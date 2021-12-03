@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<!-- Packaging -->
+	<modelVersion>4.0.0</modelVersion>
+	<packaging>pom</packaging>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.5.6</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+	<!-- Versioning -->
+	<groupId>com.aoede</groupId>
+	<artifactId>parent</artifactId>
+	<version>0-SNAPSHOT</version>
+
+	<!-- Meta-data -->
+	<name>[${project.artifactId}]</name>
+	<description>Parent module for all com.aoede modules</description>
+	<inceptionYear>2021</inceptionYear>
+
+	<!-- Modules -->
+	<modules>
+		<module>commons</module>
+		<module>modules</module>
+		<module>apps</module>
+	</modules>
+
+	<!-- Properties/Variables -->
+	<properties>
+		<!-- Desired Maven version -->
+		<maven.version>3.6</maven.version>
+		<!-- Build JDK -->
+		<java.version>11</java.version>
+
+		<!-- Maven source encoding -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<!-- Library versions-->
+		<disruptor-maven-plugin.version>3.4.4</disruptor-maven-plugin.version>
+		<springfox-swagger2.version>2.9.2</springfox-swagger2.version>
+		<hibernate-search-orm.version>5.11.10.Final</hibernate-search-orm.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!--
+				Asynchronous Logging @see https://logging.apache.org/log4j/2.x/manual/async.html
+				Hint:
+				Don't forget to set system property
+				-Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
+				to make all loggers asynchronous
+			-->
+			<dependency>
+				<groupId>com.lmax</groupId>
+				<artifactId>disruptor</artifactId>
+				<version>${disruptor-maven-plugin.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-swagger2</artifactId>
+				<version>${springfox-swagger2.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-swagger-ui</artifactId>
+				<version>${springfox-swagger2.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-search-orm</artifactId>
+				<version>${hibernate-search-orm.version}</version>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+	<!-- Dependencies -->
+	<dependencies>
+		<!-- You can easily generate your own configuration metadata file from items annotated with
+		@ConfigurationProperties by using the spring-boot-configuration-processor jar. The jar includes a Java
+		annotation processor which is invoked as your project is compiled. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- you need to exclude spring-boot-starter-logging dependency as Logback is the default implementation -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+				<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.lmax</groupId>
+			<artifactId>disruptor</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+	</dependencies>
+
+</project>
