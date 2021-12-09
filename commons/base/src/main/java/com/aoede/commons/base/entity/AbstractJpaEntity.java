@@ -22,7 +22,7 @@ import lombok.ToString;
 @ToString
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class AbstractJpaEntity<Key> extends AbstractEntity<Key> {
+public abstract class AbstractJpaEntity<Key> implements AbstractEntity<Key> {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = true)
 	@CreatedDate

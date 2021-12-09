@@ -1,11 +1,9 @@
 package com.aoede.commons.base.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,54 +28,29 @@ public abstract class AbstractController<
 	Service extends AbstractService<Key, Domain>
 > extends BaseComponent {
 
-	final protected Service service;
-
-	@Autowired
-	public AbstractController (Service service) {
-		this.service = service;
-	}
-
 	@GetMapping("/search")
 	@ResponseStatus(HttpStatus.OK)
-	public List<SimpleResponse> search(@RequestHeader("X-Search-Terms") String keyword) throws Exception {
-		return service.freeTextSearch(keyword).stream().map(e -> simpleResponse(e)).collect(Collectors.toList());
-	}
+	abstract public List<SimpleResponse> search(@RequestHeader("X-Search-Terms") String keyword) throws Exception;
 
 	@GetMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public DetailResponse get(@PathVariable("id") final Key id) throws Exception {
-		return detailResponse(service.find(id));
-	}
+	abstract public DetailResponse get(@PathVariable("id") final Key id) throws Exception;
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public List<SimpleResponse> findAll() throws Exception {
-		return service.findAll().stream().map(e -> simpleResponse(e)).collect(Collectors.toList());
-	}
+	abstract public List<SimpleResponse> findAll() throws Exception;
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public DetailResponse create(@Valid @RequestBody CreateRequest request) throws Exception {
-		return detailResponse(service.create(createRequest(request)));
-	}
+	abstract public DetailResponse create(@Valid @RequestBody final CreateRequest request) throws Exception;
 
 	@PutMapping
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void update(@Valid @RequestBody final UpdateRequest request) throws Exception {
-		service.update(updateRequest(request));
-	}
+	abstract public void update(@Valid @RequestBody final UpdateRequest request) throws Exception;
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable("id") final Key id) throws Exception {
-		service.delete(id);
-	}
-
-	abstract protected SimpleResponse simpleResponse (Domain entity);
-	abstract protected DetailResponse detailResponse (Domain entity);
-
-	abstract protected Domain createRequest (CreateRequest request);
-	abstract protected Domain updateRequest (UpdateRequest request);
+	abstract public void delete(@PathVariable("id") final Key id) throws Exception;
 }
 
 

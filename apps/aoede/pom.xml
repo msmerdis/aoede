@@ -22,6 +22,18 @@
 	<dependencies>
 
 		<dependency>
+			<groupId>com.aoede.commons</groupId>
+			<artifactId>common-base</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.aoede.modules</groupId>
+			<artifactId>module-music</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
@@ -74,7 +86,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.2.0</version>
 				<configuration>
 					<delimiters>
 						<!-- Certain JDBC connection URLs contain special character like the Oracle case -->
@@ -87,7 +98,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.0.0-M3</version>
 				<executions>
 					<execution>
 						<id>enforce-versions</id>
@@ -111,7 +121,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
 				<configuration>
 					<!--
 					In order to compile your project for Java 11, add the release configuration to the compiler
@@ -196,6 +205,7 @@
 					<include>**/*.ftl</include>
 					<include>**/*.pem</include>
 					<include>**/*.txt</include>
+					<include>**/*.svg</include>
 				</includes>
 				<filtering>true</filtering>
 			</resource>

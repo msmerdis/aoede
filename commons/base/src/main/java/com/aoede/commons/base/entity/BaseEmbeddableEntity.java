@@ -13,7 +13,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @MappedSuperclass
-public abstract class BaseEmbeddableEntity<Key extends Embeddable> extends AbstractEntity <Key> {
+public abstract class BaseEmbeddableEntity<Key extends Embeddable> implements AbstractEntity <Key> {
 	@EmbeddedId
 	protected Key id;
 

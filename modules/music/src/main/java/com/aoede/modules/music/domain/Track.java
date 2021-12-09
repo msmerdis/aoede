@@ -1,5 +1,7 @@
 package com.aoede.modules.music.domain;
 
+import java.util.List;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,9 +11,9 @@ import lombok.ToString;
 @Setter
 @ToString
 @EqualsAndHashCode
-public class Note {
-	private short note [];
-	private short duration;
+public class Track {
+	private Clef clef;
+	private List<Note> notes;
 }
 
 

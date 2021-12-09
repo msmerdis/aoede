@@ -19,7 +19,7 @@ import com.aoede.commons.base.exceptions.NotFoundException;
 import com.aoede.commons.base.exceptions.NotImplementedException;
 import com.aoede.commons.base.repository.AbstractRepository;
 
-public abstract class AbstractServiceImpl <
+public abstract class AbstractServiceDomainImpl <
 	Key,
 	Domain extends AbstractDomain<Key>,
 	Entity extends AbstractEntity<Key>,
@@ -28,7 +28,7 @@ public abstract class AbstractServiceImpl <
 
 	final protected Repository repository;
 
-	public AbstractServiceImpl (Repository repository, EntityManagerFactory entityManagerFactory) {
+	public AbstractServiceDomainImpl (Repository repository, EntityManagerFactory entityManagerFactory) {
 		this.repository  = repository;
 	}
 

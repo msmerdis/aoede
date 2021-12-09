@@ -18,7 +18,7 @@ spring:
       max-lifetime: 60000
       maximum-pool-size: 10
       minimum-idle: 1
-      pool-name: moviesConnectionPooling
+      pool-name: aoedeConnectionPooling
       transaction-isolation: TRANSACTION_READ_COMMITTED
       username: sa
       password: sa
@@ -68,4 +68,4 @@ spring:
       mode: never
       platform: h2
 server:
-  port: 32200
+  port: 8088
