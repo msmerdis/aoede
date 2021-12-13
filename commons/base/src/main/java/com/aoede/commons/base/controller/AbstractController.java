@@ -44,9 +44,9 @@ public abstract class AbstractController<
 	@ResponseStatus(HttpStatus.CREATED)
 	abstract public DetailResponse create(@Valid @RequestBody final CreateRequest request) throws Exception;
 
-	@PutMapping
+	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	abstract public void update(@Valid @RequestBody final UpdateRequest request) throws Exception;
+	abstract public void update(@PathVariable("id") final Key id, @Valid @RequestBody final UpdateRequest request) throws Exception;
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)

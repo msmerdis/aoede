@@ -8,7 +8,7 @@ import com.aoede.commons.base.exceptions.GenericException;
 public interface AbstractService <Key, Domain extends AbstractDomain<Key>> {
 	Domain create(Domain domain) throws GenericException, Exception;
 
-	void update(Domain domain) throws GenericException;
+	void update(Key id, Domain domain) throws GenericException;
 	void delete(Key id) throws GenericException;
 
 	boolean exists(Key id) throws GenericException;

@@ -48,11 +48,15 @@ public abstract class AbstractServiceEntityImpl <
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
-	public void update(Domain domain) throws GenericException {
-		Optional<Domain> optionalDomain = repository.findById(domain.getId());
+	public void update(Key id, Domain domain) throws GenericException {
+		Optional<Domain> optionalDomain = repository.findById(id);
 
 		if (optionalDomain.isEmpty()) {
 			throw new NotFoundException(domainName() + " not found.");
+		}
+
+		if (id != domain.getId()) {
+			repository.deleteById(id);
 		}
 
 		try {

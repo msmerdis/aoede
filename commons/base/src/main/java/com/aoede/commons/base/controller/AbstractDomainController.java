@@ -46,8 +46,8 @@ public abstract class AbstractDomainController<
 	}
 
 	@Override
-	public void update(@Valid @RequestBody final Domain domain) throws Exception {
-		service.update(domain);
+	public void update(@PathVariable("id") final Key id, @Valid @RequestBody final Domain domain) throws Exception {
+		service.update(id, domain);
 	}
 
 	@Override

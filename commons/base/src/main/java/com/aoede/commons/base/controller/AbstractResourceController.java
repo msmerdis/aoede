@@ -51,8 +51,8 @@ public abstract class AbstractResourceController<
 	}
 
 	@Override
-	public void update(@Valid @RequestBody final UpdateRequest request) throws Exception {
-		service.update(updateRequest(request));
+	public void update(@PathVariable("id") final Key id, @Valid @RequestBody final UpdateRequest request) throws Exception {
+		service.update(id, updateRequest(request));
 	}
 
 	@Override

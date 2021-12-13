@@ -54,6 +54,7 @@ dependency-reduced-pom.xml
 .springBeans
 **/.externalToolBuilders/
 *Servers/
+.cucumber
 
 # JetBrains #
 # based on https://github.com/github/gitignore/blob/master/Global/JetBrains.gitignore #
@@ -94,7 +95,10 @@ docker
 *.swp
 
 **/logs/
-**/aoede_data/
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# Application output
+**/aoede_data/
+**/aoede_test_data/
