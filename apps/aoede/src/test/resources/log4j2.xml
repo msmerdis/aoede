@@ -14,8 +14,8 @@
 		<!-- Rolling Random Access File Appender with a default buffer of 256 * 1024 bytes -->
 		<RollingRandomAccessFile
 			name="DefaultAppender"
-			fileName="aoede_test_data/logs/app.log"
-			filePattern="aoede_test_data/logs/${hostName}-app-%d{yyyy-MM-dd_HH}.zip">
+			fileName="target/aoede_test_data/logs/app.log"
+			filePattern="target/aoede_test_data/logs/${hostName}-app-%d{yyyy-MM-dd_HH}.zip">
 
 			<PatternLayout>
 				<Pattern>${LOG_PATTERN}</Pattern>
@@ -26,7 +26,7 @@
 			</Policies>
 
 			<DefaultRolloverStrategy>
-				<Delete basePath="aoede_test_data/logs">
+				<Delete basePath="target/aoede_test_data/logs">
 					<IfLastModified age="30d"/>
 				</Delete>
 			</DefaultRolloverStrategy>
@@ -36,8 +36,8 @@
 		<!-- Rolling Random Access File Appender with a default buffer of 256 * 1024 bytes -->
 		<RollingRandomAccessFile
 			name="DataAppender"
-			fileName="aoede_test_data/logs/app.log"
-			filePattern="aoede_test_data/logs/${hostName}-app-%d{yyyy-MM-dd_HH}.zip">
+			fileName="target/aoede_test_data/logs/app.log"
+			filePattern="target/aoede_test_data/logs/${hostName}-app-%d{yyyy-MM-dd_HH}.zip">
 
 			<PatternLayout>
 				<Pattern>${LOG_PATTERN}</Pattern>
@@ -48,7 +48,7 @@
 			</Policies>
 
 			<DefaultRolloverStrategy>
-				<Delete basePath="aoede_test_data/logs">
+				<Delete basePath="target/aoede_test_data/logs">
 					<IfLastModified age="30d"/>
 				</Delete>
 			</DefaultRolloverStrategy>

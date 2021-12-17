@@ -27,7 +27,7 @@ spring:
         prepStmtCacheSize: 250
         prepStmtCacheSqlLimit: 2048
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:file:./aoede_test_data/h2db;IFEXISTS=FALSE;AUTO_SERVER=TRUE;
+    url: jdbc:h2:file:./target/aoede_test_data/h2db;IFEXISTS=FALSE;AUTO_SERVER=TRUE;
   h2:
     console:
       enabled: true
@@ -59,7 +59,7 @@ spring:
         search:
           default:
             directory_provider: filesystem
-            indexBase: aoede_test_data/search_indexes
+            indexBase: target/aoede_test_data/search_indexes
     show-sql: false
   sql:
     init:
