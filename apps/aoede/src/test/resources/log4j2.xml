@@ -2,7 +2,7 @@
 <Configuration status="WARN" monitorInterval="30">
 	<Properties>
 		<Property name="LOG_PATTERN">
-			%d{mm:ss.SSS} : %m%n%ex
+			%d{mm:ss.SSS} : %m{nolookups}%n%ex
 		</Property>
 	</Properties>
 

@@ -48,6 +48,9 @@
 		<springfox-swagger2.version>2.9.2</springfox-swagger2.version>
 		<hibernate-search-orm.version>5.11.10.Final</hibernate-search-orm.version>
 		<cucumber.version>7.1.0</cucumber.version>
+
+		<!-- Apache Log4j 2 Vulnerability fix -->
+		<log4j2.version>2.16.0</log4j2.version>
 	</properties>
 
 	<dependencyManagement>
