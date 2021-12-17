@@ -11,9 +11,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableAutoConfiguration(exclude = {
 	ErrorMvcAutoConfiguration.class
 })
-public class Application {
+public class AoedeApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+		SpringApplication.run(AoedeApplication.class, args);
 	}
 }
 

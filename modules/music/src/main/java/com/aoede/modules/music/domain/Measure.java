@@ -11,9 +11,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @EqualsAndHashCode
-public class Sheet {
-	private String name;
-	private List<Track> tracks;
+public class Measure {
+	private List<Note> notes;
 }
 
 

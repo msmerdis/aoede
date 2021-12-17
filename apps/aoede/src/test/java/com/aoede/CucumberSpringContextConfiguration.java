@@ -10,7 +10,7 @@ import io.cucumber.spring.CucumberContextConfiguration;
 
 @CucumberContextConfiguration
 @SpringBootTest(classes = {
-	Application.class, CucumberTest.class},
+	AoedeApplication.class, CucumberTest.class},
 	webEnvironment = WebEnvironment.DEFINED_PORT
 )
 public class CucumberSpringContextConfiguration extends BaseComponent {

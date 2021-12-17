@@ -13,7 +13,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class Track {
 	private Clef clef;
-	private List<Note> notes;
+	private List<Section> sections;
 }
 
 
