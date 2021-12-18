@@ -48,9 +48,11 @@ public abstract class AbstractTestService extends BaseComponent {
 
 	public void updateBody (JsonObject obj, DataTable data) {
 		for (var row : data.asLists()) {
-			obj.add(row.get(0), new JsonPrimitive(row.get(1)));
+			obj.add(row.get(0), getPrimitive(row.get(0), row.get(1)));
 		}
 	}
+
+	protected abstract JsonPrimitive getPrimitive (String name, String value);
 
 	protected void results (HttpStatus responseStatus, int expectedStatus, String responseBody, boolean expectingBody, boolean multipleResults) {
 		success =
@@ -62,8 +64,9 @@ public abstract class AbstractTestService extends BaseComponent {
 				latestArr = JsonParser.parseString(responseBody).getAsJsonArray();
 			} else {
 				latestObj = JsonParser.parseString(responseBody).getAsJsonObject();
-				if (success)
-					latestKey = latestObj.get("id").getAsString();
+				if (success) {
+					latestKey = latestObj.get("id").toString();
+				}
 			}
 		}
 	}
@@ -100,6 +103,10 @@ public abstract class AbstractTestService extends BaseComponent {
 		latestKey = null;
 		latestObj = null;
 		latestArr = null;
+	}
+
+	final public String getLatestKey () {
+		return latestKey;
 	}
 
 	final public boolean isSuccessful () {

@@ -17,7 +17,7 @@ public interface AbstractRepository<Key, Entity extends AbstractEntity<Key>> {
 
 	public boolean existsById(Key id);
 
-	public void save(Entity entity);
+	public Entity save(Entity entity);
 
 	public Entity saveAndFlush(Entity entity);
 }

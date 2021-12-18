@@ -6,23 +6,27 @@ import com.aoede.commons.service.AbstractTestService;
 import com.google.gson.JsonPrimitive;
 
 @Component
-public class ClefTestService extends AbstractTestService {
+public class SheetTestService extends AbstractTestService {
 
 	@Override
 	public String getName() {
-		return "clef";
+		return "sheet";
 	}
 
 	@Override
 	public String getPath() {
-		return "/api/clef";
+		return "/api/sheet";
 	}
 
 	@Override
 	protected JsonPrimitive getPrimitive(String name, String value) {
-		return new JsonPrimitive(value);
+		switch (name) {
+		case "id":
+			return new JsonPrimitive(Long.parseLong(value));
+		default:
+			return new JsonPrimitive(value);
+		}
 	}
-
 }
 
 

@@ -33,8 +33,8 @@ public class HashMapRepository<Key, Entity extends AbstractEntity<Key>> extends 
 	}
 
 	@Override
-	public void save(Entity entity) {
-		data.put(entity.getId(), entity);
+	public Entity save(Entity entity) {
+		return data.put(entity.getId(), entity);
 	}
 
 	@Override

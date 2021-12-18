@@ -95,7 +95,14 @@ Scenario: create dublicate Clef
 ### this should generate an error
 
 Given a "clef" with
-	|  id  | New Clef |
+	|  id  | Dub Clef |
+	| type | G        |
+	| note | 64       |
+	| spos | 0        |
+And the request was successful
+And the response has a status code of 201
+When a "clef" with
+	|  id  | Dub Clef |
 	| type | G        |
 	| note | 64       |
 	| spos | 0        |

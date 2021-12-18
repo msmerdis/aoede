@@ -15,7 +15,7 @@ import io.cucumber.java.en.When;
 
 /**
  * GenericTestController
- * 
+ *
  * Provides the base step definitions for a domain controller request and assertion
  * Utilises domain test services to build and verify the results
  */
@@ -54,6 +54,11 @@ public class GenericTestController extends ServiceStepDefinition {
 			getResponseHeaders(),
 			getResponseBody()
 		);
+	}
+
+	@When("request previously created {string}")
+	public void getLatest (String domain) {
+		get (domain, getService(domain).getLatestKey());
 	}
 
 	@When("request all available {string}")
@@ -98,6 +103,11 @@ public class GenericTestController extends ServiceStepDefinition {
 		);
 	}
 
+	@When("update previously created {string}")
+	public void updateLatest (String domain, DataTable data) {
+		update (domain, getService(domain).getLatestKey(), data);
+	}
+
 	@When("delete {string} with id {string}")
 	public void delete(String domain, String id) {
 		logger.info("deleting " + domain + " with id " + id);
@@ -110,6 +120,11 @@ public class GenericTestController extends ServiceStepDefinition {
 			getResponseHeaders(),
 			getResponseBody()
 		);
+	}
+
+	@When("delete previously created {string}")
+	public void deleteLatest (String domain) {
+		delete (domain, getService(domain).getLatestKey());
 	}
 
 	/**
