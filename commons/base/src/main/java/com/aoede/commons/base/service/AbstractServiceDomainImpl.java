@@ -35,12 +35,15 @@ public abstract class AbstractServiceDomainImpl <
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
 	public Domain create(Domain domain) throws GenericException {
+		Entity entity;
+
 		try {
-			Entity entity = repository.saveAndFlush(createEntity(domain));
-			updateDomain(entity, domain);
+			entity = repository.saveAndFlush(createEntity(domain));
 		} catch (Exception e) {
 			throw new ConflictException(domainName() + " already exists");
 		}
+
+		updateDomain(entity, domain);
 
 		return domain;
 	}

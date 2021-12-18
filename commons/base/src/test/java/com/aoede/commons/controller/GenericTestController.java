@@ -156,6 +156,26 @@ public class GenericTestController extends ServiceStepDefinition {
 		assertTrue(getService().lastArrayContainsObjectWith(id, value));
 	}
 
+	@Then("the response array contains lastest {string}")
+	public void verifyLatestElementExistsInList (String domain) {
+		assertTrue (
+			getService(domain).lastArrayContainsObjectWith(
+				"id",
+				getService(domain).getLatestKey()
+			)
+		);
+	}
+
+	@Then("the response array does not contain lastest {string}")
+	public void verifyLatestElementDoesNotExistInList (String domain) {
+		assertFalse (
+			getService(domain).lastArrayContainsObjectWith(
+				"id",
+				getService(domain).getLatestKey()
+			)
+		);
+	}
+
 	@Then("the response array does not contain {string} with value {string}")
 	public void verifyElementDoesNotExistInList (String id, String value) {
 		assertFalse(getService().lastArrayContainsObjectWith(id, value));

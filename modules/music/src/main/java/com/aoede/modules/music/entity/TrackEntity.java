@@ -16,15 +16,15 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(
-	name = "tsheet",
+	name = "ttrack",
 	indexes = {
 		@Index(columnList = "id", unique = true)
 	}
 )
-@SequenceGenerator(name = "idGenerator", sequenceName = "SHEET_SEQ", initialValue = 1, allocationSize = 1)
-public class SheetEntity extends BaseEntity<Long> implements AbstractEntity<Long> {
+@SequenceGenerator(name = "idGenerator", sequenceName = "TRACK_SEQ", initialValue = 1, allocationSize = 1)
+public class TrackEntity extends BaseEntity<Long> implements AbstractEntity<Long> {
 	@Column
-	private String name;
+	private String clef;
 }
 
 

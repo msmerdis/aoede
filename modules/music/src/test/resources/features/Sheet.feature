@@ -1,6 +1,6 @@
 @Sheet
 Feature: Basic Sheet CRUD functionality
-### Verify the ability to create/read/update and delete Clefs
+### Verify the ability to create/read/update and delete Sheets
 
 @Positive
 Scenario: retrieve all available Sheets
@@ -29,7 +29,7 @@ Scenario: access a Sheet that does not exist
 ### Retrieve a sheet that does not exist
 ### This should return with an error
 
-When request a "clef" with id "1"
+When request a "sheet" with id "1"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
@@ -58,11 +58,12 @@ And the response has a status code of 200
 And the response array contains
 	| name      |
 	| New Sheet |
+And the response array contains lastest "sheet"
 
 @Positive
 Scenario: update a Sheet
 ### create a sheet and then update it
-### verify that the clef contents have been updated
+### verify that the sheet contents have been updated
 
 Given a "sheet" with
 	| name | Sheet 2 Update  |
@@ -78,6 +79,7 @@ Then request all available "sheet"
 And the request was successful
 And the response has a status code of 200
 And the response array contains "name" with value "Sheet 2 Updated"
+And the response array contains lastest "sheet"
 
 @Negative
 Scenario: update a non existing Sheet
@@ -110,13 +112,14 @@ Then request all available "sheet"
 And the request was successful
 And the response has a status code of 200
 And the response array does not contain "name" with value "Sheet 2 Delete"
+And the response array does not contain lastest "sheet"
 
 @Negative
 Scenario: delete a non existing Sheet
 ### attempt to delete a sheet that does not exist
 ### this should generate an error
 
-When delete "clef" with id "101"
+When delete "sheet" with id "101"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
