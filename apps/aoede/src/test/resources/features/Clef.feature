@@ -4,7 +4,8 @@ Feature: Basic Clef CRUD functionality
 
 Scenario: retrieve all available Clefs
 When request all available "clef"
-Then the response has a status code of 200
+Then the request was successful
+And the response has a status code of 200
 And the response array contains
 	| id            | type | note | spos |
 	| French Violin |  G   |  64  |  -4  |
@@ -21,14 +22,16 @@ And the response array does not contain "id" with value "Updated Clef"
 
 Scenario: search for Clef is not available
 When search "clef" with keyword "Bass"
-Then the response has a status code of 501
+Then the request was not successful
+And the response has a status code of 501
 And the response matches
 	| code | 501             |
 	| text | NOT_IMPLEMENTED |
 
 Scenario: access a single Clef by id
 When request a "clef" with id "Treble"
-Then the response has a status code of 200
+Then the request was successful
+And the response has a status code of 200
 And the response matches
 	|  id  | Treble |
 	| type | G      |
@@ -41,6 +44,7 @@ Given a "clef" with
 	| type | G        |
 	| note | 64       |
 	| spos | 0        |
+And the request was successful
 And the response has a status code of 201
 And the response matches
 	|  id  | New Clef |
@@ -48,7 +52,8 @@ And the response matches
 	| note | 64       |
 	| spos | 0        |
 When request a "clef" with id "New Clef"
-Then the response has a status code of 200
+Then the request was successful
+And the response has a status code of 200
 And the response matches
 	|  id  | New Clef |
 	| type | G        |
@@ -61,8 +66,10 @@ Given update "clef" with id "New Clef"
 	| type | A            |
 	| note | 1            |
 	| spos | 2            |
+And the request was successful
 And the response has a status code of 204
 When request a "clef" with id "Updated Clef"
+And the request was successful
 And the response has a status code of 200
 And the response matches
 	|  id  | Updated Clef |
@@ -72,8 +79,10 @@ And the response matches
 
 Scenario: delete an existing Clef
 Given delete "clef" with id "Updated Clef"
+And the request was successful
 And the response has a status code of 204
 When request a "clef" with id "Updated Clef"
+And the request was not successful
 And the response has a status code of 404
 And the response matches
 	| code | 404       |
@@ -85,6 +94,7 @@ Given a "clef" with
 	| type | C        |
 	| note | 60       |
 	| spos | 4        |
+And the request was successful
 And the response has a status code of 201
 And the response matches
 	|  id  | New Clef |
@@ -92,7 +102,8 @@ And the response matches
 	| note | 60       |
 	| spos | 4        |
 When request all available "clef"
-Then the response has a status code of 200
+Then the request was successful
+And the response has a status code of 200
 And the response array contains
 	| id            | type | note | spos |
 	| French Violin |  G   |  64  |  -4  |
@@ -113,8 +124,10 @@ Given update "clef" with id "New Clef"
 	| type | A            |
 	| note | 1            |
 	| spos | 2            |
+And the request was successful
 And the response has a status code of 204
 When request all available "clef"
+And the request was successful
 Then the response has a status code of 200
 And the response array contains
 	| id            | type | note | spos |

@@ -34,6 +34,12 @@ public class BaseStepDefinition extends BaseComponent implements EventListener {
 	private ServerProperties serverProperties;
 	private String basePath;
 
+	@PostConstruct
+	void init () {
+		restTemplate.setErrorHandler(latestResponse);
+		basePath = "http://localhost:" + serverProperties.getPort();
+	}
+
 	private static class ResponseResults implements ResponseErrorHandler {
 		public HttpHeaders headers = null;
 		public HttpStatus  status  = null;
@@ -91,12 +97,6 @@ public class BaseStepDefinition extends BaseComponent implements EventListener {
 				request.getBody().write(requestBody.getBytes());
 			}
 		}
-	}
-
-	@PostConstruct
-	void init () {
-		restTemplate.setErrorHandler(latestResponse);
-		basePath = "http://localhost:" + serverProperties.getPort();
 	}
 
 	private void execute (String url, HttpMethod method, HttpHeaders headers, String body) {
