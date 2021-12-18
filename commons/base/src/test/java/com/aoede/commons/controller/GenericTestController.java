@@ -1,83 +1,25 @@
-package com.aoede.commons;
+package com.aoede.commons.controller;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-
-import org.springframework.beans.factory.ListableBeanFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 
-import com.aoede.commons.base.BaseStepDefinition;
+import com.aoede.commons.base.ServiceStepDefinition;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.plugin.event.TestCaseFinished;
-import io.cucumber.plugin.event.TestCaseStarted;
 
-public class GenericTestController extends BaseStepDefinition {
-
-	@Autowired
-	private ListableBeanFactory listableBeanFactory;
-	private Map<String, AbstractTestController> controllers = new HashMap<String, AbstractTestController> ();
-	private AbstractTestController latestController;
-
-	@PostConstruct
-	private void discoverTestControllers () {
-		// get all service beans
-		var beans = listableBeanFactory.getBeansOfType(AbstractTestController.class, false, false);
-		logger.info("looking for test controller implementations in {}", this.getClass().getName());
-
-		for (String name : beans.keySet()) {
-			var controller = beans.get(name);
-			logger.info("identified service implementation {}", controller.getClass().getName());
-
-			controllers.put(controller.getName(), controller);
-		}
-	}
-
-	private AbstractTestController getController (String domain) {
-		assertTrue("test controller for " + domain + " cannot be found", controllers.containsKey(domain));
-		latestController = controllers.get(domain);
-		return latestController;
-	}
-
-	private AbstractTestController getController () {
-		return latestController;
-	}
-
-	private String getPath (String domain) {
-		return getController(domain).getPath();
-	}
-
-	private String getPath (String domain, String path) {
-		return getPath(domain) + path;
-	}
-
-	@Override
-	public void setup (TestCaseStarted event) {
-		super.setup(event);
-
-		for (var controller : controllers.values()) {
-			controller.setup ();
-		}
-	}
-
-	@Override
-	public void cleanup (TestCaseFinished event) {
-		super.cleanup(event);
-
-		for (var controller : controllers.values()) {
-			controller.cleanup ();
-		}
-	}
+/**
+ * GenericTestController
+ * 
+ * Provides the base step definitions for a domain controller request and assertion
+ * Utilizes domain test services to build and verify the results
+ */
+public class GenericTestController extends ServiceStepDefinition {
 
 	/**
 	 * Requests
@@ -93,7 +35,7 @@ public class GenericTestController extends BaseStepDefinition {
 		executeGet (getPath(domain, "/search"), headers);
 
 		// update test controller with data
-		getController(domain).searchResults(
+		getService(domain).searchResults(
 			getResponseStatus(),
 			getResponseHeaders(),
 			getResponseBody()
@@ -107,7 +49,7 @@ public class GenericTestController extends BaseStepDefinition {
 		executeGet (getPath(domain, "/" + id));
 
 		// update test controller with data
-		getController(domain).accessResults(
+		getService(domain).accessResults(
 			getResponseStatus(),
 			getResponseHeaders(),
 			getResponseBody()
@@ -121,7 +63,7 @@ public class GenericTestController extends BaseStepDefinition {
 		executeGet (getPath(domain));
 
 		// update test controller with data
-		getController(domain).findAllResults(
+		getService(domain).findAllResults(
 			getResponseStatus(),
 			getResponseHeaders(),
 			getResponseBody()
@@ -132,10 +74,10 @@ public class GenericTestController extends BaseStepDefinition {
 	public void create(String domain, DataTable data) {
 		logger.info("creating " + domain);
 
-		executePost (getPath(domain), getController(domain).createBody(data));
+		executePost (getPath(domain), getService(domain).createBody(data));
 
 		// update test controller with data
-		getController(domain).createResults(
+		getService(domain).createResults(
 			getResponseStatus(),
 			getResponseHeaders(),
 			getResponseBody()
@@ -146,10 +88,10 @@ public class GenericTestController extends BaseStepDefinition {
 	public void update(String domain, String id, DataTable data) {
 		logger.info("updating " + domain + " with id " + id);
 
-		executePut (getPath(domain, "/" + id), getController(domain).createBody(data));
+		executePut (getPath(domain, "/" + id), getService(domain).createBody(data));
 
 		// update test controller with data
-		getController(domain).updateResults(
+		getService(domain).updateResults(
 			getResponseStatus(),
 			getResponseHeaders(),
 			getResponseBody()
@@ -163,7 +105,7 @@ public class GenericTestController extends BaseStepDefinition {
 		executeDelete (getPath(domain, "/" + id));
 
 		// update test controller with data
-		getController(domain).deleteResults(
+		getService(domain).deleteResults(
 			getResponseStatus(),
 			getResponseHeaders(),
 			getResponseBody()
@@ -176,12 +118,12 @@ public class GenericTestController extends BaseStepDefinition {
 
 	@Then("the request was successful")
 	public void verifySuccessfulRequest () {
-		assertTrue(getController().isSuccessful());
+		assertTrue(getService().isSuccessful());
 	}
 
 	@Then("the request was not successful")
 	public void verifyNotSuccessfulRequest () {
-		assertFalse(getController().isSuccessful());
+		assertFalse(getService().isSuccessful());
 	}
 
 	@Then("the response has a status code of {int}")
@@ -191,22 +133,22 @@ public class GenericTestController extends BaseStepDefinition {
 
 	@Then("the response array contains")
 	public void verifyElementList (DataTable data) {
-		assertTrue(getController().lastArrayMatches(data));
+		assertTrue(getService().lastArrayMatches(data));
 	}
 
 	@Then("the response array contains {string} with value {string}")
 	public void verifyElementExistInList (String id, String value) {
-		assertTrue(getController().lastArrayContainsObjectWith(id, value));
+		assertTrue(getService().lastArrayContainsObjectWith(id, value));
 	}
 
 	@Then("the response array does not contain {string} with value {string}")
 	public void verifyElementDoesNotExistInList (String id, String value) {
-		assertFalse(getController().lastArrayContainsObjectWith(id, value));
+		assertFalse(getService().lastArrayContainsObjectWith(id, value));
 	}
 
 	@Then("the response matches")
 	public void verifyElement (DataTable data) {
-		assertTrue(getController().lastObjectMatches(data));
+		assertTrue(getService().lastObjectMatches(data));
 	}
 }
 

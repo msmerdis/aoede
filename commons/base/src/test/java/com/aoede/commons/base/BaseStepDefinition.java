@@ -169,10 +169,10 @@ public class BaseStepDefinition extends BaseComponent implements EventListener {
 		});
 	}
 
-	public void setup (TestCaseStarted event) {
+	protected void setup (TestCaseStarted event) {
 	}
 
-	public void cleanup (TestCaseFinished event) {
+	protected void cleanup (TestCaseFinished event) {
 		latestResponse.cleanup();
 	}
 }

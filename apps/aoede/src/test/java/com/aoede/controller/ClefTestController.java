@@ -2,10 +2,10 @@ package com.aoede.controller;
 
 import org.springframework.stereotype.Component;
 
-import com.aoede.commons.AbstractTestController;
+import com.aoede.commons.service.AbstractTestService;
 
 @Component
-public class ClefTestController extends AbstractTestController {
+public class ClefTestController extends AbstractTestService {
 
 	@Override
 	public String getName() {

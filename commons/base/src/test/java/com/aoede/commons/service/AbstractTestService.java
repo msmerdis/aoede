@@ -1,4 +1,4 @@
-package com.aoede.commons;
+package com.aoede.commons.service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import com.google.gson.JsonPrimitive;
 
 import io.cucumber.datatable.DataTable;
 
-public abstract class AbstractTestController extends BaseComponent {
+public abstract class AbstractTestService extends BaseComponent {
 	protected boolean success;
 	protected String latestKey;
 	protected JsonObject latestObj;
