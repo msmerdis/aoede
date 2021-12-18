@@ -1,8 +1,8 @@
 package com.aoede.commons.controller;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.springframework.http.HttpHeaders;
 
@@ -17,7 +17,7 @@ import io.cucumber.java.en.When;
  * GenericTestController
  * 
  * Provides the base step definitions for a domain controller request and assertion
- * Utilizes domain test services to build and verify the results
+ * Utilises domain test services to build and verify the results
  */
 public class GenericTestController extends ServiceStepDefinition {
 

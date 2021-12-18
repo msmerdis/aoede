@@ -1,11 +1,11 @@
-package com.aoede.controller;
+package com.aoede.service;
 
 import org.springframework.stereotype.Component;
 
 import com.aoede.commons.service.AbstractTestService;
 
 @Component
-public class ClefTestController extends AbstractTestService {
+public class ClefTestService extends AbstractTestService {
 
 	@Override
 	public String getName() {
