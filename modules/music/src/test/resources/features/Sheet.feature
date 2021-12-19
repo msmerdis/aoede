@@ -58,7 +58,7 @@ And the response has a status code of 200
 And the response array contains
 	| name      |
 	| New Sheet |
-And the response array contains lastest "sheet"
+And the response array contains latest "sheet"
 
 @Positive
 Scenario: update a Sheet
@@ -79,7 +79,7 @@ Then request all available "sheet"
 And the request was successful
 And the response has a status code of 200
 And the response array contains "name" with value "Sheet 2 Updated"
-And the response array contains lastest "sheet"
+And the response array contains latest "sheet"
 
 @Negative
 Scenario: update a non existing Sheet
@@ -112,7 +112,7 @@ Then request all available "sheet"
 And the request was successful
 And the response has a status code of 200
 And the response array does not contain "name" with value "Sheet 2 Delete"
-And the response array does not contain lastest "sheet"
+And the response array does not contain latest "sheet"
 
 @Negative
 Scenario: delete a non existing Sheet

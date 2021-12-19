@@ -35,12 +35,12 @@ public abstract class AbstractServiceDomainImpl <
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
 	public Domain create(Domain domain) throws GenericException {
-		Entity entity;
+		Entity entity = createEntity(domain);
 
 		try {
-			entity = repository.saveAndFlush(createEntity(domain));
+			entity = repository.saveAndFlush(entity);
 		} catch (Exception e) {
-			throw new ConflictException(domainName() + " already exists");
+			throw new ConflictException(domainName() + " could not be created");
 		}
 
 		updateDomain(entity, domain);
@@ -110,8 +110,8 @@ public abstract class AbstractServiceDomainImpl <
 		throw new NotImplementedException("Free text search not implemented for : " + domainName());
 	}
 
-	abstract protected Entity createEntity (final Domain domain);
-	abstract protected void   updateEntity (final Domain domain, Entity entity);
+	abstract protected Entity createEntity (final Domain domain) throws GenericException;
+	abstract protected void   updateEntity (final Domain domain, Entity entity) throws GenericException;
 	abstract protected Domain createDomain (final Entity entity);
 	abstract protected void   updateDomain (final Entity entity, Domain domain);
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.aoede.commons.base.service.AbstractServiceDomainImpl;
 import com.aoede.modules.music.domain.Sheet;
 import com.aoede.modules.music.entity.SheetEntity;
+import com.aoede.modules.music.entity.TrackEntity;
 import com.aoede.modules.music.repository.SheetRepository;
 
 @Service
@@ -23,7 +24,7 @@ public class SheetService extends AbstractServiceDomainImpl <Long, Sheet, SheetE
 
 	@Override
 	public String domainName() {
-		return null;
+		return "Sheet";
 	}
 
 	@Override
@@ -53,6 +54,10 @@ public class SheetService extends AbstractServiceDomainImpl <Long, Sheet, SheetE
 	protected void updateDomain(SheetEntity entity, Sheet domain) {
 		domain.setId(entity.getId());
 		domain.setName(entity.getName());
+	}
+
+	public void updateTrack(TrackEntity entity, Long id) {
+		entity.setSheet(repository.getById(id));
 	}
 
 }

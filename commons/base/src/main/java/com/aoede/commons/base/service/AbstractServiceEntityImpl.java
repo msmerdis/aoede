@@ -42,7 +42,7 @@ public abstract class AbstractServiceEntityImpl <
 		try {
 			return repository.saveAndFlush(domain);
 		} catch (Exception e) {
-			throw new ConflictException(domainName() + " already exists");
+			throw new ConflictException(domainName() + " could not be created");
 		}
 	}
 

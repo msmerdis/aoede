@@ -41,7 +41,9 @@ Scenario: create a new Track
 ### create a new track and verify the track is created with the same data as provided
 ### retrieve the track and verify the same data are returned
 
-Given a "track" with
+Given a randomized "sheet"
+And the request was successful
+And a "track" with
 	| clef | Treble |
 And the request was successful
 And the response has a status code of 201
@@ -58,14 +60,16 @@ And the response has a status code of 200
 And the response array contains
 	| clef   |
 	| Treble |
-And the response array contains lastest "track"
+And the response array contains latest "track"
 
 @Positive
 Scenario: update a Track
 ### create a track and then update it
 ### verify that the track contents have been updated
 
-Given a "track" with
+Given a randomized "sheet"
+And the request was successful
+And a "track" with
 	| clef | Treble |
 And the request was successful
 And the response has a status code of 201
@@ -79,7 +83,7 @@ Then request all available "track"
 And the request was successful
 And the response has a status code of 200
 And the response array contains "clef" with value "Bass"
-And the response array contains lastest "track"
+And the response array contains latest "track"
 
 @Negative
 Scenario: update a non existing Track
@@ -99,7 +103,9 @@ Scenario: delete a Track
 ### create a track and then delete it
 ### verify that the track is no longer accessible
 
-Given a "track" with
+Given a randomized "sheet"
+And the request was successful
+And a "track" with
 	| clef | Alto |
 And the request was successful
 And the response has a status code of 201
@@ -112,7 +118,7 @@ Then request all available "track"
 And the request was successful
 And the response has a status code of 200
 And the response array does not contain "clef" with value "Alto"
-And the response array does not contain lastest "track"
+And the response array does not contain latest "track"
 
 @Negative
 Scenario: delete a non existing Track

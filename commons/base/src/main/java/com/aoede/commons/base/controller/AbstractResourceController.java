@@ -52,6 +52,10 @@ public abstract class AbstractResourceController<
 
 	@Override
 	public void update(@PathVariable("id") final Key id, @Valid @RequestBody final UpdateRequest request) throws Exception {
+		Domain domain = updateRequest(request);
+
+		domain.setId(id);
+
 		service.update(id, updateRequest(request));
 	}
 

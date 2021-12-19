@@ -11,7 +11,7 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class Sheet extends AbstractDomain<Long> {
 	private String name;

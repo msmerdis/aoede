@@ -2,6 +2,7 @@ package com.aoede.commons.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import org.springframework.http.HttpHeaders;
@@ -16,6 +17,7 @@ import com.google.gson.JsonPrimitive;
 import io.cucumber.datatable.DataTable;
 
 public abstract class AbstractTestService extends BaseComponent {
+	private Random random = new Random (System.currentTimeMillis());
 	protected boolean success;
 	protected String latestKey;
 	protected JsonObject latestObj;
@@ -23,6 +25,16 @@ public abstract class AbstractTestService extends BaseComponent {
 
 	public abstract String getName ();
 	public abstract String getPath ();
+
+	public abstract String getKeyName ();
+
+	final public String createBody() {
+		JsonObject obj = new JsonObject();
+
+		createDefaultBody (obj);
+
+		return obj.toString();
+	}
 
 	final public String createBody (DataTable data) {
 		JsonObject obj = new JsonObject();
@@ -39,6 +51,8 @@ public abstract class AbstractTestService extends BaseComponent {
 
 		return obj.toString();
 	}
+
+	abstract public void createDefaultBody (JsonObject obj);
 
 	public void createBody (JsonObject obj, DataTable data) {
 		for (var row : data.asLists()) {
@@ -64,8 +78,8 @@ public abstract class AbstractTestService extends BaseComponent {
 				latestArr = JsonParser.parseString(responseBody).getAsJsonArray();
 			} else {
 				latestObj = JsonParser.parseString(responseBody).getAsJsonObject();
-				if (success) {
-					latestKey = latestObj.get("id").toString();
+				if (success &&  latestObj.has(getKeyName())) {
+					latestKey = latestObj.get(getKeyName()).toString();
 				}
 			}
 		}
@@ -117,7 +131,7 @@ public abstract class AbstractTestService extends BaseComponent {
 		return latestKey.equals(key);
 	}
 
-	final public boolean lastObjectMatches (DataTable data) {
+	public boolean lastObjectMatches (DataTable data) {
 		Map<String, String> element = new HashMap<String, String> ();
 
 		for (var row : data.asLists()) {
@@ -127,7 +141,7 @@ public abstract class AbstractTestService extends BaseComponent {
 		return objectMatches (latestObj, element.entrySet());
 	}
 
-	final public boolean lastArrayMatches(DataTable data) {
+	public boolean lastArrayMatches(DataTable data) {
 		for (var tableRow : data.asMaps()) {
 			if (!arrayContains (latestArr, tableRow)) {
 				return false;
@@ -136,7 +150,7 @@ public abstract class AbstractTestService extends BaseComponent {
 		return true;
 	}
 
-	final public boolean lastArrayContainsObjectWith(String id, String value) {
+	public boolean lastArrayContainsObjectWith(String id, String value) {
 		for (var element : latestArr) {
 			if (objectMatches(element.getAsJsonObject(), id, value))
 				return true;
@@ -176,6 +190,14 @@ public abstract class AbstractTestService extends BaseComponent {
 		}
 
 		return true;
+	}
+
+	protected String randomString (int length) {
+		return random.ints(48, 123)
+			.filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+			.limit(length)
+			.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+			.toString();
 	}
 
 }

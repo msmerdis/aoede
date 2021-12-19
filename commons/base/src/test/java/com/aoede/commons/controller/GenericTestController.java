@@ -75,6 +75,20 @@ public class GenericTestController extends ServiceStepDefinition {
 		);
 	}
 
+	@Given("a randomized {string}")
+	public void create(String domain) {
+		logger.info("creating " + domain);
+
+		executePost (getPath(domain), getService(domain).createBody());
+
+		// update test controller with data
+		getService(domain).createResults(
+			getResponseStatus(),
+			getResponseHeaders(),
+			getResponseBody()
+		);
+	}
+
 	@Given("a {string} with")
 	public void create(String domain, DataTable data) {
 		logger.info("creating " + domain);
@@ -133,12 +147,12 @@ public class GenericTestController extends ServiceStepDefinition {
 
 	@Then("the request was successful")
 	public void verifySuccessfulRequest () {
-		assertTrue(getService().isSuccessful());
+		assertTrue(getResponseBody(), getService().isSuccessful());
 	}
 
 	@Then("the request was not successful")
 	public void verifyNotSuccessfulRequest () {
-		assertFalse(getService().isSuccessful());
+		assertFalse(getResponseBody(), getService().isSuccessful());
 	}
 
 	@Then("the response has a status code of {int}")
@@ -156,21 +170,21 @@ public class GenericTestController extends ServiceStepDefinition {
 		assertTrue(getService().lastArrayContainsObjectWith(id, value));
 	}
 
-	@Then("the response array contains lastest {string}")
+	@Then("the response array contains latest {string}")
 	public void verifyLatestElementExistsInList (String domain) {
 		assertTrue (
 			getService(domain).lastArrayContainsObjectWith(
-				"id",
+				getService(domain).getKeyName(),
 				getService(domain).getLatestKey()
 			)
 		);
 	}
 
-	@Then("the response array does not contain lastest {string}")
+	@Then("the response array does not contain latest {string}")
 	public void verifyLatestElementDoesNotExistInList (String domain) {
 		assertFalse (
 			getService(domain).lastArrayContainsObjectWith(
-				"id",
+				getService(domain).getKeyName(),
 				getService(domain).getLatestKey()
 			)
 		);

@@ -17,6 +17,9 @@ public class TrackService extends AbstractServiceDomainImpl <Long, Track, TrackE
 	@Autowired
 	private ClefService clefService;
 
+	@Autowired
+	private SheetService sheetService;
+
 	public TrackService(TrackRepository repository, EntityManagerFactory entityManagerFactory) {
 		super(repository, entityManagerFactory);
 	}
@@ -28,36 +31,38 @@ public class TrackService extends AbstractServiceDomainImpl <Long, Track, TrackE
 
 	@Override
 	public String domainName() {
-		return null;
+		return "Track";
 	}
 
 	@Override
-	protected TrackEntity createEntity(Track domain) {
+	protected TrackEntity createEntity(Track domain) throws GenericException {
 		TrackEntity entity = new TrackEntity ();
 
-		updateEntity (domain, entity);
+		sheetService.updateTrack(entity, domain.getSheet().getId());
+		entity.setClef(domain.getClef().getId());
 
 		return entity;
 	}
 
 	@Override
-	protected void updateEntity(Track domain, TrackEntity entity) {
+	protected void updateEntity(Track domain, TrackEntity entity) throws GenericException {
 		entity.setClef(domain.getClef().getId());
 	}
 
 	@Override
 	protected Track createDomain(TrackEntity entity) {
-		Track sheet = new Track ();
+		Track track = new Track ();
 
-		updateDomain (entity, sheet);
+		updateDomain (entity, track);
 
-		return sheet;
+		return track;
 	}
 
 	@Override
 	protected void updateDomain(TrackEntity entity, Track domain) {
 		try {
 			domain.setId(entity.getId());
+			domain.setSheet(sheetService.createDomain(entity.getSheet()));
 			domain.setClef(clefService.find(entity.getClef()));
 		} catch (GenericException e) {
 			throw new RuntimeException(e.getMessage());

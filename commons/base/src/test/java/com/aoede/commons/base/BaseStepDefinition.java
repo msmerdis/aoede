@@ -100,9 +100,19 @@ public class BaseStepDefinition extends BaseComponent implements EventListener {
 	}
 
 	private void execute (String url, HttpMethod method, HttpHeaders headers, String body) {
+		logger.info ("----------------------------------------------------------------");
+		logger.info ("- Request");
+		logger.info (" -> " + method + " " + basePath + url);
+		logger.info (" -> " + body);
+
 		restTemplate.execute(basePath + url, method, new RequestParametersCallback(headers, body), r -> {
 			return latestResponse;
 		});
+
+		logger.info ("----------------------------------------------------------------");
+		logger.info ("- Response");
+		logger.info (" -> " + latestResponse.status.toString());
+		logger.info (" -> " + latestResponse.body);
 	}
 
 	protected void executeGet (String path, HttpHeaders headers) {

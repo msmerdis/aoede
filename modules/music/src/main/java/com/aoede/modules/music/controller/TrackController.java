@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aoede.commons.base.controller.AbstractResourceController;
 import com.aoede.commons.base.exceptions.GenericException;
+import com.aoede.modules.music.domain.Sheet;
 import com.aoede.modules.music.domain.Track;
 import com.aoede.modules.music.service.ClefService;
 import com.aoede.modules.music.service.TrackService;
@@ -36,7 +37,7 @@ public class TrackController extends AbstractResourceController<
 	protected SimpleTrackResponse simpleResponse(Track entity) {
 		SimpleTrackResponse response = new SimpleTrackResponse ();
 
-		response.setId(entity.getId());
+		response.setTrackId(entity.getId());
 		response.setClef(entity.getClef());
 
 		return response;
@@ -46,7 +47,8 @@ public class TrackController extends AbstractResourceController<
 	protected DetailTrackResponse detailResponse(Track entity) {
 		DetailTrackResponse response = new DetailTrackResponse ();
 
-		response.setId(entity.getId());
+		response.setTrackId(entity.getId());
+		response.setSheetId(entity.getSheet().getId());
 		response.setClef(entity.getClef());
 
 		return response;
@@ -54,7 +56,13 @@ public class TrackController extends AbstractResourceController<
 
 	@Override
 	protected Track createRequest(CreateTrack request) {
-		return updateRequest (request);
+		Track track = updateRequest (request);
+		Sheet sheet = new Sheet ();
+
+		sheet.setId(request.getSheetId());
+		track.setSheet(sheet);
+
+		return track;
 	}
 
 	@Override

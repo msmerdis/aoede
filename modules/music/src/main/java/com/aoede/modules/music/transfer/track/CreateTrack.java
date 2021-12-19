@@ -1,5 +1,7 @@
 package com.aoede.modules.music.transfer.track;
 
+import javax.validation.constraints.Positive;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,10 +9,11 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class CreateTrack extends UpdateTrack {
-
+	@Positive (message = "Track must define a positive sheet id")
+	private Long sheetId;
 }
 
 

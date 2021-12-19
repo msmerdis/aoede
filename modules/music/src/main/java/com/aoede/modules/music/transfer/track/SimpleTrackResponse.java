@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class SimpleTrackResponse {
-	private Long id;
+	private Long trackId;
 	private Clef clef;
 }
 
