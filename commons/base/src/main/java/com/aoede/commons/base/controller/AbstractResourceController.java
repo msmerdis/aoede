@@ -32,22 +32,22 @@ public abstract class AbstractResourceController<
 
 	@Override
 	public List<SimpleResponse> search(@RequestHeader("X-Search-Terms") String keyword) throws Exception {
-		return service.freeTextSearch(keyword).stream().map(e -> simpleResponse(e)).collect(Collectors.toList());
+		return service.freeTextSearch(keyword).stream().map(e -> simpleResponse(e, true, true)).collect(Collectors.toList());
 	}
 
 	@Override
 	public DetailResponse get(@PathVariable("id") final Key id) throws Exception {
-		return detailResponse(service.find(id));
+		return detailResponse(service.find(id), true, true);
 	}
 
 	@Override
 	public List<SimpleResponse> findAll() throws Exception {
-		return service.findAll().stream().map(e -> simpleResponse(e)).collect(Collectors.toList());
+		return service.findAll().stream().map(e -> simpleResponse(e, true, true)).collect(Collectors.toList());
 	}
 
 	@Override
 	public DetailResponse create(@Valid @RequestBody final CreateRequest request) throws Exception {
-		return detailResponse(service.create(createRequest(request)));
+		return detailResponse(service.create(createRequest(request)), true, true);
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public abstract class AbstractResourceController<
 
 		domain.setId(id);
 
-		service.update(id, updateRequest(request));
+		service.update(id, domain);
 	}
 
 	@Override
@@ -64,11 +64,11 @@ public abstract class AbstractResourceController<
 		service.delete(id);
 	}
 
-	abstract protected SimpleResponse simpleResponse (Domain entity);
-	abstract protected DetailResponse detailResponse (Domain entity);
+	abstract public SimpleResponse simpleResponse (Domain entity, boolean includeParent, boolean cascade);
+	abstract public DetailResponse detailResponse (Domain entity, boolean includeParent, boolean cascade);
 
-	abstract protected Domain createRequest (CreateRequest request);
-	abstract protected Domain updateRequest (UpdateRequest request);
+	abstract public Domain createRequest (CreateRequest request);
+	abstract public Domain updateRequest (UpdateRequest request);
 }
 
 

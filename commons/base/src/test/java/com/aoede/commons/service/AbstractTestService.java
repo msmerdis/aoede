@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 
 import com.aoede.commons.base.component.BaseComponent;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
@@ -129,6 +130,31 @@ public abstract class AbstractTestService extends BaseComponent {
 
 	final public boolean lastKeyMatches (String key) {
 		return latestKey.equals(key);
+	}
+
+	final public boolean containsKeyInElement (String element, String key, String value) {
+		JsonElement keyElement = latestObj.get(element);
+
+		if (!keyElement.isJsonArray()) {
+			logger.error("element " + element + " is not an array");
+			return false;
+		}
+
+		for (var item : keyElement.getAsJsonArray()) {
+			if (!item.isJsonObject()) {
+				logger.error("element " + element + " array does not contain objects");
+				return false;
+			}
+			JsonObject obj = item.getAsJsonObject();
+
+			if (!obj.has(key)) {
+				logger.error("element " + element + " objects do not contain key " + key);
+				return false;
+			}
+			if (obj.get(key).toString().equals(value))
+				return true;
+		}
+		return false;
 	}
 
 	public boolean lastObjectMatches (DataTable data) {

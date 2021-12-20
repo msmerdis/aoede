@@ -35,38 +35,41 @@ public class TrackService extends AbstractServiceDomainImpl <Long, Track, TrackE
 	}
 
 	@Override
-	protected TrackEntity createEntity(Track domain) throws GenericException {
+	public TrackEntity createEntity(Track domain, boolean includeParent, boolean cascade) throws GenericException {
 		TrackEntity entity = new TrackEntity ();
 
-		sheetService.updateTrack(entity, domain.getSheet().getId());
 		entity.setClef(domain.getClef().getId());
+		if (includeParent)
+			sheetService.updateTrackEntity(entity, domain.getSheet().getId());
 
 		return entity;
 	}
 
 	@Override
-	protected void updateEntity(Track domain, TrackEntity entity) throws GenericException {
+	public void updateEntity(Track domain, TrackEntity entity, boolean includeParent, boolean cascade) throws GenericException {
 		entity.setClef(domain.getClef().getId());
 	}
 
 	@Override
-	protected Track createDomain(TrackEntity entity) {
+	public Track createDomain(TrackEntity entity, boolean includeParent, boolean cascade) {
 		Track track = new Track ();
 
-		updateDomain (entity, track);
+		updateDomain (entity, track, includeParent, cascade);
 
 		return track;
 	}
 
 	@Override
-	protected void updateDomain(TrackEntity entity, Track domain) {
+	public void updateDomain(TrackEntity entity, Track domain, boolean includeParent, boolean cascade) {
 		try {
 			domain.setId(entity.getId());
-			domain.setSheet(sheetService.createDomain(entity.getSheet()));
 			domain.setClef(clefService.find(entity.getClef()));
 		} catch (GenericException e) {
 			throw new RuntimeException(e.getMessage());
 		}
+
+		if (includeParent)
+			domain.setSheet(sheetService.createDomain(entity.getSheet(), true, false));
 	}
 
 }

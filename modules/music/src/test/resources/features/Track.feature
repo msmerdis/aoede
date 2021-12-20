@@ -54,13 +54,9 @@ And the request was successful
 And the response has a status code of 200
 And the response matches
 	| clef | Treble |
-Then request all available "track"
+Then request previously created "sheet"
 And the request was successful
-And the response has a status code of 200
-And the response array contains
-	| clef   |
-	| Treble |
-And the response array contains latest "track"
+And "sheet" contains latest "track" in "tracks"
 
 @Positive
 Scenario: update a Track
@@ -79,11 +75,11 @@ When update previously created "track"
 	| clef | Bass |
 And the request was successful
 And the response has a status code of 204
-Then request all available "track"
+Then request previously created "track"
 And the request was successful
 And the response has a status code of 200
-And the response array contains "clef" with value "Bass"
-And the response array contains latest "track"
+And the response matches
+	| clef | Bass |
 
 @Negative
 Scenario: update a non existing Track

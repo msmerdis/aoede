@@ -199,6 +199,15 @@ public class GenericTestController extends ServiceStepDefinition {
 	public void verifyElement (DataTable data) {
 		assertTrue(getService().lastObjectMatches(data));
 	}
+
+	@Then("{string} contains latest {string} in {string}")
+	public void verifyDependentDomains (String parent, String child, String element) {
+		assertTrue (getResponseBody(), getService(parent).containsKeyInElement(
+			element,
+			getService(child).getKeyName(),
+			getService(child).getLatestKey()
+		));
+	}
 }
 
 

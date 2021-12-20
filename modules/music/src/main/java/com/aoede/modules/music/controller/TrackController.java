@@ -34,7 +34,7 @@ public class TrackController extends AbstractResourceController<
 	}
 
 	@Override
-	protected SimpleTrackResponse simpleResponse(Track entity) {
+	public SimpleTrackResponse simpleResponse(Track entity, boolean includeParent, boolean cascade) {
 		SimpleTrackResponse response = new SimpleTrackResponse ();
 
 		response.setTrackId(entity.getId());
@@ -44,18 +44,20 @@ public class TrackController extends AbstractResourceController<
 	}
 
 	@Override
-	protected DetailTrackResponse detailResponse(Track entity) {
+	public DetailTrackResponse detailResponse(Track entity, boolean includeParent, boolean cascade) {
 		DetailTrackResponse response = new DetailTrackResponse ();
 
 		response.setTrackId(entity.getId());
-		response.setSheetId(entity.getSheet().getId());
 		response.setClef(entity.getClef());
+
+		if (includeParent)
+			response.setSheetId(entity.getSheet().getId());
 
 		return response;
 	}
 
 	@Override
-	protected Track createRequest(CreateTrack request) {
+	public Track createRequest(CreateTrack request) {
 		Track track = updateRequest (request);
 		Sheet sheet = new Sheet ();
 
@@ -66,7 +68,7 @@ public class TrackController extends AbstractResourceController<
 	}
 
 	@Override
-	protected Track updateRequest(UpdateTrack request) {
+	public Track updateRequest(UpdateTrack request) {
 		Track track = new Track ();
 
 		try {

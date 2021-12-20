@@ -35,7 +35,7 @@ public abstract class AbstractServiceDomainImpl <
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
 	public Domain create(Domain domain) throws GenericException {
-		Entity entity = createEntity(domain);
+		Entity entity = createEntity(domain, true, true);
 
 		try {
 			entity = repository.saveAndFlush(entity);
@@ -43,7 +43,7 @@ public abstract class AbstractServiceDomainImpl <
 			throw new ConflictException(domainName() + " could not be created");
 		}
 
-		updateDomain(entity, domain);
+		updateDomain(entity, domain, true, true);
 
 		return domain;
 	}
@@ -59,7 +59,7 @@ public abstract class AbstractServiceDomainImpl <
 
 		Entity entity = optionalEntity.get();
 
-		updateEntity(domain, entity);
+		updateEntity(domain, entity, true, true);
 
 		try {
 			repository.saveAndFlush(entity);
@@ -95,13 +95,13 @@ public abstract class AbstractServiceDomainImpl <
 			throw new NotFoundException("Entity not found.");
 		}
 
-		return createDomain(entity.get());
+		return createDomain(entity.get(), true, true);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
 	public List<Domain> findAll() throws GenericException {
-		return repository.findAll().stream().map(e -> createDomain(e)).collect(Collectors.toList());
+		return repository.findAll().stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -110,10 +110,10 @@ public abstract class AbstractServiceDomainImpl <
 		throw new NotImplementedException("Free text search not implemented for : " + domainName());
 	}
 
-	abstract protected Entity createEntity (final Domain domain) throws GenericException;
-	abstract protected void   updateEntity (final Domain domain, Entity entity) throws GenericException;
-	abstract protected Domain createDomain (final Entity entity);
-	abstract protected void   updateDomain (final Entity entity, Domain domain);
+	abstract public Entity createEntity (final Domain domain,                boolean includeParent, boolean cascade) throws GenericException;
+	abstract public void   updateEntity (final Domain domain, Entity entity, boolean includeParent, boolean cascade) throws GenericException;
+	abstract public Domain createDomain (final Entity entity,                boolean includeParent, boolean cascade);
+	abstract public void   updateDomain (final Entity entity, Domain domain, boolean includeParent, boolean cascade);
 }
 
 

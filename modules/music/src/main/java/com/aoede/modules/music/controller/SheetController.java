@@ -1,5 +1,7 @@
 package com.aoede.modules.music.controller;
 
+import java.util.stream.Collectors;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,13 +24,16 @@ public class SheetController extends AbstractResourceController<
 	DetailSheetResponse,
 	SheetService
 > {
+	TrackController trackController;
 
-	public SheetController(SheetService service) {
-		super(service);
+	public SheetController(SheetService sheetService, TrackController trackController) {
+		super(sheetService);
+
+		this.trackController = trackController;
 	}
 
 	@Override
-	protected SimpleSheetResponse simpleResponse(Sheet entity) {
+	public SimpleSheetResponse simpleResponse(Sheet entity, boolean includeParent, boolean cascade) {
 		SimpleSheetResponse response = new SimpleSheetResponse ();
 
 		response.setId(entity.getId());
@@ -38,22 +43,28 @@ public class SheetController extends AbstractResourceController<
 	}
 
 	@Override
-	protected DetailSheetResponse detailResponse(Sheet entity) {
+	public DetailSheetResponse detailResponse(Sheet entity, boolean includeParent, boolean cascade) {
 		DetailSheetResponse response = new DetailSheetResponse ();
 
 		response.setId(entity.getId());
 		response.setName(entity.getName());
 
+		if (cascade) {
+			response.setTracks(
+				entity.getTracks().stream().map(d -> trackController.simpleResponse(d, false, true)).collect(Collectors.toList())
+			);
+		}
+
 		return response;
 	}
 
 	@Override
-	protected Sheet createRequest(CreateSheet request) {
+	public Sheet createRequest(CreateSheet request) {
 		return updateRequest (request);
 	}
 
 	@Override
-	protected Sheet updateRequest(UpdateSheet request) {
+	public Sheet updateRequest(UpdateSheet request) {
 		Sheet sheet = new Sheet ();
 
 		sheet.setName(request.getName());
