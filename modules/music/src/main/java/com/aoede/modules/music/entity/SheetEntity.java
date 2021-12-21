@@ -30,9 +30,9 @@ import lombok.Setter;
 		@Index(columnList = "id", unique = true)
 	}
 )
-@SequenceGenerator(name = "idGenerator", sequenceName = "SHEET_SEQ", initialValue = 1, allocationSize = 1)
+@SequenceGenerator(name = "sheetIdGenerator", sequenceName = "SHEET_SEQ", initialValue = 1, allocationSize = 1)
 public class SheetEntity extends BaseEntity<Long> implements AbstractEntity<Long> {
-	@Column
+	@Column(length = 512, nullable = false)
 	private String name;
 
 	@Fetch(FetchMode.SELECT)

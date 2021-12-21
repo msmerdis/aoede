@@ -14,6 +14,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class Measure extends AbstractDomain<Long> {
+	private Section section;
 	private List<Note> notes;
 }
 
