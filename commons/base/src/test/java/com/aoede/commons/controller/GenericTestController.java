@@ -75,6 +75,20 @@ public class GenericTestController extends ServiceStepDefinition {
 		);
 	}
 
+	@When("request all available {string} for latest {string}")
+	public void findAll (String childDomain, String parentDomain) {
+		logger.info("retrieving all available " + childDomain + " under " + getPath(parentDomain) + "(" + getService(parentDomain).getLatestKey() + ")");
+
+		executeGet (getPath(childDomain) + "/" + getService(parentDomain).getName() + "/" + getService(parentDomain).getLatestKey());
+
+		// update test controller with data
+		getService(childDomain).findAllResults(
+			getResponseStatus(),
+			getResponseHeaders(),
+			getResponseBody()
+		);
+	}
+
 	@Given("a randomized {string}")
 	public void create(String domain) {
 		logger.info("creating " + domain);

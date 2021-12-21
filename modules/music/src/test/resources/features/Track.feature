@@ -110,7 +110,7 @@ And the response matches
 When delete previously created "track"
 And the request was successful
 And the response has a status code of 204
-Then request all available "track"
+Then request all available "track" for latest "sheet"
 And the request was successful
 And the response has a status code of 200
 And the response array does not contain "clef" with value "Alto"

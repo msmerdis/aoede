@@ -1,9 +1,15 @@
 package com.aoede.modules.music.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.persistence.EntityManagerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aoede.commons.base.exceptions.GenericException;
 import com.aoede.commons.base.service.AbstractServiceDomainImpl;
@@ -70,6 +76,11 @@ public class TrackService extends AbstractServiceDomainImpl <Long, Track, TrackE
 
 		if (includeParent)
 			domain.setSheet(sheetService.createDomain(entity.getSheet(), true, false));
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+	public List<Track> findAllBySheet(Long id) throws GenericException {
+		return repository.findBySheetId(id).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
 	}
 
 }
