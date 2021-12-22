@@ -24,7 +24,7 @@ public abstract class AbstractServiceDomainImpl <
 	Domain extends AbstractDomain<Key>,
 	Entity extends AbstractEntity<Key>,
 	Repository extends AbstractRepository<Key, Entity>
-> extends BaseComponent implements AbstractService<Key, Domain> {
+> extends BaseComponent implements AbstractServiceDomain<Key, Domain, Entity> {
 
 	final protected Repository repository;
 
@@ -109,11 +109,6 @@ public abstract class AbstractServiceDomainImpl <
 	public List<Domain> freeTextSearch(String keyword) throws GenericException {
 		throw new NotImplementedException("Free text search not implemented for : " + domainName());
 	}
-
-	abstract public Entity createEntity (final Domain domain,                boolean includeParent, boolean cascade) throws GenericException;
-	abstract public void   updateEntity (final Domain domain, Entity entity, boolean includeParent, boolean cascade) throws GenericException;
-	abstract public Domain createDomain (final Entity entity,                boolean includeParent, boolean cascade);
-	abstract public void   updateDomain (final Entity entity, Domain domain, boolean includeParent, boolean cascade);
 }
 
 

@@ -148,4 +148,3 @@ And the response has a status code of 404
 And the response matches
 	| code | 404       |
 	| text | NOT_FOUND |
-
