@@ -4,6 +4,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
@@ -49,9 +50,18 @@ public class GenericExceptionHandler extends BaseComponent {
 		);
 	}
 
-	@ExceptionHandler(value=MethodArgumentNotValidException.class)
+	@ExceptionHandler(HttpMessageConversionException.class)
+	public final ResponseEntity<?> handleHttpMessageConversionException(HttpMessageConversionException ex) {
+		logger.error(ex.getMessage());
+
+		return generateResponse (
+			new BadRequestException ("Invalid Json")
+		);
+	}
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public final ResponseEntity<?> handleException(MethodArgumentNotValidException ex) {
-		BadRequestException bre = new BadRequestException ("Validation erros");
+		BadRequestException bre = new BadRequestException ("Validation errors");
 
 		// build validation info
 		bre.info = ex.getBindingResult().getFieldErrors().stream()
@@ -64,6 +74,9 @@ public class GenericExceptionHandler extends BaseComponent {
 
 	@ExceptionHandler(Exception.class)
 	public final ResponseEntity<?> handleInternalServerException (final Exception ex) {
+		for (var trace : ex.getStackTrace())
+			logger.error(trace.toString());
+
 		return generateResponse (
 			new GenericException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage())
 		);

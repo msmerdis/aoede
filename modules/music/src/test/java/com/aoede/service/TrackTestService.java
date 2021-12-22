@@ -39,16 +39,18 @@ public class TrackTestService extends AbstractTestService {
 
 	@Override
 	public void createDefaultBody(JsonObject obj) {
+		obj.add("sheetId", new JsonPrimitive(Integer.parseInt(sheetTestService.getLatestKey())));
 		obj.add("clef", new JsonPrimitive("Treble"));
 	}
 
 	@Override
-	protected JsonPrimitive getPrimitive(String name, String value) {
+	protected void addJsonElement (JsonObject obj, String name, String value) {
 		switch (name) {
-			case "id":
-				return new JsonPrimitive(Long.parseLong(value));
-			default:
-				return new JsonPrimitive(value);
+		case "id":
+			obj.add(name, new JsonPrimitive(Long.parseLong(value)));
+			break;
+		default:
+			obj.add(name, new JsonPrimitive(value));
 		}
 	}
 

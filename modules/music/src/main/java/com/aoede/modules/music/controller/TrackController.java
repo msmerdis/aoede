@@ -3,6 +3,7 @@ package com.aoede.modules.music.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,12 +33,14 @@ public class TrackController extends AbstractResourceController<
 	DetailTrackResponse,
 	TrackService
 > {
+	@Autowired
 	ClefService clefService;
 
-	public TrackController(TrackService service, ClefService clefService) {
-		super(service);
+	@Autowired
+	SectionController sectionController;
 
-		this.clefService = clefService;
+	public TrackController(TrackService service) {
+		super(service);
 	}
 
 	@Override
@@ -59,6 +62,12 @@ public class TrackController extends AbstractResourceController<
 
 		if (includeParent)
 			response.setSheetId(entity.getSheet().getId());
+
+		if (cascade) {
+			response.setSections (
+				entity.getSections().stream().map(d -> sectionController.simpleResponse(d, false, true)).collect(Collectors.toList())
+			);
+		}
 
 		return response;
 	}
@@ -90,7 +99,7 @@ public class TrackController extends AbstractResourceController<
 	@GetMapping("/sheet/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public List<SimpleTrackResponse> findAllBySheet(@PathVariable("id") final Long id) throws Exception {
-		return service.findAllBySheet(id).stream().map(e -> simpleResponse(e, true, true)).collect(Collectors.toList());
+		return service.findBySheetId(id).stream().map(e -> simpleResponse(e, true, true)).collect(Collectors.toList());
 	}
 
 }

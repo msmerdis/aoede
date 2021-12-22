@@ -32,6 +32,13 @@ public class ServiceStepDefinition extends BaseStepDefinition {
 			var service = beans.get(name);
 			logger.info("identified service implementation {}", service.getClass().getName());
 
+			if (services.containsKey(service.getName())) {
+				logger.error("dublicate service with name " + service.getName() + " found");
+				logger.error(" -> " + service.getClass().getName());
+				logger.error(" -> " + services.get(service.getName()).getClass().getName());
+				System.exit(1);
+			}
+
 			services.put(service.getName(), service);
 		}
 	}

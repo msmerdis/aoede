@@ -13,12 +13,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
 
 import io.cucumber.datatable.DataTable;
 
 public abstract class AbstractTestService extends BaseComponent {
-	private Random random = new Random (System.currentTimeMillis());
+	protected Random random = new Random (System.currentTimeMillis());
 	protected boolean success;
 	protected String latestKey;
 	protected JsonObject latestObj;
@@ -57,17 +56,17 @@ public abstract class AbstractTestService extends BaseComponent {
 
 	public void createBody (JsonObject obj, DataTable data) {
 		for (var row : data.asLists()) {
-			obj.add(row.get(0), new JsonPrimitive(row.get(1)));
+			addJsonElement(obj, row.get(0), row.get(1));
 		}
 	}
 
 	public void updateBody (JsonObject obj, DataTable data) {
 		for (var row : data.asLists()) {
-			obj.add(row.get(0), getPrimitive(row.get(0), row.get(1)));
+			addJsonElement(obj, row.get(0), row.get(1));
 		}
 	}
 
-	protected abstract JsonPrimitive getPrimitive (String name, String value);
+	protected abstract void addJsonElement (JsonObject obj, String name, String value);
 
 	protected void results (HttpStatus responseStatus, int expectedStatus, String responseBody, boolean expectingBody, boolean multipleResults) {
 		success =

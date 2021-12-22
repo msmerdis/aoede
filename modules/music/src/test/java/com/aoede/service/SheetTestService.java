@@ -25,12 +25,13 @@ public class SheetTestService extends AbstractTestService {
 	}
 
 	@Override
-	protected JsonPrimitive getPrimitive(String name, String value) {
+	protected void addJsonElement (JsonObject obj, String name, String value) {
 		switch (name) {
 		case "id":
-			return new JsonPrimitive(Long.parseLong(value));
+			obj.add(name, new JsonPrimitive(Long.parseLong(value)));
+			break;
 		default:
-			return new JsonPrimitive(value);
+			obj.add(name, new JsonPrimitive(value));
 		}
 	}
 

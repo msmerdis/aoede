@@ -1,8 +1,7 @@
 package com.aoede.modules.music.domain;
 
-import org.apache.commons.lang3.math.Fraction;
-
 import com.aoede.commons.base.domain.AbstractDomain;
+import com.aoede.modules.music.transfer.Fraction;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

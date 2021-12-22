@@ -4,7 +4,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
 
-import org.apache.commons.lang3.math.Fraction;
+import com.aoede.modules.music.transfer.Fraction;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

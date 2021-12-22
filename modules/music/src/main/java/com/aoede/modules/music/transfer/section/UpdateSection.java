@@ -6,7 +6,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-import org.apache.commons.lang3.math.Fraction;
+import com.aoede.modules.music.transfer.Fraction;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

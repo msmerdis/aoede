@@ -25,8 +25,8 @@ public class ClefTestService extends AbstractTestService {
 	}
 
 	@Override
-	protected JsonPrimitive getPrimitive(String name, String value) {
-		return new JsonPrimitive(value);
+	protected void addJsonElement (JsonObject obj, String name, String value) {
+		obj.add(name, new JsonPrimitive(value));
 	}
 
 	@Override
