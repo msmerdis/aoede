@@ -61,7 +61,6 @@ public class SectionTestService extends AbstractTestService {
 			case "timeSignature":
 				JsonObject inner = new JsonObject();
 				String[] parts = value.split("/");
-				logger.error("got parts : " + parts);
 
 				inner.add( "numerator" , new JsonPrimitive(Integer.parseInt(parts[0])));
 				inner.add("denominator", new JsonPrimitive(Integer.parseInt(parts[1])));

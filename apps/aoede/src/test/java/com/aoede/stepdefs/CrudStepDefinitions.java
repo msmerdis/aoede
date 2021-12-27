@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.aoede.commons.base.BaseStepDefinition;
+import com.aoede.commons.base.ResponseResults;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -12,6 +13,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 public class CrudStepDefinitions extends BaseStepDefinition {
+	private ResponseResults latestResults = new ResponseResults ();
 
 	/**
 	 * Requests
@@ -19,7 +21,7 @@ public class CrudStepDefinitions extends BaseStepDefinition {
 
 	@When("request {string} from aoede")
 	public void getRequest(String path) {
-		executeGet (path, defaultHeaders());
+		latestResults = executeGet (path, defaultHeaders());
 	}
 
 	/**
@@ -28,12 +30,12 @@ public class CrudStepDefinitions extends BaseStepDefinition {
 
 	@Then("the aoede response has a status code of {int}")
 	public void verifyStatus (int code) {
-		assertEquals(code, getResponseStatus().value());
+		assertEquals(code, latestResults.status.value());
 	}
 
 	@Then("the aoede response matches")
 	public void verifyElement (DataTable data) {
-		JsonObject object = JsonParser.parseString(getResponseBody()).getAsJsonObject();
+		JsonObject object = JsonParser.parseString(latestResults.body).getAsJsonObject();
 
 		for (var row : data.asLists()) {
 			assertTrue (

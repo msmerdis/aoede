@@ -1,13 +1,15 @@
 package com.aoede.commons.service;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
+import com.aoede.commons.base.ResponseResults;
 import com.aoede.commons.base.component.BaseComponent;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -15,13 +17,17 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import io.cucumber.datatable.DataTable;
+import lombok.Getter;
 
+@Getter
 public abstract class AbstractTestService extends BaseComponent {
 	protected Random random = new Random (System.currentTimeMillis());
 	protected boolean success;
 	protected String latestKey;
+	protected String latestCreatedKey;
 	protected JsonObject latestObj;
 	protected JsonArray latestArr;
+	protected ResponseResults latestResults;
 
 	public abstract String getName ();
 	public abstract String getPath ();
@@ -68,45 +74,54 @@ public abstract class AbstractTestService extends BaseComponent {
 
 	protected abstract void addJsonElement (JsonObject obj, String name, String value);
 
-	protected void results (HttpStatus responseStatus, int expectedStatus, String responseBody, boolean expectingBody, boolean multipleResults) {
+	protected void results (ResponseResults results, int expectedStatus, boolean expectingBody, boolean multipleResults) {
 		success =
-			(responseStatus.value() == expectedStatus) &&
-			((responseBody.isEmpty()) != expectingBody);
+			(results.status.value() == expectedStatus) &&
+			((results.body.isEmpty()) != expectingBody);
 
-		if (!success || expectingBody) {
-			if (success && multipleResults) {
-				latestArr = JsonParser.parseString(responseBody).getAsJsonArray();
-			} else {
-				latestObj = JsonParser.parseString(responseBody).getAsJsonObject();
-				if (success &&  latestObj.has(getKeyName())) {
-					latestKey = latestObj.get(getKeyName()).toString();
-				}
-			}
+		latestObj = null;
+		latestArr = null;
+		latestResults = results;
+
+		JsonElement element = JsonParser.parseString(results.body);
+
+		if (success && expectingBody && multipleResults) {
+			assertTrue ("expecting json array as result", element.isJsonArray());
+			latestArr = element.getAsJsonArray();
+		}
+
+		if (!success || (expectingBody && !multipleResults)) {
+			assertTrue ("expecting json object as result", element.isJsonObject());
+			latestObj = element.getAsJsonObject();
 		}
 	}
 
-	public void searchResults (HttpStatus responseStatus, HttpHeaders responseHeaders, String responseBody) {
-		results (responseStatus, HttpStatus.OK.value(), responseBody, true, true);
+	public void searchResults (ResponseResults results) {
+		results (results, HttpStatus.OK.value(), true, true);
 	}
 
-	public void accessResults(HttpStatus responseStatus, HttpHeaders responseHeaders, String responseBody) {
-		results (responseStatus, HttpStatus.OK.value(), responseBody, true, false);
+	public void accessResults(ResponseResults results) {
+		results (results, HttpStatus.OK.value(), true, false);
 	}
 
-	public void findAllResults (HttpStatus responseStatus, HttpHeaders responseHeaders, String responseBody) {
-		results (responseStatus, HttpStatus.OK.value(), responseBody, true, true);
+	public void findAllResults (ResponseResults results) {
+		results (results, HttpStatus.OK.value(), true, true);
 	}
 
-	public void createResults (HttpStatus responseStatus, HttpHeaders responseHeaders, String responseBody) {
-		results (responseStatus, HttpStatus.CREATED.value(), responseBody, true, false);
+	public void createResults (ResponseResults results) {
+		results (results, HttpStatus.CREATED.value(), true, false);
+
+		if (success && latestObj.has(getKeyName())) {
+			latestKey = latestObj.get(getKeyName()).toString();
+		}
 	}
 
-	public void updateResults (HttpStatus responseStatus, HttpHeaders responseHeaders, String responseBody) {
-		results (responseStatus, HttpStatus.NO_CONTENT.value(), responseBody, false, false);
+	public void updateResults (ResponseResults results) {
+		results (results, HttpStatus.NO_CONTENT.value(), false, false);
 	}
 
-	public void deleteResults (HttpStatus responseStatus, HttpHeaders responseHeaders, String responseBody) {
-		results (responseStatus, HttpStatus.NO_CONTENT.value(), responseBody, false, false);
+	public void deleteResults (ResponseResults results) {
+		results (results, HttpStatus.NO_CONTENT.value(), false, false);
 	}
 
 	public void setup () {
@@ -117,14 +132,7 @@ public abstract class AbstractTestService extends BaseComponent {
 		latestKey = null;
 		latestObj = null;
 		latestArr = null;
-	}
-
-	final public String getLatestKey () {
-		return latestKey;
-	}
-
-	final public boolean isSuccessful () {
-		return success;
+		latestResults = null;
 	}
 
 	final public boolean lastKeyMatches (String key) {
