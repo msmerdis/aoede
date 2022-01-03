@@ -6,6 +6,11 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Definition of the base domain class
+ *
+ * Defines a key for each domain class, keys are mandatory for all domain objects
+ */
 @Getter
 @Setter
 @ToString

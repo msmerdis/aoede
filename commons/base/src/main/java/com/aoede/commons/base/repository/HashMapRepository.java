@@ -8,6 +8,11 @@ import java.util.stream.Collectors;
 import com.aoede.commons.base.component.BaseComponent;
 import com.aoede.commons.base.entity.AbstractEntity;
 
+/**
+ * HashMap repository is using a hash map to store data
+ *
+ * Implements all methods defined in AbstractRepository
+ */
 public class HashMapRepository<Key, Entity extends AbstractEntity<Key>> extends BaseComponent implements AbstractRepository <Key, Entity> {
 
 	private HashMap<Key, Entity> data = new HashMap <Key, Entity>();

@@ -16,7 +16,10 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * This class holds all common attributes an entity should have
+ * This class holds all common attributes a jpa entity should have
+ *
+ * - createdDate: date entry is created
+ * - updatedDate: date the entry is updated
  */
 @Getter
 @ToString

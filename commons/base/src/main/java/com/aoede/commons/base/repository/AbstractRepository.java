@@ -7,6 +7,9 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 import com.aoede.commons.base.entity.AbstractEntity;
 
+/**
+ * Definition of basic CRUD operations for entities
+ */
 @NoRepositoryBean
 public interface AbstractRepository<Key, Entity extends AbstractEntity<Key>> {
 	public List<Entity> findAll();

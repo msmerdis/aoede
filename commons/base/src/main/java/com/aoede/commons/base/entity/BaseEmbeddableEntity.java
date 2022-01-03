@@ -8,12 +8,12 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * This class a base entity for non composite keys
+ * This class a base entity for composite keys
  */
 @Getter
 @ToString
 @MappedSuperclass
-public abstract class BaseEmbeddableEntity<Key extends Embeddable> implements AbstractEntity <Key> {
+public abstract class BaseEmbeddableEntity<Key extends Embeddable> extends AbstractJpaEntity<Key> implements AbstractEntity <Key> {
 	@EmbeddedId
 	protected Key id;
 

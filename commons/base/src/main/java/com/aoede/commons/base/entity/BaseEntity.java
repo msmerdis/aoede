@@ -14,7 +14,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @MappedSuperclass
-public abstract class BaseEntity<Key> implements AbstractEntity <Key> {
+public abstract class BaseEntity<Key> extends AbstractJpaEntity<Key> implements AbstractEntity <Key> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idGenerator")
 	protected Key id;

@@ -35,8 +35,8 @@ And the response has a status code of 404
 And the response matches
 	| code | 404       |
 	| text | NOT_FOUND |
-	@Positive
 
+@Positive
 Scenario: create a new Section
 ### create a new section and verify the track is created with the same data as provided
 ### retrieve the section and verify the same data are returned

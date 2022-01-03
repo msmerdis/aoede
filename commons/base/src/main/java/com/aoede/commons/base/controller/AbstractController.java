@@ -18,6 +18,11 @@ import com.aoede.commons.base.component.BaseComponent;
 import com.aoede.commons.base.domain.AbstractDomain;
 import com.aoede.commons.base.service.AbstractService;
 
+/**
+ * Definition of basic CRUD operations for domain objects
+ *
+ * Assume that the request and response objects can be differ from the domain object itself
+ */
 public abstract class AbstractController<
 	Key,
 	Domain extends AbstractDomain<Key>,

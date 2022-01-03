@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -12,6 +11,12 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import com.aoede.commons.base.domain.AbstractDomain;
 import com.aoede.commons.base.service.AbstractService;
 
+/**
+ * Domain controller can be used in case the domain object is used
+ * as a request and response object as well
+ *
+ * Controller will pass and return the object as is to the service layer
+ */
 public abstract class AbstractDomainController<
 	Key,
 	Domain extends AbstractDomain<Key>,
@@ -20,7 +25,6 @@ public abstract class AbstractDomainController<
 
 	final protected Service service;
 
-	@Autowired
 	public AbstractDomainController (Service service) {
 		this.service = service;
 	}

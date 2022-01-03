@@ -13,6 +13,14 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import com.aoede.commons.base.domain.AbstractDomain;
 import com.aoede.commons.base.service.AbstractService;
 
+/**
+ * Resource controller can be used in case the domain object differs
+ * from the request and response objects
+ *
+ * Controller will convert the request objects to a domain class before
+ * passing it to the service layer and additional convert the resulting domain classes
+ * into the response objects before returning them as a result
+ */
 public abstract class AbstractResourceController<
 	Key,
 	Domain extends AbstractDomain<Key>,
@@ -64,9 +72,19 @@ public abstract class AbstractResourceController<
 		service.delete(id);
 	}
 
+	/**
+	 * operations to display a domain object are abstact and should be defined by each
+	 * implementing class.
+	 *
+	 * To resolve circular dependencies options to include parent and children are included
+	 */
 	abstract public SimpleResponse simpleResponse (Domain entity, boolean includeParent, boolean cascade);
 	abstract public DetailResponse detailResponse (Domain entity, boolean includeParent, boolean cascade);
 
+	/**
+	 * operations to generate the domain class from the create and update objects are abstract
+	 * and should be defined by each implementing class.
+	 */
 	abstract public Domain createRequest (CreateRequest request);
 	abstract public Domain updateRequest (UpdateRequest request);
 }

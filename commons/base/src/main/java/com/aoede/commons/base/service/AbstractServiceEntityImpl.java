@@ -18,6 +18,12 @@ import com.aoede.commons.base.exceptions.NotFoundException;
 import com.aoede.commons.base.exceptions.NotImplementedException;
 import com.aoede.commons.base.repository.AbstractRepository;
 
+/**
+ * Entity service can be used in case the domain object is used
+ * as an entity as well
+ *
+ * Service will pass and return the object as is to the repository layer
+ */
 public abstract class AbstractServiceEntityImpl <
 	Key,
 	Domain extends AbstractDomain<Key> & AbstractEntity<Key>,
