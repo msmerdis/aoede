@@ -15,14 +15,12 @@ import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestTemplate;
 
-import com.aoede.commons.base.component.BaseComponent;
-
 import io.cucumber.plugin.EventListener;
 import io.cucumber.plugin.event.EventPublisher;
 import io.cucumber.plugin.event.TestCaseFinished;
 import io.cucumber.plugin.event.TestCaseStarted;
 
-public class BaseStepDefinition extends BaseComponent implements EventListener {
+public class BaseStepDefinition extends BaseTestComponent implements EventListener {
 	private RestTemplate restTemplate = new RestTemplate();
 
 	@Autowired

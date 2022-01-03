@@ -18,13 +18,4 @@
 	<name>[${project.artifactId}]</name>
 	<description>Base Definitions for music module</description>
 
-	<!-- Dependencies -->
-	<dependencies>
-
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-search-orm</artifactId>
-		</dependency>
-
-	</dependencies>
 </project>

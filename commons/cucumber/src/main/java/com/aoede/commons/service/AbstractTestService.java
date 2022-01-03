@@ -9,8 +9,8 @@ import java.util.Set;
 
 import org.springframework.http.HttpStatus;
 
+import com.aoede.commons.base.BaseTestComponent;
 import com.aoede.commons.base.ResponseResults;
-import com.aoede.commons.base.component.BaseComponent;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -20,7 +20,7 @@ import io.cucumber.datatable.DataTable;
 import lombok.Getter;
 
 @Getter
-public abstract class AbstractTestService extends BaseComponent {
+public abstract class AbstractTestService extends BaseTestComponent {
 	protected Random random = new Random (System.currentTimeMillis());
 	protected boolean success;
 	protected String latestKey;
