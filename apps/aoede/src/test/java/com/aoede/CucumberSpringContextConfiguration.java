@@ -1,18 +1,22 @@
 package com.aoede;
 
+import org.springframework.boot.test.autoconfigure.actuate.metrics.AutoConfigureMetrics;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.aoede.commons.base.component.BaseComponent;
 
 import io.cucumber.java.Before;
 import io.cucumber.spring.CucumberContextConfiguration;
 
+@AutoConfigureMetrics
 @CucumberContextConfiguration
 @SpringBootTest(classes = {
 	AoedeApplication.class, CucumberTest.class},
 	webEnvironment = WebEnvironment.DEFINED_PORT
 )
+@ActiveProfiles("test")
 public class CucumberSpringContextConfiguration extends BaseComponent {
 	/**
 	 * Need this method so the cucumber will recognise this class as glue and load spring context configuration

@@ -1,7 +1,14 @@
 package com.aoede.stepdefs;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import com.aoede.commons.base.BaseStepDefinition;
 import com.aoede.commons.base.ResponseResults;
@@ -22,6 +29,17 @@ public class CrudStepDefinitions extends BaseStepDefinition {
 	@When("request {string} from aoede")
 	public void getRequest(String path) {
 		latestResults = executeGet (path, defaultHeaders());
+	}
+
+	@When("request {string} from aoede as plain text")
+	public void getPlainTextRequest(String path) {
+		HttpHeaders headers = defaultHeaders ();
+		List<MediaType> accept = new LinkedList<MediaType> ();
+
+		accept.add(MediaType.TEXT_PLAIN);
+		headers.setAccept(accept);
+
+		latestResults = executeGet (path, headers);
 	}
 
 	/**
@@ -47,6 +65,12 @@ public class CrudStepDefinitions extends BaseStepDefinition {
 				object.get(row.get(0)).getAsString().equals(row.get(1))
 			);
 		}
+	}
+
+	@Then("the aoede response contains {string}")
+	public void verifyElement (String keyword) {
+		assertNotNull("response does not have a body", latestResults.body);
+		assertTrue(keyword + " is not in " + latestResults.body, latestResults.body.indexOf(keyword) >= 0);
 	}
 
 }

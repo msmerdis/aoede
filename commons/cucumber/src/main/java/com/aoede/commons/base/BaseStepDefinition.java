@@ -124,6 +124,7 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 		HttpHeaders headers = new HttpHeaders ();
 
 		headers.setContentType(MediaType.APPLICATION_JSON);
+
 		return headers;
 	}
 

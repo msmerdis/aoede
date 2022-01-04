@@ -69,3 +69,13 @@ spring:
       platform: h2
 server:
   port: 8088
+management:
+  server:
+    port: 8089
+  security:
+    enabled: false
+  endpoints:
+    enabled-by-default: true
+    web:
+      exposure:
+        include: health,metrics,prometheus
