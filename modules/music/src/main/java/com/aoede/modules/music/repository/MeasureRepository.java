@@ -9,6 +9,7 @@ import com.aoede.modules.music.entity.MeasureEntity;
 
 @Repository
 public interface MeasureRepository extends AbstractJpaRepository <Long, MeasureEntity> {
+	List<MeasureEntity> findBySectionId(Long id);
 }
 
 

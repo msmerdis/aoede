@@ -1,4 +1,4 @@
-@Track
+@Section
 Feature: Basic Section CRUD functionality
 ### Verify the ability to create/read/update and delete Sections
 
@@ -66,7 +66,7 @@ Then request previously created "track"
 And the request was successful
 And "track" contains latest "section" in "sections"
 
-Scenario: update a new Section
+Scenario: update a Section
 ### create a section and then update it
 ### verify that the section contents have been updated
 

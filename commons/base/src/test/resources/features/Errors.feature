@@ -64,3 +64,21 @@ When testing "unauthorized" error
 Then the response has a status code of 401 and matches
 	| code | 401          |
 	| text | UNAUTHORIZED |
+
+@Negative
+Scenario: test http media type not acceptable exceptions
+### force application to throw an http media type not acceptable exception and verify the generated response
+
+When testing "httpMediaTypeNotAcceptable" error
+Then the response has a status code of 400 and matches
+	| code | 400         |
+	| text | BAD_REQUEST |
+
+@Negative
+Scenario: test method argument type mismatch exceptions
+### force application to throw a method argument type mismatch exception and verify the generated response
+
+When testing "methodArgumentTypeMismatch" error
+Then the response has a status code of 400 and matches
+	| code | 400         |
+	| text | BAD_REQUEST |

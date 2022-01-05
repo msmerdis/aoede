@@ -1,11 +1,15 @@
 package com.aoede.modules.music.service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManagerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aoede.commons.base.exceptions.GenericException;
 import com.aoede.commons.base.service.AbstractServiceDomainImpl;
@@ -63,6 +67,14 @@ public class MeasureServiceImpl extends AbstractServiceDomainImpl <Long, Measure
 
 	@Override
 	public void updateDomain(MeasureEntity entity, Measure domain, boolean includeParent, boolean cascade) {
+		domain.setId(entity.getId());
+
+		if (includeParent) {
+			domain.setSection(
+				sectionService.createDomain(entity.getSection(), true, false)
+			);
+		}
+
 		if (cascade) {
 			domain.setNotes(
 				entity.getNotes().stream()
@@ -75,6 +87,11 @@ public class MeasureServiceImpl extends AbstractServiceDomainImpl <Long, Measure
 
 	public void updateNoteEntity(NoteEntity entity, Long id) {
 		entity.setMeasure(repository.getById(id));
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+	public List<Measure> findBySectionId(Long id) {
+		return repository.findBySectionId(id).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
 	}
 
 }

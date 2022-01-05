@@ -14,7 +14,7 @@ import com.aoede.commons.base.controller.AbstractResourceController;
 import com.aoede.modules.music.domain.KeySignature;
 import com.aoede.modules.music.domain.Section;
 import com.aoede.modules.music.domain.Track;
-import com.aoede.modules.music.service.ClefService;
+import com.aoede.modules.music.service.MeasureService;
 import com.aoede.modules.music.service.SectionService;
 import com.aoede.modules.music.transfer.section.CreateSection;
 import com.aoede.modules.music.transfer.section.DetailSectionResponse;
@@ -32,12 +32,12 @@ public class SectionController extends AbstractResourceController<
 	DetailSectionResponse,
 	SectionService
 > {
-	ClefService clefService;
+	MeasureController measureController;
 
-	public SectionController(SectionService service, ClefService clefService) {
+	public SectionController(SectionService service, MeasureController measureController) {
 		super(service);
 
-		this.clefService = clefService;
+		this.measureController = measureController;
 	}
 
 	@Override
@@ -64,6 +64,12 @@ public class SectionController extends AbstractResourceController<
 		if (includeParent) {
 			response.setTrackId(entity.getTrack().getId());
 			response.setSheetId(entity.getTrack().getSheet().getId());
+		}
+
+		if (cascade) {
+			response.setMeasures(
+				entity.getMeasures().stream().map(d -> measureController.simpleResponse(d, false, true)).collect(Collectors.toList())
+			);
 		}
 
 		return response;

@@ -1,10 +1,13 @@
 package com.aoede.commons.base.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.aoede.commons.base.exceptions.AcceptedStatus;
 import com.aoede.commons.base.exceptions.BadRequestException;
@@ -26,7 +29,7 @@ import com.aoede.commons.base.exceptions.UnauthorizedException;
 @RestController
 @RequestMapping ("/test/error")
 public class ExceptionTestController {
-	
+
 	// force status response
 
 	@GetMapping("/accepted")
@@ -102,6 +105,19 @@ public class ExceptionTestController {
 	public void unauthorized() throws GenericException {
 		throw new UnauthorizedException ("testing unauthorized exceptions");
 	}
+
+	@GetMapping("/httpMediaTypeNotAcceptable")
+	@ResponseStatus(HttpStatus.OK)
+	public void httpMediaTypeNotAcceptable() throws Exception {
+		throw new HttpMediaTypeNotAcceptableException (MediaType.APPLICATION_JSON_VALUE);
+	}
+
+	@GetMapping("/methodArgumentTypeMismatch")
+	@ResponseStatus(HttpStatus.OK)
+	public void methodArgumentTypeMismatch() throws Exception {
+		throw new MethodArgumentTypeMismatchException (null, null, null, null, null);
+	}
+
 }
 
 

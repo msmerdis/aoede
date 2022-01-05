@@ -7,6 +7,9 @@ import javax.persistence.EntityManagerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aoede.commons.base.exceptions.GenericException;
 import com.aoede.commons.base.service.AbstractServiceDomainImpl;
@@ -71,7 +74,6 @@ public class SectionServiceImpl extends AbstractServiceDomainImpl <Long, Section
 	@Override
 	public void updateDomain(SectionEntity entity, Section domain, boolean includeParent, boolean cascade) {
 		KeySignature keySignature = new KeySignature ();
-
 		keySignature.setId(entity.getKeySignature());
 
 		domain.setId(entity.getId());
@@ -104,6 +106,7 @@ public class SectionServiceImpl extends AbstractServiceDomainImpl <Long, Section
 		entity.setSection(repository.getById(id));
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
 	public List<Section> findByTrackId(Long id) {
 		return repository.findByTrackId(id).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
 	}
