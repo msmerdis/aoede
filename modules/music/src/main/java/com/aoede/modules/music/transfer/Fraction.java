@@ -1,5 +1,7 @@
 package com.aoede.modules.music.transfer;
 
+import javax.validation.constraints.Positive;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,7 +14,10 @@ import lombok.ToString;
 @EqualsAndHashCode
 @AllArgsConstructor
 public class Fraction {
+	@Positive(message = "numerator must be a positive value")
 	private int numerator;
+
+	@Positive(message = "numerator must be a positive value")
 	private int denominator;
 }
 

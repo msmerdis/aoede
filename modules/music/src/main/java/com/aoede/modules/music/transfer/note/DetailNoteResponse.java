@@ -11,6 +11,9 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 public class DetailNoteResponse extends SimpleNoteResponse {
 	private Long sheetId;
+	private Long trackId;
+	private Long sectionId;
+	private Long measureId;
 }
 
 

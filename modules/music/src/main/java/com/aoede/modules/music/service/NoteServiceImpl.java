@@ -1,9 +1,15 @@
 package com.aoede.modules.music.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.persistence.EntityManagerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aoede.commons.base.exceptions.GenericException;
 import com.aoede.commons.base.service.AbstractServiceDomainImpl;
@@ -37,7 +43,6 @@ public class NoteServiceImpl extends AbstractServiceDomainImpl <Long, Note, Note
 		NoteEntity entity = new NoteEntity ();
 
 		updateEntity (domain, entity, includeParent, cascade);
-
 		if (includeParent)
 			measureService.updateNoteEntity(entity, domain.getMeasure().getId());
 
@@ -62,10 +67,22 @@ public class NoteServiceImpl extends AbstractServiceDomainImpl <Long, Note, Note
 
 	@Override
 	public void updateDomain(NoteEntity entity, Note domain, boolean includeParent, boolean cascade) {
+		domain.setId(entity.getId());
 		domain.setNote(entity.getNote());
 		domain.setValue(
 			new Fraction (entity.getValueNum(), entity.getValueDen())
 		);
+
+		if (includeParent) {
+			domain.setMeasure(
+				measureService.createDomain(entity.getMeasure(), true, false)
+			);
+		}
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+	public List<Note> findByMeasureId(Long id) {
+		return repository.findByMeasureId(id).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
 	}
 
 }

@@ -30,8 +30,12 @@ public class MeasureController extends AbstractResourceController<
 	DetailMeasureResponse,
 	MeasureService
 > {
-	public MeasureController(MeasureService service) {
+	NoteController noteController;
+
+	public MeasureController(MeasureService service, NoteController noteController) {
 		super(service);
+
+		this.noteController = noteController;
 	}
 
 	@Override
@@ -53,6 +57,12 @@ public class MeasureController extends AbstractResourceController<
 			response.setSectionId(entity.getSection().getId());
 			response.setTrackId(entity.getSection().getTrack().getId());
 			response.setSheetId(entity.getSection().getTrack().getSheet().getId());
+		}
+
+		if (cascade) {
+			response.setNotes(
+				entity.getNotes().stream().map(d -> noteController.simpleResponse(d, false, true)).collect(Collectors.toList())
+			);
 		}
 
 		return response;

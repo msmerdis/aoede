@@ -2,7 +2,7 @@ package com.aoede.modules.music.transfer.note;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.NotNull;
 
 import com.aoede.modules.music.transfer.Fraction;
 
@@ -20,7 +20,7 @@ public class UpdateNote {
 	@Max(value = 127, message = "maximum allowed note value is 127")
 	private short note;
 
-	@Positive(message = "note must be a value")
+	@NotNull(message = "note must be a value")
 	private Fraction value;
 }
 
