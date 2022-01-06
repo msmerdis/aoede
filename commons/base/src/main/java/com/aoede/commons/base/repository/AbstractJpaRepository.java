@@ -6,7 +6,9 @@ import org.springframework.data.repository.NoRepositoryBean;
 import com.aoede.commons.base.entity.AbstractEntity;
 
 @NoRepositoryBean
-public interface AbstractJpaRepository<Key, Entity extends AbstractEntity<Key>> extends AbstractRepository<Key, Entity>, JpaRepository<Entity, Key> {
+public interface AbstractJpaRepository<
+	EntityId, Entity extends AbstractEntity<EntityId>
+> extends AbstractRepository<EntityId, Entity>, JpaRepository<Entity, EntityId> {
 }
 
 

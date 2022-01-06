@@ -21,7 +21,7 @@ public abstract class AbstractDomainController<
 	Key,
 	Domain extends AbstractDomain<Key>,
 	Service extends AbstractService<Key, Domain>
-> extends AbstractController <Key, Domain, Domain, Domain, Domain, Domain, Service> {
+> extends AbstractController <Key, Domain, Key, Domain, Domain, Domain, Domain, Service> {
 
 	final protected Service service;
 

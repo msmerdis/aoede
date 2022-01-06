@@ -18,6 +18,7 @@ import com.aoede.modules.music.transfer.sheet.UpdateSheet;
 public class SheetController extends AbstractResourceController<
 	Long,
 	Sheet,
+	Long,
 	CreateSheet,
 	UpdateSheet,
 	SimpleSheetResponse,
@@ -59,17 +60,22 @@ public class SheetController extends AbstractResourceController<
 	}
 
 	@Override
-	public Sheet createRequest(CreateSheet request) {
-		return updateRequest (request);
+	public Sheet createDomain(CreateSheet request) {
+		return updateDomain (request);
 	}
 
 	@Override
-	public Sheet updateRequest(UpdateSheet request) {
+	public Sheet updateDomain(UpdateSheet request) {
 		Sheet sheet = new Sheet ();
 
 		sheet.setName(request.getName());
 
 		return sheet;
+	}
+
+	@Override
+	public Long createDomainId(Long data) {
+		return data;
 	}
 
 }

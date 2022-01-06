@@ -7,6 +7,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -16,7 +19,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import com.aoede.commons.base.entity.AbstractEntity;
-import com.aoede.commons.base.entity.BaseEntity;
+import com.aoede.commons.base.entity.AbstractJpaEntity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -27,11 +30,16 @@ import lombok.Setter;
 @Table(
 	name = "tsheet",
 	indexes = {
-		@Index(columnList = "id", unique = true)
+		@Index(columnList = "sheetId", unique = true)
 	}
 )
 @SequenceGenerator(name = "sheetIdGenerator", sequenceName = "SHEET_SEQ", initialValue = 1, allocationSize = 1)
-public class SheetEntity extends BaseEntity<Long> implements AbstractEntity<Long> {
+public class SheetEntity extends AbstractJpaEntity<Long> implements AbstractEntity<Long> {
+	@Id
+	@Column(name = "sheetId")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sheetIdGenerator")
+	private Long id;
+
 	@Column(length = 512, nullable = false)
 	private String name;
 

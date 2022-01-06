@@ -12,9 +12,10 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public class Section extends AbstractDomain<Long> {
+@ToString
+@EqualsAndHashCode
+public class Section implements AbstractDomain<Long> {
+	private Long id;
 	private short tempo;
 	private KeySignature keySignature;
 	private Fraction timeSignature;

@@ -14,7 +14,7 @@ import com.aoede.modules.music.entity.TrackEntity;
 import com.aoede.modules.music.repository.SheetRepository;
 
 @Service
-public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, SheetEntity, SheetRepository> implements SheetService {
+public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Long, SheetEntity, SheetRepository> implements SheetService {
 
 	@Autowired
 	private TrackService trackService;
@@ -73,6 +73,11 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Sh
 
 	public void updateTrackEntity(TrackEntity entity, Long id) {
 		entity.setSheet(repository.getById(id));
+	}
+
+	@Override
+	public Long createEntityId(Long key) {
+		return key;
 	}
 
 }

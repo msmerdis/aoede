@@ -11,9 +11,10 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public class Sheet extends AbstractDomain<Long> {
+@ToString
+@EqualsAndHashCode
+public class Sheet implements AbstractDomain<Long> {
+	private Long id;
 	private String name;
 	private List<Track> tracks;
 }

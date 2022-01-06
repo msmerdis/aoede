@@ -24,6 +24,7 @@ import com.aoede.modules.music.transfer.measure.UpdateMeasure;
 public class MeasureController extends AbstractResourceController<
 	Long,
 	Measure,
+	Long,
 	CreateMeasure,
 	UpdateMeasure,
 	SimpleMeasureResponse,
@@ -69,8 +70,8 @@ public class MeasureController extends AbstractResourceController<
 	}
 
 	@Override
-	public Measure createRequest(CreateMeasure request) {
-		Measure measure = updateRequest (request);
+	public Measure createDomain(CreateMeasure request) {
+		Measure measure = updateDomain (request);
 		Section section = new Section ();
 
 		section.setId(request.getSectionId());
@@ -80,7 +81,7 @@ public class MeasureController extends AbstractResourceController<
 	}
 
 	@Override
-	public Measure updateRequest(UpdateMeasure request) {
+	public Measure updateDomain(UpdateMeasure request) {
 		Measure measure = new Measure ();
 
 		return measure;
@@ -90,6 +91,11 @@ public class MeasureController extends AbstractResourceController<
 	@ResponseStatus(HttpStatus.OK)
 	public List<SimpleMeasureResponse> findAllBySection(@PathVariable("id") final Long id) throws Exception {
 		return service.findBySectionId(id).stream().map(e -> simpleResponse(e, true, true)).collect(Collectors.toList());
+	}
+
+	@Override
+	public Long createDomainId(Long data) {
+		return data;
 	}
 
 }

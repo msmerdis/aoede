@@ -7,7 +7,7 @@ import com.aoede.modules.music.domain.Track;
 import com.aoede.modules.music.entity.SectionEntity;
 import com.aoede.modules.music.entity.TrackEntity;
 
-public interface TrackService extends AbstractServiceDomain <Long, Track, TrackEntity> {
+public interface TrackService extends AbstractServiceDomain <Long, Track, Long, TrackEntity> {
 
 	void updateSectionEntity(SectionEntity entity, Long id);
 

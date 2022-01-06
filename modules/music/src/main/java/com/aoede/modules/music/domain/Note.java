@@ -10,9 +10,10 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public class Note extends AbstractDomain<Long> {
+@ToString
+@EqualsAndHashCode
+public class Note implements AbstractDomain<Long> {
+	private Long id;
 	private int note;
 	private Fraction value;
 	private Measure measure;

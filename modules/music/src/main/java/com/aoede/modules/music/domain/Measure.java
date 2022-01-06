@@ -11,9 +11,10 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public class Measure extends AbstractDomain<Long> {
+@ToString
+@EqualsAndHashCode
+public class Measure implements AbstractDomain<Long> {
+	private Long id;
 	private Section section;
 	private List<Note> notes;
 }

@@ -9,9 +9,10 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public class KeySignature extends AbstractDomain<String> {
+@ToString
+@EqualsAndHashCode
+public class KeySignature implements AbstractDomain<String> {
+	private String id;
 }
 
 

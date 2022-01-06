@@ -19,7 +19,7 @@ import com.aoede.modules.music.repository.NoteRepository;
 import com.aoede.modules.music.transfer.Fraction;
 
 @Service
-public class NoteServiceImpl extends AbstractServiceDomainImpl <Long, Note, NoteEntity, NoteRepository> implements NoteService {
+public class NoteServiceImpl extends AbstractServiceDomainImpl <Long, Note, Long, NoteEntity, NoteRepository> implements NoteService {
 
 	@Autowired
 	private MeasureService measureService;
@@ -83,6 +83,11 @@ public class NoteServiceImpl extends AbstractServiceDomainImpl <Long, Note, Note
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
 	public List<Note> findByMeasureId(Long id) {
 		return repository.findByMeasureId(id).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
+	}
+
+	@Override
+	public Long createEntityId(Long key) {
+		return key;
 	}
 
 }

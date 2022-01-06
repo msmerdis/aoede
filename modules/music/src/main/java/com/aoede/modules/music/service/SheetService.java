@@ -5,7 +5,7 @@ import com.aoede.modules.music.domain.Sheet;
 import com.aoede.modules.music.entity.SheetEntity;
 import com.aoede.modules.music.entity.TrackEntity;
 
-public interface SheetService extends AbstractServiceDomain <Long, Sheet, SheetEntity> {
+public interface SheetService extends AbstractServiceDomain <Long, Sheet, Long, SheetEntity> {
 
 	void updateTrackEntity(TrackEntity entity, Long id);
 

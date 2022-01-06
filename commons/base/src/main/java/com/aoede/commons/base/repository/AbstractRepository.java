@@ -11,14 +11,14 @@ import com.aoede.commons.base.entity.AbstractEntity;
  * Definition of basic CRUD operations for entities
  */
 @NoRepositoryBean
-public interface AbstractRepository<Key, Entity extends AbstractEntity<Key>> {
+public interface AbstractRepository<EntityId, Entity extends AbstractEntity<EntityId>> {
 	public List<Entity> findAll();
 
-	public Optional<Entity> findById(Key id);
+	public Optional<Entity> findById(EntityId id);
 
-	public void deleteById(Key id);
+	public void deleteById(EntityId id);
 
-	public boolean existsById(Key id);
+	public boolean existsById(EntityId id);
 
 	public Entity save(Entity entity);
 

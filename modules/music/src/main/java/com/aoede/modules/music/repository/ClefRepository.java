@@ -24,11 +24,7 @@ public class ClefRepository extends HashMapRepository <String, Clef> {
 	}
 
 	private Clef buildClef (String name, char type, int note, int spos) {
-		Clef clef = new Clef (type, note, spos);
-
-		clef.setId(name);
-
-		return clef;
+		return new Clef (name, type, note, spos);
 	}
 }
 

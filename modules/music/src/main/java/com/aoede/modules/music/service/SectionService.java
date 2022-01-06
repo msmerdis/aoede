@@ -7,7 +7,7 @@ import com.aoede.modules.music.domain.Section;
 import com.aoede.modules.music.entity.MeasureEntity;
 import com.aoede.modules.music.entity.SectionEntity;
 
-public interface SectionService extends AbstractServiceDomain <Long, Section, SectionEntity> {
+public interface SectionService extends AbstractServiceDomain <Long, Section, Long, SectionEntity> {
 
 	void updateMeasureEntity(MeasureEntity entity, Long id);
 

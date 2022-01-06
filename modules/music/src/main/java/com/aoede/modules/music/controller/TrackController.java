@@ -27,6 +27,7 @@ import com.aoede.modules.music.transfer.track.UpdateTrack;
 public class TrackController extends AbstractResourceController<
 	Long,
 	Track,
+	Long,
 	CreateTrack,
 	UpdateTrack,
 	SimpleTrackResponse,
@@ -73,8 +74,8 @@ public class TrackController extends AbstractResourceController<
 	}
 
 	@Override
-	public Track createRequest(CreateTrack request) {
-		Track track = updateRequest (request);
+	public Track createDomain(CreateTrack request) {
+		Track track = updateDomain(request);
 		Sheet sheet = new Sheet ();
 
 		sheet.setId(request.getSheetId());
@@ -84,7 +85,7 @@ public class TrackController extends AbstractResourceController<
 	}
 
 	@Override
-	public Track updateRequest(UpdateTrack request) {
+	public Track updateDomain(UpdateTrack request) {
 		Track track = new Track ();
 
 		try {
@@ -100,6 +101,11 @@ public class TrackController extends AbstractResourceController<
 	@ResponseStatus(HttpStatus.OK)
 	public List<SimpleTrackResponse> findAllBySheet(@PathVariable("id") final Long id) throws Exception {
 		return service.findBySheetId(id).stream().map(e -> simpleResponse(e, true, true)).collect(Collectors.toList());
+	}
+
+	@Override
+	public Long createDomainId(Long data) {
+		return data;
 	}
 
 }

@@ -21,7 +21,7 @@ import com.aoede.modules.music.repository.SectionRepository;
 import com.aoede.modules.music.transfer.Fraction;
 
 @Service
-public class SectionServiceImpl extends AbstractServiceDomainImpl <Long, Section, SectionEntity, SectionRepository> implements SectionService {
+public class SectionServiceImpl extends AbstractServiceDomainImpl <Long, Section, Long, SectionEntity, SectionRepository> implements SectionService {
 
 	@Autowired
 	private TrackService trackService;
@@ -109,6 +109,11 @@ public class SectionServiceImpl extends AbstractServiceDomainImpl <Long, Section
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
 	public List<Section> findByTrackId(Long id) {
 		return repository.findByTrackId(id).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
+	}
+
+	@Override
+	public Long createEntityId(Long key) {
+		return key;
 	}
 
 }

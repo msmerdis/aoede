@@ -19,7 +19,7 @@ import com.aoede.modules.music.entity.NoteEntity;
 import com.aoede.modules.music.repository.MeasureRepository;
 
 @Service
-public class MeasureServiceImpl extends AbstractServiceDomainImpl <Long, Measure, MeasureEntity, MeasureRepository> implements MeasureService {
+public class MeasureServiceImpl extends AbstractServiceDomainImpl <Long, Measure, Long, MeasureEntity, MeasureRepository> implements MeasureService {
 
 	@Autowired
 	private SectionService sectionService;
@@ -92,6 +92,11 @@ public class MeasureServiceImpl extends AbstractServiceDomainImpl <Long, Measure
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
 	public List<Measure> findBySectionId(Long id) {
 		return repository.findBySectionId(id).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
+	}
+
+	@Override
+	public Long createEntityId(Long key) {
+		return key;
 	}
 
 }

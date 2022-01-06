@@ -25,6 +25,7 @@ import com.aoede.modules.music.transfer.section.UpdateSection;
 public class SectionController extends AbstractResourceController<
 	Long,
 	Section,
+	Long,
 	CreateSection,
 	UpdateSection,
 	SimpleSectionResponse,
@@ -75,8 +76,8 @@ public class SectionController extends AbstractResourceController<
 	}
 
 	@Override
-	public Section createRequest(CreateSection request) {
-		Section section = updateRequest (request);
+	public Section createDomain(CreateSection request) {
+		Section section = updateDomain (request);
 		Track track = new Track ();
 
 		track.setId(request.getTrackId());
@@ -86,7 +87,7 @@ public class SectionController extends AbstractResourceController<
 	}
 
 	@Override
-	public Section updateRequest(UpdateSection request) {
+	public Section updateDomain(UpdateSection request) {
 		Section section = new Section ();
 		KeySignature keySignature = new KeySignature();
 
@@ -103,6 +104,11 @@ public class SectionController extends AbstractResourceController<
 	@ResponseStatus(HttpStatus.OK)
 	public List<SimpleSectionResponse> findAllByTrack(@PathVariable("id") final Long id) throws Exception {
 		return service.findByTrackId(id).stream().map(e -> simpleResponse(e, true, true)).collect(Collectors.toList());
+	}
+
+	@Override
+	public Long createDomainId(Long data) {
+		return data;
 	}
 
 }

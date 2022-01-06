@@ -17,21 +17,23 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.aoede.commons.base.component.BaseComponent;
 import com.aoede.commons.base.domain.AbstractDomain;
 import com.aoede.commons.base.service.AbstractService;
+import com.aoede.commons.base.service.GenericAPIDefinition;
 
 /**
  * Definition of basic CRUD operations for domain objects
  *
- * Assume that the request and response objects can be differ from the domain object itself
+ * Assume that the data and response objects can be differ from the domain object itself
  */
 public abstract class AbstractController<
-	Key,
-	Domain extends AbstractDomain<Key>,
-	CreateRequest,
-	UpdateRequest,
+	DomainId,
+	Domain extends AbstractDomain<DomainId>,
+	AccessData,
+	CreateData,
+	UpdateData,
 	SimpleResponse,
 	DetailResponse,
-	Service extends AbstractService<Key, Domain>
-> extends BaseComponent {
+	Service extends AbstractService<DomainId, Domain>
+> extends BaseComponent implements GenericAPIDefinition<AccessData, CreateData, UpdateData, SimpleResponse, DetailResponse> {
 
 	@GetMapping("/search")
 	@ResponseStatus(HttpStatus.OK)
@@ -39,7 +41,7 @@ public abstract class AbstractController<
 
 	@GetMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	abstract public DetailResponse get(@PathVariable("id") final Key id) throws Exception;
+	abstract public DetailResponse get(@PathVariable("id") final AccessData id) throws Exception;
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
@@ -47,15 +49,15 @@ public abstract class AbstractController<
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	abstract public DetailResponse create(@Valid @RequestBody final CreateRequest request) throws Exception;
+	abstract public DetailResponse create(@Valid @RequestBody final CreateData data) throws Exception;
 
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	abstract public void update(@PathVariable("id") final Key id, @Valid @RequestBody final UpdateRequest request) throws Exception;
+	abstract public void update(@PathVariable("id") final AccessData id, @Valid @RequestBody final UpdateData data) throws Exception;
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	abstract public void delete(@PathVariable("id") final Key id) throws Exception;
+	abstract public void delete(@PathVariable("id") final AccessData id) throws Exception;
 }
 
 

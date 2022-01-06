@@ -16,7 +16,8 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Clef extends AbstractDomain<String> implements AbstractEntity<String> {
+public class Clef implements AbstractDomain<String>, AbstractEntity<String> {
+	private String id;
 	private char type; // corresponds to the sign the clef should be using
 	private int  note; // the note the clef denotes (midi format)
 	private int  spos; // denotes the position on the stave the clef should be placed

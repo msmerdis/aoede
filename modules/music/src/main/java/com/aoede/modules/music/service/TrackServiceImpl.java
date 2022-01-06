@@ -19,7 +19,7 @@ import com.aoede.modules.music.entity.TrackEntity;
 import com.aoede.modules.music.repository.TrackRepository;
 
 @Service
-public class TrackServiceImpl extends AbstractServiceDomainImpl <Long, Track, TrackEntity, TrackRepository> implements TrackService {
+public class TrackServiceImpl extends AbstractServiceDomainImpl <Long, Track, Long, TrackEntity, TrackRepository> implements TrackService {
 
 	@Autowired
 	private ClefService clefService;
@@ -99,6 +99,11 @@ public class TrackServiceImpl extends AbstractServiceDomainImpl <Long, Track, Tr
 
 	public void updateSectionEntity(SectionEntity entity, Long id) {
 		entity.setTrack(repository.getById(id));
+	}
+
+	@Override
+	public Long createEntityId(Long key) {
+		return key;
 	}
 
 }

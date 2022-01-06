@@ -13,9 +13,11 @@ import com.aoede.commons.base.entity.AbstractEntity;
  *
  * Implements all methods defined in AbstractRepository
  */
-public class HashMapRepository<Key, Entity extends AbstractEntity<Key>> extends BaseComponent implements AbstractRepository <Key, Entity> {
+public class HashMapRepository<
+	EntityId, Entity extends AbstractEntity<EntityId>
+> extends BaseComponent implements AbstractRepository <EntityId, Entity> {
 
-	private HashMap<Key, Entity> data = new HashMap <Key, Entity>();
+	private HashMap<EntityId, Entity> data = new HashMap <EntityId, Entity>();
 
 	@Override
 	public List<Entity> findAll() {
@@ -23,17 +25,17 @@ public class HashMapRepository<Key, Entity extends AbstractEntity<Key>> extends 
 	}
 
 	@Override
-	public Optional<Entity> findById(Key id) {
+	public Optional<Entity> findById(EntityId id) {
 		return Optional.ofNullable(data.get(id));
 	}
 
 	@Override
-	public void deleteById(Key id) {
+	public void deleteById(EntityId id) {
 		data.remove(id);
 	}
 
 	@Override
-	public boolean existsById(Key id) {
+	public boolean existsById(EntityId id) {
 		return data.get(id) != null;
 	}
 
@@ -44,9 +46,7 @@ public class HashMapRepository<Key, Entity extends AbstractEntity<Key>> extends 
 
 	@Override
 	public Entity saveAndFlush(Entity entity) {
-		save(entity);
-
-		return entity;
+		return save(entity);
 	}
 
 }

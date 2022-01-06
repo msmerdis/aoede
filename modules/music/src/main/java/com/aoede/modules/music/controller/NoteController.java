@@ -25,6 +25,7 @@ import com.aoede.modules.music.transfer.note.UpdateNote;
 public class NoteController extends AbstractResourceController<
 	Long,
 	Note,
+	Long,
 	CreateNote,
 	UpdateNote,
 	SimpleNoteResponse,
@@ -65,9 +66,9 @@ public class NoteController extends AbstractResourceController<
 	}
 
 	@Override
-	public Note createRequest(CreateNote request) {
+	public Note createDomain(CreateNote request) {
 		Measure measure = new Measure();
-		Note note = updateRequest (request);
+		Note note = updateDomain (request);
 
 		measure.setId(request.getMeasureId());
 
@@ -77,7 +78,7 @@ public class NoteController extends AbstractResourceController<
 	}
 
 	@Override
-	public Note updateRequest(UpdateNote request) {
+	public Note updateDomain(UpdateNote request) {
 		Note note = new Note ();
 
 		note.setNote(request.getNote());
@@ -90,6 +91,11 @@ public class NoteController extends AbstractResourceController<
 	@ResponseStatus(HttpStatus.OK)
 	public List<SimpleNoteResponse> findAllBySheet(@PathVariable("id") final Long id) throws Exception {
 		return service.findByMeasureId(id).stream().map(e -> simpleResponse(e, true, true)).collect(Collectors.toList());
+	}
+
+	@Override
+	public Long createDomainId(Long data) {
+		return data;
 	}
 
 }

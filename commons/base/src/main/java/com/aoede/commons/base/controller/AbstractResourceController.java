@@ -22,14 +22,15 @@ import com.aoede.commons.base.service.AbstractService;
  * into the response objects before returning them as a result
  */
 public abstract class AbstractResourceController<
-	Key,
-	Domain extends AbstractDomain<Key>,
-	CreateRequest,
-	UpdateRequest,
+	DomainId,
+	Domain extends AbstractDomain<DomainId>,
+	AccessData,
+	CreateData,
+	UpdateData,
 	SimpleResponse,
 	DetailResponse,
-	Service extends AbstractService<Key, Domain>
-> extends AbstractController <Key, Domain, CreateRequest, UpdateRequest, SimpleResponse, DetailResponse, Service> {
+	Service extends AbstractService<DomainId, Domain>
+> extends AbstractController <DomainId, Domain, AccessData, CreateData, UpdateData, SimpleResponse, DetailResponse, Service> {
 
 	final protected Service service;
 
@@ -44,8 +45,8 @@ public abstract class AbstractResourceController<
 	}
 
 	@Override
-	public DetailResponse get(@PathVariable("id") final Key id) throws Exception {
-		return detailResponse(service.find(id), true, true);
+	public DetailResponse get(@PathVariable("id") final AccessData id) throws Exception {
+		return detailResponse(service.find(createDomainId(id)), true, true);
 	}
 
 	@Override
@@ -54,22 +55,18 @@ public abstract class AbstractResourceController<
 	}
 
 	@Override
-	public DetailResponse create(@Valid @RequestBody final CreateRequest request) throws Exception {
-		return detailResponse(service.create(createRequest(request)), true, true);
+	public DetailResponse create(@Valid @RequestBody final CreateData data) throws Exception {
+		return detailResponse(service.create(createDomain(data)), true, true);
 	}
 
 	@Override
-	public void update(@PathVariable("id") final Key id, @Valid @RequestBody final UpdateRequest request) throws Exception {
-		Domain domain = updateRequest(request);
-
-		domain.setId(id);
-
-		service.update(id, domain);
+	public void update(@PathVariable("id") final AccessData id, @Valid @RequestBody final UpdateData data) throws Exception {
+		service.update(createDomainId(id), updateDomain(data));
 	}
 
 	@Override
-	public void delete(@PathVariable("id") final Key id) throws Exception {
-		service.delete(id);
+	public void delete(@PathVariable("id") final AccessData id) throws Exception {
+		service.delete(createDomainId(id));
 	}
 
 	/**
@@ -85,8 +82,13 @@ public abstract class AbstractResourceController<
 	 * operations to generate the domain class from the create and update objects are abstract
 	 * and should be defined by each implementing class.
 	 */
-	abstract public Domain createRequest (CreateRequest request);
-	abstract public Domain updateRequest (UpdateRequest request);
+	abstract public Domain createDomain (CreateData data);
+	abstract public Domain updateDomain (UpdateData data);
+
+	/**
+	 * operations to generate the domain class key
+	 */
+	abstract public DomainId createDomainId (AccessData data);
 }
 
 
