@@ -76,7 +76,7 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Lo
 	}
 
 	@Override
-	public Long createEntityId(Long key) {
+	public Long createEntityKey(Long key) {
 		return key;
 	}
 

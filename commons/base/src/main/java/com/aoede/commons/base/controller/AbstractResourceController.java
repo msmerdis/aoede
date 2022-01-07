@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.aoede.commons.base.domain.AbstractDomain;
 import com.aoede.commons.base.service.AbstractService;
+import com.aoede.commons.base.transfer.AbstractResponse;
 
 /**
  * Resource controller can be used in case the domain object differs
@@ -22,15 +23,15 @@ import com.aoede.commons.base.service.AbstractService;
  * into the response objects before returning them as a result
  */
 public abstract class AbstractResourceController<
-	DomainId,
-	Domain extends AbstractDomain<DomainId>,
+	DomainKey,
+	Domain extends AbstractDomain<DomainKey>,
 	AccessData,
 	CreateData,
 	UpdateData,
-	SimpleResponse,
-	DetailResponse,
-	Service extends AbstractService<DomainId, Domain>
-> extends AbstractController <DomainId, Domain, AccessData, CreateData, UpdateData, SimpleResponse, DetailResponse, Service> {
+	SimpleResponse extends AbstractResponse <AccessData>,
+	DetailResponse extends AbstractResponse <AccessData>,
+	Service extends AbstractService<DomainKey, Domain>
+> extends AbstractController <DomainKey, Domain, AccessData, CreateData, UpdateData, SimpleResponse, DetailResponse, Service> {
 
 	final protected Service service;
 
@@ -46,7 +47,7 @@ public abstract class AbstractResourceController<
 
 	@Override
 	public DetailResponse get(@PathVariable("id") final AccessData id) throws Exception {
-		return detailResponse(service.find(createDomainId(id)), true, true);
+		return detailResponse(service.find(createDomainKey(id)), true, true);
 	}
 
 	@Override
@@ -61,12 +62,12 @@ public abstract class AbstractResourceController<
 
 	@Override
 	public void update(@PathVariable("id") final AccessData id, @Valid @RequestBody final UpdateData data) throws Exception {
-		service.update(createDomainId(id), updateDomain(data));
+		service.update(createDomainKey(id), updateDomain(data));
 	}
 
 	@Override
 	public void delete(@PathVariable("id") final AccessData id) throws Exception {
-		service.delete(createDomainId(id));
+		service.delete(createDomainKey(id));
 	}
 
 	/**
@@ -88,7 +89,7 @@ public abstract class AbstractResourceController<
 	/**
 	 * operations to generate the domain class key
 	 */
-	abstract public DomainId createDomainId (AccessData data);
+	abstract public DomainKey createDomainKey (AccessData data);
 }
 
 

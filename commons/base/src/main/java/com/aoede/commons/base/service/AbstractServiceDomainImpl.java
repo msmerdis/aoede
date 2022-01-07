@@ -27,10 +27,10 @@ import com.aoede.commons.base.repository.AbstractRepository;
  * when communicating with the repository
  */
 public abstract class AbstractServiceDomainImpl <
-	DomainId, Domain extends AbstractDomain<DomainId>,
-	EntityId, Entity extends AbstractEntity<EntityId>,
-	Repository extends AbstractRepository<EntityId, Entity>
-> extends BaseComponent implements AbstractServiceDomain<DomainId, Domain, EntityId, Entity> {
+	DomainKey, Domain extends AbstractDomain<DomainKey>,
+	EntityKey, Entity extends AbstractEntity<EntityKey>,
+	Repository extends AbstractRepository<EntityKey, Entity>
+> extends BaseComponent implements AbstractServiceDomain<DomainKey, Domain, EntityKey, Entity> {
 
 	final protected Repository repository;
 
@@ -56,8 +56,8 @@ public abstract class AbstractServiceDomainImpl <
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
-	public void update(DomainId id, Domain domain) throws GenericException {
-		Optional<Entity> optionalEntity = repository.findById(createEntityId(id));
+	public void update(DomainKey id, Domain domain) throws GenericException {
+		Optional<Entity> optionalEntity = repository.findById(createEntityKey(id));
 
 		if (optionalEntity.isEmpty()) {
 			throw new NotFoundException(domainName() + " not found.");
@@ -76,8 +76,8 @@ public abstract class AbstractServiceDomainImpl <
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
-	public void delete(DomainId id) throws GenericException {
-		EntityId key = createEntityId(id);
+	public void delete(DomainKey id) throws GenericException {
+		EntityKey key = createEntityKey(id);
 		Optional<Entity> entity = repository.findById(key);
 
 		if (entity.isEmpty()) {
@@ -89,14 +89,14 @@ public abstract class AbstractServiceDomainImpl <
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
-	public boolean exists(DomainId id) throws GenericException {
-		return repository.existsById(createEntityId(id));
+	public boolean exists(DomainKey id) throws GenericException {
+		return repository.existsById(createEntityKey(id));
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
-	public Domain find(DomainId id) throws GenericException {
-		Optional<Entity> entity = repository.findById(createEntityId(id));
+	public Domain find(DomainKey id) throws GenericException {
+		Optional<Entity> entity = repository.findById(createEntityKey(id));
 
 		if (entity.isEmpty()) {
 			throw new NotFoundException("Entity not found.");

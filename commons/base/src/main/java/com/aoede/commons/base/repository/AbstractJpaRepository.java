@@ -7,8 +7,8 @@ import com.aoede.commons.base.entity.AbstractEntity;
 
 @NoRepositoryBean
 public interface AbstractJpaRepository<
-	EntityId, Entity extends AbstractEntity<EntityId>
-> extends AbstractRepository<EntityId, Entity>, JpaRepository<Entity, EntityId> {
+	EntityKey, Entity extends AbstractEntity<EntityKey>
+> extends AbstractRepository<EntityKey, Entity>, JpaRepository<Entity, EntityKey> {
 }
 
 

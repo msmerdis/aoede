@@ -8,14 +8,14 @@ import com.aoede.commons.base.exceptions.GenericException;
 /**
  * Definition of basic CRUD operations for domain objects
  */
-public interface AbstractService <DomainId, Domain extends AbstractDomain<DomainId>> {
+public interface AbstractService <DomainKey, Domain extends AbstractDomain<DomainKey>> {
 	Domain create(Domain domain) throws GenericException, Exception;
 
-	void update(DomainId id, Domain domain) throws GenericException;
-	void delete(DomainId id) throws GenericException;
+	void update(DomainKey id, Domain domain) throws GenericException;
+	void delete(DomainKey id) throws GenericException;
 
-	boolean exists(DomainId id) throws GenericException;
-	Domain find(DomainId id) throws GenericException;
+	boolean exists(DomainKey id) throws GenericException;
+	Domain find(DomainKey id) throws GenericException;
 
 	List<Domain> findAll() throws GenericException;
 	List<Domain> freeTextSearch (String keyword) throws GenericException;

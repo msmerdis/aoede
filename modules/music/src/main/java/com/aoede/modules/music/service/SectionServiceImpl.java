@@ -112,7 +112,7 @@ public class SectionServiceImpl extends AbstractServiceDomainImpl <Long, Section
 	}
 
 	@Override
-	public Long createEntityId(Long key) {
+	public Long createEntityKey(Long key) {
 		return key;
 	}
 

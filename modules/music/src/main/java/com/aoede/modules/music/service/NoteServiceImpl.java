@@ -86,7 +86,7 @@ public class NoteServiceImpl extends AbstractServiceDomainImpl <Long, Note, Long
 	}
 
 	@Override
-	public Long createEntityId(Long key) {
+	public Long createEntityKey(Long key) {
 		return key;
 	}
 

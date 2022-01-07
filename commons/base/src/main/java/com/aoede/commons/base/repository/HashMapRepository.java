@@ -14,10 +14,10 @@ import com.aoede.commons.base.entity.AbstractEntity;
  * Implements all methods defined in AbstractRepository
  */
 public class HashMapRepository<
-	EntityId, Entity extends AbstractEntity<EntityId>
-> extends BaseComponent implements AbstractRepository <EntityId, Entity> {
+	EntityKey, Entity extends AbstractEntity<EntityKey>
+> extends BaseComponent implements AbstractRepository <EntityKey, Entity> {
 
-	private HashMap<EntityId, Entity> data = new HashMap <EntityId, Entity>();
+	private HashMap<EntityKey, Entity> data = new HashMap <EntityKey, Entity>();
 
 	@Override
 	public List<Entity> findAll() {
@@ -25,17 +25,17 @@ public class HashMapRepository<
 	}
 
 	@Override
-	public Optional<Entity> findById(EntityId id) {
+	public Optional<Entity> findById(EntityKey id) {
 		return Optional.ofNullable(data.get(id));
 	}
 
 	@Override
-	public void deleteById(EntityId id) {
+	public void deleteById(EntityKey id) {
 		data.remove(id);
 	}
 
 	@Override
-	public boolean existsById(EntityId id) {
+	public boolean existsById(EntityKey id) {
 		return data.get(id) != null;
 	}
 

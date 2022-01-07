@@ -25,14 +25,14 @@ import com.aoede.commons.base.service.GenericAPIDefinition;
  * Assume that the data and response objects can be differ from the domain object itself
  */
 public abstract class AbstractController<
-	DomainId,
-	Domain extends AbstractDomain<DomainId>,
+	DomainKey,
+	Domain extends AbstractDomain<DomainKey>,
 	AccessData,
 	CreateData,
 	UpdateData,
 	SimpleResponse,
 	DetailResponse,
-	Service extends AbstractService<DomainId, Domain>
+	Service extends AbstractService<DomainKey, Domain>
 > extends BaseComponent implements GenericAPIDefinition<AccessData, CreateData, UpdateData, SimpleResponse, DetailResponse> {
 
 	@GetMapping("/search")

@@ -102,7 +102,7 @@ public class TrackServiceImpl extends AbstractServiceDomainImpl <Long, Track, Lo
 	}
 
 	@Override
-	public Long createEntityId(Long key) {
+	public Long createEntityKey(Long key) {
 		return key;
 	}
 

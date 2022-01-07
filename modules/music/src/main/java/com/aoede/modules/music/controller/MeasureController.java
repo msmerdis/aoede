@@ -94,7 +94,7 @@ public class MeasureController extends AbstractResourceController<
 	}
 
 	@Override
-	public Long createDomainId(Long data) {
+	public Long createDomainKey(Long data) {
 		return data;
 	}
 

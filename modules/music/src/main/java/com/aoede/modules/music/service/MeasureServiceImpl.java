@@ -95,7 +95,7 @@ public class MeasureServiceImpl extends AbstractServiceDomainImpl <Long, Measure
 	}
 
 	@Override
-	public Long createEntityId(Long key) {
+	public Long createEntityKey(Long key) {
 		return key;
 	}
 
