@@ -17,6 +17,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import com.aoede.commons.base.component.BaseComponent;
 import com.aoede.commons.base.exceptions.BadRequestException;
 import com.aoede.commons.base.exceptions.GenericException;
+import com.aoede.commons.base.exceptions.GenericExceptionContainer;
 import com.aoede.commons.base.exceptions.MethodNotAllowedException;
 import com.aoede.commons.base.exceptions.NotFoundException;
 
@@ -63,6 +64,15 @@ public class GenericExceptionHandler extends BaseComponent {
 	@ExceptionHandler(GenericException.class)
 	public final ResponseEntity<?> handleAllApiErrors(final GenericException ex) {
 		return generateResponse (ex);
+	}
+
+	/**
+	 * A GenericExceptionContainer is essentially a GenericException thrown as a runtime exception
+	 * to be used in cases where adding the GenericException in the method signature is not possible
+	 */
+	@ExceptionHandler(GenericExceptionContainer.class)
+	public final ResponseEntity<?> handleGenericExceptionContainer (final GenericExceptionContainer ex) {
+		return generateResponse(ex.getException());
 	}
 
 	/**

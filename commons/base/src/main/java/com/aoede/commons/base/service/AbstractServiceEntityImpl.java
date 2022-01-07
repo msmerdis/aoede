@@ -39,9 +39,7 @@ public abstract class AbstractServiceEntityImpl <
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
 	public Domain create(Domain domain) throws GenericException {
-		Optional<Domain> optionalDomain = repository.findById(domain.getId());
-
-		if (optionalDomain.isPresent()) {
+		if (repository.existsById(domain.getId())) {
 			throw new ConflictException(domainName() + " already exists");
 		}
 

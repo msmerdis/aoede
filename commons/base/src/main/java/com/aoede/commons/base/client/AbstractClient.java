@@ -19,17 +19,17 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class AbstractClient<
-	AccessData,
+	AccessKey,
 	CreateData,
 	UpdateData,
 	SimpleResponse,
 	DetailResponse
-> extends BaseComponent implements GenericAPIDefinition<AccessData, CreateData, UpdateData, SimpleResponse, DetailResponse> {
+> extends BaseComponent implements GenericAPIDefinition<AccessKey, CreateData, UpdateData, SimpleResponse, DetailResponse> {
 
 	private RestTemplate restTemplate;
 	private ObjectMapper objectMapper;
 
-	private final Class<AccessData> accessDataType;
+	private final Class<AccessKey> accessDataType;
 	private final Class<CreateData> createDataType;
 	private final Class<UpdateData> updateDataType;
 
@@ -37,7 +37,7 @@ public abstract class AbstractClient<
 	private final Class<DetailResponse> detailResponseType;
 
 	public AbstractClient (
-		Class<AccessData> accessDataType, Class<CreateData> createDataType, Class<UpdateData> updateDataType,
+		Class<AccessKey> accessDataType, Class<CreateData> createDataType, Class<UpdateData> updateDataType,
 		Class<List<SimpleResponse>> simpleResponseType, Class<DetailResponse> detailResponseType
 	) {
 		this.accessDataType = accessDataType;
@@ -69,7 +69,7 @@ public abstract class AbstractClient<
 	}
 
 	@Override
-	public DetailResponse get(AccessData id) throws Exception {
+	public DetailResponse get(AccessKey id) throws Exception {
 		String path = objectMapper.writerFor(accessDataType).writeValueAsString(id);
 
 		AbstractClientResponseResults result =
@@ -97,7 +97,7 @@ public abstract class AbstractClient<
 	}
 
 	@Override
-	public void update(AccessData id, @Valid UpdateData data) throws Exception {
+	public void update(AccessKey id, @Valid UpdateData data) throws Exception {
 		String body = objectMapper.writerFor(updateDataType).writeValueAsString(data);
 		String path = objectMapper.writerFor(accessDataType).writeValueAsString(id);
 
@@ -105,7 +105,7 @@ public abstract class AbstractClient<
 	}
 
 	@Override
-	public void delete(AccessData id) throws Exception {
+	public void delete(AccessKey id) throws Exception {
 		String path = objectMapper.writerFor(accessDataType).writeValueAsString(id);
 
 		send ("/" + path, HttpMethod.DELETE, new AbstractClientRequestCallback(defaultHeaders()), HttpStatus.NO_CONTENT);

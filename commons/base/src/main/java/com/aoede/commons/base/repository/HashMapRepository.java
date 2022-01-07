@@ -41,7 +41,8 @@ public class HashMapRepository<
 
 	@Override
 	public Entity save(Entity entity) {
-		return data.put(entity.getId(), entity);
+		data.put(entity.getId(), entity);
+		return entity;
 	}
 
 	@Override

@@ -159,7 +159,6 @@ public class GenericTestController extends ServiceStepDefinition {
 
 	@Then("the response array contains latest {string}")
 	public void verifyLatestElementExistsInList (String domain) {
-		logger.error("call lastArrayContainsObjectWith " + getService(domain).getKeyName() + "(" + getService(domain).getLatestKey() +")");
 		assertTrue (
 			getService().getLatestResults().body,
 			getService().lastArrayContainsObjectWith(

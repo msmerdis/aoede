@@ -82,3 +82,12 @@ When testing "methodArgumentTypeMismatch" error
 Then the response has a status code of 400 and matches
 	| code | 400         |
 	| text | BAD_REQUEST |
+
+@Negative
+Scenario: test method argument type mismatch exceptions
+### force application to throw a method argument type mismatch exception and verify the generated response
+
+When testing "genericExceptionContainer" error
+Then the response has a status code of 208 and matches
+	| code | 208              |
+	| text | ALREADY_REPORTED |

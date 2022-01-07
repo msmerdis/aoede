@@ -25,13 +25,13 @@ import com.aoede.commons.base.transfer.AbstractResponse;
 public abstract class AbstractResourceController<
 	DomainKey,
 	Domain extends AbstractDomain<DomainKey>,
-	AccessData,
+	AccessKey,
 	CreateData,
 	UpdateData,
-	SimpleResponse extends AbstractResponse <AccessData>,
-	DetailResponse extends AbstractResponse <AccessData>,
+	SimpleResponse extends AbstractResponse <AccessKey>,
+	DetailResponse extends AbstractResponse <AccessKey>,
 	Service extends AbstractService<DomainKey, Domain>
-> extends AbstractController <DomainKey, Domain, AccessData, CreateData, UpdateData, SimpleResponse, DetailResponse, Service> {
+> extends AbstractController <DomainKey, Domain, AccessKey, CreateData, UpdateData, SimpleResponse, DetailResponse, Service> {
 
 	final protected Service service;
 
@@ -46,7 +46,7 @@ public abstract class AbstractResourceController<
 	}
 
 	@Override
-	public DetailResponse get(@PathVariable("id") final AccessData id) throws Exception {
+	public DetailResponse get(@PathVariable("id") final AccessKey id) throws Exception {
 		return detailResponse(service.find(createDomainKey(id)), true, true);
 	}
 
@@ -61,12 +61,12 @@ public abstract class AbstractResourceController<
 	}
 
 	@Override
-	public void update(@PathVariable("id") final AccessData id, @Valid @RequestBody final UpdateData data) throws Exception {
+	public void update(@PathVariable("id") final AccessKey id, @Valid @RequestBody final UpdateData data) throws Exception {
 		service.update(createDomainKey(id), updateDomain(data));
 	}
 
 	@Override
-	public void delete(@PathVariable("id") final AccessData id) throws Exception {
+	public void delete(@PathVariable("id") final AccessKey id) throws Exception {
 		service.delete(createDomainKey(id));
 	}
 
@@ -89,7 +89,7 @@ public abstract class AbstractResourceController<
 	/**
 	 * operations to generate the domain class key
 	 */
-	abstract public DomainKey createDomainKey (AccessData data);
+	abstract public DomainKey createDomainKey (AccessKey data);
 }
 
 

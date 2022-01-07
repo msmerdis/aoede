@@ -15,6 +15,7 @@ import com.aoede.commons.base.exceptions.ConflictException;
 import com.aoede.commons.base.exceptions.CreatedStatus;
 import com.aoede.commons.base.exceptions.ForbiddenException;
 import com.aoede.commons.base.exceptions.GenericException;
+import com.aoede.commons.base.exceptions.GenericExceptionContainer;
 import com.aoede.commons.base.exceptions.MethodNotAllowedException;
 import com.aoede.commons.base.exceptions.NoContentStatus;
 import com.aoede.commons.base.exceptions.NotFoundException;
@@ -116,6 +117,12 @@ public class ExceptionTestController {
 	@ResponseStatus(HttpStatus.OK)
 	public void methodArgumentTypeMismatch() throws Exception {
 		throw new MethodArgumentTypeMismatchException (null, null, null, null, null);
+	}
+
+	@GetMapping("/genericExceptionContainer")
+	@ResponseStatus(HttpStatus.OK)
+	public void genericExceptionContainer() {
+		throw new GenericExceptionContainer(HttpStatus.ALREADY_REPORTED, "container exception");
 	}
 
 }

@@ -27,13 +27,13 @@ import com.aoede.commons.base.service.GenericAPIDefinition;
 public abstract class AbstractController<
 	DomainKey,
 	Domain extends AbstractDomain<DomainKey>,
-	AccessData,
+	AccessKey,
 	CreateData,
 	UpdateData,
 	SimpleResponse,
 	DetailResponse,
 	Service extends AbstractService<DomainKey, Domain>
-> extends BaseComponent implements GenericAPIDefinition<AccessData, CreateData, UpdateData, SimpleResponse, DetailResponse> {
+> extends BaseComponent implements GenericAPIDefinition<AccessKey, CreateData, UpdateData, SimpleResponse, DetailResponse> {
 
 	@GetMapping("/search")
 	@ResponseStatus(HttpStatus.OK)
@@ -41,7 +41,7 @@ public abstract class AbstractController<
 
 	@GetMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	abstract public DetailResponse get(@PathVariable("id") final AccessData id) throws Exception;
+	abstract public DetailResponse get(@PathVariable("id") final AccessKey id) throws Exception;
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
@@ -53,11 +53,11 @@ public abstract class AbstractController<
 
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	abstract public void update(@PathVariable("id") final AccessData id, @Valid @RequestBody final UpdateData data) throws Exception;
+	abstract public void update(@PathVariable("id") final AccessKey id, @Valid @RequestBody final UpdateData data) throws Exception;
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	abstract public void delete(@PathVariable("id") final AccessData id) throws Exception;
+	abstract public void delete(@PathVariable("id") final AccessKey id) throws Exception;
 }
 
 
