@@ -3,6 +3,7 @@ package com.aoede.commons.controller;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.springframework.http.HttpHeaders;
 
@@ -22,6 +23,20 @@ import io.cucumber.java.en.When;
  * Utilises domain test services to build and verify the results
  */
 public class GenericTestController extends ServiceStepDefinition {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Data preparation steps
+	 */
+
+	public String generateCompositeKey (DataTable data) {
+		return generatePaddedBase64(generateJson(data));
+	}
+
+	@When("prepare composite id {string}")
+	public void search(String name, DataTable data) {
+		put(name, generateCompositeKey(data));
+	}
 
 	/**
 	 * Requests
@@ -41,7 +56,7 @@ public class GenericTestController extends ServiceStepDefinition {
 	}
 
 	@When("request a {string} with id {string}")
-	public void get(String domain, String id) {
+	public void getSimple(String domain, String id) {
 		logger.info("retrieve " + domain + " with id " + id);
 
 		ResponseResults results = executeGet (getPath(domain, "/" + id));
@@ -50,9 +65,23 @@ public class GenericTestController extends ServiceStepDefinition {
 		getService(domain).accessResults(results);
 	}
 
+	@When("request a {string} with composite id")
+	public void getComposite(String domain, DataTable data) {
+		getSimple(domain, generateCompositeKey (data));
+	}
+
+	@When("request a {string} with composite id {string}")
+	public void getCompositePrepared(String domain, String name) {
+		String id = get(name);
+
+		assertNotNull(id, "composite id has not been prepared");
+
+		getSimple(domain, id);
+	}
+
 	@When("request previously created {string}")
 	public void getLatest (String domain) {
-		get (domain, getService(domain).getLatestKey());
+		getSimple (domain, getService(domain).getLatestKey());
 	}
 
 	@When("request all available {string}")
@@ -92,7 +121,7 @@ public class GenericTestController extends ServiceStepDefinition {
 	}
 
 	@When("update {string} with id {string}")
-	public void update(String domain, String id, DataTable data) {
+	public void updateSimple(String domain, String id, DataTable data) {
 		logger.info("updating " + domain + " with id " + id);
 		ResponseResults results = executePut (getPath(domain, "/" + id), getService(domain).createBody(data));
 
@@ -100,13 +129,22 @@ public class GenericTestController extends ServiceStepDefinition {
 		getService(domain).updateResults(results);
 	}
 
+	@When("update {string} with composite id {string}")
+	public void updateCompositePrepared(String domain, String name, DataTable data) {
+		String id = get(name);
+
+		assertNotNull(id, "composite id has not been prepared");
+
+		updateSimple(domain, id, data);
+	}
+
 	@When("update previously created {string}")
 	public void updateLatest (String domain, DataTable data) {
-		update (domain, getService(domain).getLatestKey(), data);
+		updateSimple (domain, getService(domain).getLatestKey(), data);
 	}
 
 	@When("delete {string} with id {string}")
-	public void delete(String domain, String id) {
+	public void deleteSimple(String domain, String id) {
 		logger.info("deleting " + domain + " with id " + id);
 		ResponseResults results = executeDelete (getPath(domain, "/" + id));
 
@@ -114,9 +152,23 @@ public class GenericTestController extends ServiceStepDefinition {
 		getService(domain).deleteResults(results);
 	}
 
+	@When("delete {string} with composite id {string}")
+	public void deleteCompositePrepared(String domain, String name) {
+		String id = get(name);
+
+		assertNotNull(id, "composite id has not been prepared");
+
+		deleteSimple(domain, id);
+	}
+
+	@When("delete {string} with composite id")
+	public void deleteComposite(String domain, DataTable data) {
+		deleteSimple(domain, generateCompositeKey (data));
+	}
+
 	@When("delete previously created {string}")
 	public void deleteLatest (String domain) {
-		delete (domain, getService(domain).getLatestKey());
+		deleteSimple (domain, getService(domain).getLatestKey());
 	}
 
 	/**

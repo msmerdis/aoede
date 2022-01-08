@@ -112,7 +112,7 @@ public abstract class AbstractTestService extends BaseTestComponent {
 		results (results, HttpStatus.CREATED.value(), true, false);
 
 		if (success && latestObj.has(getKeyName())) {
-			latestKey = latestObj.get(getKeyName()).toString();
+			latestKey = latestObj.get(getKeyName()).getAsString();
 		}
 	}
 

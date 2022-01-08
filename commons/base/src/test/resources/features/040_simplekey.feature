@@ -1,4 +1,4 @@
-@HashMapRepository
+@SimpleKey
 Feature: Basic CRUD functionality for hash map repository
 ### Verify the ability to create/read/update and delete entities in hash map repository
 ### SimpleKeyDomain has been created for that purpose
@@ -8,10 +8,16 @@ Scenario: retrieve all available entities
 
 Given a "SimpleKeyDomain" with
 	| value | simply one |
+And the request was successful
+And the response has a status code of 201
 And a "SimpleKeyDomain" with
 	| value | simply two |
+And the request was successful
+And the response has a status code of 201
 And a "SimpleKeyDomain" with
 	| value | simply three |
+And the request was successful
+And the response has a status code of 201
 When request all available "SimpleKeyDomain"
 Then the request was successful
 And the response has a status code of 200
