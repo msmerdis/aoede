@@ -5,16 +5,14 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
@@ -32,21 +30,18 @@ import lombok.Setter;
 @Table(
 	name = "ttrack",
 	indexes = {
-		@Index(columnList = "trackId", unique = true),
-		@Index(columnList = "trackId, sheetId")
+		@Index(columnList = "sheetId, trackId", unique = true)
 	}
 )
-@SequenceGenerator(name = "trackIdGenerator", sequenceName = "TRACK_SEQ", initialValue = 1, allocationSize = 1)
-public class TrackEntity extends AbstractJpaEntity<Long> implements AbstractEntity<Long> {
-	@Id
-	@Column(name = "trackId")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trackIdGenerator")
-	private Long id;
+public class TrackEntity extends AbstractJpaEntity<TrackId> implements AbstractEntity<TrackId> {
+	@EmbeddedId
+	private TrackId id;
 
 	@Column(length = 32, nullable = false)
 	private String clef;
 
 	@OneToOne(fetch = FetchType.LAZY)
+	@MapsId("sheedId")
 	@JoinColumn(name = "sheetId", referencedColumnName = "sheetId", nullable = false)
 	private SheetEntity sheet;
 

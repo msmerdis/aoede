@@ -23,6 +23,7 @@ import io.cucumber.plugin.event.TestCaseFinished;
 import io.cucumber.plugin.event.TestCaseStarted;
 
 public class ServiceStepDefinition extends BaseStepDefinition {
+	private static final long serialVersionUID = 1L;
 
 	@Autowired
 	private ListableBeanFactory listableBeanFactory;
@@ -122,10 +123,8 @@ public class ServiceStepDefinition extends BaseStepDefinition {
 
 	protected String generatePaddedBase64 (String data) {
 		switch (data.length() % 3) {
-			case 1:
-				data = data + "  ";
-			case 2:
-				data = data + " ";
+			case 1: data = data + "  "; break;
+			case 2: data = data + " ";  break;
 			default:
 				// no padding is needed
 		}

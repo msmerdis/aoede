@@ -1,6 +1,6 @@
 package com.aoede.modules.music.transfer.note;
 
-import com.aoede.commons.base.transfer.AbstractResponse;
+import com.aoede.commons.base.transfer.AbstractCompositeResponse;
 import com.aoede.modules.music.transfer.Fraction;
 
 import lombok.EqualsAndHashCode;
@@ -12,8 +12,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @EqualsAndHashCode
-public class SimpleNoteResponse implements AbstractResponse <Long> {
-	private Long noteId;
+public class SimpleNoteResponse implements AbstractCompositeResponse <AccessNote> {
+	private AccessNote id;
 	private int note;
 	private Fraction value;
 }

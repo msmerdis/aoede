@@ -2,7 +2,7 @@ package com.aoede.modules.music.transfer.section;
 
 import java.util.List;
 
-import com.aoede.commons.base.transfer.AbstractResponse;
+import com.aoede.commons.base.transfer.AbstractCompositeResponse;
 import com.aoede.modules.music.transfer.measure.SimpleMeasureResponse;
 
 import lombok.EqualsAndHashCode;
@@ -14,8 +14,8 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class SimpleSectionResponse extends UpdateSection implements AbstractResponse <Long> {
-	private Long sectionId;
+public class SimpleSectionResponse extends UpdateSection implements AbstractCompositeResponse <AccessSection> {
+	private AccessSection id;
 	private List<SimpleMeasureResponse> measures;
 }
 

@@ -14,12 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aoede.commons.base.exceptions.GenericException;
 import com.aoede.commons.base.service.AbstractServiceDomainImpl;
 import com.aoede.modules.music.domain.Track;
+import com.aoede.modules.music.domain.TrackKey;
 import com.aoede.modules.music.entity.SectionEntity;
 import com.aoede.modules.music.entity.TrackEntity;
+import com.aoede.modules.music.entity.TrackId;
 import com.aoede.modules.music.repository.TrackRepository;
 
 @Service
-public class TrackServiceImpl extends AbstractServiceDomainImpl <Long, Track, Long, TrackEntity, TrackRepository> implements TrackService {
+public class TrackServiceImpl extends AbstractServiceDomainImpl <TrackKey, Track, TrackId, TrackEntity, TrackRepository> implements TrackService {
 
 	@Autowired
 	private ClefService clefService;
@@ -47,11 +49,14 @@ public class TrackServiceImpl extends AbstractServiceDomainImpl <Long, Track, Lo
 	@Override
 	public TrackEntity createEntity(Track domain, boolean includeParent, boolean cascade) throws GenericException {
 		TrackEntity entity = new TrackEntity ();
+		Long sheetId = domain.getSheet().getId();
 
 		updateEntity (domain, entity, includeParent, cascade);
 
-		if (includeParent)
-			sheetService.updateTrackEntity(entity, domain.getSheet().getId());
+		// update parent entities
+		sheetService.updateTrackEntity(entity, sheetId);
+
+		entity.setId(new TrackId(sheetId, repository.countBySheetId(sheetId)));
 
 		return entity;
 	}
@@ -73,7 +78,7 @@ public class TrackServiceImpl extends AbstractServiceDomainImpl <Long, Track, Lo
 	@Override
 	public void updateDomain(TrackEntity entity, Track domain, boolean includeParent, boolean cascade) {
 		try {
-			domain.setId(entity.getId());
+			domain.setId(createDomainKey(entity.getId()));
 			domain.setClef(clefService.find(entity.getClef()));
 		} catch (GenericException e) {
 			throw new RuntimeException(e.getMessage());
@@ -97,12 +102,21 @@ public class TrackServiceImpl extends AbstractServiceDomainImpl <Long, Track, Lo
 		return repository.findBySheetId(id).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
 	}
 
-	public void updateSectionEntity(SectionEntity entity, Long id) {
-		entity.setTrack(repository.getById(id));
+	public void updateSectionEntity(SectionEntity entity, TrackKey key) {
+		entity.setTrack(repository.getById(createEntityKey(key)));
 	}
 
 	@Override
-	public Long createEntityKey(Long key) {
+	public TrackId createEntityKey(TrackKey key) {
+		return new TrackId(key.getSheetId(), key.getTrackId());
+	}
+
+	public TrackKey createDomainKey(TrackId id) {
+		TrackKey key = new TrackKey ();
+
+		key.setSheetId(id.getSheetId());
+		key.setTrackId(id.getTrackId());
+
 		return key;
 	}
 

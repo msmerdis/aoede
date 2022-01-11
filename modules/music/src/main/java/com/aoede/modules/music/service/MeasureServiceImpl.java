@@ -14,12 +14,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aoede.commons.base.exceptions.GenericException;
 import com.aoede.commons.base.service.AbstractServiceDomainImpl;
 import com.aoede.modules.music.domain.Measure;
+import com.aoede.modules.music.domain.MeasureKey;
+import com.aoede.modules.music.domain.SectionKey;
 import com.aoede.modules.music.entity.MeasureEntity;
+import com.aoede.modules.music.entity.MeasureId;
 import com.aoede.modules.music.entity.NoteEntity;
+import com.aoede.modules.music.entity.SectionId;
 import com.aoede.modules.music.repository.MeasureRepository;
 
 @Service
-public class MeasureServiceImpl extends AbstractServiceDomainImpl <Long, Measure, Long, MeasureEntity, MeasureRepository> implements MeasureService {
+public class MeasureServiceImpl extends AbstractServiceDomainImpl <MeasureKey, Measure, MeasureId, MeasureEntity, MeasureRepository> implements MeasureService {
 
 	@Autowired
 	private SectionService sectionService;
@@ -44,10 +48,14 @@ public class MeasureServiceImpl extends AbstractServiceDomainImpl <Long, Measure
 	@Override
 	public MeasureEntity createEntity(Measure domain, boolean includeParent, boolean cascade) throws GenericException {
 		MeasureEntity entity = new MeasureEntity ();
+		SectionKey sectionId = domain.getSection().getId();
 
 		updateEntity(domain, entity, includeParent, cascade);
-		if (includeParent)
-			sectionService.updateMeasureEntity(entity, domain.getSection().getId());
+
+		sectionService.updateMeasureEntity(entity, sectionId);
+		entity.setId(new MeasureId(sectionId.getSheetId(), sectionId.getTrackId(), sectionId.getSectionId(), repository.countBySectionId(
+			sectionService.createEntityKey(sectionId)
+		)));
 
 		return entity;
 	}
@@ -67,7 +75,7 @@ public class MeasureServiceImpl extends AbstractServiceDomainImpl <Long, Measure
 
 	@Override
 	public void updateDomain(MeasureEntity entity, Measure domain, boolean includeParent, boolean cascade) {
-		domain.setId(entity.getId());
+		domain.setId(createDomainKey(entity.getId()));
 
 		if (includeParent) {
 			domain.setSection(
@@ -85,17 +93,32 @@ public class MeasureServiceImpl extends AbstractServiceDomainImpl <Long, Measure
 		}
 	}
 
-	public void updateNoteEntity(NoteEntity entity, Long id) {
-		entity.setMeasure(repository.getById(id));
+	@Override
+	public void updateNoteEntity(NoteEntity entity, MeasureKey key) {
+		entity.setMeasure(repository.getById(createEntityKey(key)));
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
-	public List<Measure> findBySectionId(Long id) {
-		return repository.findBySectionId(id).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
+	public List<Measure> findBySectionId(SectionKey id) {
+		SectionId key = sectionService.createEntityKey(id);
+
+		return repository.findBySectionId(key).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
 	}
 
 	@Override
-	public Long createEntityKey(Long key) {
+	public MeasureId createEntityKey(MeasureKey key) {
+		return new MeasureId(key.getSheetId(), key.getTrackId(), key.getSectionId(), key.getMeasureId());
+	}
+
+	public MeasureKey createDomainKey(MeasureId id) {
+		MeasureKey key = new MeasureKey ();
+
+		key.setSheetId(id.getSheetId());
+		key.setTrackId(id.getTrackId());
+
+		key.setSectionId(id.getSectionId());
+		key.setMeasureId(id.getMeasureId());
+
 		return key;
 	}
 

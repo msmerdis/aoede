@@ -21,6 +21,8 @@ import lombok.Getter;
 
 @Getter
 public abstract class AbstractTestService extends BaseTestComponent {
+	private static final long serialVersionUID = 1L;
+
 	protected Random random = new Random (System.currentTimeMillis());
 	protected boolean success;
 	protected String latestKey;
@@ -158,7 +160,8 @@ public abstract class AbstractTestService extends BaseTestComponent {
 				logger.error("element " + element + " objects do not contain key " + key);
 				return false;
 			}
-			if (obj.get(key).toString().equals(value))
+
+			if (obj.get(key).getAsString().equals(value))
 				return true;
 		}
 		return false;

@@ -1,15 +1,14 @@
 package com.aoede.modules.music.entity;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.aoede.commons.base.entity.AbstractEntity;
@@ -24,16 +23,12 @@ import lombok.Setter;
 @Table(
 	name = "tnote",
 	indexes = {
-		@Index(columnList = "noteId", unique = true),
-		@Index(columnList = "noteId, measureId")
+		@Index(columnList = "sheetId, trackId, sectionId, measureId, noteId", unique = true)
 	}
 )
-@SequenceGenerator(name = "noteIdGenerator", sequenceName = "NOTE_SEQ", initialValue = 1, allocationSize = 1)
-public class NoteEntity extends AbstractJpaEntity<Long> implements AbstractEntity<Long> {
-	@Id
-	@Column(name = "noteId")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "noteIdGenerator")
-	private Long id;
+public class NoteEntity extends AbstractJpaEntity<NoteId> implements AbstractEntity<NoteId> {
+	@EmbeddedId
+	private NoteId id;
 
 	@Column(nullable = false)
 	private int note;
@@ -45,7 +40,34 @@ public class NoteEntity extends AbstractJpaEntity<Long> implements AbstractEntit
 	private int valueDen;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "measureId", referencedColumnName = "measureId", nullable = false)
+	@MapsId("sheedId")
+	@JoinColumn(name = "sheetId", referencedColumnName = "sheetId", nullable = false)
+	private SheetEntity sheet;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@MapsId("sheetId, trackId")
+	@JoinColumns({
+		@JoinColumn(name = "sheetId", referencedColumnName = "sheetId", nullable = false, insertable = false, updatable = false),
+		@JoinColumn(name = "trackId", referencedColumnName = "trackId", nullable = false, insertable = false, updatable = false)
+	})
+	private TrackEntity track;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@MapsId("sheetId, trackId, sectionId")
+	@JoinColumns({
+		@JoinColumn(name = "sheetId", referencedColumnName = "sheetId", nullable = false, insertable = false, updatable = false),
+		@JoinColumn(name = "trackId", referencedColumnName = "trackId", nullable = false, insertable = false, updatable = false),
+		@JoinColumn(name = "sectionId", referencedColumnName = "sectionId", nullable = false, insertable = false, updatable = false)
+	})
+	private SectionEntity section;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumns({
+		@JoinColumn(name = "sheetId", referencedColumnName = "sheetId", nullable = false, insertable = false, updatable = false),
+		@JoinColumn(name = "trackId", referencedColumnName = "trackId", nullable = false, insertable = false, updatable = false),
+		@JoinColumn(name = "sectionId", referencedColumnName = "sectionId", nullable = false, insertable = false, updatable = false),
+		@JoinColumn(name = "measureId", referencedColumnName = "measureId", nullable = false, insertable = false, updatable = false)
+	})
 	private MeasureEntity measure;
 }
 

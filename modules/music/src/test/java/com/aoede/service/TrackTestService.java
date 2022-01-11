@@ -11,6 +11,7 @@ import io.cucumber.datatable.DataTable;
 
 @Component
 public class TrackTestService extends AbstractTestService {
+	private static final long serialVersionUID = 1L;
 
 	@Autowired
 	SheetTestService sheetTestService;
@@ -27,7 +28,7 @@ public class TrackTestService extends AbstractTestService {
 
 	@Override
 	public String getKeyName() {
-		return "trackId";
+		return "id";
 	}
 
 	@Override
@@ -46,9 +47,6 @@ public class TrackTestService extends AbstractTestService {
 	@Override
 	protected void addJsonElement (JsonObject obj, String name, String value) {
 		switch (name) {
-		case "id":
-			obj.add(name, new JsonPrimitive(Long.parseLong(value)));
-			break;
 		default:
 			obj.add(name, new JsonPrimitive(value));
 		}

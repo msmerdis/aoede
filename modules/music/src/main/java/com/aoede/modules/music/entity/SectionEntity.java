@@ -5,16 +5,15 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
@@ -32,16 +31,12 @@ import lombok.Setter;
 @Table(
 	name = "tsection",
 	indexes = {
-		@Index(columnList = "sectionId", unique = true),
-		@Index(columnList = "sectionId, trackId")
+		@Index(columnList = "sheetId, trackId, sectionId", unique = true)
 	}
 )
-@SequenceGenerator(name = "sectionIdGenerator", sequenceName = "SECTION_SEQ", initialValue = 1, allocationSize = 1)
-public class SectionEntity extends AbstractJpaEntity<Long> implements AbstractEntity<Long> {
-	@Id
-	@Column(name = "sectionId")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sectionIdGenerator")
-	private Long id;
+public class SectionEntity extends AbstractJpaEntity<SectionId> implements AbstractEntity<SectionId> {
+	@EmbeddedId
+	private SectionId id;
 
 	@Column(nullable = false)
 	private short tempo;
@@ -56,7 +51,16 @@ public class SectionEntity extends AbstractJpaEntity<Long> implements AbstractEn
 	private int timeSignatureDenominator;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "trackId", referencedColumnName = "trackId", nullable = false)
+	@MapsId("sheedId")
+	@JoinColumn(name = "sheetId", referencedColumnName = "sheetId", nullable = false)
+	private SheetEntity sheet;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@MapsId("sheetId, trackId")
+	@JoinColumns({
+		@JoinColumn(name = "sheetId", referencedColumnName = "sheetId", nullable = false, insertable = false, updatable = false),
+		@JoinColumn(name = "trackId", referencedColumnName = "trackId", nullable = false, insertable = false, updatable = false)
+	})
 	private TrackEntity track;
 
 	@Fetch(FetchMode.SELECT)

@@ -13,8 +13,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @EqualsAndHashCode
-public class Track implements AbstractDomain<Long> {
-	private Long id;
+public class Track implements AbstractDomain<TrackKey> {
+	private TrackKey id;
 	private Clef clef;
 	private Sheet sheet;
 	private List<Section> sections;

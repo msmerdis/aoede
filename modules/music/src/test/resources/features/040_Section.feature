@@ -2,6 +2,7 @@
 Feature: Basic Section CRUD functionality
 ### Verify the ability to create/read/update and delete Sections
 
+@TC0401
 @Positive
 Scenario: retrieve all available Sections
 ### Retrieve the list of all available sections
@@ -11,7 +12,9 @@ Scenario: retrieve all available Sections
 When request all available "section"
 Then the request was successful
 And the response has a status code of 200
+And "section" returned array of size 0
 
+@TC0402
 @Negative
 Scenario: search for section is not available
 ### Attempt to search for a Section
@@ -24,18 +27,22 @@ And the response matches
 	| code | 501             |
 	| text | NOT_IMPLEMENTED |
 
+@TC0403
 @Negative
 Scenario: access a Section that does not exist
 ### Retrieve a section that does not exist
 ### This should return with an error
 
-When request a "section" with id "1"
-Then the request was not successful
+When request a "section" with composite id
+	|  sheetId  | integer | 1000 |
+	|  trackId  | integer | 1000 |
+	| sectionId | integer | 1000 |
 And the response has a status code of 404
 And the response matches
 	| code | 404       |
 	| text | NOT_FOUND |
 
+@TC0404
 @Positive
 Scenario: create a new Section
 ### create a new section and verify the track is created with the same data as provided
@@ -58,6 +65,7 @@ And the response matches
 When request previously created "section"
 And the request was successful
 And the response has a status code of 200
+And "section" has "measures" array of size 0
 And the response matches
 	| tempo         | 120 |
 	| keySignature  | TBC |
@@ -65,7 +73,10 @@ And the response matches
 Then request previously created "track"
 And the request was successful
 And "track" contains latest "section" in "sections"
+And "track" has "sections" array of size 1
 
+@TC0405
+@Positive
 Scenario: update a Section
 ### create a section and then update it
 ### verify that the section contents have been updated
@@ -93,13 +104,19 @@ And the response has a status code of 204
 Then request previously created "track"
 And the request was successful
 And "track" contains latest "section" in "sections"
+And "track" has "sections" array of size 1
 
+@TC0406
 @Negative
 Scenario: update a non existing Section
 ### attempt to update a section that does not exist
 ### this should generate an error
 
-When update "section" with id "100"
+Given prepare composite id "nonExistingSectionId"
+	|  sheetId  | integer | 1000 |
+	|  trackId  | integer | 1000 |
+	| sectionId | integer | 1000 |
+When update "section" with composite id "nonExistingSectionId"
 	| tempo         | 120 |
 	| keySignature  | TBC |
 	| timeSignature | 3/4 |
@@ -109,6 +126,8 @@ And the response matches
 	| code | 404       |
 	| text | NOT_FOUND |
 
+@TC0407
+@Positive
 Scenario: delete a Section
 ### create a section and then delete it
 ### verify that the section is no longer accessible
@@ -137,12 +156,16 @@ And the response matches
 	| code | 404       |
 	| text | NOT_FOUND |
 
+@TC0408
 @Negative
 Scenario: delete a non existing Section
 ### attempt to delete a section that does not exist
 ### this should generate an error
 
-When delete "section" with id "101"
+When delete "section" with composite id
+	|  sheetId  | integer | 1000 |
+	|  trackId  | integer | 1000 |
+	| sectionId | integer | 1000 |
 Then the request was not successful
 And the response has a status code of 404
 And the response matches

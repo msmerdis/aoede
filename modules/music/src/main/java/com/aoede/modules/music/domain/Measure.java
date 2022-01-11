@@ -13,8 +13,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @EqualsAndHashCode
-public class Measure implements AbstractDomain<Long> {
-	private Long id;
+public class Measure implements AbstractDomain<MeasureKey> {
+	private MeasureKey id;
 	private Section section;
 	private List<Note> notes;
 }

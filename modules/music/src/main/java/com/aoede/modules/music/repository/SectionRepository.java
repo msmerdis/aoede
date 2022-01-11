@@ -6,10 +6,14 @@ import org.springframework.stereotype.Repository;
 
 import com.aoede.commons.base.repository.AbstractJpaRepository;
 import com.aoede.modules.music.entity.SectionEntity;
+import com.aoede.modules.music.entity.SectionId;
+import com.aoede.modules.music.entity.TrackId;
 
 @Repository
-public interface SectionRepository extends AbstractJpaRepository <Long, SectionEntity> {
-	List<SectionEntity> findByTrackId(Long id);
+public interface SectionRepository extends AbstractJpaRepository <SectionId, SectionEntity> {
+	List<SectionEntity> findByTrackId(TrackId id);
+
+	Short countByTrackId(TrackId trackId);
 }
 
 

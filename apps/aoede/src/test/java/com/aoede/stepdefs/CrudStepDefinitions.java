@@ -20,6 +20,8 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 public class CrudStepDefinitions extends BaseStepDefinition {
+	private static final long serialVersionUID = 1L;
+
 	private ResponseResults latestResults = new ResponseResults ();
 
 	/**

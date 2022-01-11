@@ -5,12 +5,17 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.aoede.commons.base.repository.AbstractJpaRepository;
+import com.aoede.modules.music.entity.MeasureId;
 import com.aoede.modules.music.entity.NoteEntity;
+import com.aoede.modules.music.entity.NoteId;
 
 @Repository
-public interface NoteRepository extends AbstractJpaRepository <Long, NoteEntity> {
+public interface NoteRepository extends AbstractJpaRepository <NoteId, NoteEntity> {
 
-	List<NoteEntity> findByMeasureId(Long id);
+	List<NoteEntity> findByMeasureId(MeasureId id);
+
+	Short countByMeasureId(MeasureId id);
+
 }
 
 

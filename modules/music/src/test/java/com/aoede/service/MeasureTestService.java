@@ -11,6 +11,7 @@ import io.cucumber.datatable.DataTable;
 
 @Component
 public class MeasureTestService extends AbstractTestService {
+	private static final long serialVersionUID = 1L;
 
 	@Autowired
 	SectionTestService sectionTestService;
@@ -27,19 +28,19 @@ public class MeasureTestService extends AbstractTestService {
 
 	@Override
 	public String getKeyName() {
-		return "measureId";
+		return "id";
 	}
 
 	@Override
 	public void createBody (JsonObject obj, DataTable data) {
-		obj.add("sectionId", new JsonPrimitive(Integer.parseInt(sectionTestService.getLatestKey())));
+		obj.add("sectionId", new JsonPrimitive(sectionTestService.getLatestKey()));
 
 		super.createBody(obj, data);
 	}
 
 	@Override
 	public void createDefaultBody(JsonObject obj) {
-		obj.add("sectionId", new JsonPrimitive(Integer.parseInt(sectionTestService.getLatestKey())));
+		obj.add("sectionId", new JsonPrimitive(sectionTestService.getLatestKey()));
 	}
 
 	@Override

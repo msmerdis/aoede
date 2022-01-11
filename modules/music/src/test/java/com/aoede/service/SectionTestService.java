@@ -12,6 +12,7 @@ import io.cucumber.datatable.DataTable;
 
 @Component
 public class SectionTestService extends AbstractTestService {
+	private static final long serialVersionUID = 1L;
 
 	@Autowired
 	TrackTestService trackTestService;
@@ -28,12 +29,12 @@ public class SectionTestService extends AbstractTestService {
 
 	@Override
 	public String getKeyName() {
-		return "sectionId";
+		return "id";
 	}
 
 	@Override
 	public void createBody (JsonObject obj, DataTable data) {
-		obj.add("trackId", new JsonPrimitive(Integer.parseInt(trackTestService.getLatestKey())));
+		obj.add("trackId", new JsonPrimitive(trackTestService.getLatestKey()));
 
 		super.createBody(obj, data);
 	}
@@ -45,7 +46,7 @@ public class SectionTestService extends AbstractTestService {
 		fraction.add( "numerator" , new JsonPrimitive(4));
 		fraction.add("denominator", new JsonPrimitive(4));
 
-		obj.add("trackId", new JsonPrimitive(Integer.parseInt(trackTestService.getLatestKey())));
+		obj.add("trackId", new JsonPrimitive(trackTestService.getLatestKey()));
 		obj.add("tempo", new JsonPrimitive(random.nextInt(200) + 40));
 		obj.add("keySignature", new JsonPrimitive(randomString(12)));
 		obj.add("timeSignature", fraction);
@@ -55,9 +56,6 @@ public class SectionTestService extends AbstractTestService {
 	@Override
 	protected void addJsonElement (JsonObject obj, String name, String value) {
 		switch (name) {
-			case "id":
-				obj.add(name, new JsonPrimitive(Long.parseLong(value)));
-				break;
 			case "timeSignature":
 				JsonObject inner = new JsonObject();
 				String[] parts = value.split("/");

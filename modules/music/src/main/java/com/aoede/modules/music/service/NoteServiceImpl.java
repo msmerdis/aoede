@@ -13,13 +13,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.aoede.commons.base.exceptions.GenericException;
 import com.aoede.commons.base.service.AbstractServiceDomainImpl;
+import com.aoede.modules.music.domain.MeasureKey;
 import com.aoede.modules.music.domain.Note;
+import com.aoede.modules.music.domain.NoteKey;
+import com.aoede.modules.music.entity.MeasureId;
 import com.aoede.modules.music.entity.NoteEntity;
+import com.aoede.modules.music.entity.NoteId;
 import com.aoede.modules.music.repository.NoteRepository;
 import com.aoede.modules.music.transfer.Fraction;
 
 @Service
-public class NoteServiceImpl extends AbstractServiceDomainImpl <Long, Note, Long, NoteEntity, NoteRepository> implements NoteService {
+public class NoteServiceImpl extends AbstractServiceDomainImpl <NoteKey, Note, NoteId, NoteEntity, NoteRepository> implements NoteService {
 
 	@Autowired
 	private MeasureService measureService;
@@ -41,10 +45,20 @@ public class NoteServiceImpl extends AbstractServiceDomainImpl <Long, Note, Long
 	@Override
 	public NoteEntity createEntity(Note domain, boolean includeParent, boolean cascade) throws GenericException {
 		NoteEntity entity = new NoteEntity ();
+		MeasureKey measureId = domain.getMeasure().getId();
 
 		updateEntity (domain, entity, includeParent, cascade);
-		if (includeParent)
-			measureService.updateNoteEntity(entity, domain.getMeasure().getId());
+
+		measureService.updateNoteEntity(entity, measureId);
+		entity.setId(new NoteId(
+			measureId.getSheetId(),
+			measureId.getTrackId(),
+			measureId.getSectionId(),
+			measureId.getMeasureId(),
+			repository.countByMeasureId(
+				measureService.createEntityKey(measureId)
+			)
+		));
 
 		return entity;
 	}
@@ -67,7 +81,7 @@ public class NoteServiceImpl extends AbstractServiceDomainImpl <Long, Note, Long
 
 	@Override
 	public void updateDomain(NoteEntity entity, Note domain, boolean includeParent, boolean cascade) {
-		domain.setId(entity.getId());
+		domain.setId(createDomainKey(entity.getId()));
 		domain.setNote(entity.getNote());
 		domain.setValue(
 			new Fraction (entity.getValueNum(), entity.getValueDen())
@@ -80,13 +94,30 @@ public class NoteServiceImpl extends AbstractServiceDomainImpl <Long, Note, Long
 		}
 	}
 
+	@Override
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
-	public List<Note> findByMeasureId(Long id) {
-		return repository.findByMeasureId(id).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
+	public List<Note> findByMeasureId(MeasureKey id) {
+		MeasureId key = measureService.createEntityKey(id);
+
+		return repository.findByMeasureId(key).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
 	}
 
 	@Override
-	public Long createEntityKey(Long key) {
+	public NoteId createEntityKey(NoteKey key) {
+		return new NoteId(key.getSheetId(), key.getTrackId(), key.getSectionId(), key.getMeasureId(), key.getNoteId());
+	}
+
+	public NoteKey createDomainKey(NoteId id) {
+		NoteKey key = new NoteKey ();
+
+		key.setSheetId(id.getSheetId());
+		key.setTrackId(id.getTrackId());
+
+		key.setSectionId(id.getSectionId());
+		key.setMeasureId(id.getMeasureId());
+
+		key.setNoteId(id.getNoteId());
+
 		return key;
 	}
 

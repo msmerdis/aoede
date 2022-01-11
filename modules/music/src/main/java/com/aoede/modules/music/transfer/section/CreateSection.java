@@ -1,6 +1,6 @@
 package com.aoede.modules.music.transfer.section;
 
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.NotEmpty;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,8 +12,8 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class CreateSection extends UpdateSection {
-	@Positive (message = "Section must define a positive track id")
-	private Long trackId;
+	@NotEmpty (message = "Section must define a track id")
+	private String trackId;
 }
 
 

@@ -2,6 +2,7 @@
 Feature: Basic Clef CRUD functionality
 ### Verify the ability to create/read/update and delete Clefs
 
+@TC0101
 @Positive
 Scenario: retrieve all available Clefs
 ### Retrieve the list of all available clefs
@@ -24,7 +25,9 @@ And the response array contains
 	| Subbass       |  F   |  53  |   4  |
 And the response array does not contain "id" with value "New Clef"
 And the response array does not contain "id" with value "Updated Clef"
+And "clef" returned array of size 9
 
+@TC0102
 @Negative
 Scenario: search for Clef is not available
 ### Attempt to search for a clef
@@ -37,6 +40,7 @@ And the response matches
 	| code | 501             |
 	| text | NOT_IMPLEMENTED |
 
+@TC0103
 @Positive
 Scenario: access a single Clef by id
 ### Retrieve one of the common clefs
@@ -51,6 +55,7 @@ And the response matches
 	| note | 64     |
 	| spos | -2     |
 
+@TC0104
 @Negative
 Scenario: access a Clef that does not exist
 ### Retrieve a clef that does not exist
@@ -63,6 +68,7 @@ And the response matches
 	| code | 404       |
 	| text | NOT_FOUND |
 
+@TC0105
 @Negative
 Scenario: create a new Clef
 ### create a new clef is not allowed
@@ -78,6 +84,7 @@ And the response matches
 	| code | 400         |
 	| text | BAD_REQUEST |
 
+@TC0106
 @Negative
 Scenario: update a Clef
 ### updating clefs is not allowed
@@ -93,6 +100,7 @@ And the response matches
 	| code | 400         |
 	| text | BAD_REQUEST |
 
+@TC0107
 @Negative
 Scenario: delete a Clef
 ### deleting clefs is not allowed

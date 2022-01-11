@@ -4,17 +4,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
@@ -32,19 +30,33 @@ import lombok.Setter;
 @Table(
 	name = "tmeasure",
 	indexes = {
-		@Index(columnList = "measureId", unique = true),
-		@Index(columnList = "measureId, sectionId")
+		@Index(columnList = "sheetId, trackId, sectionId, measureId", unique = true)
 	}
 )
-@SequenceGenerator(name = "measureIdGenerator", sequenceName = "MEASURE_SEQ", initialValue = 1, allocationSize = 1)
-public class MeasureEntity extends AbstractJpaEntity<Long> implements AbstractEntity<Long> {
-	@Id
-	@Column(name = "measureId")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "measureIdGenerator")
-	private Long id;
+public class MeasureEntity extends AbstractJpaEntity<MeasureId> implements AbstractEntity<MeasureId> {
+	@EmbeddedId
+	private MeasureId id;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "sectionId", referencedColumnName = "sectionId", nullable = false)
+	@MapsId("sheedId")
+	@JoinColumn(name = "sheetId", referencedColumnName = "sheetId", nullable = false)
+	private SheetEntity sheet;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@MapsId("sheetId, trackId")
+	@JoinColumns({
+		@JoinColumn(name = "sheetId", referencedColumnName = "sheetId", nullable = false, insertable = false, updatable = false),
+		@JoinColumn(name = "trackId", referencedColumnName = "trackId", nullable = false, insertable = false, updatable = false)
+	})
+	private TrackEntity track;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@MapsId("sheetId, trackId, sectionId")
+	@JoinColumns({
+		@JoinColumn(name = "sheetId", referencedColumnName = "sheetId", nullable = false, insertable = false, updatable = false),
+		@JoinColumn(name = "trackId", referencedColumnName = "trackId", nullable = false, insertable = false, updatable = false),
+		@JoinColumn(name = "sectionId", referencedColumnName = "sectionId", nullable = false, insertable = false, updatable = false)
+	})
 	private SectionEntity section;
 
 	@Fetch(FetchMode.SELECT)

@@ -3,6 +3,8 @@ package com.aoede.modules.music.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,44 +12,49 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aoede.commons.base.controller.AbstractResourceController;
+import com.aoede.commons.base.controller.AbstractCompositeResourceController;
 import com.aoede.modules.music.domain.KeySignature;
 import com.aoede.modules.music.domain.Section;
+import com.aoede.modules.music.domain.SectionKey;
 import com.aoede.modules.music.domain.Track;
 import com.aoede.modules.music.service.SectionService;
+import com.aoede.modules.music.transfer.section.AccessSection;
 import com.aoede.modules.music.transfer.section.CreateSection;
 import com.aoede.modules.music.transfer.section.DetailSectionResponse;
 import com.aoede.modules.music.transfer.section.SimpleSectionResponse;
 import com.aoede.modules.music.transfer.section.UpdateSection;
+import com.aoede.modules.music.transfer.track.AccessTrack;
 
 @RestController
 @RequestMapping ("/api/section")
-public class SectionController extends AbstractResourceController<
-	Long,
+public class SectionController extends AbstractCompositeResourceController<
+	SectionKey,
 	Section,
-	Long,
+	AccessSection,
 	CreateSection,
 	UpdateSection,
 	SimpleSectionResponse,
 	DetailSectionResponse,
 	SectionService
 > {
+	@Autowired
 	MeasureController measureController;
 
-	public SectionController(SectionService service, MeasureController measureController) {
-		super(service);
+	@Autowired
+	ConversionService conversionService;
 
-		this.measureController = measureController;
+	@Autowired
+	TrackController trackController;
+
+	public SectionController(SectionService service) {
+		super(service);
 	}
 
 	@Override
 	public SimpleSectionResponse simpleResponse(Section entity, boolean includeParent, boolean cascade) {
 		SimpleSectionResponse response = new SimpleSectionResponse ();
 
-		response.setSectionId(entity.getId());
-		response.setTempo(entity.getTempo());
-		response.setTimeSignature(entity.getTimeSignature());
-		response.setKeySignature(entity.getKeySignature().getId());
+		updateSimpleSectionResponse (response, entity, entity.getId());
 
 		return response;
 	}
@@ -55,15 +62,13 @@ public class SectionController extends AbstractResourceController<
 	@Override
 	public DetailSectionResponse detailResponse(Section entity, boolean includeParent, boolean cascade) {
 		DetailSectionResponse response = new DetailSectionResponse ();
+		SectionKey key = entity.getId();
 
-		response.setSectionId(entity.getId());
-		response.setTempo(entity.getTempo());
-		response.setTimeSignature(entity.getTimeSignature());
-		response.setKeySignature(entity.getKeySignature().getId());
+		updateSimpleSectionResponse (response, entity, key);
 
 		if (includeParent) {
-			response.setTrackId(entity.getTrack().getId());
-			response.setSheetId(entity.getTrack().getSheet().getId());
+			response.setSheetId(key.getSheetId());
+			response.setTrackId(new AccessTrack(key.getSheetId(), key.getTrackId()));
 		}
 
 		if (cascade) {
@@ -75,12 +80,21 @@ public class SectionController extends AbstractResourceController<
 		return response;
 	}
 
+	private void updateSimpleSectionResponse (SimpleSectionResponse response, Section entity, SectionKey key) {
+		response.setId(new AccessSection(key.getSheetId(), key.getTrackId(), key.getSectionId()));
+		response.setTempo(entity.getTempo());
+		response.setTimeSignature(entity.getTimeSignature());
+		response.setKeySignature(entity.getKeySignature().getId());
+	}
+
 	@Override
 	public Section createDomain(CreateSection request) {
 		Section section = updateDomain (request);
 		Track track = new Track ();
 
-		track.setId(request.getTrackId());
+		track.setId(trackController.createDomainKey(
+			conversionService.convert(request.getTrackId(), AccessTrack.class)
+		));
 		section.setTrack(track);
 
 		return section;
@@ -102,13 +116,22 @@ public class SectionController extends AbstractResourceController<
 
 	@GetMapping("/track/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public List<SimpleSectionResponse> findAllByTrack(@PathVariable("id") final Long id) throws Exception {
-		return service.findByTrackId(id).stream().map(e -> simpleResponse(e, true, true)).collect(Collectors.toList());
+	public List<SimpleSectionResponse> findAllByTrack(@PathVariable("id") final AccessTrack id) throws Exception {
+		return service.findByTrackId(
+			trackController.createDomainKey(id)
+		).stream().map(e -> simpleResponse(e, true, true)).collect(Collectors.toList());
 	}
 
 	@Override
-	public Long createDomainKey(Long data) {
-		return data;
+	public SectionKey createDomainKey(AccessSection data) {
+		SectionKey key = new SectionKey ();
+
+		key.setSheetId(data.getSheetId());
+		key.setTrackId(data.getTrackId());
+
+		key.setSectionId(data.getSectionId());
+
+		return key;
 	}
 
 }

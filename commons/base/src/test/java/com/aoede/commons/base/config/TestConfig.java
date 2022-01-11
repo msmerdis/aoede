@@ -1,4 +1,4 @@
-package com.aoede.commons.base.controller;
+package com.aoede.commons.base.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;

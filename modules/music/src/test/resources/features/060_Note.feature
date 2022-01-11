@@ -2,6 +2,7 @@
 Feature: Basic Note CRUD functionality
 ### Verify the ability to create/read/update and delete Note
 
+@TC0601
 @Positive
 Scenario: retrieve all available Notes
 ### Retrieve the list of all available note
@@ -12,6 +13,7 @@ When request all available "note"
 Then the request was successful
 And the response has a status code of 200
 
+@TC0602
 @Negative
 Scenario: search for note is not available
 ### Attempt to search for a Note
@@ -24,18 +26,25 @@ And the response matches
 	| code | 501             |
 	| text | NOT_IMPLEMENTED |
 
+@TC0603
 @Negative
 Scenario: access a Note that does not exist
 ### Retrieve a note that does not exist
 ### This should return with an error
 
-When request a "note" with id "1"
+When request a "note" with composite id
+	|  sheetId  | integer | 1000 |
+	|  trackId  | integer | 1000 |
+	| sectionId | integer | 1000 |
+	| measureId | integer | 1000 |
+	|   noteId  | integer | 1000 |
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
 	| code | 404       |
 	| text | NOT_FOUND |
 
+@TC0604
 @Positive
 Scenario: create a new Note
 ### create a new note and verify the measure is created with the same data as provided
@@ -67,6 +76,8 @@ Then request previously created "measure"
 And the request was successful
 And "measure" contains latest "note" in "notes"
 
+@TC0605
+@Positive
 Scenario: update a Note
 ### create a note and then update it
 ### verify that the note contents have been updated
@@ -97,12 +108,19 @@ And the request was successful
 And the response has a status code of 200
 And the response array contains latest "note"
 
+@TC0606
 @Negative
 Scenario: update a non existing note
 ### attempt to update a note that does not exist
 ### this should generate an error
 
-When update "note" with id "100"
+Given prepare composite id "nonExistingNoteId"
+	|  sheetId  | integer | 1000 |
+	|  trackId  | integer | 1000 |
+	| sectionId | integer | 1000 |
+	| measureId | integer | 1000 |
+	|   noteId  | integer | 1000 |
+When update "note" with composite id "nonExistingNoteId"
 	| note  |  64 |
 	| value | 1/4 |
 Then the request was not successful
@@ -111,6 +129,8 @@ And the response matches
 	| code | 404       |
 	| text | NOT_FOUND |
 
+@TC0607
+@Positive
 Scenario: delete a Note
 ### create a note and then delete it
 ### verify that the note is no longer accessible
@@ -141,12 +161,18 @@ And the response matches
 	| code | 404       |
 	| text | NOT_FOUND |
 
+@TC0608
 @Negative
 Scenario: delete a non existing Note
 ### attempt to delete a note that does not exist
 ### this should generate an error
 
-When delete "note" with id "101"
+When delete "note" with composite id
+	|  sheetId  | integer | 1000 |
+	|  trackId  | integer | 1000 |
+	| sectionId | integer | 1000 |
+	| measureId | integer | 1000 |
+	|   noteId  | integer | 1000 |
 Then the request was not successful
 And the response has a status code of 404
 And the response matches

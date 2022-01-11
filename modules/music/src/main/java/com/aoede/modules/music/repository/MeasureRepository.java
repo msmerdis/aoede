@@ -6,10 +6,14 @@ import org.springframework.stereotype.Repository;
 
 import com.aoede.commons.base.repository.AbstractJpaRepository;
 import com.aoede.modules.music.entity.MeasureEntity;
+import com.aoede.modules.music.entity.MeasureId;
+import com.aoede.modules.music.entity.SectionId;
 
 @Repository
-public interface MeasureRepository extends AbstractJpaRepository <Long, MeasureEntity> {
-	List<MeasureEntity> findBySectionId(Long id);
+public interface MeasureRepository extends AbstractJpaRepository <MeasureId, MeasureEntity> {
+	List<MeasureEntity> findBySectionId(SectionId id);
+
+	Short countBySectionId(SectionId sectionId);
 }
 
 

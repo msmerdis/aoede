@@ -1,6 +1,6 @@
 package com.aoede.modules.music.transfer.measure;
 
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.NotEmpty;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,8 +12,8 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class CreateMeasure extends UpdateMeasure {
-	@Positive (message = "Measure must define a positive section id")
-	private Long sectionId;
+	@NotEmpty (message = "Measure must define a section id")
+	private String sectionId;
 }
 
 

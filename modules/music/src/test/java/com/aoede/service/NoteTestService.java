@@ -12,6 +12,7 @@ import io.cucumber.datatable.DataTable;
 
 @Component
 public class NoteTestService extends AbstractTestService {
+	private static final long serialVersionUID = 1L;
 
 	@Autowired
 	MeasureTestService measureTestService;
@@ -28,12 +29,12 @@ public class NoteTestService extends AbstractTestService {
 
 	@Override
 	public String getKeyName() {
-		return "noteId";
+		return "id";
 	}
 
 	@Override
 	public void createBody (JsonObject obj, DataTable data) {
-		obj.add("measureId", new JsonPrimitive(Integer.parseInt(measureTestService.getLatestKey())));
+		obj.add("measureId", new JsonPrimitive(measureTestService.getLatestKey()));
 
 		super.createBody(obj, data);
 	}
@@ -45,7 +46,7 @@ public class NoteTestService extends AbstractTestService {
 		fraction.add( "numerator" , new JsonPrimitive(4));
 		fraction.add("denominator", new JsonPrimitive(4));
 
-		obj.add("measureId", new JsonPrimitive(Integer.parseInt(measureTestService.getLatestKey())));
+		obj.add("measureId", new JsonPrimitive(measureTestService.getLatestKey()));
 		obj.add("note", new JsonPrimitive(random.nextInt(60) + 40));
 		obj.add("value", fraction);
 	}
@@ -53,9 +54,6 @@ public class NoteTestService extends AbstractTestService {
 	@Override
 	protected void addJsonElement (JsonObject obj, String name, String value) {
 		switch (name) {
-			case "id":
-				obj.add(name, new JsonPrimitive(Long.parseLong(value)));
-				break;
 			case "value":
 				JsonObject inner = new JsonObject();
 				String[] parts = value.split("/");

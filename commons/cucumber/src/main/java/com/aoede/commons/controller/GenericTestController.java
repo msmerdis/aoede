@@ -239,6 +239,18 @@ public class GenericTestController extends ServiceStepDefinition {
 		);
 	}
 
+	@Then("{string} returned array of size {int}")
+	public void verifyResultCount (String domain, int size) {
+		AbstractTestService service = getService(domain);
+
+		var arr = service.getLatestArr();
+		assertNotNull(arr, "latest response is not an array");
+
+		int actual = arr.size();
+
+		assertEquals (size, actual);
+	}
+
 	@Then("the response matches")
 	public void verifyElement (DataTable data) {
 		assertTrue(
@@ -257,6 +269,22 @@ public class GenericTestController extends ServiceStepDefinition {
 			cService.getKeyName(),
 			cService.getLatestKey()
 		));
+	}
+
+	@Then("{string} has {string} array of size {int}")
+	public void verifyArraySize (String domain, String array, int size) {
+		AbstractTestService service = getService(domain);
+
+		var obj = service.getLatestObj();
+		assertNotNull(obj, "latest response is not an object");
+		assertTrue("latest object does not contain " + array, obj.has(array));
+
+		var element = obj.get(array);
+		assertTrue(array + " is not an array", element.isJsonArray());
+
+		int actual = element.getAsJsonArray().size();
+
+		assertEquals (size, actual);
 	}
 }
 

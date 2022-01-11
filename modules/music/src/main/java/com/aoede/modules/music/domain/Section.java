@@ -14,8 +14,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @EqualsAndHashCode
-public class Section implements AbstractDomain<Long> {
-	private Long id;
+public class Section implements AbstractDomain<SectionKey> {
+	private SectionKey id;
 	private short tempo;
 	private KeySignature keySignature;
 	private Fraction timeSignature;

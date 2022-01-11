@@ -15,13 +15,16 @@ import com.aoede.commons.base.exceptions.GenericException;
 import com.aoede.commons.base.service.AbstractServiceDomainImpl;
 import com.aoede.modules.music.domain.KeySignature;
 import com.aoede.modules.music.domain.Section;
+import com.aoede.modules.music.domain.SectionKey;
+import com.aoede.modules.music.domain.TrackKey;
 import com.aoede.modules.music.entity.MeasureEntity;
 import com.aoede.modules.music.entity.SectionEntity;
+import com.aoede.modules.music.entity.SectionId;
 import com.aoede.modules.music.repository.SectionRepository;
 import com.aoede.modules.music.transfer.Fraction;
 
 @Service
-public class SectionServiceImpl extends AbstractServiceDomainImpl <Long, Section, Long, SectionEntity, SectionRepository> implements SectionService {
+public class SectionServiceImpl extends AbstractServiceDomainImpl <SectionKey, Section, SectionId, SectionEntity, SectionRepository> implements SectionService {
 
 	@Autowired
 	private TrackService trackService;
@@ -46,10 +49,14 @@ public class SectionServiceImpl extends AbstractServiceDomainImpl <Long, Section
 	@Override
 	public SectionEntity createEntity(Section domain, boolean includeParent, boolean cascade) throws GenericException {
 		SectionEntity entity = new SectionEntity ();
+		TrackKey trackId = domain.getTrack().getId();
 
 		updateEntity(domain, entity, includeParent, cascade);
-		if (includeParent)
-			trackService.updateSectionEntity(entity, domain.getTrack().getId());
+
+		trackService.updateSectionEntity(entity, trackId);
+		entity.setId(new SectionId(trackId.getSheetId(), trackId.getTrackId(), repository.countByTrackId(
+			trackService.createEntityKey(trackId)
+		)));
 
 		return entity;
 	}
@@ -76,7 +83,7 @@ public class SectionServiceImpl extends AbstractServiceDomainImpl <Long, Section
 		KeySignature keySignature = new KeySignature ();
 		keySignature.setId(entity.getKeySignature());
 
-		domain.setId(entity.getId());
+		domain.setId(createDomainKey(entity.getId()));
 		domain.setKeySignature(keySignature);
 		domain.setTempo(entity.getTempo());
 		domain.setTimeSignature(
@@ -102,17 +109,30 @@ public class SectionServiceImpl extends AbstractServiceDomainImpl <Long, Section
 		}
 	}
 
-	public void updateMeasureEntity(MeasureEntity entity, Long id) {
-		entity.setSection(repository.getById(id));
-	}
-
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
-	public List<Section> findByTrackId(Long id) {
-		return repository.findByTrackId(id).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
+	public List<Section> findByTrackId(TrackKey trackKey) {
+		return repository.findByTrackId(
+			trackService.createEntityKey(trackKey)
+		).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
 	}
 
 	@Override
-	public Long createEntityKey(Long key) {
+	public SectionId createEntityKey(SectionKey key) {
+		return new SectionId(key.getSheetId(), key.getTrackId(), key.getSectionId());
+	}
+
+	public void updateMeasureEntity(MeasureEntity entity, SectionKey key) {
+		entity.setSection(repository.getById(createEntityKey(key)));
+	}
+
+	public SectionKey createDomainKey(SectionId id) {
+		SectionKey key = new SectionKey ();
+
+		key.setSheetId(id.getSheetId());
+		key.setTrackId(id.getTrackId());
+
+		key.setSectionId(id.getSectionId());
+
 		return key;
 	}
 
