@@ -11,8 +11,6 @@ import io.cucumber.datatable.DataTable;
 
 @Component
 public class TrackTestService extends AbstractTestService {
-	private static final long serialVersionUID = 1L;
-
 	@Autowired
 	SheetTestService sheetTestService;
 

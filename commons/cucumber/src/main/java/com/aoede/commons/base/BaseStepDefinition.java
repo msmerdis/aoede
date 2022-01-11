@@ -21,8 +21,6 @@ import io.cucumber.plugin.event.TestCaseFinished;
 import io.cucumber.plugin.event.TestCaseStarted;
 
 public class BaseStepDefinition extends BaseTestComponent implements EventListener {
-	private static final long serialVersionUID = 1L;
-
 	private RestTemplate restTemplate = new RestTemplate();
 
 	@Autowired
@@ -145,7 +143,6 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 	}
 
 	protected void cleanup (TestCaseFinished event) {
-		clear();
 	}
 }
 

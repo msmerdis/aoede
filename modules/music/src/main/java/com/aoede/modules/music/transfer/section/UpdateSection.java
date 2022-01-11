@@ -2,7 +2,6 @@ package com.aoede.modules.music.transfer.section;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
@@ -23,8 +22,7 @@ public class UpdateSection {
 	@Max(value = 512, message = "maximum allowed tempo is 512")
 	private short tempo;
 
-	@NotEmpty (message = "Section must define a key signature")
-	private String keySignature;
+	private short keySignature;
 
 	@NotNull(message = "Section must define a time signature")
 	private Fraction timeSignature;

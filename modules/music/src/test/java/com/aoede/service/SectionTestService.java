@@ -12,8 +12,6 @@ import io.cucumber.datatable.DataTable;
 
 @Component
 public class SectionTestService extends AbstractTestService {
-	private static final long serialVersionUID = 1L;
-
 	@Autowired
 	TrackTestService trackTestService;
 
@@ -48,9 +46,8 @@ public class SectionTestService extends AbstractTestService {
 
 		obj.add("trackId", new JsonPrimitive(trackTestService.getLatestKey()));
 		obj.add("tempo", new JsonPrimitive(random.nextInt(200) + 40));
-		obj.add("keySignature", new JsonPrimitive(randomString(12)));
+		obj.add("keySignature", new JsonPrimitive(random.nextInt(15) - 7));
 		obj.add("timeSignature", fraction);
-
 	}
 
 	@Override
@@ -68,7 +65,6 @@ public class SectionTestService extends AbstractTestService {
 			default:
 				obj.add(name, new JsonPrimitive(value));
 		}
-
 	}
 
 	@Override

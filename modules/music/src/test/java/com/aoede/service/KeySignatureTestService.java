@@ -7,15 +7,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 @Component
-public class SheetTestService extends AbstractTestService {
+public class KeySignatureTestService extends AbstractTestService {
 	@Override
 	public String getName() {
-		return "sheet";
+		return "keySignature";
 	}
 
 	@Override
 	public String getPath() {
-		return "/api/sheet";
+		return "/api/key_signature";
 	}
 
 	@Override
@@ -25,19 +25,12 @@ public class SheetTestService extends AbstractTestService {
 
 	@Override
 	protected void addJsonElement (JsonObject obj, String name, String value) {
-		switch (name) {
-		case "id":
-			obj.add(name, new JsonPrimitive(Long.parseLong(value)));
-			break;
-		default:
-			obj.add(name, new JsonPrimitive(value));
-		}
+		obj.add(name, new JsonPrimitive(value));
 	}
 
 	@Override
-	public void createDefaultBody(JsonObject obj) {
-		obj.add("name", new JsonPrimitive("sheet_" + randomString(18)));
-	}
+	public void createDefaultBody(JsonObject obj) {}
+
 }
 
 

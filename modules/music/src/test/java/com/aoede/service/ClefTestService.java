@@ -8,8 +8,6 @@ import com.google.gson.JsonPrimitive;
 
 @Component
 public class ClefTestService extends AbstractTestService {
-	private static final long serialVersionUID = 1L;
-
 	@Override
 	public String getName() {
 		return "clef";

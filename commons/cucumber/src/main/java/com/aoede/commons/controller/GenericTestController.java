@@ -2,16 +2,14 @@ package com.aoede.commons.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 
 import com.aoede.commons.base.ResponseResults;
 import com.aoede.commons.base.ServiceStepDefinition;
 import com.aoede.commons.service.AbstractTestService;
-import com.aoede.commons.service.TestCaseIdTrackerService;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
@@ -27,10 +25,6 @@ import io.cucumber.java.en.When;
  * Utilises domain test services to build and verify the results
  */
 public class GenericTestController extends ServiceStepDefinition {
-	private static final long serialVersionUID = 1L;
-
-	@Autowired
-	private TestCaseIdTrackerService testCaseIdTrackerService;
 
 	/**
 	 * Hooks
@@ -68,13 +62,14 @@ public class GenericTestController extends ServiceStepDefinition {
 	 * Data preparation steps
 	 */
 
-	public String generateCompositeKey (DataTable data) {
-		return generatePaddedBase64(generateJson(data));
+	@When("prepare composite id {string}")
+	public void prepareCompositeId(String name, DataTable data) {
+		compositeIdService.put(name, compositeIdService.generateCompositeKey(data));
 	}
 
-	@When("prepare composite id {string}")
-	public void search(String name, DataTable data) {
-		put(name, generateCompositeKey(data));
+	@When("prepare json {string}")
+	public void prepareJson(String name, DataTable data) {
+		jsonObjectService.put(name, jsonObjectService.generateJson(data));
 	}
 
 	/**
@@ -106,12 +101,12 @@ public class GenericTestController extends ServiceStepDefinition {
 
 	@When("request a {string} with composite id")
 	public void getComposite(String domain, DataTable data) {
-		getSimple(domain, generateCompositeKey (data));
+		getSimple(domain, compositeIdService.generateCompositeKey(data));
 	}
 
 	@When("request a {string} with composite id {string}")
 	public void getCompositePrepared(String domain, String name) {
-		String id = get(name);
+		String id = compositeIdService.get(name);
 
 		assertNotNull(id, "composite id has not been prepared");
 
@@ -170,7 +165,7 @@ public class GenericTestController extends ServiceStepDefinition {
 
 	@When("update {string} with composite id {string}")
 	public void updateCompositePrepared(String domain, String name, DataTable data) {
-		String id = get(name);
+		String id = compositeIdService.get(name);
 
 		assertNotNull(id, "composite id has not been prepared");
 
@@ -193,7 +188,7 @@ public class GenericTestController extends ServiceStepDefinition {
 
 	@When("delete {string} with composite id {string}")
 	public void deleteCompositePrepared(String domain, String name) {
-		String id = get(name);
+		String id = compositeIdService.get(name);
 
 		assertNotNull(id, "composite id has not been prepared");
 
@@ -202,7 +197,7 @@ public class GenericTestController extends ServiceStepDefinition {
 
 	@When("delete {string} with composite id")
 	public void deleteComposite(String domain, DataTable data) {
-		deleteSimple(domain, generateCompositeKey (data));
+		deleteSimple(domain, compositeIdService.generateCompositeKey(data));
 	}
 
 	@When("delete previously created {string}")
@@ -283,7 +278,7 @@ public class GenericTestController extends ServiceStepDefinition {
 		AbstractTestService service = getService(domain);
 
 		var arr = service.getLatestArr();
-		assertNotNull(arr, "latest response is not an array");
+		assertNotNull("latest response is not an array", arr);
 
 		int actual = arr.size();
 
@@ -315,7 +310,7 @@ public class GenericTestController extends ServiceStepDefinition {
 		AbstractTestService service = getService(domain);
 
 		var obj = service.getLatestObj();
-		assertNotNull(obj, "latest response is not an object");
+		assertNotNull("latest response is not an object", obj);
 		assertTrue("latest object does not contain " + array, obj.has(array));
 
 		var element = obj.get(array);

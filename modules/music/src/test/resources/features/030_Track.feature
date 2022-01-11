@@ -64,6 +64,7 @@ And the response matches
 	| clef | Treble |
 Then request previously created "sheet"
 And the request was successful
+And the response has a status code of 200
 And "sheet" contains latest "track" in "tracks"
 And "sheet" has "tracks" array of size 1
 

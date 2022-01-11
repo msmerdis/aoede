@@ -54,13 +54,13 @@ And a randomized "track"
 And the request was successful
 And a "section" with
 	| tempo         | 120 |
-	| keySignature  | TBC |
+	| keySignature  |  0  |
 	| timeSignature | 3/4 |
 And the request was successful
 And the response has a status code of 201
 And the response matches
 	| tempo         | 120 |
-	| keySignature  | TBC |
+	| keySignature  |  0  |
 	| timeSignature | 3/4 |
 When request previously created "section"
 And the request was successful
@@ -68,7 +68,7 @@ And the response has a status code of 200
 And "section" has "measures" array of size 0
 And the response matches
 	| tempo         | 120 |
-	| keySignature  | TBC |
+	| keySignature  |  0  |
 	| timeSignature | 3/4 |
 Then request previously created "track"
 And the request was successful
@@ -87,21 +87,29 @@ And a randomized "track"
 And the request was successful
 And a "section" with
 	| tempo         | 120 |
-	| keySignature  | TBC |
+	| keySignature  |  0  |
 	| timeSignature | 3/4 |
 And the request was successful
 And the response has a status code of 201
 And the response matches
 	| tempo         | 120 |
-	| keySignature  | TBC |
+	| keySignature  |  0  |
 	| timeSignature | 3/4 |
 When update previously created "section"
 	| tempo         | 160 |
-	| keySignature  | ERM |
+	| keySignature  |  1  |
 	| timeSignature | 4/4 |
 And the request was successful
 And the response has a status code of 204
-Then request previously created "track"
+Then request previously created "section"
+And the request was successful
+And the response has a status code of 200
+And the response matches
+	| tempo         | 160 |
+	| keySignature  |  1  |
+	| timeSignature | 4/4 |
+And request previously created "track"
+And the response has a status code of 200
 And the request was successful
 And "track" contains latest "section" in "sections"
 And "track" has "sections" array of size 1
@@ -118,7 +126,7 @@ Given prepare composite id "nonExistingSectionId"
 	| sectionId | integer | 1000 |
 When update "section" with composite id "nonExistingSectionId"
 	| tempo         | 120 |
-	| keySignature  | TBC |
+	| keySignature  |  0  |
 	| timeSignature | 3/4 |
 Then the request was not successful
 And the response has a status code of 404
@@ -138,13 +146,13 @@ And a randomized "track"
 And the request was successful
 And a "section" with
 	| tempo         | 120 |
-	| keySignature  | TBC |
+	| keySignature  |  0  |
 	| timeSignature | 3/4 |
 And the request was successful
 And the response has a status code of 201
 And the response matches
 	| tempo         | 120 |
-	| keySignature  | TBC |
+	| keySignature  |  0  |
 	| timeSignature | 3/4 |
 When delete previously created "section"
 And the request was successful

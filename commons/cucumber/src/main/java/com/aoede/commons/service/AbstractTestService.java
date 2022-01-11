@@ -21,8 +21,6 @@ import lombok.Getter;
 
 @Getter
 public abstract class AbstractTestService extends BaseTestComponent {
-	private static final long serialVersionUID = 1L;
-
 	protected Random random = new Random (System.currentTimeMillis());
 	protected boolean success;
 	protected String latestKey;

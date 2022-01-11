@@ -1,34 +1,38 @@
 package com.aoede.commons.base;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.aoede.commons.service.AbstractTestService;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.aoede.commons.service.CompositeIdService;
+import com.aoede.commons.service.CompositeIdServiceImpl;
+import com.aoede.commons.service.JsonObjectService;
+import com.aoede.commons.service.JsonObjectServiceImpl;
+import com.aoede.commons.service.TestCaseIdTrackerService;
 
-import io.cucumber.datatable.DataTable;
 import io.cucumber.plugin.event.TestCaseFinished;
 import io.cucumber.plugin.event.TestCaseStarted;
 
 public class ServiceStepDefinition extends BaseStepDefinition {
-	private static final long serialVersionUID = 1L;
-
+	// autowired service persists between scenario execution
 	@Autowired
 	private ListableBeanFactory listableBeanFactory;
 	private Map<String, AbstractTestService> services = new HashMap<String, AbstractTestService> ();
 	private AbstractTestService latestService;
+
+	@Autowired
+	protected TestCaseIdTrackerService testCaseIdTrackerService;
+
+	// services instantiated locally will be recreated for every scenario
+	protected CompositeIdService compositeIdService;
+	protected JsonObjectService jsonObjectService;
 
 	@PostConstruct
 	private void discoverTestServices () {
@@ -49,6 +53,16 @@ public class ServiceStepDefinition extends BaseStepDefinition {
 
 			services.put(service.getName(), service);
 		}
+
+		// initialize ephemeral objects
+		CompositeIdServiceImpl compositeIdServiceImpl = new CompositeIdServiceImpl();
+		JsonObjectServiceImpl  jsonObjectServiceImpl  = new JsonObjectServiceImpl();
+
+		jsonObjectServiceImpl.setCompositeIdService(compositeIdServiceImpl);
+		compositeIdServiceImpl.setJsonObjectService(jsonObjectServiceImpl);
+
+		compositeIdService = compositeIdServiceImpl;
+		jsonObjectService  = jsonObjectServiceImpl;
 	}
 
 	protected AbstractTestService getService (String domain) {
@@ -85,50 +99,6 @@ public class ServiceStepDefinition extends BaseStepDefinition {
 		for (var service : services.values()) {
 			service.cleanup ();
 		}
-	}
-
-	protected String generateJson (DataTable data) {
-		JsonObject obj = new JsonObject ();
-
-		for (var row : data.asLists()) {
-			assertEquals("Json row must have exactly three elements", 3, row.size());
-			switch (row.get(1)) {
-			case "int":
-			case "integer":
-				obj.add(row.get(0), new JsonPrimitive(Integer.parseInt(row.get(2))));
-			case "long":
-				obj.add(row.get(0), new JsonPrimitive(Long.parseLong(row.get(2))));
-				break;
-			case "number":
-				obj.add(row.get(0), new JsonPrimitive(new BigInteger(row.get(2))));
-				break;
-			case "string":
-				obj.add(row.get(0), new JsonPrimitive(row.get(2)));
-				break;
-			case "bool":
-			case "boolean":
-				obj.add(row.get(0), new JsonPrimitive(Boolean.parseBoolean(row.get(2))));
-				break;
-			default:
-				assertFalse (true, "Type " + row.get(1) + " could not be converted to json value");
-			}
-		}
-
-		return obj.toString();
-	}
-
-	protected String generateBase64 (String data) {
-		return Base64.encodeBase64String(data.getBytes());
-	}
-
-	protected String generatePaddedBase64 (String data) {
-		switch (data.length() % 3) {
-			case 1: data = data + "  "; break;
-			case 2: data = data + " ";  break;
-			default:
-				// no padding is needed
-		}
-		return generateBase64 (data);
 	}
 }
 

@@ -41,8 +41,8 @@ public class SectionEntity extends AbstractJpaEntity<SectionId> implements Abstr
 	@Column(nullable = false)
 	private short tempo;
 
-	@Column(length = 32, nullable = false)
-	private String keySignature;
+	@Column(nullable = false)
+	private short keySignature;
 
 	@Column(nullable = false)
 	private int timeSignatureNumerator;
