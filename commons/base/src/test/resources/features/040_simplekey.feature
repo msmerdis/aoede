@@ -3,6 +3,7 @@ Feature: Basic CRUD functionality for hash map repository
 ### Verify the ability to create/read/update and delete entities in hash map repository
 ### SimpleKeyDomain has been created for that purpose
 
+@TC040001
 @Positive
 Scenario: retrieve all available entities
 
@@ -27,6 +28,7 @@ And the response array contains
 	|  2 | simply two   |
 	|  3 | simply three |
 
+@TC040002
 @Negative
 Scenario: access a single entity
 ### Retrieve an entity and verify its contents
@@ -38,6 +40,7 @@ And the response matches
 	| id    |      1     |
 	| value | simply one |
 
+@TC040003
 @Negative
 Scenario: access an entity that does not exist
 ### Retrieve an entity that does not exist
@@ -50,6 +53,7 @@ And the response matches
 	| code | 404       |
 	| text | NOT_FOUND |
 
+@TC040004
 @Positive
 Scenario: create a new entity
 ### create a new entity and verify it is created with the same data as provided
@@ -74,6 +78,7 @@ And the response array contains
 	|  4 | simply four |
 And the response array contains latest "SimpleKeyDomain"
 
+@TC040005
 @Negative
 Scenario: create a dublicate entity
 ### create an entity that already exists
@@ -87,6 +92,7 @@ And the response matches
 	| code | 409      |
 	| text | CONFLICT |
 
+@TC040006
 @Positive
 Scenario: update an entity
 ### create an entity and then update it
@@ -108,6 +114,7 @@ And the response has a status code of 200
 And the response array contains "id" with value "6"
 And the response array contains "value" with value "simply five"
 
+@TC040007
 @Negative
 Scenario: update a non existing entity
 ### attempt to update an entity that does not exist
@@ -121,6 +128,7 @@ And the response matches
 	| code | 404       |
 	| text | NOT_FOUND |
 
+@TC040008
 @Positive
 Scenario: delete an entity
 ### create an entity and then delete it
@@ -147,6 +155,7 @@ And the response has a status code of 200
 And the response array does not contain "id" with value "7"
 And the response array does not contain "value" with value "simply six"
 
+@TC040009
 @Negative
 Scenario: delete a non existing entity
 ### attempt to delete an entity that does not exist

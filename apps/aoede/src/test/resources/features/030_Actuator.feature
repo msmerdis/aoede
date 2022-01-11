@@ -2,6 +2,7 @@
 Feature: Verify actuator endpoints are up and running
 ### Verify the setup of actuator
 
+@TC030001
 @Positive
 Scenario: access actuator
 ### verify actuator is present in the aoede application
@@ -9,6 +10,7 @@ Scenario: access actuator
 When request "/actuator" from aoede
 Then the aoede response has a status code of 200
 
+@TC030002
 @Positive
 Scenario: access actuator health check
 ### verify health check is present in the aoede application
@@ -18,6 +20,7 @@ Then the aoede response has a status code of 200
 And the aoede response matches
 	| status | UP |
 
+@TC030003
 @Positive
 Scenario: access actuator metrics
 ### verify metrics are present in the aoede application
@@ -72,6 +75,7 @@ And the aoede response contains "tomcat.sessions.created"
 And the aoede response contains "tomcat.sessions.expired"
 And the aoede response contains "tomcat.sessions.rejected"
 
+@TC030004
 @Positive
 Scenario: access actuator prometheus metrics
 ### verify prometheus metrics are present in the aoede application

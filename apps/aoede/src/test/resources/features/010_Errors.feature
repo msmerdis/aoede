@@ -2,6 +2,7 @@
 Feature: Verify handling of error cases
 ### Verify invalid requests are processed as expected
 
+@TC010001
 @Negative
 Scenario: access non existing url
 ### verify paths not configured within the application return an error in json format

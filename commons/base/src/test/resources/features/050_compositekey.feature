@@ -3,6 +3,7 @@ Feature: Basic CRUD functionality for hash map repository
 ### Verify the ability to create/read/update and delete entities in hash map repository
 ### CompositeKeyDomain has been created for that purpose
 
+@TC050001
 @Positive
 Scenario: retrieve all available entities
 
@@ -33,6 +34,7 @@ And the response array contains
 	|     1    |    2    | composite two   |
 	|     2    |    1    | composite three |
 
+@TC050002
 @Negative
 Scenario: access a single entity
 ### Retrieve an entity and verify its contents
@@ -47,6 +49,7 @@ And the response matches
 	| childId  |      2        |
 	| value    | composite two |
 
+@TC050003
 @Negative
 Scenario: access an entity that does not exist
 ### Retrieve an entity that does not exist
@@ -61,6 +64,7 @@ And the response matches
 	| code | 404       |
 	| text | NOT_FOUND |
 
+@TC050004
 @Positive
 Scenario: create a new entity
 ### create a new entity and verify it is created with the same data as provided
@@ -91,6 +95,7 @@ And the response array contains
 	|     4    |    1    | composite four |
 And the response array contains latest "CompositeKeyDomain"
 
+@TC050005
 @Negative
 Scenario: create a dublicate entity
 ### create an entity that already exists
@@ -106,6 +111,7 @@ And the response matches
 	| code | 409      |
 	| text | CONFLICT |
 
+@TC050006
 @Positive
 Scenario: update an entity
 ### create an entity and then update it
@@ -132,6 +138,7 @@ And the response array contains "parentId" with value "3"
 And the response array contains "childId" with value "1"
 And the response array contains "value" with value "composite five"
 
+@TC050007
 @Negative
 Scenario: update a non existing entity
 ### attempt to update an entity that does not exist
@@ -148,6 +155,7 @@ And the response matches
 	| code | 404       |
 	| text | NOT_FOUND |
 
+@TC050008
 @Positive
 Scenario: delete an entity
 ### create an entity and then delete it
@@ -182,6 +190,7 @@ And the response has a status code of 200
 And the response array does not contain "value" with value "composite six"
 And the response array does not contain latest "CompositeKeyDomain"
 
+@TC050009
 @Negative
 Scenario: delete a non existing entity
 ### attempt to delete an entity that does not exist

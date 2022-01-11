@@ -5,13 +5,17 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 
 import com.aoede.commons.base.ResponseResults;
 import com.aoede.commons.base.ServiceStepDefinition;
 import com.aoede.commons.service.AbstractTestService;
+import com.aoede.commons.service.TestCaseIdTrackerService;
 
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.Before;
+import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -24,6 +28,41 @@ import io.cucumber.java.en.When;
  */
 public class GenericTestController extends ServiceStepDefinition {
 	private static final long serialVersionUID = 1L;
+
+	@Autowired
+	private TestCaseIdTrackerService testCaseIdTrackerService;
+
+	/**
+	 * Hooks
+	 */
+
+	@Before
+	public void beforeScenario(Scenario scenario) {
+		// verify all test cases are properly tagged
+		boolean isPositive = false;
+		boolean isNegative = false;
+		boolean hasTCvalue = false;
+
+		for (String tag : scenario.getSourceTagNames()) {
+			switch (tag) {
+			case "@Positive": isPositive = true; break;
+			case "@Negative": isNegative = true; break;
+			default:
+				if (tag.startsWith("@TC")) {
+					assertFalse ("test cases cannot define more than one test case id", hasTCvalue);
+					assertTrue (
+						"test case id's must be unique, dublicate found : " + tag,
+						testCaseIdTrackerService.add(tag)
+					);
+					hasTCvalue = true;
+				}
+			}
+		}
+
+		assertTrue  ("test cases must define a test case id", hasTCvalue);
+		assertTrue  ("test cases must be either @Positive  or @Negative", isPositive || isNegative);
+		assertFalse ("test cases cannot be both @Positive and @Negative", isPositive && isNegative);
+	}
 
 	/**
 	 * Data preparation steps

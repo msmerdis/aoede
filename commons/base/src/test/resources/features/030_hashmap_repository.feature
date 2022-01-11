@@ -3,6 +3,7 @@ Feature: Basic CRUD functionality for hash map repository
 ### Verify the ability to create/read/update and delete entities in hash map repository
 ### TestHashMapDomain has been created for that purpose
 
+@TC030001
 @Positive
 Scenario: retrieve all available entities
 
@@ -15,6 +16,7 @@ And the response array contains
 	|  2 | two   |
 	|  3 | three |
 
+@TC030002
 @Negative
 Scenario: access a single entity
 ### Retrieve an entity and verify its contents
@@ -26,6 +28,7 @@ And the response matches
 	| id    |  1  |
 	| value | one |
 
+@TC030003
 @Negative
 Scenario: access an entity that does not exist
 ### Retrieve an entity that does not exist
@@ -38,6 +41,7 @@ And the response matches
 	| code | 404       |
 	| text | NOT_FOUND |
 
+@TC030004
 @Positive
 Scenario: create a new entity
 ### create a new entity and verify it is created with the same data as provided
@@ -65,6 +69,7 @@ And the response array contains
 	|  4 | Four  |
 And the response array contains latest "TestHashMapDomain"
 
+@TC030005
 @Negative
 Scenario: create a dublicate entity
 ### create an entity that already exists
@@ -79,6 +84,7 @@ And the response matches
 	| code | 409      |
 	| text | CONFLICT |
 
+@TC030006
 @Positive
 Scenario: update an entity
 ### create an entity and then update it
@@ -103,6 +109,7 @@ And the response has a status code of 200
 And the response array contains "id" with value "5"
 And the response array contains "value" with value "five"
 
+@TC030007
 @Negative
 Scenario: update a non existing entity
 ### attempt to update an entity that does not exist
@@ -117,6 +124,7 @@ And the response matches
 	| code | 404       |
 	| text | NOT_FOUND |
 
+@TC030008
 @Positive
 Scenario: delete an entity
 ### create an entity and then delete it
@@ -145,6 +153,7 @@ And the response has a status code of 200
 And the response array does not contain "id" with value "6"
 And the response array does not contain "value" with value "six"
 
+@TC030009
 @Negative
 Scenario: delete a non existing entity
 ### attempt to delete an entity that does not exist
@@ -157,6 +166,7 @@ And the response matches
 	| code | 404       |
 	| text | NOT_FOUND |
 
+@TC030010
 @Positive
 Scenario: update an entity's id
 ### create an entity and then update it's id

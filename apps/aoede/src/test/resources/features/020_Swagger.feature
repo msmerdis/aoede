@@ -2,6 +2,7 @@
 Feature: Verify swagger endpoints are up and running
 ### Verify the setup of swagger
 
+@TC020001
 @Positive
 Scenario: access swagger ui
 ### verify swagger ui is present in the aoede application
@@ -12,6 +13,7 @@ And the aoede response contains "<!-- HTML for static distribution bundle build 
 And the aoede response contains "<!DOCTYPE html>"
 And the aoede response contains "<title>Swagger UI</title>"
 
+@TC020002
 @Positive
 Scenario: access swagger docs
 ### verify swagger docs are present in the aoede application
