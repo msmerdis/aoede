@@ -8,7 +8,6 @@ import com.google.gson.JsonPrimitive;
 
 @Component
 public class SimpleKeyTestService  extends AbstractTestService {
-	private static final long serialVersionUID = 1L;
 
 	@Override
 	public String getName() {
