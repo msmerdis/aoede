@@ -1,5 +1,9 @@
 package com.aoede.commons.base;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,6 +19,12 @@ import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestTemplate;
 
+import com.aoede.commons.service.AbstractTestServiceDiscoveryService;
+import com.aoede.commons.service.CompositeIdService;
+import com.aoede.commons.service.JsonObjectService;
+import com.aoede.commons.service.TestCaseIdTrackerService;
+
+import io.cucumber.java.Scenario;
 import io.cucumber.plugin.EventListener;
 import io.cucumber.plugin.event.EventPublisher;
 
@@ -24,6 +34,18 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 	@Autowired
 	private ServerProperties serverProperties;
 	private String basePath;
+
+	@Autowired
+	protected AbstractTestServiceDiscoveryService services;
+
+	@Autowired
+	private TestCaseIdTrackerService testCaseIdTrackerService;
+
+	@Autowired
+	protected CompositeIdService compositeIdService;
+
+	@Autowired
+	protected JsonObjectService jsonObjectService;
 
 	@PostConstruct
 	void init () {
@@ -128,12 +150,53 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 		HttpHeaders headers = new HttpHeaders ();
 
 		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.set("X-Test-Case-Id", testCaseIdTrackerService.getLatestTestCaseId());
 
 		return headers;
 	}
 
 	@Override
 	public void setEventPublisher(EventPublisher publisher) {}
+
+	protected void setup (Scenario scenario) {
+		services.setup();
+
+		assertNotNull("json object service is not autowired", jsonObjectService);
+		assertNotNull("composite id service is not autowired", compositeIdService);
+
+		// verify all test cases are properly tagged
+		boolean isPositive = false;
+		boolean isNegative = false;
+		boolean hasTCvalue = false;
+
+		assertNotNull("testCaseIdTrackerService is not autowired", testCaseIdTrackerService);
+
+		for (String tag : scenario.getSourceTagNames()) {
+			switch (tag) {
+			case "@Positive": isPositive = true; break;
+			case "@Negative": isNegative = true; break;
+			default:
+				if (tag.startsWith("@TC")) {
+					assertFalse ("test cases cannot define more than one test case id", hasTCvalue);
+					assertTrue (
+						"test case id's must be unique, dublicate found : " + tag,
+						testCaseIdTrackerService.add(tag)
+					);
+					hasTCvalue = true;
+				}
+			}
+		}
+
+		assertTrue  ("test cases must define a test case id", hasTCvalue);
+		assertTrue  ("test cases must be either @Positive  or @Negative", isPositive || isNegative);
+		assertFalse ("test cases cannot be both @Positive and @Negative", isPositive && isNegative);
+	}
+
+	protected void cleanup () {
+		services.clear();
+		jsonObjectService.clear();
+		compositeIdService.clear();
+	}
 }
 
 

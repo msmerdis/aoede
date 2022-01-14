@@ -7,8 +7,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.springframework.http.HttpHeaders;
 
+import com.aoede.commons.base.BaseStepDefinition;
 import com.aoede.commons.base.ResponseResults;
-import com.aoede.commons.base.ServiceStepDefinition;
 import com.aoede.commons.service.AbstractTestService;
 import com.google.gson.JsonElement;
 
@@ -23,7 +23,7 @@ import io.cucumber.java.en.When;
  * Provides the base step definitions for a domain controller request and assertion
  * Utilises domain test services to build and verify the results
  */
-public class GenericTestController extends ServiceStepDefinition {
+public class GenericTestController extends BaseStepDefinition {
 
 	/**
 	 * Data preparation steps
