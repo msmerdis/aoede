@@ -2,6 +2,7 @@ package com.aoede.commons.service;
 
 import com.aoede.commons.base.ResponseResults;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import io.cucumber.datatable.DataTable;
@@ -25,7 +26,7 @@ public interface AbstractTestService {
 
 	public boolean isSuccess();
 
-	public String getLatestKey();
+	public JsonElement getLatestKey();
 	public ResponseResults getLatestResults();
 
 	public String createBody();

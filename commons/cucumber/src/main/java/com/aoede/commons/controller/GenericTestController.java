@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import com.aoede.commons.base.ResponseResults;
 import com.aoede.commons.base.ServiceStepDefinition;
 import com.aoede.commons.service.AbstractTestService;
+import com.google.gson.JsonElement;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
@@ -30,12 +31,12 @@ public class GenericTestController extends ServiceStepDefinition {
 
 	@When("prepare composite id {string}")
 	public void prepareCompositeId(String name, DataTable data) {
-		compositeIdService.put(name, compositeIdService.generateCompositeKey(data));
+		compositeIdService.put(name, data);
 	}
 
 	@When("prepare json {string}")
 	public void prepareJson(String name, DataTable data) {
-		jsonObjectService.put(name, jsonObjectService.generateJson(data));
+		jsonObjectService.put(name, data);
 	}
 
 	/**
@@ -74,14 +75,18 @@ public class GenericTestController extends ServiceStepDefinition {
 	public void getCompositePrepared(String domain, String name) {
 		String id = compositeIdService.get(name);
 
-		assertNotNull(id, "composite id has not been prepared");
+		assertNotNull("composite id has not been prepared", id);
 
 		getSimple(domain, id);
 	}
 
 	@When("request previously created {string}")
 	public void getLatest (String domain) {
-		getSimple (domain, getService(domain).getLatestKey());
+		JsonElement element = getService(domain).getLatestKey();
+
+		assertNotNull(domain + " has not been created", element);
+
+		getSimple (domain, element.getAsString());
 	}
 
 	@When("request all available {string}")
@@ -140,7 +145,11 @@ public class GenericTestController extends ServiceStepDefinition {
 
 	@When("update previously created {string}")
 	public void updateLatest (String domain, DataTable data) {
-		updateSimple (domain, getService(domain).getLatestKey(), data);
+		JsonElement element = getService(domain).getLatestKey();
+
+		assertNotNull(domain + " has not been created", element);
+		
+		updateSimple (domain, element.getAsString(), data);
 	}
 
 	@When("delete {string} with id {string}")
@@ -168,7 +177,11 @@ public class GenericTestController extends ServiceStepDefinition {
 
 	@When("delete previously created {string}")
 	public void deleteLatest (String domain) {
-		deleteSimple (domain, getService(domain).getLatestKey());
+		JsonElement element = getService(domain).getLatestKey();
+
+		assertNotNull(domain + " has not been created", element);
+
+		deleteSimple (domain, element.getAsString());
 	}
 
 	/**
@@ -215,7 +228,7 @@ public class GenericTestController extends ServiceStepDefinition {
 			getService().getLatestResults().body,
 			getService().lastArrayContainsObjectWith(
 				getService(domain).getKeyName(),
-				getService(domain).getLatestKey()
+				getService(domain).getLatestKey().getAsString()
 			)
 		);
 	}
@@ -226,7 +239,7 @@ public class GenericTestController extends ServiceStepDefinition {
 			getService().getLatestResults().body,
 			getService().lastArrayContainsObjectWith(
 				getService(domain).getKeyName(),
-				getService(domain).getLatestKey()
+				getService(domain).getLatestKey().getAsString()
 			)
 		);
 	}
@@ -267,7 +280,7 @@ public class GenericTestController extends ServiceStepDefinition {
 		assertTrue (pService.getLatestResults().body, pService.containsKeyInElement(
 			element,
 			cService.getKeyName(),
-			cService.getLatestKey()
+			cService.getLatestKey().getAsString()
 		));
 	}
 

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.aoede.commons.service.AbstractTestServiceImpl;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -31,16 +32,16 @@ public class TrackTestServiceImpl extends AbstractTestServiceImpl implements Tra
 
 	@Override
 	public void createBody (JsonObject obj, DataTable data) {
-		String key = sheetTestService.getLatestKey();
+		JsonElement key = sheetTestService.getLatestKey();
 
-		if (key != null) obj.add("sheetId", new JsonPrimitive(Integer.parseInt(key)));
+		if (key != null) obj.add("sheetId", key);
 
 		super.createBody(obj, data);
 	}
 
 	@Override
 	public void createDefaultBody(JsonObject obj) {
-		obj.add("sheetId", new JsonPrimitive(Integer.parseInt(sheetTestService.getLatestKey())));
+		obj.add("sheetId", sheetTestService.getLatestKey());
 		obj.add("clef", new JsonPrimitive("Treble"));
 	}
 

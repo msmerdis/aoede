@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.aoede.commons.service.AbstractTestServiceImpl;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -31,16 +32,16 @@ public class MeasureTestServiceImpl extends AbstractTestServiceImpl implements M
 
 	@Override
 	public void createBody (JsonObject obj, DataTable data) {
-		String key = sectionTestService.getLatestKey();
+		JsonElement key = sectionTestService.getLatestKey();
 
-		if (key != null) obj.add("sectionId", new JsonPrimitive(key));
+		if (key != null) obj.add("sectionId", key);
 
 		super.createBody(obj, data);
 	}
 
 	@Override
 	public void createDefaultBody(JsonObject obj) {
-		obj.add("sectionId", new JsonPrimitive(sectionTestService.getLatestKey()));
+		obj.add("sectionId", sectionTestService.getLatestKey());
 	}
 
 	@Override

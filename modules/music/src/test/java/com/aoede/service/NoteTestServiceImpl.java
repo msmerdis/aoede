@@ -11,7 +11,7 @@ import com.google.gson.JsonPrimitive;
 import io.cucumber.datatable.DataTable;
 
 @Component
-public class NoteTestServiceImpl extends AbstractTestServiceImpl {
+public class NoteTestServiceImpl extends AbstractTestServiceImpl implements NoteTestService {
 	@Autowired
 	MeasureTestService measureTestService;
 
@@ -32,9 +32,9 @@ public class NoteTestServiceImpl extends AbstractTestServiceImpl {
 
 	@Override
 	public void createBody (JsonObject obj, DataTable data) {
-		String key = measureTestService.getLatestKey();
+		JsonElement key = measureTestService.getLatestKey();
 
-		if (key != null) obj.add("measureId", new JsonPrimitive(key));
+		if (key != null) obj.add("measureId", key);
 
 		super.createBody(obj, data);
 	}
@@ -46,7 +46,7 @@ public class NoteTestServiceImpl extends AbstractTestServiceImpl {
 		fraction.add( "numerator" , new JsonPrimitive(4));
 		fraction.add("denominator", new JsonPrimitive(4));
 
-		obj.add("measureId", new JsonPrimitive(measureTestService.getLatestKey()));
+		obj.add("measureId", measureTestService.getLatestKey());
 		obj.add("note", new JsonPrimitive(random.nextInt(60) + 40));
 		obj.add("value", fraction);
 	}

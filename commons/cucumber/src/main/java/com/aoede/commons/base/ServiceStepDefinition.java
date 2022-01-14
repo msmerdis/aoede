@@ -69,6 +69,7 @@ public class ServiceStepDefinition extends BaseStepDefinition {
 	protected AbstractTestService getService (String domain) {
 		assertTrue("test controller for " + domain + " cannot be found", services.containsKey(domain));
 		latestService = services.get(domain);
+		assertNotNull("test controller for " + domain + " is null", latestService);
 		return latestService;
 	}
 

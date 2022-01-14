@@ -32,9 +32,9 @@ public class SectionTestServiceImpl extends AbstractTestServiceImpl implements S
 
 	@Override
 	public void createBody (JsonObject obj, DataTable data) {
-		String key = trackTestService.getLatestKey();
+		JsonElement key = trackTestService.getLatestKey();
 
-		if (key != null) obj.add("trackId", new JsonPrimitive(key));
+		if (key != null) obj.add("trackId", key);
 
 		super.createBody(obj, data);
 	}
@@ -46,7 +46,7 @@ public class SectionTestServiceImpl extends AbstractTestServiceImpl implements S
 		fraction.add( "numerator" , new JsonPrimitive(4));
 		fraction.add("denominator", new JsonPrimitive(4));
 
-		obj.add("trackId", new JsonPrimitive(trackTestService.getLatestKey()));
+		obj.add("trackId", trackTestService.getLatestKey());
 		obj.add("tempo", new JsonPrimitive(random.nextInt(200) + 40));
 		obj.add("keySignature", new JsonPrimitive(random.nextInt(15) - 7));
 		obj.add("timeSignature", fraction);

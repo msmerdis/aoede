@@ -23,8 +23,8 @@ import lombok.Getter;
 public abstract class AbstractTestServiceImpl extends BaseTestComponent implements AbstractTestService {
 	protected Random random = new Random (System.currentTimeMillis());
 	protected boolean success;
-	protected String latestKey;
-	protected String latestCreatedKey;
+	protected JsonElement latestCreatedKey;
+	protected JsonElement latestKey;
 	protected JsonObject latestObj;
 	protected JsonArray latestArr;
 	protected ResponseResults latestResults;
@@ -117,7 +117,7 @@ public abstract class AbstractTestServiceImpl extends BaseTestComponent implemen
 		results (results, HttpStatus.CREATED.value(), true, false);
 
 		if (success && latestObj.has(getKeyName())) {
-			latestKey = latestObj.get(getKeyName()).getAsString();
+			latestKey = latestObj.get(getKeyName());
 		}
 	}
 
