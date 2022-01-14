@@ -14,7 +14,7 @@ public interface AbstractTestService {
 	public String getKeyName ();
 
 	public void setup();
-	public void cleanup();
+	public void clear();
 
 	public void findAllResults(ResponseResults results);
 

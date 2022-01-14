@@ -50,20 +50,20 @@ public class GenericTestController extends ServiceStepDefinition {
 
 		headers.add("X-Search-Terms", keyword);
 
-		ResponseResults results = executeGet (getPath(domain, "/search"), headers);
+		ResponseResults results = executeGet (services.getPathForService(domain, "/search"), headers);
 
 		// update test controller with data
-		getService(domain).searchResults(results);
+		services.getService(domain).searchResults(results);
 	}
 
 	@When("request a {string} with id {string}")
 	public void getSimple(String domain, String id) {
 		logger.info("retrieve " + domain + " with id " + id);
 
-		ResponseResults results = executeGet (getPath(domain, "/" + id));
+		ResponseResults results = executeGet (services.getPathForService(domain, "/" + id));
 
 		// update test controller with data
-		getService(domain).accessResults(results);
+		services.getService(domain).accessResults(results);
 	}
 
 	@When("request a {string} with composite id")
@@ -82,7 +82,7 @@ public class GenericTestController extends ServiceStepDefinition {
 
 	@When("request previously created {string}")
 	public void getLatest (String domain) {
-		JsonElement element = getService(domain).getLatestKey();
+		JsonElement element = services.getService(domain).getLatestKey();
 
 		assertNotNull(domain + " has not been created", element);
 
@@ -92,46 +92,62 @@ public class GenericTestController extends ServiceStepDefinition {
 	@When("request all available {string}")
 	public void findAll (String domain) {
 		logger.info("retrieving all available " + domain);
-		ResponseResults results = executeGet (getPath(domain));
+		ResponseResults results = executeGet (services.getPathForService(domain));
 
 		// update test controller with data
-		getService(domain).findAllResults(results);
+		services.getService(domain).findAllResults(results);
 	}
 
 	@When("request all available {string} for latest {string}")
 	public void findAll (String childDomain, String parentDomain) {
-		logger.info("retrieving all available " + childDomain + " under " + getPath(parentDomain) + "(" + getService(parentDomain).getLatestKey() + ")");
-		ResponseResults results = executeGet (getPath(childDomain) + "/" + getService(parentDomain).getName() + "/" + getService(parentDomain).getLatestKey());
+		logger.info("retrieving all available " + childDomain + " under "
+			+ services.getPathForService(parentDomain)
+			+ "(" + services.getService(parentDomain).getLatestKey() + ")");
+
+		ResponseResults results = executeGet (
+			services.getPathForService(childDomain)
+				+ "/" + services.getService(parentDomain).getName()
+				+ "/" + services.getService(parentDomain).getLatestKey()
+		);
 
 		// update test controller with data
-		getService(childDomain).findAllResults(results);
+		services.getService(childDomain).findAllResults(results);
 	}
 
 	@Given("a randomized {string}")
 	public void create(String domain) {
 		logger.info("creating " + domain);
-		ResponseResults results = executePost (getPath(domain), getService(domain).createBody());
+		ResponseResults results = executePost (
+			services.getPathForService(domain),
+			services.getService(domain).createBody()
+		);
 
 		// update test controller with data
-		getService(domain).createResults(results);
+		services.getService(domain).createResults(results);
 	}
 
 	@Given("a {string} with")
 	public void create(String domain, DataTable data) {
 		logger.info("creating " + domain);
-		ResponseResults results = executePost (getPath(domain), getService(domain).createBody(data));
+		ResponseResults results = executePost (
+			services.getPathForService(domain),
+			services.getService(domain).createBody(data)
+		);
 
 		// update test controller with data
-		getService(domain).createResults(results);
+		services.getService(domain).createResults(results);
 	}
 
 	@When("update {string} with id {string}")
 	public void updateSimple(String domain, String id, DataTable data) {
 		logger.info("updating " + domain + " with id " + id);
-		ResponseResults results = executePut (getPath(domain, "/" + id), getService(domain).createBody(data));
+		ResponseResults results = executePut (
+			services.getPathForService(domain, "/" + id),
+			services.getService(domain).createBody(data)
+		);
 
 		// update test controller with data
-		getService(domain).updateResults(results);
+		services.getService(domain).updateResults(results);
 	}
 
 	@When("update {string} with composite id {string}")
@@ -145,20 +161,20 @@ public class GenericTestController extends ServiceStepDefinition {
 
 	@When("update previously created {string}")
 	public void updateLatest (String domain, DataTable data) {
-		JsonElement element = getService(domain).getLatestKey();
+		JsonElement element = services.getService(domain).getLatestKey();
 
 		assertNotNull(domain + " has not been created", element);
-		
+
 		updateSimple (domain, element.getAsString(), data);
 	}
 
 	@When("delete {string} with id {string}")
 	public void deleteSimple(String domain, String id) {
 		logger.info("deleting " + domain + " with id " + id);
-		ResponseResults results = executeDelete (getPath(domain, "/" + id));
+		ResponseResults results = executeDelete (services.getPathForService(domain, "/" + id));
 
 		// update test controller with data
-		getService(domain).deleteResults(results);
+		services.getService(domain).deleteResults(results);
 	}
 
 	@When("delete {string} with composite id {string}")
@@ -177,7 +193,7 @@ public class GenericTestController extends ServiceStepDefinition {
 
 	@When("delete previously created {string}")
 	public void deleteLatest (String domain) {
-		JsonElement element = getService(domain).getLatestKey();
+		JsonElement element = services.getService(domain).getLatestKey();
 
 		assertNotNull(domain + " has not been created", element);
 
@@ -190,45 +206,45 @@ public class GenericTestController extends ServiceStepDefinition {
 
 	@Then("the request was successful")
 	public void verifySuccessfulRequest () {
-		AbstractTestService service = getService();
-		assertTrue(service.getLatestResults().body, getService().isSuccess());
+		AbstractTestService service = services.getService();
+		assertTrue(service.getLatestResults().body, services.getService().isSuccess());
 	}
 
 	@Then("the request was not successful")
 	public void verifyNotSuccessfulRequest () {
-		AbstractTestService service = getService();
-		assertFalse(service.getLatestResults().body, getService().isSuccess());
+		AbstractTestService service = services.getService();
+		assertFalse(service.getLatestResults().body, services.getService().isSuccess());
 	}
 
 	@Then("the response has a status code of {int}")
 	public void verifyStatus (int code) {
-		AbstractTestService service = getService();
+		AbstractTestService service = services.getService();
 		assertEquals(code, service.getLatestResults().status.value());
 	}
 
 	@Then("the response array contains")
 	public void verifyElementList (DataTable data) {
 		assertTrue(
-			getService().getLatestResults().body,
-			getService().lastArrayMatches(data)
+			services.getService().getLatestResults().body,
+			services.getService().lastArrayMatches(data)
 		);
 	}
 
 	@Then("the response array contains {string} with value {string}")
 	public void verifyElementExistInList (String id, String value) {
 		assertTrue(
-			getService().getLatestResults().body,
-			getService().lastArrayContainsObjectWith(id, value)
+			services.getService().getLatestResults().body,
+			services.getService().lastArrayContainsObjectWith(id, value)
 		);
 	}
 
 	@Then("the response array contains latest {string}")
 	public void verifyLatestElementExistsInList (String domain) {
 		assertTrue (
-			getService().getLatestResults().body,
-			getService().lastArrayContainsObjectWith(
-				getService(domain).getKeyName(),
-				getService(domain).getLatestKey().getAsString()
+			services.getService().getLatestResults().body,
+			services.getService().lastArrayContainsObjectWith(
+				services.getService(domain).getKeyName(),
+				services.getService(domain).getLatestKey().getAsString()
 			)
 		);
 	}
@@ -236,10 +252,10 @@ public class GenericTestController extends ServiceStepDefinition {
 	@Then("the response array does not contain latest {string}")
 	public void verifyLatestElementDoesNotExistInList (String domain) {
 		assertFalse (
-			getService().getLatestResults().body,
-			getService().lastArrayContainsObjectWith(
-				getService(domain).getKeyName(),
-				getService(domain).getLatestKey().getAsString()
+			services.getService().getLatestResults().body,
+			services.getService().lastArrayContainsObjectWith(
+				services.getService(domain).getKeyName(),
+				services.getService(domain).getLatestKey().getAsString()
 			)
 		);
 	}
@@ -247,14 +263,14 @@ public class GenericTestController extends ServiceStepDefinition {
 	@Then("the response array does not contain {string} with value {string}")
 	public void verifyElementDoesNotExistInList (String id, String value) {
 		assertFalse(
-			getService().getLatestResults().body,
-			getService().lastArrayContainsObjectWith(id, value)
+			services.getService().getLatestResults().body,
+			services.getService().lastArrayContainsObjectWith(id, value)
 		);
 	}
 
 	@Then("{string} returned array of size {int}")
 	public void verifyResultCount (String domain, int size) {
-		AbstractTestService service = getService(domain);
+		AbstractTestService service = services.getService(domain);
 
 		var arr = service.getLatestArr();
 		assertNotNull("latest response is not an array", arr);
@@ -267,15 +283,15 @@ public class GenericTestController extends ServiceStepDefinition {
 	@Then("the response matches")
 	public void verifyElement (DataTable data) {
 		assertTrue(
-			getService().getLatestResults().body,
-			getService().lastObjectMatches(data)
+			services.getService().getLatestResults().body,
+			services.getService().lastObjectMatches(data)
 		);
 	}
 
 	@Then("{string} contains latest {string} in {string}")
 	public void verifyDependentDomains (String parent, String child, String element) {
-		AbstractTestService pService = getService(parent);
-		AbstractTestService cService = getService(child);
+		AbstractTestService pService = services.getService(parent);
+		AbstractTestService cService = services.getService(child);
 
 		assertTrue (pService.getLatestResults().body, pService.containsKeyInElement(
 			element,
@@ -286,7 +302,7 @@ public class GenericTestController extends ServiceStepDefinition {
 
 	@Then("{string} has {string} array of size {int}")
 	public void verifyArraySize (String domain, String array, int size) {
-		AbstractTestService service = getService(domain);
+		AbstractTestService service = services.getService(domain);
 
 		var obj = service.getLatestObj();
 		assertNotNull("latest response is not an object", obj);

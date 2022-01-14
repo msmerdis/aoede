@@ -101,18 +101,22 @@ public abstract class AbstractTestServiceImpl extends BaseTestComponent implemen
 		}
 	}
 
+	@Override
 	public void searchResults (ResponseResults results) {
 		results (results, HttpStatus.OK.value(), true, true);
 	}
 
+	@Override
 	public void accessResults(ResponseResults results) {
 		results (results, HttpStatus.OK.value(), true, false);
 	}
 
+	@Override
 	public void findAllResults (ResponseResults results) {
 		results (results, HttpStatus.OK.value(), true, true);
 	}
 
+	@Override
 	public void createResults (ResponseResults results) {
 		results (results, HttpStatus.CREATED.value(), true, false);
 
@@ -121,19 +125,23 @@ public abstract class AbstractTestServiceImpl extends BaseTestComponent implemen
 		}
 	}
 
+	@Override
 	public void updateResults (ResponseResults results) {
 		results (results, HttpStatus.NO_CONTENT.value(), false, false);
 	}
 
+	@Override
 	public void deleteResults (ResponseResults results) {
 		results (results, HttpStatus.NO_CONTENT.value(), false, false);
 	}
 
+	@Override
 	public void setup () {
 		success = false;
 	}
 
-	public void cleanup () {
+	@Override
+	public void clear () {
 		latestKey = null;
 		latestObj = null;
 		latestArr = null;
