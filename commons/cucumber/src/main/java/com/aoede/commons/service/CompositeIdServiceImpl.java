@@ -1,16 +1,17 @@
 package com.aoede.commons.service;
 
-import java.util.HashMap;
-
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 
 import io.cucumber.datatable.DataTable;
-import lombok.Setter;
 
-@Setter
-public class CompositeIdServiceImpl extends HashMap<String, String> implements CompositeIdService {
-	private static final long serialVersionUID = 1L;
+@Service
+public class CompositeIdServiceImpl extends TestStorageServiceImpl<String> implements CompositeIdService {
 
+	@Lazy
+	@Autowired
 	private JsonObjectService jsonObjectService;
 
 	@Override

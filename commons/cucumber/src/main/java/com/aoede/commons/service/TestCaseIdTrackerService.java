@@ -1,8 +1,8 @@
 package com.aoede.commons.service;
 
-import java.util.Set;
-
-public interface TestCaseIdTrackerService extends Set<String> {
+public interface TestCaseIdTrackerService {
+	String getLatestTestCaseId ();
+	boolean add (String testCaseId);
 }
 
 

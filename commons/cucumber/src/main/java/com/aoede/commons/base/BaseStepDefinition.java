@@ -17,8 +17,6 @@ import org.springframework.web.client.RestTemplate;
 
 import io.cucumber.plugin.EventListener;
 import io.cucumber.plugin.event.EventPublisher;
-import io.cucumber.plugin.event.TestCaseFinished;
-import io.cucumber.plugin.event.TestCaseStarted;
 
 public class BaseStepDefinition extends BaseTestComponent implements EventListener {
 	private RestTemplate restTemplate = new RestTemplate();
@@ -71,9 +69,12 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 		ResponseResults response = new ResponseResults ();
 
 		logger.info ("----------------------------------------------------------------");
-		logger.info ("- Request");
-		logger.info (" -> " + method + " " + basePath + url);
-		logger.info (" -> " + body);
+		logger.info ("- Request:  " + method + " " + basePath + url);
+		logger.info ("Headers:");
+		for (var header : headers.entrySet())
+			logger.info (" - " + header.getKey() + ": " + header.getValue());
+		logger.info ("body:");
+		logger.info (body);
 
 		restTemplate.setErrorHandler(response);
 		restTemplate.execute(basePath + url, method, new RequestParametersCallback(headers, body), r -> {
@@ -81,9 +82,12 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 		});
 
 		logger.info ("----------------------------------------------------------------");
-		logger.info ("- Response");
-		logger.info (" -> " + response.status.toString());
-		logger.info (" -> " + response.body);
+		logger.info ("- Response: " + response.status.toString());
+		logger.info ("Headers:");
+		for (var header : response.headers.entrySet())
+			logger.info (" - " + header.getKey() + ": " + header.getValue());
+		logger.info ("body:");
+		logger.info (response.body);
 
 		return response;
 	}
@@ -129,21 +133,7 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 	}
 
 	@Override
-	public void setEventPublisher(EventPublisher publisher) {
-		publisher.registerHandlerFor(TestCaseStarted.class, event -> {
-			this.setup(event);
-		});
-
-		publisher.registerHandlerFor(TestCaseFinished.class, event -> {
-			this.cleanup(event);
-		});
-	}
-
-	protected void setup (TestCaseStarted event) {
-	}
-
-	protected void cleanup (TestCaseFinished event) {
-	}
+	public void setEventPublisher(EventPublisher publisher) {}
 }
 
 

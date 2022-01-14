@@ -2,7 +2,7 @@ package com.aoede;
 
 import org.junit.runner.RunWith;
 
-import com.aoede.commons.base.component.BaseComponent;
+import com.aoede.commons.base.BaseTestComponent;
 
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
@@ -13,7 +13,7 @@ import io.cucumber.junit.CucumberOptions;
 	tags = "",
 	features = {"src/test/resources/features"}
 )
-public class CucumberTest extends BaseComponent {
+public class CucumberTest extends BaseTestComponent {
 }
 
 

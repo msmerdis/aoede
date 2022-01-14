@@ -12,8 +12,6 @@ import com.aoede.commons.base.ServiceStepDefinition;
 import com.aoede.commons.service.AbstractTestService;
 
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.Before;
-import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -25,38 +23,6 @@ import io.cucumber.java.en.When;
  * Utilises domain test services to build and verify the results
  */
 public class GenericTestController extends ServiceStepDefinition {
-
-	/**
-	 * Hooks
-	 */
-
-	@Before
-	public void beforeScenario(Scenario scenario) {
-		// verify all test cases are properly tagged
-		boolean isPositive = false;
-		boolean isNegative = false;
-		boolean hasTCvalue = false;
-
-		for (String tag : scenario.getSourceTagNames()) {
-			switch (tag) {
-			case "@Positive": isPositive = true; break;
-			case "@Negative": isNegative = true; break;
-			default:
-				if (tag.startsWith("@TC")) {
-					assertFalse ("test cases cannot define more than one test case id", hasTCvalue);
-					assertTrue (
-						"test case id's must be unique, dublicate found : " + tag,
-						testCaseIdTrackerService.add(tag)
-					);
-					hasTCvalue = true;
-				}
-			}
-		}
-
-		assertTrue  ("test cases must define a test case id", hasTCvalue);
-		assertTrue  ("test cases must be either @Positive  or @Negative", isPositive || isNegative);
-		assertFalse ("test cases cannot be both @Positive and @Negative", isPositive && isNegative);
-	}
 
 	/**
 	 * Data preparation steps

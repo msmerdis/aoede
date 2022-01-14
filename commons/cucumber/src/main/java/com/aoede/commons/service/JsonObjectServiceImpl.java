@@ -5,18 +5,21 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
-import java.util.HashMap;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import io.cucumber.datatable.DataTable;
-import lombok.Setter;
 
-@Setter
-public class JsonObjectServiceImpl extends HashMap<String, JsonObject> implements JsonObjectService {
-	private static final long serialVersionUID = 1L;
+@Service
+public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> implements JsonObjectService {
 
+	@Lazy
+	@Autowired
 	private CompositeIdService compositeIdService;
 
 	// generate a json object base on data table
