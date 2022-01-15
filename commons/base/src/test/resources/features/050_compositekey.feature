@@ -45,9 +45,9 @@ When request a "CompositeKeyDomain" with composite id
 Then the request was successful
 And the response has a status code of 200
 And the response matches
-	| parentId |      1        |
-	| childId  |      2        |
-	| value    | composite two |
+	| parentId | integer |      1        |
+	| childId  | integer |      2        |
+	| value    | string  | composite two |
 
 @TC050003
 @Negative
@@ -61,8 +61,8 @@ When request a "CompositeKeyDomain" with composite id
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
 
 @TC050004
 @Positive @Create
@@ -77,16 +77,16 @@ Given a "CompositeKeyDomain" with
 And the request was successful
 And the response has a status code of 201
 And the response matches
-	| parentId | 4              |
-	| childId  | 1              |
-	| value    | composite four |
+	| parentId | integer | 4              |
+	| childId  | integer | 1              |
+	| value    | string  | composite four |
 When request previously created "CompositeKeyDomain"
 And the request was successful
 And the response has a status code of 200
 And the response matches
-	| parentId | 4              |
-	| childId  | 1              |
-	| value    | composite four |
+	| parentId | integer | 4              |
+	| childId  | integer | 1              |
+	| value    | string  | composite four |
 Then request all available "CompositeKeyDomain"
 And the request was successful
 And the response has a status code of 200
@@ -108,8 +108,8 @@ Given a "CompositeKeyDomain" with
 And the request was not successful
 And the response has a status code of 409
 And the response matches
-	| code | 409      |
-	| text | CONFLICT |
+	| code | integer | 409      |
+	| text | string  | CONFLICT |
 
 @TC050006
 @Positive @Update
@@ -124,9 +124,9 @@ Given a "CompositeKeyDomain" with
 And the request was successful
 And the response has a status code of 201
 And the response matches
-	| parentId |  3   |
-	| childId  |  1   |
-	| value    | nope |
+	| parentId | integer |  3   |
+	| childId  | integer |  1   |
+	| value    | string  | nope |
 When update previously created "CompositeKeyDomain"
 	| value | string | composite five |
 And the request was successful
@@ -152,8 +152,8 @@ And update "CompositeKeyDomain" with composite id "nonExistingCompositeId"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
 
 @TC050008
 @Positive @Delete
@@ -168,9 +168,9 @@ Given a "CompositeKeyDomain" with
 And the request was successful
 And the response has a status code of 201
 And the response matches
-	| parentId |       4       |
-	| childId  |       1       |
-	| value    | composite six |
+	| parentId | integer |       4       |
+	| childId  | integer |       1       |
+	| value    | string  | composite six |
 When delete "CompositeKeyDomain" with composite id
 	| parentId | integer | 4 |
 	| childId  | integer | 1 |
@@ -182,8 +182,8 @@ Then request a "CompositeKeyDomain" with composite id
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
 And request all available "CompositeKeyDomain"
 And the request was successful
 And the response has a status code of 200
@@ -202,5 +202,5 @@ When delete "CompositeKeyDomain" with composite id
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |

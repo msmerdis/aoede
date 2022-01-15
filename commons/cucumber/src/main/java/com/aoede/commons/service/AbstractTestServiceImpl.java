@@ -20,14 +20,13 @@ import lombok.Getter;
 
 @Getter
 public abstract class AbstractTestServiceImpl extends BaseTestComponent implements AbstractTestService {
-	protected boolean success;
-	protected JsonElement latestCreatedKey;
-	protected JsonElement latestKey;
-	protected JsonObject latestObj;
-	protected JsonArray latestArr;
-	protected ResponseResults latestResults;
+	private boolean success;
+	private JsonElement latestKey;
+	private JsonObject latestObj;
+	private JsonArray latestArr;
+	private ResponseResults latestResults;
 
-	protected void results (ResponseResults results, int expectedStatus, boolean expectingBody, boolean multipleResults) {
+	private void results (ResponseResults results, int expectedStatus, boolean expectingBody, boolean multipleResults) {
 		success =
 			(results.status.value() == expectedStatus) &&
 			((results.body.isEmpty()) != expectingBody);

@@ -41,8 +41,8 @@ When search "keySignature" with keyword "D"
 Then the request was not successful
 And the response has a status code of 501
 And the response matches
-	| code | 501             |
-	| text | NOT_IMPLEMENTED |
+	| code | integer | 501             |
+	| text | string  | NOT_IMPLEMENTED |
 
 @TC0703
 @Positive
@@ -54,9 +54,9 @@ When request a "keySignature" with id "0"
 Then the request was successful
 And the response has a status code of 200
 And the response matches
-	|    id | 0 |
-	| major | C |
-	| minor | a |
+	|    id | integer | 0 |
+	| major | string  | C |
+	| minor | string  | a |
 
 @TC0704
 @Negative
@@ -68,8 +68,8 @@ When request a "keySignature" with id "8"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
 
 @TC0705
 @Negative @Create
@@ -83,8 +83,8 @@ Given a "keySignature" with
 And the request was not successful
 And the response has a status code of 400
 And the response matches
-	| code | 400         |
-	| text | BAD_REQUEST |
+	| code | integer | 400         |
+	| text | string  | BAD_REQUEST |
 
 @TC0706
 @Negative @Update
@@ -98,15 +98,15 @@ Given update "keySignature" with id "-1"
 And the request was not successful
 And the response has a status code of 400
 And the response matches
-	| code | 400         |
-	| text | BAD_REQUEST |
+	| code | integer | 400         |
+	| text | string  | BAD_REQUEST |
 When request a "keySignature" with id "5"
 Then the request was successful
 And the response has a status code of 200
 And the response matches
-	|    id | 5  |
-	| major | B  |
-	| minor | g+ |
+	|    id | integer | 5  |
+	| major | string  | B  |
+	| minor | string  | g+ |
 
 @TC0707
 @Negative @Delete
@@ -117,12 +117,12 @@ When delete "keySignature" with id "-2"
 Then the request was not successful
 And the response has a status code of 400
 And the response matches
-	| code | 400         |
-	| text | BAD_REQUEST |
+	| code | integer | 400         |
+	| text | string  | BAD_REQUEST |
 When request a "keySignature" with id "-5"
 Then the request was successful
 And the response has a status code of 200
 And the response matches
-	|    id | -5 |
-	| major | D- |
-	| minor | b- |
+	|    id | integer | -5 |
+	| major | string  | D- |
+	| minor | string  | b- |

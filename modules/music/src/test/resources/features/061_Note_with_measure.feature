@@ -13,8 +13,10 @@ And a "track" with
 	| clef    | string | Treble |
 And the request was successful
 And the response has a status code of 201
+And prepare json "clefTreble"
+	| id      | string | Treble |
 And the response matches
-	| clef | Treble |
+	| clef    |  json  | clefTreble |
 And a "section" with
 	| trackId       | key      | track |
 	| tempo         | integer  |  120  |
@@ -32,8 +34,8 @@ And a "note" with
 	| value     | fraction |   1/4   |
 And the request was successful
 And the response matches
-	| note  |  64 |
-	| value | 1/4 |
+	| note  | integer  |  64 |
+	| value | fraction | 1/4 |
 And the response has a status code of 201
 
 @TC0611
@@ -45,8 +47,8 @@ Scenario: create a new Note
 When request previously created "note"
 And the request was successful
 And the response matches
-	| note  |  64 |
-	| value | 1/4 |
+	| note  | integer  |  64 |
+	| value | fraction | 1/4 |
 And the response has a status code of 200
 Then request previously created "measure"
 And the request was successful
@@ -81,5 +83,5 @@ Then request previously created "note"
 And the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |

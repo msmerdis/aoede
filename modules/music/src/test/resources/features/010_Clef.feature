@@ -37,8 +37,8 @@ When search "clef" with keyword "Bass"
 Then the request was not successful
 And the response has a status code of 501
 And the response matches
-	| code | 501             |
-	| text | NOT_IMPLEMENTED |
+	| code | integer | 501             |
+	| text | string  | NOT_IMPLEMENTED |
 
 @TC0103
 @Positive
@@ -50,10 +50,10 @@ When request a "clef" with id "Treble"
 Then the request was successful
 And the response has a status code of 200
 And the response matches
-	|  id  | Treble |
-	| type | G      |
-	| note | 64     |
-	| spos | -2     |
+	|  id  | string  | Treble |
+	| type | string  | G      |
+	| note | integer | 64     |
+	| spos | integer | -2     |
 
 @TC0104
 @Negative
@@ -65,8 +65,8 @@ When request a "clef" with id "NotAClef"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
 
 @TC0105
 @Negative @Create
@@ -81,8 +81,8 @@ Given a "clef" with
 And the request was not successful
 And the response has a status code of 400
 And the response matches
-	| code | 400         |
-	| text | BAD_REQUEST |
+	| code | integer | 400         |
+	| text | string  | BAD_REQUEST |
 
 @TC0106
 @Negative @Update
@@ -97,8 +97,8 @@ Given update "clef" with id "NotAClef"
 And the request was not successful
 And the response has a status code of 400
 And the response matches
-	| code | 400         |
-	| text | BAD_REQUEST |
+	| code | integer | 400         |
+	| text | string  | BAD_REQUEST |
 
 @TC0107
 @Negative @Delete
@@ -109,5 +109,5 @@ When delete "clef" with id "NotAClef"
 Then the request was not successful
 And the response has a status code of 400
 And the response matches
-	| code | 400         |
-	| text | BAD_REQUEST |
+	| code | integer | 400         |
+	| text | string  | BAD_REQUEST |

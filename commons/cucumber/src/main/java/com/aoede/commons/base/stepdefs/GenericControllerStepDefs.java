@@ -277,7 +277,8 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 	public void verifyElement (DataTable data) {
 		assertTrue(
 			latestService.getLatestResults().body,
-			latestService.lastObjectMatches(data)
+			jsonObjectService.jsonObjectMatches(
+				latestService.getLatestObj(), data)
 		);
 	}
 

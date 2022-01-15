@@ -37,8 +37,8 @@ When request a "SimpleKeyDomain" with id "1"
 Then the request was successful
 And the response has a status code of 200
 And the response matches
-	| id    |      1     |
-	| value | simply one |
+	| id    | integer |      1     |
+	| value | string  | simply one |
 
 @TC040003
 @Negative
@@ -50,8 +50,8 @@ When request a "SimpleKeyDomain" with id "1000"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
 
 @TC040004
 @Positive @Create
@@ -64,12 +64,12 @@ Given a "SimpleKeyDomain" with
 And the request was successful
 And the response has a status code of 201
 And the response matches
-	| value | simply four |
+	| value | string | simply four |
 When request previously created "SimpleKeyDomain"
 And the request was successful
 And the response has a status code of 200
 And the response matches
-	| value | simply four |
+	| value | string | simply four |
 Then request all available "SimpleKeyDomain"
 And the request was successful
 And the response has a status code of 200
@@ -89,8 +89,8 @@ Given a "SimpleKeyDomain" with
 And the request was not successful
 And the response has a status code of 409
 And the response matches
-	| code | 409      |
-	| text | CONFLICT |
+	| code | integer | 409      |
+	| text | string  | CONFLICT |
 
 @TC040006
 @Positive @Update
@@ -103,7 +103,7 @@ Given a "SimpleKeyDomain" with
 And the request was successful
 And the response has a status code of 201
 And the response matches
-	| value | nope |
+	| value | string | nope |
 When update previously created "SimpleKeyDomain"
 	| value | string | simply five |
 And the request was successful
@@ -125,8 +125,8 @@ When update "SimpleKeyDomain" with id "1000"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
 
 @TC040008
 @Positive @Delete
@@ -139,7 +139,7 @@ Given a "SimpleKeyDomain" with
 And the request was successful
 And the response has a status code of 201
 And the response matches
-	| value | simply six |
+	| value | string | simply six |
 When delete "SimpleKeyDomain" with id "7"
 And the request was successful
 And the response has a status code of 204
@@ -147,8 +147,8 @@ Then request a "SimpleKeyDomain" with id "7"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
 And request all available "SimpleKeyDomain"
 And the request was successful
 And the response has a status code of 200
@@ -165,5 +165,5 @@ When delete "SimpleKeyDomain" with id "1000"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |

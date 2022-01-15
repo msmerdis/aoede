@@ -38,6 +38,11 @@ public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> im
 		stringPattern = Pattern.compile(STRING_REGEX, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 	}
 
+	@Override
+	public void put(String name, DataTable data) {
+		put(name, generateJson(data));
+	}
+
 	// generate a json object base on data table
 	@Override
 	public JsonObject generateJson (DataTable data) {
@@ -83,9 +88,9 @@ public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> im
 			case "json":
 				assertTrue (
 					"json " + row.get(1) + " was not found",
-					containsKey(row.get(1))
+					containsKey(row.get(2))
 				);
-				obj.add(row.get(0), get(row.get(1)));
+				obj.add(row.get(0), get(row.get(2)));
 				break;
 			default:
 				assertFalse ("Type " + row.get(1) + " could not be converted to json value", true);
@@ -96,9 +101,68 @@ public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> im
 	}
 
 	@Override
-	public void put(String name, DataTable data) {
-		put(name, generateJson(data));
+	public boolean jsonObjectMatches(JsonObject object, DataTable data) {
+		return jsonObjectMatches (object, generateJson (data));
 	}
+
+	@Override
+	public boolean jsonObjectMatches(JsonObject object, JsonObject data) {
+		// verify the existence of all keys
+		for (String key : data.keySet()) {
+			if (!object.has(key)) {
+				logger.info("object does not contain key " + key);
+				return false;
+			}
+
+			// get the json elements to proceed with the rest of the tests
+			JsonElement datElem = data.get(key);
+			JsonElement objElem = object.get(key);
+
+			if (objElem.isJsonPrimitive()) {
+				// elements must match
+				if (!objElem.equals(datElem)) {
+					logger.info("object's " + key + " does not match " + datElem.toString());
+					return false;
+				}
+				// no need to check the rest of the cases
+				continue;
+			}
+
+			if (objElem.isJsonNull()) {
+				// data element must be null too
+				if (!datElem.isJsonNull()) {
+					logger.info("object's " + key + " is null");
+					return false;
+				}
+				// no need to check the rest of the cases
+				continue;
+			}
+
+			if (objElem.isJsonObject()) {
+				// data element must be object too
+				if (!datElem.isJsonObject()) {
+					logger.info("object's " + key + " is an object");
+					return false;
+				}
+
+				// match objects recursivly
+				if (!jsonObjectMatches(objElem.getAsJsonObject(), datElem.getAsJsonObject())) {
+					return false;
+				}
+				// no need to check the rest of the cases
+				continue;
+			}
+
+			// no further types are implemented stop with an error if that ever happens
+			assertNotNull ("object element could not be handled (unimplemented type)", null);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Help functions to generate json
+	 */
 
 	private String randomString (int length) {
 		return random.ints(48, 123)

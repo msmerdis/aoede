@@ -24,8 +24,8 @@ When search "section" with keyword "hello"
 Then the request was not successful
 And the response has a status code of 501
 And the response matches
-	| code | 501             |
-	| text | NOT_IMPLEMENTED |
+	| code | integer | 501             |
+	| text | string  | NOT_IMPLEMENTED |
 
 @TC0403
 @Negative
@@ -39,8 +39,8 @@ When request a "section" with composite id
 	| sectionId | integer | 1000 |
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
 
 @TC0404
 @Negative @Update
@@ -59,8 +59,8 @@ When update "section" with composite id "nonExistingSectionId"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
 
 @TC0405
 @Negative @Delete
@@ -75,5 +75,5 @@ When delete "section" with composite id
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |

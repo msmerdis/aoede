@@ -26,16 +26,15 @@ public interface AbstractTestService {
 
 	public boolean isSuccess();
 
-	public JsonElement getLatestKey();
 	public ResponseResults getLatestResults();
 
 	public boolean lastArrayMatches(DataTable data);
 	public boolean lastArrayContainsObjectWith(String id, String value);
-	public boolean lastObjectMatches(DataTable data);
 	public boolean containsKeyInElement(String element, String keyName, String latestKey);
 
-	public JsonArray getLatestArr();
-	public JsonObject getLatestObj();
+	public JsonElement getLatestKey();
+	public JsonArray   getLatestArr();
+	public JsonObject  getLatestObj();
 }
 
 

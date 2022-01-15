@@ -24,8 +24,8 @@ When search "track" with keyword "hello"
 Then the request was not successful
 And the response has a status code of 501
 And the response matches
-	| code | 501             |
-	| text | NOT_IMPLEMENTED |
+	| code | integer | 501             |
+	| text | string  | NOT_IMPLEMENTED |
 
 @TC0303
 @Negative
@@ -39,8 +39,8 @@ When request a "track" with composite id
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
 
 @TC0304
 @Negative @Update
@@ -56,8 +56,8 @@ And update "track" with composite id "nonExistingTrackId"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
 
 @TC0305
 @Negative @Delete
@@ -71,5 +71,5 @@ When delete "track" with composite id
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |

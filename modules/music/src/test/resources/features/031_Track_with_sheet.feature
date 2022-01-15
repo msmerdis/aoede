@@ -13,8 +13,10 @@ And a "track" with
 	| clef    | string | Treble |
 And the request was successful
 And the response has a status code of 201
+And prepare json "clefTreble"
+	| id      | string | Treble |
 And the response matches
-	| clef | Treble |
+	| clef    |  json  | clefTreble |
 
 @TC0311
 @Positive @Create
@@ -27,7 +29,7 @@ And the request was successful
 And the response has a status code of 200
 And "track" has "sections" array of size 0
 And the response matches
-	| clef | Treble |
+	| clef | json | clefTreble |
 Then request previously created "sheet"
 And the request was successful
 And the response has a status code of 200
@@ -47,8 +49,10 @@ And the response has a status code of 204
 Then request previously created "track"
 And the request was successful
 And the response has a status code of 200
+And prepare json "clefBass"
+	| id | string | Bass |
 And the response matches
-	| clef | Bass |
+	| clef | json | clefBass |
 
 @TC0313
 @Positive @Delete
@@ -62,5 +66,5 @@ And the response has a status code of 204
 Then request all available "track" for latest "sheet"
 And the request was successful
 And the response has a status code of 200
-And the response array does not contain "clef" with value "Alto"
+And the response array does not contain "clef" with value "Treble"
 And the response array does not contain latest "track"

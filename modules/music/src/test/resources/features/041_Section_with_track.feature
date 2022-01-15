@@ -13,8 +13,10 @@ And a "track" with
 	| clef    | string | Treble |
 And the request was successful
 And the response has a status code of 201
+And prepare json "clefTreble"
+	| id | string | Treble |
 And the response matches
-	| clef | Treble |
+	| clef | json | clefTreble |
 And a "section" with
 	| trackId       | key      | track |
 	| tempo         | integer  |  120  |
@@ -23,9 +25,9 @@ And a "section" with
 And the request was successful
 And the response has a status code of 201
 And the response matches
-	| tempo         | 120 |
-	| keySignature  |  0  |
-	| timeSignature | 3/4 |
+	| tempo         | integer  | 120 |
+	| keySignature  | integer  |  0  |
+	| timeSignature | fraction | 3/4 |
 
 @TC0411
 @Positive @Create
@@ -38,9 +40,9 @@ And the request was successful
 And the response has a status code of 200
 And "section" has "measures" array of size 0
 And the response matches
-	| tempo         | 120 |
-	| keySignature  |  0  |
-	| timeSignature | 3/4 |
+	| tempo         | integer  | 120 |
+	| keySignature  | integer  |  0  |
+	| timeSignature | fraction | 3/4 |
 Then request previously created "track"
 And the request was successful
 And "track" contains latest "section" in "sections"
@@ -62,9 +64,9 @@ Then request previously created "section"
 And the request was successful
 And the response has a status code of 200
 And the response matches
-	| tempo         | 160 |
-	| keySignature  |  1  |
-	| timeSignature | 4/4 |
+	| tempo         | integer  | 160 |
+	| keySignature  | integer  |  1  |
+	| timeSignature | fraction | 4/4 |
 And request previously created "track"
 And the response has a status code of 200
 And the request was successful
@@ -84,5 +86,5 @@ Then request previously created "section"
 And the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |

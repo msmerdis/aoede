@@ -24,8 +24,8 @@ When search "sheet" with keyword "hello"
 Then the request was not successful
 And the response has a status code of 501
 And the response matches
-	| code | 501             |
-	| text | NOT_IMPLEMENTED |
+	| code | integer | 501             |
+	| text | string  | NOT_IMPLEMENTED |
 
 @TC0203
 @Negative
@@ -37,8 +37,8 @@ When request a "sheet" with id "1000"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
 
 @TC0204
 @Positive @Create
@@ -51,13 +51,13 @@ Given a "sheet" with
 And the request was successful
 And the response has a status code of 201
 And the response matches
-	| name | New Sheet |
+	| name | string | New Sheet |
 When request previously created "sheet"
 And the request was successful
 And the response has a status code of 200
 And "sheet" has "tracks" array of size 0
 And the response matches
-	| name | New Sheet |
+	| name | string | New Sheet |
 Then request all available "sheet"
 And the request was successful
 And the response has a status code of 200
@@ -78,7 +78,7 @@ Given a "sheet" with
 And the request was successful
 And the response has a status code of 201
 And the response matches
-	| name | Sheet 2 Update  |
+	| name | string | Sheet 2 Update  |
 When update previously created "sheet"
 	| name | string | Sheet 2 Updated |
 And the request was successful
@@ -101,8 +101,8 @@ When update "sheet" with id "100"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
 
 @TC0207
 @Positive @Delete
@@ -115,7 +115,7 @@ Given a "sheet" with
 And the request was successful
 And the response has a status code of 201
 And the response matches
-	| name | Sheet 2 Delete |
+	| name | string | Sheet 2 Delete |
 When delete previously created "sheet"
 And the request was successful
 And the response has a status code of 204
@@ -135,5 +135,5 @@ When delete "sheet" with id "101"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |

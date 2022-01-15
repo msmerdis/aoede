@@ -25,8 +25,8 @@ When request a "TestHashMapDomain" with id "1"
 Then the request was successful
 And the response has a status code of 200
 And the response matches
-	| id    |  1  |
-	| value | one |
+	| id    | integer |  1  |
+	| value | string  | one |
 
 @TC030003
 @Negative
@@ -38,8 +38,8 @@ When request a "TestHashMapDomain" with id "1000"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
 
 @TC030004
 @Positive
@@ -54,14 +54,14 @@ Given a "TestHashMapDomain" with
 And the request was successful
 And the response has a status code of 201
 And the response matches
-	| id    |  4   |
-	| value | Four |
+	| id    | integer |  4   |
+	| value | string  | Four |
 When request previously created "TestHashMapDomain"
 And the request was successful
 And the response has a status code of 200
 And the response matches
-	| id    |  4   |
-	| value | Four |
+	| id    | integer |  4   |
+	| value | string  | Four |
 Then request all available "TestHashMapDomain"
 And the request was successful
 And the response has a status code of 200
@@ -82,8 +82,8 @@ Given a "TestHashMapDomain" with
 And the request was not successful
 And the response has a status code of 409
 And the response matches
-	| code | 409      |
-	| text | CONFLICT |
+	| code | integer | 409      |
+	| text | string  | CONFLICT |
 
 @TC030006
 @Positive @Update
@@ -97,8 +97,8 @@ Given a "TestHashMapDomain" with
 And the request was successful
 And the response has a status code of 201
 And the response matches
-	| id    |  5   |
-	| value | nope |
+	| id    | integer |  5   |
+	| value | string  | nope |
 When update previously created "TestHashMapDomain"
 	| id    | integer |  5   |
 	| value | string  | five |
@@ -122,8 +122,8 @@ When update "TestHashMapDomain" with id "1000"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
 
 @TC030008
 @Positive @Delete
@@ -137,8 +137,8 @@ Given a "TestHashMapDomain" with
 And the request was successful
 And the response has a status code of 201
 And the response matches
-	| id    |  6  |
-	| value | six |
+	| id    | integer |  6  |
+	| value | string  | six |
 When delete "TestHashMapDomain" with id "6"
 And the request was successful
 And the response has a status code of 204
@@ -146,8 +146,8 @@ Then request a "TestHashMapDomain" with id "6"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
 And request all available "TestHashMapDomain"
 And the request was successful
 And the response has a status code of 200
@@ -164,8 +164,8 @@ When delete "TestHashMapDomain" with id "1000"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
 
 @TC030010
 @Positive @Update
@@ -179,8 +179,8 @@ Given a "TestHashMapDomain" with
 And the request was successful
 And the response has a status code of 201
 And the response matches
-	| id    |  777  |
-	| value | seven |
+	| id    | integer |  777  |
+	| value | string  | seven |
 When update previously created "TestHashMapDomain"
 	| id    | integer |   7   |
 	| value | string  | seven |
@@ -196,11 +196,11 @@ And request a "TestHashMapDomain" with id "7"
 Then the request was successful
 And the response has a status code of 200
 And the response matches
-	| id    |   7   |
-	| value | seven |
+	| id    | integer |   7   |
+	| value | string  | seven |
 And request a "TestHashMapDomain" with id "777"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |

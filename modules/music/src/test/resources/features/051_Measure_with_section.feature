@@ -13,8 +13,10 @@ And a "track" with
 	| clef    | string | Treble |
 And the request was successful
 And the response has a status code of 201
+And prepare json "clefTreble"
+	| id      | string | Treble |
 And the response matches
-	| clef | Treble |
+	| clef    |  json  | clefTreble |
 And a "section" with
 	| trackId       | key      | track |
 	| tempo         | integer  |  120  |
@@ -69,5 +71,5 @@ Then request previously created "measure"
 And the request was not successful
 And the response has a status code of 404
 And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
