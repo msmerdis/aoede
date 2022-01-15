@@ -20,7 +20,6 @@ public class AbstractTestServiceDiscoveryServiceImpl extends BaseTestComponent i
 	@Autowired
 	private ListableBeanFactory listableBeanFactory;
 	private Map<String, AbstractTestService> services = new HashMap<String, AbstractTestService> ();
-	private AbstractTestService latestService;
 
 	@PostConstruct
 	private void discoverTestServices () {
@@ -46,15 +45,8 @@ public class AbstractTestServiceDiscoveryServiceImpl extends BaseTestComponent i
 	@Override
 	public AbstractTestService getService (String domain) {
 		assertTrue("test controller for " + domain + " cannot be found", services.containsKey(domain));
-		latestService = services.get(domain);
-		assertNotNull("test controller for " + domain + " is null", latestService);
-		return latestService;
-	}
-
-	@Override
-	public AbstractTestService getService () {
-		assertNotNull("no previous test controller is found", latestService);
-		return latestService;
+		assertNotNull("test controller for " + domain + " is null", services.get(domain));
+		return services.get(domain);
 	}
 
 	@Override

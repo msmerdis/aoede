@@ -25,6 +25,8 @@ import io.cucumber.java.en.When;
  */
 public class GenericControllerStepDefs extends BaseStepDefinition {
 
+	AbstractTestService latestService = null;
+
 	/**
 	 * Data preparation steps
 	 */
@@ -53,7 +55,8 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		ResponseResults results = executeGet (services.getPathForService(domain, "/search"), headers);
 
 		// update test controller with data
-		services.getService(domain).searchResults(results);
+		latestService = services.getService(domain);
+		latestService.searchResults(results);
 	}
 
 	@When("request a {string} with id {string}")
@@ -63,7 +66,8 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		ResponseResults results = executeGet (services.getPathForService(domain, "/" + id));
 
 		// update test controller with data
-		services.getService(domain).accessResults(results);
+		latestService = services.getService(domain);
+		latestService.accessResults(results);
 	}
 
 	@When("request a {string} with composite id")
@@ -95,7 +99,8 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		ResponseResults results = executeGet (services.getPathForService(domain));
 
 		// update test controller with data
-		services.getService(domain).findAllResults(results);
+		latestService = services.getService(domain);
+		latestService.findAllResults(results);
 	}
 
 	@When("request all available {string} for latest {string}")
@@ -123,7 +128,8 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		);
 
 		// update test controller with data
-		services.getService(domain).createResults(results);
+		latestService = services.getService(domain);
+		latestService.createResults(results);
 	}
 
 	@When("update {string} with id {string}")
@@ -135,7 +141,8 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		);
 
 		// update test controller with data
-		services.getService(domain).updateResults(results);
+		latestService = services.getService(domain);
+		latestService.updateResults(results);
 	}
 
 	@When("update {string} with composite id {string}")
@@ -162,7 +169,8 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		ResponseResults results = executeDelete (services.getPathForService(domain, "/" + id));
 
 		// update test controller with data
-		services.getService(domain).deleteResults(results);
+		latestService = services.getService(domain);
+		latestService.deleteResults(results);
 	}
 
 	@When("delete {string} with composite id {string}")
@@ -194,43 +202,40 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 
 	@Then("the request was successful")
 	public void verifySuccessfulRequest () {
-		AbstractTestService service = services.getService();
-		assertTrue(service.getLatestResults().body, services.getService().isSuccess());
+		assertTrue(latestService.getLatestResults().body, latestService.isSuccess());
 	}
 
 	@Then("the request was not successful")
 	public void verifyNotSuccessfulRequest () {
-		AbstractTestService service = services.getService();
-		assertFalse(service.getLatestResults().body, services.getService().isSuccess());
+		assertFalse(latestService.getLatestResults().body, latestService.isSuccess());
 	}
 
 	@Then("the response has a status code of {int}")
 	public void verifyStatus (int code) {
-		AbstractTestService service = services.getService();
-		assertEquals(code, service.getLatestResults().status.value());
+		assertEquals(code, latestService.getLatestResults().status.value());
 	}
 
 	@Then("the response array contains")
 	public void verifyElementList (DataTable data) {
 		assertTrue(
-			services.getService().getLatestResults().body,
-			services.getService().lastArrayMatches(data)
+			latestService.getLatestResults().body,
+			latestService.lastArrayMatches(data)
 		);
 	}
 
 	@Then("the response array contains {string} with value {string}")
 	public void verifyElementExistInList (String id, String value) {
 		assertTrue(
-			services.getService().getLatestResults().body,
-			services.getService().lastArrayContainsObjectWith(id, value)
+			latestService.getLatestResults().body,
+			latestService.lastArrayContainsObjectWith(id, value)
 		);
 	}
 
 	@Then("the response array contains latest {string}")
 	public void verifyLatestElementExistsInList (String domain) {
 		assertTrue (
-			services.getService().getLatestResults().body,
-			services.getService().lastArrayContainsObjectWith(
+			latestService.getLatestResults().body,
+			latestService.lastArrayContainsObjectWith(
 				services.getService(domain).getKeyName(),
 				services.getService(domain).getLatestKey().getAsString()
 			)
@@ -240,8 +245,8 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 	@Then("the response array does not contain latest {string}")
 	public void verifyLatestElementDoesNotExistInList (String domain) {
 		assertFalse (
-			services.getService().getLatestResults().body,
-			services.getService().lastArrayContainsObjectWith(
+			latestService.getLatestResults().body,
+			latestService.lastArrayContainsObjectWith(
 				services.getService(domain).getKeyName(),
 				services.getService(domain).getLatestKey().getAsString()
 			)
@@ -251,8 +256,8 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 	@Then("the response array does not contain {string} with value {string}")
 	public void verifyElementDoesNotExistInList (String id, String value) {
 		assertFalse(
-			services.getService().getLatestResults().body,
-			services.getService().lastArrayContainsObjectWith(id, value)
+			latestService.getLatestResults().body,
+			latestService.lastArrayContainsObjectWith(id, value)
 		);
 	}
 
@@ -271,8 +276,8 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 	@Then("the response matches")
 	public void verifyElement (DataTable data) {
 		assertTrue(
-			services.getService().getLatestResults().body,
-			services.getService().lastObjectMatches(data)
+			latestService.getLatestResults().body,
+			latestService.lastObjectMatches(data)
 		);
 	}
 
