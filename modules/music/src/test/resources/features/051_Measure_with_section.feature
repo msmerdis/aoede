@@ -28,7 +28,7 @@ And the request was successful
 And the response has a status code of 201
 
 @TC0511
-@Positive
+@Positive @Create
 Scenario: create a new Measure
 ### create a new measure and verify the measure is created with the same data as provided
 ### retrieve the measure and verify the same data are returned
@@ -42,7 +42,7 @@ And the request was successful
 And "section" contains latest "measure" in "measures"
 
 @TC0512
-@Positive
+@Positive @Update
 Scenario: update a Measure
 ### create a measure and then update it
 ### verify that the measure contents have been updated
@@ -57,7 +57,7 @@ And the response has a status code of 200
 And the response array contains latest "measure"
 
 @TC0513
-@Positive
+@Positive @Delete
 Scenario: delete a Measure
 ### create a measure and then delete it
 ### verify that the measure is no longer accessible

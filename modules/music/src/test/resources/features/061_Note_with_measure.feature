@@ -37,7 +37,7 @@ And the response matches
 And the response has a status code of 201
 
 @TC0611
-@Positive
+@Positive @Create
 Scenario: create a new Note
 ### create a new note and verify the measure is created with the same data as provided
 ### retrieve the note and verify the same data are returned
@@ -53,7 +53,7 @@ And the request was successful
 And "measure" contains latest "note" in "notes"
 
 @TC0612
-@Positive
+@Positive @Update
 Scenario: update a Note
 ### create a note and then update it
 ### verify that the note contents have been updated
@@ -69,7 +69,7 @@ And the response has a status code of 200
 And the response array contains latest "note"
 
 @TC0613
-@Positive
+@Positive @Delete
 Scenario: delete a Note
 ### create a note and then delete it
 ### verify that the note is no longer accessible

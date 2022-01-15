@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -171,10 +172,16 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 
 		assertNotNull("testCaseIdTrackerService is not autowired", testCaseIdTrackerService);
 
-		for (String tag : scenario.getSourceTagNames()) {
+		String scenarioName = scenario.getName().toLowerCase();
+		Collection<String> scenarioTags = scenario.getSourceTagNames();
+
+		for (String tag : scenarioTags) {
 			switch (tag) {
 			case "@Positive": isPositive = true; break;
 			case "@Negative": isNegative = true; break;
+			case "@Create": assertTag(scenarioName, "create"); break;
+			case "@Update": assertTag(scenarioName, "update"); break;
+			case "@Delete": assertTag(scenarioName, "delete"); break;
 			default:
 				if (tag.startsWith("@TC")) {
 					assertFalse ("test cases cannot define more than one test case id", hasTCvalue);
@@ -187,9 +194,22 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 			}
 		}
 
+		assertHasTag (scenarioName, "create ", scenarioTags, "@Create");
+		assertHasTag (scenarioName, "update ", scenarioTags, "@Update");
+		assertHasTag (scenarioName, "delete ", scenarioTags, "@Delete");
+
 		assertTrue  ("test cases must define a test case id", hasTCvalue);
 		assertTrue  ("test cases must be either @Positive  or @Negative", isPositive || isNegative);
 		assertFalse ("test cases cannot be both @Positive and @Negative", isPositive && isNegative);
+	}
+
+	private void assertTag (String name, String value) {
+		assertTrue ("scenario does not contain keyword " + value, name.contains(value));
+	}
+
+	private void assertHasTag (String scenarioName, String name, Collection<String> scenarioTags, String value) {
+		if (scenarioName.contains(name))
+			assertTrue ("scenario is not tagged with " + value, scenarioTags.contains(value));
 	}
 
 	protected void cleanup () {
