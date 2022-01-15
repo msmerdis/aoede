@@ -4,11 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.aoede.commons.service.AbstractTestServiceImpl;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-
-import io.cucumber.datatable.DataTable;
 
 @Component
 public class TrackTestServiceImpl extends AbstractTestServiceImpl implements TrackTestService {
@@ -28,23 +24,6 @@ public class TrackTestServiceImpl extends AbstractTestServiceImpl implements Tra
 	@Override
 	public String getKeyName() {
 		return "id";
-	}
-
-	@Override
-	public void createBody (JsonObject obj, DataTable data) {
-		JsonElement key = sheetTestService.getLatestKey();
-
-		if (key != null) obj.add("sheetId", key);
-
-		super.createBody(obj, data);
-	}
-
-	@Override
-	protected void addJsonElement (JsonObject obj, String name, String value) {
-		switch (name) {
-		default:
-			obj.add(name, new JsonPrimitive(value));
-		}
 	}
 
 	@Override

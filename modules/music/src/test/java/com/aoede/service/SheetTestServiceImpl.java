@@ -3,8 +3,6 @@ package com.aoede.service;
 import org.springframework.stereotype.Component;
 
 import com.aoede.commons.service.AbstractTestServiceImpl;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 @Component
 public class SheetTestServiceImpl extends AbstractTestServiceImpl implements SheetTestService {
@@ -23,16 +21,6 @@ public class SheetTestServiceImpl extends AbstractTestServiceImpl implements She
 		return "id";
 	}
 
-	@Override
-	protected void addJsonElement (JsonObject obj, String name, String value) {
-		switch (name) {
-		case "id":
-			obj.add(name, new JsonPrimitive(Long.parseLong(value)));
-			break;
-		default:
-			obj.add(name, new JsonPrimitive(value));
-		}
-	}
 }
 
 

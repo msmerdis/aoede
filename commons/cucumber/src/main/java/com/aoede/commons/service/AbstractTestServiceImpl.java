@@ -27,25 +27,6 @@ public abstract class AbstractTestServiceImpl extends BaseTestComponent implemen
 	protected JsonArray latestArr;
 	protected ResponseResults latestResults;
 
-
-	// TODO: remove and replace with json build steps
-	public void createBody (JsonObject obj, DataTable data) {
-		for (var row : data.asLists()) {
-			addJsonElement(obj, row.get(0), row.get(1));
-		}
-	}
-
-	// TODO: remove and replace with json build steps
-	public void updateBody (JsonObject obj, DataTable data) {
-		for (var row : data.asLists()) {
-			addJsonElement(obj, row.get(0), row.get(1));
-		}
-	}
-
-
-	// TODO: remove and replace with json build steps
-	protected abstract void addJsonElement (JsonObject obj, String name, String value);
-
 	protected void results (ResponseResults results, int expectedStatus, boolean expectingBody, boolean multipleResults) {
 		success =
 			(results.status.value() == expectedStatus) &&

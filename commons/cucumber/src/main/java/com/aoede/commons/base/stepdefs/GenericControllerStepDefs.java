@@ -1,4 +1,4 @@
-package com.aoede.commons.controller;
+package com.aoede.commons.base.stepdefs;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -23,7 +23,7 @@ import io.cucumber.java.en.When;
  * Provides the base step definitions for a domain controller request and assertion
  * Utilises domain test services to build and verify the results
  */
-public class GenericTestController extends BaseStepDefinition {
+public class GenericControllerStepDefs extends BaseStepDefinition {
 
 	/**
 	 * Data preparation steps

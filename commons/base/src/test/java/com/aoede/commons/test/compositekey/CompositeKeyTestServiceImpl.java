@@ -3,8 +3,6 @@ package com.aoede.commons.test.compositekey;
 import org.springframework.stereotype.Component;
 
 import com.aoede.commons.service.AbstractTestServiceImpl;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 @Component
 public class CompositeKeyTestServiceImpl extends AbstractTestServiceImpl implements CompositeKeyTestService {
@@ -22,19 +20,6 @@ public class CompositeKeyTestServiceImpl extends AbstractTestServiceImpl impleme
 	@Override
 	public String getKeyName() {
 		return "id";
-	}
-
-	@Override
-	protected void addJsonElement(JsonObject obj, String name, String value) {
-		switch (name) {
-		case "id":
-		case "childId":
-		case "parentId":
-			obj.add(name, new JsonPrimitive(Integer.parseInt(value)));
-			break;
-		default:
-			obj.add(name, new JsonPrimitive(value));
-		}
 	}
 
 }
