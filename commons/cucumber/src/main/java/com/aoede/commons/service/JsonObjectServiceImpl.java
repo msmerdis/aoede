@@ -2,14 +2,18 @@ package com.aoede.commons.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
+import java.util.Random;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -17,10 +21,22 @@ import io.cucumber.datatable.DataTable;
 
 @Service
 public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> implements JsonObjectService {
+	//private final static String STRING_REGEX = "([^{}]*(\\{[^{}]*\\}))*[^{}]*";
+	private final static String STRING_REGEX = "\\{[^{}]*\\}";
+
+	private Random random = new Random (System.currentTimeMillis());
+	private Pattern stringPattern;
+
+	@Autowired
+	private AbstractTestServiceDiscoveryService abstractTestServiceDiscoveryService;
 
 	@Lazy
 	@Autowired
 	private CompositeIdService compositeIdService;
+
+	public JsonObjectServiceImpl () {
+		stringPattern = Pattern.compile(STRING_REGEX, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+	}
 
 	// generate a json object base on data table
 	@Override
@@ -46,12 +62,23 @@ public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> im
 			case "boolean":
 				obj.add(row.get(0), new JsonPrimitive(Boolean.parseBoolean(row.get(2))));
 				break;
+			case "fraction":
+				obj.add(row.get(0), buildFraction(row.get(2)));
+				break;
 			case "compositeId":
 				assertTrue (
 					"composite id " + row.get(1) + " was not found",
 					compositeIdService.containsKey(row.get(1))
 				);
 				obj.add(row.get(0), new JsonPrimitive(compositeIdService.get(row.get(1))));
+				break;
+			case "key":
+				JsonElement element = abstractTestServiceDiscoveryService.getService(row.get(2)).getLatestKey();
+				assertNotNull("key for " + row.get(2) + " was not found", element);
+				obj.add(row.get(0), element);
+				break;
+			case "random string":
+				obj.add(row.get(0), new JsonPrimitive(randomString(row.get(2))));
 				break;
 			case "json":
 				assertTrue (
@@ -71,6 +98,55 @@ public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> im
 	@Override
 	public void put(String name, DataTable data) {
 		put(name, generateJson(data));
+	}
+
+	private String randomString (int length) {
+		return random.ints(48, 123)
+			.filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+			.limit(length)
+			.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+			.toString();
+	}
+
+	private String randomString (String template) {
+		var matcher = stringPattern.matcher(template);
+
+		// find and process all matches
+		while (matcher.find()) {
+			String block = matcher.group();
+			String[] parts = block.substring(1, block.length()-1).split(":");
+
+			switch (parts[0]) {
+				case "string":
+					assertEquals("string template block must have two parts", 2, parts.length);
+					int length = Integer.parseInt(parts[1]);
+					assertTrue("string template block must define a positive number as the second part", length > 0);
+					template = template.replace(block, randomString(length));
+					break;
+				default:
+					assertNotNull("unknown template block for random string: " + parts[0], null);
+			}
+		}
+
+		logger.info("generated random string : " + template);
+		return template;
+	}
+
+	private JsonObject buildFraction (BigInteger num, BigInteger den) {
+		JsonObject fraction = new JsonObject ();
+
+		fraction.add( "numerator" , new JsonPrimitive(num));
+		fraction.add("denominator", new JsonPrimitive(den));
+
+		return fraction;
+	}
+
+	private JsonObject buildFraction (String fraction) {
+		String[] parts = fraction.split("/");
+
+		assertEquals("fraction must have two parts", 2, parts.length);
+
+		return buildFraction (new BigInteger(parts[0]), new BigInteger(parts[1]));
 	}
 }
 

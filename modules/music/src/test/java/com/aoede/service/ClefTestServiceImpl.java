@@ -28,9 +28,6 @@ public class ClefTestServiceImpl extends AbstractTestServiceImpl implements Clef
 		obj.add(name, new JsonPrimitive(value));
 	}
 
-	@Override
-	public void createDefaultBody(JsonObject obj) {}
-
 }
 
 

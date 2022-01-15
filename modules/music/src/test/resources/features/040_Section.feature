@@ -43,79 +43,7 @@ And the response matches
 	| text | NOT_FOUND |
 
 @TC0404
-@Positive
-Scenario: create a new Section
-### create a new section and verify the track is created with the same data as provided
-### retrieve the section and verify the same data are returned
-
-Given a randomized "sheet"
-And the request was successful
-And a randomized "track"
-And the request was successful
-And a "section" with
-	| tempo         | 120 |
-	| keySignature  |  0  |
-	| timeSignature | 3/4 |
-And the request was successful
-And the response has a status code of 201
-And the response matches
-	| tempo         | 120 |
-	| keySignature  |  0  |
-	| timeSignature | 3/4 |
-When request previously created "section"
-And the request was successful
-And the response has a status code of 200
-And "section" has "measures" array of size 0
-And the response matches
-	| tempo         | 120 |
-	| keySignature  |  0  |
-	| timeSignature | 3/4 |
-Then request previously created "track"
-And the request was successful
-And "track" contains latest "section" in "sections"
-And "track" has "sections" array of size 1
-
-@TC0405
-@Positive
-Scenario: update a Section
-### create a section and then update it
-### verify that the section contents have been updated
-
-Given a randomized "sheet"
-And the request was successful
-And a randomized "track"
-And the request was successful
-And a "section" with
-	| tempo         | 120 |
-	| keySignature  |  0  |
-	| timeSignature | 3/4 |
-And the request was successful
-And the response has a status code of 201
-And the response matches
-	| tempo         | 120 |
-	| keySignature  |  0  |
-	| timeSignature | 3/4 |
-When update previously created "section"
-	| tempo         | 160 |
-	| keySignature  |  1  |
-	| timeSignature | 4/4 |
-And the request was successful
-And the response has a status code of 204
-Then request previously created "section"
-And the request was successful
-And the response has a status code of 200
-And the response matches
-	| tempo         | 160 |
-	| keySignature  |  1  |
-	| timeSignature | 4/4 |
-And request previously created "track"
-And the response has a status code of 200
-And the request was successful
-And "track" contains latest "section" in "sections"
-And "track" has "sections" array of size 1
-
-@TC0406
-@Negative
+@Negative @Update
 Scenario: update a non existing Section
 ### attempt to update a section that does not exist
 ### this should generate an error
@@ -125,47 +53,17 @@ Given prepare composite id "nonExistingSectionId"
 	|  trackId  | integer | 1000 |
 	| sectionId | integer | 1000 |
 When update "section" with composite id "nonExistingSectionId"
-	| tempo         | 120 |
-	| keySignature  |  0  |
-	| timeSignature | 3/4 |
+	| tempo         | integer  | 120 |
+	| keySignature  | integer  |  0  |
+	| timeSignature | fraction | 3/4 |
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
 	| code | 404       |
 	| text | NOT_FOUND |
 
-@TC0407
-@Positive
-Scenario: delete a Section
-### create a section and then delete it
-### verify that the section is no longer accessible
-
-Given a randomized "sheet"
-And the request was successful
-And a randomized "track"
-And the request was successful
-And a "section" with
-	| tempo         | 120 |
-	| keySignature  |  0  |
-	| timeSignature | 3/4 |
-And the request was successful
-And the response has a status code of 201
-And the response matches
-	| tempo         | 120 |
-	| keySignature  |  0  |
-	| timeSignature | 3/4 |
-When delete previously created "section"
-And the request was successful
-And the response has a status code of 204
-Then request previously created "section"
-And the request was not successful
-And the response has a status code of 404
-And the response matches
-	| code | 404       |
-	| text | NOT_FOUND |
-
-@TC0408
-@Negative
+@TC0405
+@Negative @Delete
 Scenario: delete a non existing Section
 ### attempt to delete a section that does not exist
 ### this should generate an error

@@ -72,14 +72,14 @@ And the response matches
 	| text | NOT_FOUND |
 
 @TC0705
-@Negative
+@Negative @Create
 Scenario: create a new Key signature
 ### create a new key signature is not allowed
 
 Given a "keySignature" with
-	|    id | 8 |
-	| major | F |
-	| minor | d |
+	|    id | integer | 8 |
+	| major | string  | F |
+	| minor | string  | d |
 And the request was not successful
 And the response has a status code of 400
 And the response matches
@@ -87,14 +87,14 @@ And the response matches
 	| text | BAD_REQUEST |
 
 @TC0706
-@Negative
+@Negative @Update
 Scenario: update a Key signature
 ### updating key signatures is not allowed
 
-Given update "keySignature" with id "NotAKeySignature"
-	|    id | 5 |
-	| major | F |
-	| minor | d |
+Given update "keySignature" with id "-1"
+	|    id | integer | 5 |
+	| major | string  | F |
+	| minor | string  | d |
 And the request was not successful
 And the response has a status code of 400
 And the response matches
@@ -109,11 +109,11 @@ And the response matches
 	| minor | g+ |
 
 @TC0707
-@Negative
+@Negative @Delete
 Scenario: delete a Key signature
 ### deleting key signatures is not allowed
 
-When delete "keySignature" with id "-5"
+When delete "keySignature" with id "-2"
 Then the request was not successful
 And the response has a status code of 400
 And the response matches

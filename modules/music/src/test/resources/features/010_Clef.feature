@@ -69,15 +69,15 @@ And the response matches
 	| text | NOT_FOUND |
 
 @TC0105
-@Negative
+@Negative @Create
 Scenario: create a new Clef
 ### create a new clef is not allowed
 
 Given a "clef" with
-	|  id  | New Clef |
-	| type | G        |
-	| note | 64       |
-	| spos | 0        |
+	|  id  | string  | New Clef |
+	| type | string  | G        |
+	| note | integer | 64       |
+	| spos | integer | 0        |
 And the request was not successful
 And the response has a status code of 400
 And the response matches
@@ -85,15 +85,15 @@ And the response matches
 	| text | BAD_REQUEST |
 
 @TC0106
-@Negative
+@Negative @Update
 Scenario: update a Clef
 ### updating clefs is not allowed
 
 Given update "clef" with id "NotAClef"
-	|  id  | Updated Clef |
-	| type | A            |
-	| note | 1            |
-	| spos | 2            |
+	|  id  | string  | Updated Clef |
+	| type | string  | A            |
+	| note | integer | 1            |
+	| spos | integer | 2            |
 And the request was not successful
 And the response has a status code of 400
 And the response matches
@@ -101,7 +101,7 @@ And the response matches
 	| text | BAD_REQUEST |
 
 @TC0107
-@Negative
+@Negative @Delete
 Scenario: delete a Clef
 ### deleting clefs is not allowed
 

@@ -43,13 +43,14 @@ And the response matches
 
 @TC030004
 @Positive
+@Create
 Scenario: create a new entity
 ### create a new entity and verify it is created with the same data as provided
 ### retrieve the entity and verify the same data are returned
 
 Given a "TestHashMapDomain" with
-	| id    |  4   |
-	| value | Four |
+	| id    | integer |  4   |
+	| value | string  | Four |
 And the request was successful
 And the response has a status code of 201
 And the response matches
@@ -70,14 +71,14 @@ And the response array contains
 And the response array contains latest "TestHashMapDomain"
 
 @TC030005
-@Negative
+@Negative @Create
 Scenario: create a dublicate entity
 ### create an entity that already exists
 ### this should generate an error
 
 Given a "TestHashMapDomain" with
-	| id    |  1        |
-	| value | dublicate |
+	| id    | integer |  1        |
+	| value | string  | dublicate |
 And the request was not successful
 And the response has a status code of 409
 And the response matches
@@ -85,22 +86,22 @@ And the response matches
 	| text | CONFLICT |
 
 @TC030006
-@Positive
+@Positive @Update
 Scenario: update an entity
 ### create an entity and then update it
 ### verify that the entity contents have been updated
 
 Given a "TestHashMapDomain" with
-	| id    |  5   |
-	| value | nope |
+	| id    | integer |  5   |
+	| value | string  | nope |
 And the request was successful
 And the response has a status code of 201
 And the response matches
 	| id    |  5   |
 	| value | nope |
 When update previously created "TestHashMapDomain"
-	| id    |  5   |
-	| value | five |
+	| id    | integer |  5   |
+	| value | string  | five |
 And the request was successful
 And the response has a status code of 204
 Then request all available "TestHashMapDomain"
@@ -110,14 +111,14 @@ And the response array contains "id" with value "5"
 And the response array contains "value" with value "five"
 
 @TC030007
-@Negative
+@Negative @Update
 Scenario: update a non existing entity
 ### attempt to update an entity that does not exist
 ### this should generate an error
 
 When update "TestHashMapDomain" with id "1000"
-	| id    |  5   |
-	| value | five |
+	| id    | integer |  5   |
+	| value | string  | five |
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
@@ -125,14 +126,14 @@ And the response matches
 	| text | NOT_FOUND |
 
 @TC030008
-@Positive
+@Positive @Delete
 Scenario: delete an entity
 ### create an entity and then delete it
 ### verify that the entity is no longer accessible
 
 Given a "TestHashMapDomain" with
-	| id    |  6  |
-	| value | six |
+	| id    | integer |  6  |
+	| value | string  | six |
 And the request was successful
 And the response has a status code of 201
 And the response matches
@@ -154,7 +155,7 @@ And the response array does not contain "id" with value "6"
 And the response array does not contain "value" with value "six"
 
 @TC030009
-@Negative
+@Negative @Delete
 Scenario: delete a non existing entity
 ### attempt to delete an entity that does not exist
 ### this should generate an error
@@ -167,22 +168,22 @@ And the response matches
 	| text | NOT_FOUND |
 
 @TC030010
-@Positive
+@Positive @Update
 Scenario: update an entity's id
 ### create an entity and then update it's id
 ### verify that the entity contents have been updated
 
 Given a "TestHashMapDomain" with
-	| id    |  777  |
-	| value | seven |
+	| id    | integer |  777  |
+	| value | string  | seven |
 And the request was successful
 And the response has a status code of 201
 And the response matches
 	| id    |  777  |
 	| value | seven |
 When update previously created "TestHashMapDomain"
-	| id    |   7   |
-	| value | seven |
+	| id    | integer |   7   |
+	| value | string  | seven |
 And the request was successful
 And the response has a status code of 204
 Then request all available "TestHashMapDomain"

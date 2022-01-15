@@ -40,11 +40,6 @@ public class MeasureTestServiceImpl extends AbstractTestServiceImpl implements M
 	}
 
 	@Override
-	public void createDefaultBody(JsonObject obj) {
-		obj.add("sectionId", sectionTestService.getLatestKey());
-	}
-
-	@Override
 	protected void addJsonElement (JsonObject obj, String name, String value) {
 		switch (name) {
 			case "id":

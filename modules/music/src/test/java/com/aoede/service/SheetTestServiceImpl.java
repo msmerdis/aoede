@@ -33,11 +33,6 @@ public class SheetTestServiceImpl extends AbstractTestServiceImpl implements She
 			obj.add(name, new JsonPrimitive(value));
 		}
 	}
-
-	@Override
-	public void createDefaultBody(JsonObject obj) {
-		obj.add("name", new JsonPrimitive("sheet_" + randomString(18)));
-	}
 }
 
 

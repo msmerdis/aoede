@@ -41,13 +41,13 @@ And the response matches
 	| text | NOT_FOUND |
 
 @TC0204
-@Positive
+@Positive @Create
 Scenario: create a new Sheet
 ### create a new sheet and verify the sheet is created with the same data as provided
 ### retrieve the sheet and verify the same data are returned
 
 Given a "sheet" with
-	| name | New Sheet |
+	| name | string | New Sheet |
 And the request was successful
 And the response has a status code of 201
 And the response matches
@@ -68,19 +68,19 @@ And the response array contains latest "sheet"
 And "sheet" returned array of size 1
 
 @TC0205
-@Positive
+@Positive @Update
 Scenario: update a Sheet
 ### create a sheet and then update it
 ### verify that the sheet contents have been updated
 
 Given a "sheet" with
-	| name | Sheet 2 Update  |
+	| name | string | Sheet 2 Update  |
 And the request was successful
 And the response has a status code of 201
 And the response matches
 	| name | Sheet 2 Update  |
 When update previously created "sheet"
-	| name | Sheet 2 Updated |
+	| name | string | Sheet 2 Updated |
 And the request was successful
 And the response has a status code of 204
 Then request all available "sheet"
@@ -88,15 +88,16 @@ And the request was successful
 And the response has a status code of 200
 And the response array contains "name" with value "Sheet 2 Updated"
 And the response array contains latest "sheet"
+And the response array does not contain "name" with value "Sheet 2 Update"
 
 @TC0206
-@Negative
+@Negative @Update
 Scenario: update a non existing Sheet
 ### attempt to update a sheet that does not exist
 ### this should generate an error
 
 When update "sheet" with id "100"
-	| name | Sheet 2 Updated |
+	| name | string | Sheet 2 Updated |
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
@@ -104,13 +105,13 @@ And the response matches
 	| text | NOT_FOUND |
 
 @TC0207
-@Positive
+@Positive @Delete
 Scenario: delete a Sheet
 ### create a sheet and then delete it
 ### verify that the sheet is no longer accessible
 
 Given a "sheet" with
-	| name | Sheet 2 Delete |
+	| name | string | Sheet 2 Delete |
 And the request was successful
 And the response has a status code of 201
 And the response matches
@@ -125,7 +126,7 @@ And the response array does not contain "name" with value "Sheet 2 Delete"
 And the response array does not contain latest "sheet"
 
 @TC0208
-@Negative
+@Negative @Delete
 Scenario: delete a non existing Sheet
 ### attempt to delete a sheet that does not exist
 ### this should generate an error

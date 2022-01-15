@@ -40,19 +40,6 @@ public class SectionTestServiceImpl extends AbstractTestServiceImpl implements S
 	}
 
 	@Override
-	public void createDefaultBody(JsonObject obj) {
-		JsonObject fraction = new JsonObject ();
-
-		fraction.add( "numerator" , new JsonPrimitive(4));
-		fraction.add("denominator", new JsonPrimitive(4));
-
-		obj.add("trackId", trackTestService.getLatestKey());
-		obj.add("tempo", new JsonPrimitive(random.nextInt(200) + 40));
-		obj.add("keySignature", new JsonPrimitive(random.nextInt(15) - 7));
-		obj.add("timeSignature", fraction);
-	}
-
-	@Override
 	protected void addJsonElement (JsonObject obj, String name, String value) {
 		switch (name) {
 			case "timeSignature":

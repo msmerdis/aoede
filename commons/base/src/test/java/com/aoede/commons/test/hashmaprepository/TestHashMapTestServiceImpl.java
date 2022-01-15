@@ -25,12 +25,6 @@ public class TestHashMapTestServiceImpl extends AbstractTestServiceImpl implemen
 	}
 
 	@Override
-	public void createDefaultBody(JsonObject obj) {
-		obj.add("id", new JsonPrimitive(random.nextInt(200) + 40));
-		obj.add("value", new JsonPrimitive(randomString(12)));
-	}
-
-	@Override
 	protected void addJsonElement(JsonObject obj, String name, String value) {
 		switch (name) {
 		case "id":

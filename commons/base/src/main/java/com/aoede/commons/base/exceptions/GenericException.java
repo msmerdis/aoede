@@ -28,6 +28,7 @@ public class GenericException extends Exception implements Serializable {
 	@JsonProperty public final String text;
 	@JsonProperty public final String desc;
 
+	@JsonProperty
 	@JsonInclude(Include.NON_NULL)
 	public List<String> info;
 

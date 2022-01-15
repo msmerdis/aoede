@@ -114,24 +114,12 @@ public class GenericTestController extends BaseStepDefinition {
 		services.getService(childDomain).findAllResults(results);
 	}
 
-	@Given("a randomized {string}")
-	public void create(String domain) {
-		logger.info("creating " + domain);
-		ResponseResults results = executePost (
-			services.getPathForService(domain),
-			services.getService(domain).createBody()
-		);
-
-		// update test controller with data
-		services.getService(domain).createResults(results);
-	}
-
 	@Given("a {string} with")
 	public void create(String domain, DataTable data) {
 		logger.info("creating " + domain);
 		ResponseResults results = executePost (
 			services.getPathForService(domain),
-			services.getService(domain).createBody(data)
+			jsonObjectService.generateJson(data).toString()
 		);
 
 		// update test controller with data
@@ -143,7 +131,7 @@ public class GenericTestController extends BaseStepDefinition {
 		logger.info("updating " + domain + " with id " + id);
 		ResponseResults results = executePut (
 			services.getPathForService(domain, "/" + id),
-			services.getService(domain).createBody(data)
+			jsonObjectService.generateJson(data).toString()
 		);
 
 		// update test controller with data

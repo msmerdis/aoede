@@ -28,9 +28,6 @@ public class KeySignatureTestServiceImpl extends AbstractTestServiceImpl impleme
 		obj.add(name, new JsonPrimitive(value));
 	}
 
-	@Override
-	public void createDefaultBody(JsonObject obj) {}
-
 }
 
 

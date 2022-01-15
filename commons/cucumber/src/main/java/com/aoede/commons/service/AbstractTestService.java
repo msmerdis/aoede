@@ -29,9 +29,6 @@ public interface AbstractTestService {
 	public JsonElement getLatestKey();
 	public ResponseResults getLatestResults();
 
-	public String createBody();
-	public String createBody(DataTable data);
-
 	public boolean lastArrayMatches(DataTable data);
 	public boolean lastArrayContainsObjectWith(String id, String value);
 	public boolean lastObjectMatches(DataTable data);

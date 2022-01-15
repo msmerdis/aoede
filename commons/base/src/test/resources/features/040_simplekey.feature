@@ -8,15 +8,15 @@ Feature: Basic CRUD functionality for hash map repository
 Scenario: retrieve all available entities
 
 Given a "SimpleKeyDomain" with
-	| value | simply one |
+	| value | string | simply one |
 And the request was successful
 And the response has a status code of 201
 And a "SimpleKeyDomain" with
-	| value | simply two |
+	| value | string | simply two |
 And the request was successful
 And the response has a status code of 201
 And a "SimpleKeyDomain" with
-	| value | simply three |
+	| value | string | simply three |
 And the request was successful
 And the response has a status code of 201
 When request all available "SimpleKeyDomain"
@@ -54,13 +54,13 @@ And the response matches
 	| text | NOT_FOUND |
 
 @TC040004
-@Positive
+@Positive @Create
 Scenario: create a new entity
 ### create a new entity and verify it is created with the same data as provided
 ### retrieve the entity and verify the same data are returned
 
 Given a "SimpleKeyDomain" with
-	| value | simply four |
+	| value | string | simply four |
 And the request was successful
 And the response has a status code of 201
 And the response matches
@@ -79,13 +79,13 @@ And the response array contains
 And the response array contains latest "SimpleKeyDomain"
 
 @TC040005
-@Negative
+@Negative @Create
 Scenario: create a dublicate entity
 ### create an entity that already exists
 ### this should generate an error
 
 Given a "SimpleKeyDomain" with
-	| value | simply one |
+	| value | string | simply one |
 And the request was not successful
 And the response has a status code of 409
 And the response matches
@@ -93,19 +93,19 @@ And the response matches
 	| text | CONFLICT |
 
 @TC040006
-@Positive
+@Positive @Update
 Scenario: update an entity
 ### create an entity and then update it
 ### verify that the entity contents have been updated
 
 Given a "SimpleKeyDomain" with
-	| value | nope |
+	| value | string | nope |
 And the request was successful
 And the response has a status code of 201
 And the response matches
 	| value | nope |
 When update previously created "SimpleKeyDomain"
-	| value | simply five |
+	| value | string | simply five |
 And the request was successful
 And the response has a status code of 204
 Then request all available "SimpleKeyDomain"
@@ -115,13 +115,13 @@ And the response array contains "id" with value "6"
 And the response array contains "value" with value "simply five"
 
 @TC040007
-@Negative
+@Negative @Update
 Scenario: update a non existing entity
 ### attempt to update an entity that does not exist
 ### this should generate an error
 
 When update "SimpleKeyDomain" with id "1000"
-	| value | simply five |
+	| value | string | simply five |
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
@@ -129,13 +129,13 @@ And the response matches
 	| text | NOT_FOUND |
 
 @TC040008
-@Positive
+@Positive @Delete
 Scenario: delete an entity
 ### create an entity and then delete it
 ### verify that the entity is no longer accessible
 
 Given a "SimpleKeyDomain" with
-	| value | simply six |
+	| value | string | simply six |
 And the request was successful
 And the response has a status code of 201
 And the response matches
@@ -156,7 +156,7 @@ And the response array does not contain "id" with value "7"
 And the response array does not contain "value" with value "simply six"
 
 @TC040009
-@Negative
+@Negative @Delete
 Scenario: delete a non existing entity
 ### attempt to delete an entity that does not exist
 ### this should generate an error

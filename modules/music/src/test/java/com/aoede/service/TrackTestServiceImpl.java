@@ -40,12 +40,6 @@ public class TrackTestServiceImpl extends AbstractTestServiceImpl implements Tra
 	}
 
 	@Override
-	public void createDefaultBody(JsonObject obj) {
-		obj.add("sheetId", sheetTestService.getLatestKey());
-		obj.add("clef", new JsonPrimitive("Treble"));
-	}
-
-	@Override
 	protected void addJsonElement (JsonObject obj, String name, String value) {
 		switch (name) {
 		default:

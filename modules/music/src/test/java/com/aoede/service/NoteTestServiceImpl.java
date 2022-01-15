@@ -40,18 +40,6 @@ public class NoteTestServiceImpl extends AbstractTestServiceImpl implements Note
 	}
 
 	@Override
-	public void createDefaultBody(JsonObject obj) {
-		JsonObject fraction = new JsonObject ();
-
-		fraction.add( "numerator" , new JsonPrimitive(4));
-		fraction.add("denominator", new JsonPrimitive(4));
-
-		obj.add("measureId", measureTestService.getLatestKey());
-		obj.add("note", new JsonPrimitive(random.nextInt(60) + 40));
-		obj.add("value", fraction);
-	}
-
-	@Override
 	protected void addJsonElement (JsonObject obj, String name, String value) {
 		switch (name) {
 			case "value":

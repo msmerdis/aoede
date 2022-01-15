@@ -4,7 +4,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 import org.springframework.http.HttpStatus;
@@ -21,44 +20,12 @@ import lombok.Getter;
 
 @Getter
 public abstract class AbstractTestServiceImpl extends BaseTestComponent implements AbstractTestService {
-	protected Random random = new Random (System.currentTimeMillis());
 	protected boolean success;
 	protected JsonElement latestCreatedKey;
 	protected JsonElement latestKey;
 	protected JsonObject latestObj;
 	protected JsonArray latestArr;
 	protected ResponseResults latestResults;
-
-	// TODO: remove and replace with json build steps
-	final public String createBody() {
-		JsonObject obj = new JsonObject();
-
-		createDefaultBody (obj);
-
-		return obj.toString();
-	}
-
-	// TODO: remove and replace with json build steps
-	final public String createBody (DataTable data) {
-		JsonObject obj = new JsonObject();
-
-		createBody (obj, data);
-
-		return obj.toString();
-	}
-
-	// TODO: remove and replace with json build steps
-	final public String updateBody (DataTable data) {
-		JsonObject obj = new JsonObject();
-
-		updateBody (obj, data);
-
-		return obj.toString();
-	}
-
-
-	// TODO: remove and replace with json build steps
-	abstract public void createDefaultBody (JsonObject obj);
 
 
 	// TODO: remove and replace with json build steps
@@ -244,15 +211,6 @@ public abstract class AbstractTestServiceImpl extends BaseTestComponent implemen
 		}
 
 		return true;
-	}
-
-	// TODO: move as step definition help function
-	protected String randomString (int length) {
-		return random.ints(48, 123)
-			.filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-			.limit(length)
-			.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-			.toString();
 	}
 
 }
