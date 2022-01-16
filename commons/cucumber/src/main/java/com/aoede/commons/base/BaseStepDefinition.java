@@ -17,7 +17,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequest;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 import com.aoede.commons.service.AbstractTestServiceDiscoveryService;
@@ -55,6 +57,21 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 	@PostConstruct
 	void init () {
 		basePath = "http://localhost:" + serverProperties.getPort();
+
+		restTemplate.setErrorHandler(new ResponseResultsErrorHandler());
+	}
+
+	private class ResponseResultsErrorHandler implements ResponseErrorHandler {
+
+		@Override
+		public boolean hasError(ClientHttpResponse response) throws IOException {
+			return false;
+		}
+
+		@Override
+		public void handleError(ClientHttpResponse response) throws IOException {
+		}
+
 	}
 
 	private class RequestParametersCallback implements RequestCallback {
@@ -93,8 +110,6 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 	}
 
 	private ResponseResults execute (String url, HttpMethod method, HttpHeaders headers, String body) {
-		ResponseResults response = new ResponseResults ();
-
 		logger.info ("----------------------------------------------------------------");
 		logger.info ("- Request:  " + method + " " + basePath + url);
 		logger.info ("Headers:");
@@ -103,20 +118,25 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 		logger.info ("body:");
 		logger.info (body);
 
-		restTemplate.setErrorHandler(response);
-		restTemplate.execute(basePath + url, method, new RequestParametersCallback(headers, body), r -> {
-			return response;
+		ResponseResults responseResults = restTemplate.execute(basePath + url, method, new RequestParametersCallback(headers, body), response -> {
+			ResponseResults results = new ResponseResults ();
+
+			results.headers = response.getHeaders();
+			results.status  = response.getStatusCode();
+			results.body    = new String (response.getBody().readAllBytes());
+
+			return results;
 		});
 
 		logger.info ("----------------------------------------------------------------");
-		logger.info ("- Response: " + response.status.toString());
+		logger.info ("- Response: " + responseResults.status.toString());
 		logger.info ("Headers:");
-		for (var header : response.headers.entrySet())
+		for (var header : responseResults.headers.entrySet())
 			logger.info (" - " + header.getKey() + ": " + header.getValue());
 		logger.info ("body:");
-		logger.info (response.body);
+		logger.info (responseResults.body);
 
-		return response;
+		return responseResults;
 	}
 
 	protected ResponseResults executeGet (String path, HttpHeaders headers) {
