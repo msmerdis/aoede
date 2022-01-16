@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -21,7 +23,6 @@ import io.cucumber.datatable.DataTable;
 
 @Service
 public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> implements JsonObjectService {
-	//private final static String STRING_REGEX = "([^{}]*(\\{[^{}]*\\}))*[^{}]*";
 	private final static String STRING_REGEX = "\\{[^{}]*\\}";
 
 	private Random random = new Random (System.currentTimeMillis());
@@ -39,8 +40,8 @@ public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> im
 	}
 
 	@Override
-	public void put(String name, DataTable data) {
-		put(name, generateJson(data));
+	public JsonObject put(String name, DataTable data) {
+		return put(name, generateJson(data));
 	}
 
 	// generate a json object base on data table
@@ -50,51 +51,7 @@ public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> im
 
 		for (var row : data.asLists()) {
 			assertEquals("Json row must have exactly three elements", 3, row.size());
-			switch (row.get(1)) {
-			case "int":
-			case "integer":
-				obj.add(row.get(0), new JsonPrimitive(Integer.parseInt(row.get(2))));
-			case "long":
-				obj.add(row.get(0), new JsonPrimitive(Long.parseLong(row.get(2))));
-				break;
-			case "number":
-				obj.add(row.get(0), new JsonPrimitive(new BigInteger(row.get(2))));
-				break;
-			case "string":
-				obj.add(row.get(0), new JsonPrimitive(row.get(2)));
-				break;
-			case "bool":
-			case "boolean":
-				obj.add(row.get(0), new JsonPrimitive(Boolean.parseBoolean(row.get(2))));
-				break;
-			case "fraction":
-				obj.add(row.get(0), buildFraction(row.get(2)));
-				break;
-			case "compositeId":
-				assertTrue (
-					"composite id " + row.get(1) + " was not found",
-					compositeIdService.containsKey(row.get(1))
-				);
-				obj.add(row.get(0), new JsonPrimitive(compositeIdService.get(row.get(1))));
-				break;
-			case "key":
-				JsonElement element = abstractTestServiceDiscoveryService.getService(row.get(2)).getLatestKey();
-				assertNotNull("key for " + row.get(2) + " was not found", element);
-				obj.add(row.get(0), element);
-				break;
-			case "random string":
-				obj.add(row.get(0), new JsonPrimitive(randomString(row.get(2))));
-				break;
-			case "json":
-				assertTrue (
-					"json " + row.get(1) + " was not found",
-					containsKey(row.get(2))
-				);
-				obj.add(row.get(0), get(row.get(2)));
-				break;
-			default:
-				assertFalse ("Type " + row.get(1) + " could not be converted to json value", true);
-			}
+			obj.add(row.get(0), generateJsonElement(row.get(1), row.get(2)));
 		}
 
 		return obj;
@@ -124,6 +81,7 @@ public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> im
 					logger.info("object's " + key + " does not match " + datElem.toString());
 					return false;
 				}
+
 				// no need to check the rest of the cases
 				continue;
 			}
@@ -134,6 +92,7 @@ public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> im
 					logger.info("object's " + key + " is null");
 					return false;
 				}
+
 				// no need to check the rest of the cases
 				continue;
 			}
@@ -145,10 +104,27 @@ public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> im
 					return false;
 				}
 
-				// match objects recursivly
+				// match objects recursively
 				if (!jsonObjectMatches(objElem.getAsJsonObject(), datElem.getAsJsonObject())) {
 					return false;
 				}
+
+				// no need to check the rest of the cases
+				continue;
+			}
+
+			if (objElem.isJsonArray()) {
+				// data must be an array too
+				if (!datElem.isJsonArray()) {
+					logger.info("object's " + key + " is an array");
+					return false;
+				}
+
+				// we need to match every item int he data list with the object list
+				if (!jsonArrayMatches(objElem.getAsJsonArray(), datElem.getAsJsonArray())) {
+					return false;
+				}
+
 				// no need to check the rest of the cases
 				continue;
 			}
@@ -160,9 +136,148 @@ public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> im
 		return true;
 	}
 
+	@Override
+	public JsonArray generateJsonArray(DataTable template, DataTable data) {
+		JsonArray arr = new JsonArray ();
+
+		var maps = template.asMaps();
+		assertEquals ("object template must have one row", 1, maps.size());
+		var templateObject = maps.get(0);
+
+		for (var row : data.asMaps()) {
+			assertEquals ("object template and data table must be of the same size", templateObject.size(), row.size());
+			JsonObject obj = new JsonObject();
+
+			for (var key : row.keySet()) {
+				assertTrue ("key " + key + " must be contained in template object", templateObject.containsKey(key));
+
+				obj.add(key, generateJsonElement(templateObject.get(key), row.get(key)));
+			}
+
+			arr.add(obj);
+		}
+
+		return arr;
+	}
+
+	@Override
+	public boolean jsonArrayMatches (JsonArray array, JsonArray data) {
+		// iterate the data array and match each item
+		for (int i = 0; i < data.size(); i += 1) {
+			JsonElement element = data.get(i);
+
+			if (element.isJsonPrimitive() || element.isJsonNull()) {
+				// elements must match
+				if (!array.contains(element)) {
+					logger.info("array does not contain " + element.toString());
+					return false;
+				}
+
+				// no need to check the rest of the cases
+				continue;
+			}
+
+			if (element.isJsonObject()) {
+				// array must contain the object
+				if (!jsonArrayContainsObject (array, element.getAsJsonObject())) {
+					logger.info("array does not contain " + element.toString());
+					return false;
+				}
+
+				// no need to check the rest of the cases
+				continue;
+			}
+
+			// no further types are implemented stop with an error if that ever happens
+			assertNotNull ("array element could not be handled (unimplemented type)", null);
+		}
+
+		return true;
+	}
+
+	@Override
+	public boolean jsonArrayContainsObject(JsonArray array, String key, String type, String value) {
+		JsonObject obj = new JsonObject ();
+
+		obj.add(key, generateJsonElement(type, value));
+
+		return jsonArrayContainsObject (array, obj);
+	}
+
+	@Override
+	public boolean jsonArrayContainsObject(JsonArray array, DataTable data) {
+		return jsonArrayContainsObject (array, generateJson(data));
+	}
+
+	@Override
+	public boolean jsonArrayContainsObject(JsonArray array, JsonObject data) {
+		// iterate the data array and match each object
+		for (int i = 0; i < array.size(); i += 1) {
+			JsonElement element = array.get(i);
+
+			if (element.isJsonObject() && jsonObjectMatches(element.getAsJsonObject(), data)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean jsonArrayContainsObjectWithElement(JsonArray array, String key, JsonElement element) {
+		JsonObject obj = new JsonObject();
+
+		obj.add(key, element);
+
+		return jsonArrayContainsObject(array, obj);
+	}
+
 	/**
 	 * Help functions to generate json
 	 */
+
+	private JsonElement generateJsonElement (String type, String value) {
+
+		switch (type) {
+		case "int":
+		case "integer":
+			return new JsonPrimitive(Integer.parseInt(value));
+		case "long":
+			return new JsonPrimitive(Long.parseLong(value));
+		case "number":
+			return new JsonPrimitive(new BigInteger(value));
+		case "string":
+			return new JsonPrimitive(value);
+		case "bool":
+		case "boolean":
+			return new JsonPrimitive(Boolean.parseBoolean(value));
+		case "fraction":
+			return buildFraction(value);
+		case "compositeId":
+			assertTrue (
+				"composite id " + value + " was not found",
+				compositeIdService.containsKey(value)
+			);
+			return new JsonPrimitive(compositeIdService.get(value));
+		case "key":
+			JsonElement element = abstractTestServiceDiscoveryService.getService(value).getLatestKey();
+			assertNotNull("key for " + value + " was not found", element);
+			return element;
+		case "random string":
+			return new JsonPrimitive(randomString(value));
+		case "json":
+			assertTrue (
+				"json " + value + " was not found",
+				containsKey(value)
+			);
+			return get(value);
+		case "null":
+			return JsonNull.INSTANCE;
+		default:
+			assertFalse ("Type " + type + " could not be converted to json value", true);
+			return null;
+		}
+	}
 
 	private String randomString (int length) {
 		return random.ints(48, 123)
@@ -212,6 +327,7 @@ public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> im
 
 		return buildFraction (new BigInteger(parts[0]), new BigInteger(parts[1]));
 	}
+
 }
 
 

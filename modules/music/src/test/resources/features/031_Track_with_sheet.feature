@@ -66,5 +66,5 @@ And the response has a status code of 204
 Then request all available "track" for latest "sheet"
 And the request was successful
 And the response has a status code of 200
-And the response array does not contain "clef" with value "Treble"
+And the response array does not contain "clef" with "string" value "Treble"
 And the response array does not contain latest "track"

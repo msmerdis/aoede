@@ -61,7 +61,10 @@ And the response matches
 Then request all available "sheet"
 And the request was successful
 And the response has a status code of 200
-And the response array contains
+And prepare data table "sheetObject"
+	| name   |
+	| string |
+And the response array contains "sheetObject" objects
 	| name      |
 	| New Sheet |
 And the response array contains latest "sheet"
@@ -86,9 +89,9 @@ And the response has a status code of 204
 Then request all available "sheet"
 And the request was successful
 And the response has a status code of 200
-And the response array contains "name" with value "Sheet 2 Updated"
+And the response array contains "name" with "string" value "Sheet 2 Updated"
 And the response array contains latest "sheet"
-And the response array does not contain "name" with value "Sheet 2 Update"
+And the response array does not contain "name" with "string" value "Sheet 2 Update"
 
 @TC0206
 @Negative @Update
@@ -122,7 +125,7 @@ And the response has a status code of 204
 Then request all available "sheet"
 And the request was successful
 And the response has a status code of 200
-And the response array does not contain "name" with value "Sheet 2 Delete"
+And the response array does not contain "name" with "string" value "Sheet 2 Delete"
 And the response array does not contain latest "sheet"
 
 @TC0208

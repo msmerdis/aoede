@@ -5,8 +5,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import io.cucumber.datatable.DataTable;
-
 public interface AbstractTestService {
 	public String getName ();
 	public String getPath ();
@@ -27,10 +25,6 @@ public interface AbstractTestService {
 	public boolean isSuccess();
 
 	public ResponseResults getLatestResults();
-
-	public boolean lastArrayMatches(DataTable data);
-	public boolean lastArrayContainsObjectWith(String id, String value);
-	public boolean containsKeyInElement(String element, String keyName, String latestKey);
 
 	public JsonElement getLatestKey();
 	public JsonArray   getLatestArr();

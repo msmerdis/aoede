@@ -22,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.aoede.commons.service.AbstractTestServiceDiscoveryService;
 import com.aoede.commons.service.CompositeIdService;
+import com.aoede.commons.service.DataTableService;
 import com.aoede.commons.service.JsonObjectService;
 import com.aoede.commons.service.TestCaseIdTrackerService;
 
@@ -47,6 +48,9 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 
 	@Autowired
 	protected JsonObjectService jsonObjectService;
+
+	@Autowired
+	protected DataTableService dataTableService;
 
 	@PostConstruct
 	void init () {
@@ -216,6 +220,7 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 		services.clear();
 		jsonObjectService.clear();
 		compositeIdService.clear();
+		dataTableService.clear();
 	}
 }
 

@@ -12,7 +12,10 @@ Scenario: retrieve all available Key signatures
 When request all available "keySignature"
 Then the request was successful
 And the response has a status code of 200
-And the response array contains
+And prepare data table "keySignatureObject"
+	| id      | major  | minor  |
+	| integer | string | string |
+And the response array contains "keySignatureObject" objects
 	| id | major | minor |
 	| -7 |   C-  |   a-  |
 	| -6 |   G-  |   e-  |

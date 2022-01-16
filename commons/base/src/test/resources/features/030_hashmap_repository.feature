@@ -10,7 +10,10 @@ Scenario: retrieve all available entities
 When request all available "TestHashMapDomain"
 Then the request was successful
 And the response has a status code of 200
-And the response array contains
+And prepare data table "TestHashMapDomainObjectTemplate"
+	| id      | value  |
+	| integer | string |
+And the response array contains "TestHashMapDomainObjectTemplate" objects
 	| id | value |
 	|  1 | one   |
 	|  2 | two   |
@@ -65,7 +68,10 @@ And the response matches
 Then request all available "TestHashMapDomain"
 And the request was successful
 And the response has a status code of 200
-And the response array contains
+And prepare data table "TestHashMapDomainObjectTemplate"
+	| id      | value  |
+	| integer | string |
+And the response array contains "TestHashMapDomainObjectTemplate" objects
 	| id | value |
 	|  4 | Four  |
 And the response array contains latest "TestHashMapDomain"
@@ -107,8 +113,8 @@ And the response has a status code of 204
 Then request all available "TestHashMapDomain"
 And the request was successful
 And the response has a status code of 200
-And the response array contains "id" with value "5"
-And the response array contains "value" with value "five"
+And the response array contains "id" with "integer" value "5"
+And the response array contains "value" with "string" value "five"
 
 @TC030007
 @Negative @Update
@@ -151,8 +157,8 @@ And the response matches
 And request all available "TestHashMapDomain"
 And the request was successful
 And the response has a status code of 200
-And the response array does not contain "id" with value "6"
-And the response array does not contain "value" with value "six"
+And the response array does not contain "id" with "integer" value "6"
+And the response array does not contain "value" with "string" value "six"
 
 @TC030009
 @Negative @Delete
@@ -189,9 +195,9 @@ And the response has a status code of 204
 Then request all available "TestHashMapDomain"
 And the request was successful
 And the response has a status code of 200
-And the response array contains "id" with value "7"
-And the response array contains "value" with value "seven"
-And the response array does not contain "id" with value "777"
+And the response array contains "id" with "integer" value "7"
+And the response array contains "value" with "string" value "seven"
+And the response array does not contain "id" with "integer" value "777"
 And request a "TestHashMapDomain" with id "7"
 Then the request was successful
 And the response has a status code of 200

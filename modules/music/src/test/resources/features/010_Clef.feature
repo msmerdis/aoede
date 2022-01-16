@@ -12,7 +12,10 @@ Scenario: retrieve all available Clefs
 When request all available "clef"
 Then the request was successful
 And the response has a status code of 200
-And the response array contains
+And prepare data table "clefObject"
+	| id            | type   | note    | spos    |
+	| string        | string | integer | integer |
+And the response array contains "clefObject" objects
 	| id            | type | note | spos |
 	| French Violin |  G   |  64  |  -4  |
 	| Treble        |  G   |  64  |  -2  |
@@ -23,8 +26,8 @@ And the response array contains
 	| Baritone      |  F   |  53  |   0  |
 	| Bass          |  F   |  53  |   2  |
 	| Subbass       |  F   |  53  |   4  |
-And the response array does not contain "id" with value "New Clef"
-And the response array does not contain "id" with value "Updated Clef"
+And the response array does not contain "id" with "string" value "New Clef"
+And the response array does not contain "id" with "string" value "Updated Clef"
 And "clef" returned array of size 9
 
 @TC0102

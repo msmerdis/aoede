@@ -38,8 +38,8 @@ public class CompositeIdServiceImpl extends TestStorageServiceImpl<String> imple
 	}
 
 	@Override
-	public void put(String name, DataTable data) {
-		put(name, generateCompositeKey(data));
+	public String put(String name, DataTable data) {
+		return put(name, generateCompositeKey(data));
 	}
 
 }

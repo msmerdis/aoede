@@ -10,7 +10,9 @@ import org.springframework.http.HttpHeaders;
 import com.aoede.commons.base.BaseStepDefinition;
 import com.aoede.commons.base.ResponseResults;
 import com.aoede.commons.service.AbstractTestService;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
@@ -39,6 +41,11 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 	@When("prepare json {string}")
 	public void prepareJson(String name, DataTable data) {
 		jsonObjectService.put(name, data);
+	}
+
+	@When("prepare data table {string}")
+	public void prepareDataTable(String name, DataTable data) {
+		dataTableService.put(name, data);
 	}
 
 	/**
@@ -215,19 +222,31 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		assertEquals(code, latestService.getLatestResults().status.value());
 	}
 
-	@Then("the response array contains")
-	public void verifyElementList (DataTable data) {
+	@Then("the response array contains {string} objects")
+	public void verifyElementList (String dataTableName, DataTable data) {
+		// generate a json array using a previously stored template
+		JsonArray array = jsonObjectService.generateJsonArray(
+			dataTableService.get(dataTableName), data);
+
 		assertTrue(
 			latestService.getLatestResults().body,
-			latestService.lastArrayMatches(data)
+			jsonObjectService.jsonArrayMatches(latestService.getLatestArr(), array)
 		);
 	}
 
-	@Then("the response array contains {string} with value {string}")
-	public void verifyElementExistInList (String id, String value) {
+	@Then("the response array contains {string} with {string} value {string}")
+	public void verifyElementExistInList (String id, String type, String value) {
 		assertTrue(
 			latestService.getLatestResults().body,
-			latestService.lastArrayContainsObjectWith(id, value)
+			jsonObjectService.jsonArrayContainsObject(latestService.getLatestArr(), id, type, value)
+		);
+	}
+
+	@Then("the response array does not contain {string} with {string} value {string}")
+	public void verifyElementDoesNotExistInList (String id, String type, String value) {
+		assertFalse(
+			latestService.getLatestResults().body,
+			jsonObjectService.jsonArrayContainsObject(latestService.getLatestArr(), id, type, value)
 		);
 	}
 
@@ -235,9 +254,10 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 	public void verifyLatestElementExistsInList (String domain) {
 		assertTrue (
 			latestService.getLatestResults().body,
-			latestService.lastArrayContainsObjectWith(
-				services.getService(domain).getKeyName(),
-				services.getService(domain).getLatestKey().getAsString()
+			jsonObjectService.jsonArrayContainsObjectWithElement(
+				latestService.getLatestArr(),
+				latestService.getKeyName(),
+				latestService.getLatestKey()
 			)
 		);
 	}
@@ -246,18 +266,31 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 	public void verifyLatestElementDoesNotExistInList (String domain) {
 		assertFalse (
 			latestService.getLatestResults().body,
-			latestService.lastArrayContainsObjectWith(
-				services.getService(domain).getKeyName(),
-				services.getService(domain).getLatestKey().getAsString()
+			jsonObjectService.jsonArrayContainsObjectWithElement(
+				latestService.getLatestArr(),
+				latestService.getKeyName(),
+				latestService.getLatestKey()
 			)
 		);
 	}
 
-	@Then("the response array does not contain {string} with value {string}")
-	public void verifyElementDoesNotExistInList (String id, String value) {
-		assertFalse(
-			latestService.getLatestResults().body,
-			latestService.lastArrayContainsObjectWith(id, value)
+	@Then("{string} contains latest {string} in {string}")
+	public void verifyDependentDomains (String parent, String child, String element) {
+		AbstractTestService pService = services.getService(parent);
+		AbstractTestService cService = services.getService(child);
+
+		JsonObject obj = pService.getLatestObj();
+
+		assertTrue (parent + " does not have element " + element, obj.has(element));
+		assertTrue (element + " is not an array", obj.get(element).isJsonArray());
+
+		assertTrue (
+			pService.getLatestResults().body,
+			jsonObjectService.jsonArrayContainsObjectWithElement(
+				obj.get(element).getAsJsonArray(),
+				cService.getKeyName(),
+				cService.getLatestKey()
+			)
 		);
 	}
 
@@ -280,18 +313,6 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 			jsonObjectService.jsonObjectMatches(
 				latestService.getLatestObj(), data)
 		);
-	}
-
-	@Then("{string} contains latest {string} in {string}")
-	public void verifyDependentDomains (String parent, String child, String element) {
-		AbstractTestService pService = services.getService(parent);
-		AbstractTestService cService = services.getService(child);
-
-		assertTrue (pService.getLatestResults().body, pService.containsKeyInElement(
-			element,
-			cService.getKeyName(),
-			cService.getLatestKey().getAsString()
-		));
 	}
 
 	@Then("{string} has {string} array of size {int}")
