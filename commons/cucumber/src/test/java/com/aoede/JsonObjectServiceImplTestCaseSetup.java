@@ -1,6 +1,8 @@
 package com.aoede;
 
 import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import org.junit.runner.RunWith;
@@ -12,11 +14,14 @@ import com.aoede.commons.service.AbstractTestServiceDiscoveryService;
 import com.aoede.commons.service.CompositeIdService;
 import com.aoede.commons.service.JsonObjectServiceImpl;
 
+import io.cucumber.datatable.DataTable;
+import io.cucumber.datatable.DataTableTypeRegistry;
+import io.cucumber.datatable.DataTableTypeRegistryTableConverter;
+
 @RunWith(SpringRunner.class)
 public class JsonObjectServiceImplTestCaseSetup extends BaseTestComponent {
 
-	@MockBean
-	protected Random random;
+	protected Random random = new Random(0);
 
 	@MockBean
 	protected AbstractTestServiceDiscoveryService abstractTestServiceDiscoveryService;
@@ -47,6 +52,14 @@ public class JsonObjectServiceImplTestCaseSetup extends BaseTestComponent {
 		field.setAccessible(true);
 
 		return field.get(uut);
+	}
+
+	protected DataTable buildDataTable (List<List<String>> data) {
+		return DataTable.create(data,
+			new DataTableTypeRegistryTableConverter (
+				new DataTableTypeRegistry (Locale.ENGLISH)
+			)
+		);
 	}
 
 }

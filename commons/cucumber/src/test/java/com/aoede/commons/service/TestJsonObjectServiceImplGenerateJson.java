@@ -6,8 +6,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import org.junit.Test;
 
@@ -21,7 +19,7 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.datatable.DataTableTypeRegistry;
 import io.cucumber.datatable.DataTableTypeRegistryTableConverter;
 
-public class TestJsonObjectServiceImpl extends JsonObjectServiceImplTestCaseSetup {
+public class TestJsonObjectServiceImplGenerateJson extends JsonObjectServiceImplTestCaseSetup {
 
 	@Test
 	public void verifyGenerateSimpleJson () throws Exception {
@@ -142,13 +140,7 @@ public class TestJsonObjectServiceImpl extends JsonObjectServiceImplTestCaseSetu
 
 	@Test
 	public void verifyGenerateRandomJson () throws Exception {
-		when (random.ints(48, 123)).thenReturn(
-			IntStream.of(
-				100, 101, 102, 103, 104, 105,
-				106, 107, 108, 109, 110, 111,
-				112, 113, 114, 115, 116, 117
-			)
-		);
+		random.setSeed(0);
 
 		DataTable table = DataTable.create(List.of(
 			List.of("data", "random string", "data_{string:12}")
@@ -158,7 +150,7 @@ public class TestJsonObjectServiceImpl extends JsonObjectServiceImplTestCaseSetu
 
 		JsonObject object = uut().generateJson(table);
 
-		assertEquals ("json is not generated correctly", "{\"data\":\"data_defghijklmno\"}", object.toString());
+		assertEquals ("json is not generated correctly", "{\"data\":\"data_ly4qeYTuM22G\"}", object.toString());
 	}
 
 }

@@ -1,7 +1,6 @@
 package com.aoede.commons.base;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -36,33 +35,25 @@ public class TestBaseStepDefinitionAssertTag extends BaseStepDefinitionTestCaseS
 		assertTag.setAccessible(true);
 
 		// call assert function
-		try {
+
+		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
 			assertTag.invoke(uut, "anything", "create");
-			assertFalse ("assertTag did not perform the assertion", true);
-		} catch (InvocationTargetException e) {
-			assertEquals("invocation must fail due to an assertion", "java.lang.AssertionError", e.getCause().getClass().getCanonicalName());
-		}
+		});
 
-		try {
+
+		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
 			assertTag.invoke(uut, "reate", "create");
-			assertFalse ("assertTag did not perform the assertion", true);
-		} catch (InvocationTargetException e) {
-			assertEquals("invocation must fail due to an assertion", "java.lang.AssertionError", e.getCause().getClass().getCanonicalName());
-		}
+		});
 
-		try {
+
+		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
 			assertTag.invoke(uut, "creat", "create");
-			assertFalse ("assertTag did not perform the assertion", true);
-		} catch (InvocationTargetException e) {
-			assertEquals("invocation must fail due to an assertion", "java.lang.AssertionError", e.getCause().getClass().getCanonicalName());
-		}
+		});
 
-		try {
+
+		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
 			assertTag.invoke(uut, "crte", "create");
-			assertFalse ("assertTag did not perform the assertion", true);
-		} catch (InvocationTargetException e) {
-			assertEquals("invocation must fail due to an assertion", "java.lang.AssertionError", e.getCause().getClass().getCanonicalName());
-		}
+		});
 	}
 
 }

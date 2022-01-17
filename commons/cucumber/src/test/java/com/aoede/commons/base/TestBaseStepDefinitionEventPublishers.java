@@ -1,7 +1,6 @@
 package com.aoede.commons.base;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
@@ -100,12 +99,9 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);
 		cleanup.setAccessible(true);
 
-		try {
+		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
 			cleanup.invoke(uut, scenario);
-			assertFalse ("cleanup did not perform the assertion", true);
-		} catch (InvocationTargetException e) {
-			assertEquals("invocation must fail due to an assertion", "java.lang.AssertionError", e.getCause().getClass().getCanonicalName());
-		}
+		});
 	}
 
 	@Test
@@ -124,12 +120,9 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);
 		cleanup.setAccessible(true);
 
-		try {
+		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
 			cleanup.invoke(uut, scenario);
-			assertFalse ("cleanup did not perform the assertion", true);
-		} catch (InvocationTargetException e) {
-			assertEquals("invocation must fail due to an assertion", "java.lang.AssertionError", e.getCause().getClass().getCanonicalName());
-		}
+		});
 	}
 
 	@Test
@@ -148,12 +141,9 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);
 		cleanup.setAccessible(true);
 
-		try {
+		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
 			cleanup.invoke(uut, scenario);
-			assertFalse ("cleanup did not perform the assertion", true);
-		} catch (InvocationTargetException e) {
-			assertEquals("invocation must fail due to an assertion", "java.lang.AssertionError", e.getCause().getClass().getCanonicalName());
-		}
+		});
 	}
 
 	@Test
@@ -172,12 +162,9 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);
 		cleanup.setAccessible(true);
 
-		try {
+		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
 			cleanup.invoke(uut, scenario);
-			assertFalse ("cleanup did not perform the assertion", true);
-		} catch (InvocationTargetException e) {
-			assertEquals("invocation must fail due to an assertion", "java.lang.AssertionError", e.getCause().getClass().getCanonicalName());
-		}
+		});
 	}
 
 	@Test
@@ -196,12 +183,9 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);
 		cleanup.setAccessible(true);
 
-		try {
+		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
 			cleanup.invoke(uut, scenario);
-			assertFalse ("cleanup did not perform the assertion", true);
-		} catch (InvocationTargetException e) {
-			assertEquals("invocation must fail due to an assertion", "java.lang.AssertionError", e.getCause().getClass().getCanonicalName());
-		}
+		});
 	}
 
 	@Test
@@ -220,12 +204,9 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);
 		cleanup.setAccessible(true);
 
-		try {
+		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
 			cleanup.invoke(uut, scenario);
-			assertFalse ("cleanup did not perform the assertion", true);
-		} catch (InvocationTargetException e) {
-			assertEquals("invocation must fail due to an assertion", "java.lang.AssertionError", e.getCause().getClass().getCanonicalName());
-		}
+		});
 	}
 
 	@Test
@@ -244,12 +225,9 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);
 		cleanup.setAccessible(true);
 
-		try {
+		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
 			cleanup.invoke(uut, scenario);
-			assertFalse ("cleanup did not perform the assertion", true);
-		} catch (InvocationTargetException e) {
-			assertEquals("invocation must fail due to an assertion", "java.lang.AssertionError", e.getCause().getClass().getCanonicalName());
-		}
+		});
 	}
 
 	@Test
@@ -268,12 +246,9 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);
 		cleanup.setAccessible(true);
 
-		try {
+		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
 			cleanup.invoke(uut, scenario);
-			assertFalse ("cleanup did not perform the assertion", true);
-		} catch (InvocationTargetException e) {
-			assertEquals("invocation must fail due to an assertion", "java.lang.AssertionError", e.getCause().getClass().getCanonicalName());
-		}
+		});
 	}
 
 	@Test
@@ -292,12 +267,9 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);
 		cleanup.setAccessible(true);
 
-		try {
+		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
 			cleanup.invoke(uut, scenario);
-			assertFalse ("cleanup did not perform the assertion", true);
-		} catch (InvocationTargetException e) {
-			assertEquals("invocation must fail due to an assertion", "java.lang.AssertionError", e.getCause().getClass().getCanonicalName());
-		}
+		});
 	}
 
 	@Test

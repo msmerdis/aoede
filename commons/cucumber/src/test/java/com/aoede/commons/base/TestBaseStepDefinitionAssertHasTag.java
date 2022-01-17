@@ -1,7 +1,6 @@
 package com.aoede.commons.base;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -75,12 +74,9 @@ public class TestBaseStepDefinitionAssertHasTag extends BaseStepDefinitionTestCa
 	}
 
 	private void verifyFailedAssert_assert (Method assertHasTag, BaseStepDefinition uut, String scenarioName, String name, Collection<String> scenarioTags, String value) throws Exception {
-		try {
+		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
 			assertHasTag.invoke(uut, scenarioName, name, scenarioTags, value);
-			assertFalse ("assertTag did not perform the assertion", true);
-		} catch (InvocationTargetException e) {
-			assertEquals("invocation must fail due to an assertion", "java.lang.AssertionError", e.getCause().getClass().getCanonicalName());
-		}
+		});
 	}
 
 }

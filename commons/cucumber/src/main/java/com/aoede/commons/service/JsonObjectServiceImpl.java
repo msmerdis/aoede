@@ -260,8 +260,12 @@ public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> im
 			);
 			return new JsonPrimitive(compositeIdService.get(value));
 		case "key":
-			JsonElement element = abstractTestServiceDiscoveryService.getService(value).getLatestKey();
+			AbstractTestService service = abstractTestServiceDiscoveryService.getService(value);
+			assertNotNull("service for " + value + " was not found", service);
+
+			JsonElement element = service.getLatestKey();
 			assertNotNull("key for " + value + " was not found", element);
+
 			return element;
 		case "random string":
 			return new JsonPrimitive(randomString(value));
@@ -277,6 +281,7 @@ public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> im
 			assertFalse ("Type " + type + " could not be converted to json value", true);
 			return null;
 		}
+
 	}
 
 	private String randomString (int length) {
@@ -325,7 +330,7 @@ public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> im
 
 		assertEquals("fraction must have two parts", 2, parts.length);
 
-		return buildFraction (new BigInteger(parts[0]), new BigInteger(parts[1]));
+		return buildFraction (new BigInteger(parts[0].trim()), new BigInteger(parts[1].trim()));
 	}
 
 }
