@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.aoede.commons.base.component.BaseComponent;
+import com.aoede.commons.base.component.GenericAPIDefinition;
 import com.aoede.commons.base.domain.AbstractDomain;
 import com.aoede.commons.base.service.AbstractService;
-import com.aoede.commons.base.service.GenericAPIDefinition;
 
 /**
  * Definition of basic CRUD operations for domain objects

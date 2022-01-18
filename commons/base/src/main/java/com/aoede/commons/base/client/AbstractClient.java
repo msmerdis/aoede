@@ -12,8 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
 import com.aoede.commons.base.component.BaseComponent;
+import com.aoede.commons.base.component.GenericAPIDefinition;
 import com.aoede.commons.base.exceptions.GenericException;
-import com.aoede.commons.base.service.GenericAPIDefinition;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

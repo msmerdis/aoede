@@ -1,4 +1,4 @@
-package com.aoede.commons.base.service;
+package com.aoede.commons.base.component;
 
 import java.util.List;
 
