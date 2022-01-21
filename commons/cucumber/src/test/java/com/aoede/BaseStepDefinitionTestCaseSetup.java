@@ -13,9 +13,9 @@ import org.springframework.web.client.RestTemplate;
 import com.aoede.commons.base.BaseStepDefinition;
 import com.aoede.commons.base.BaseTestComponent;
 import com.aoede.commons.service.AbstractTestServiceDiscoveryService;
-import com.aoede.commons.service.CompositeIdService;
-import com.aoede.commons.service.DataTableService;
-import com.aoede.commons.service.JsonObjectService;
+import com.aoede.commons.service.CompositeIdServiceImpl;
+import com.aoede.commons.service.DataTableServiceImpl;
+import com.aoede.commons.service.JsonObjectServiceImpl;
 import com.aoede.commons.service.TestCaseIdTrackerService;
 
 @RunWith(SpringRunner.class)
@@ -34,13 +34,13 @@ public class BaseStepDefinitionTestCaseSetup extends BaseTestComponent {
 	protected TestCaseIdTrackerService testCaseIdTrackerService;
 
 	@MockBean
-	protected CompositeIdService compositeIdService;
+	protected CompositeIdServiceImpl compositeIdService;
 
 	@MockBean
-	protected JsonObjectService jsonObjectService;
+	protected JsonObjectServiceImpl jsonObjectService;
 
 	@MockBean
-	protected DataTableService dataTableService;
+	protected DataTableServiceImpl dataTableService;
 
 	// unit under test
 	protected BaseStepDefinition uut () throws Exception {

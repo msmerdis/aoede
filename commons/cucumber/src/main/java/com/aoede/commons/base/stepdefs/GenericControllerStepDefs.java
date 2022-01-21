@@ -27,7 +27,7 @@ import io.cucumber.java.en.When;
  */
 public class GenericControllerStepDefs extends BaseStepDefinition {
 
-	AbstractTestService latestService = null;
+	private AbstractTestService latestService = null;
 
 	/**
 	 * Data preparation steps
@@ -111,10 +111,8 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 	}
 
 	@When("request all available {string} for latest {string}")
-	public void findAll (String childDomain, String parentDomain) {
-		logger.info("retrieving all available " + childDomain + " under "
-			+ services.getPathForService(parentDomain)
-			+ "(" + services.getService(parentDomain).getLatestKey() + ")");
+	public void findAllForLatest (String childDomain, String parentDomain) {
+		logger.info("retrieving all available " + childDomain + " under " + parentDomain);
 
 		ResponseResults results = executeGet (
 			services.getPathForService(childDomain)
@@ -209,12 +207,12 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 
 	@Then("the request was successful")
 	public void verifySuccessfulRequest () {
-		assertTrue(latestService.getLatestResults().body, latestService.isSuccess());
+		assertTrue("request was not successful", latestService.isSuccess());
 	}
 
 	@Then("the request was not successful")
 	public void verifyNotSuccessfulRequest () {
-		assertFalse(latestService.getLatestResults().body, latestService.isSuccess());
+		assertFalse("request was successful", latestService.isSuccess());
 	}
 
 	@Then("the response has a status code of {int}")
@@ -229,7 +227,6 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 			dataTableService.get(dataTableName), data);
 
 		assertTrue(
-			latestService.getLatestResults().body,
 			jsonObjectService.jsonArrayMatches(latestService.getLatestArr(), array)
 		);
 	}
@@ -237,7 +234,6 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 	@Then("the response array contains {string} with {string} value {string}")
 	public void verifyElementExistInList (String id, String type, String value) {
 		assertTrue(
-			latestService.getLatestResults().body,
 			jsonObjectService.jsonArrayContainsObject(latestService.getLatestArr(), id, type, value)
 		);
 	}
@@ -245,7 +241,6 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 	@Then("the response array does not contain {string} with {string} value {string}")
 	public void verifyElementDoesNotExistInList (String id, String type, String value) {
 		assertFalse(
-			latestService.getLatestResults().body,
 			jsonObjectService.jsonArrayContainsObject(latestService.getLatestArr(), id, type, value)
 		);
 	}
@@ -253,7 +248,6 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 	@Then("the response array contains latest {string}")
 	public void verifyLatestElementExistsInList (String domain) {
 		assertTrue (
-			latestService.getLatestResults().body,
 			jsonObjectService.jsonArrayContainsObjectWithElement(
 				latestService.getLatestArr(),
 				latestService.getKeyName(),
@@ -265,7 +259,6 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 	@Then("the response array does not contain latest {string}")
 	public void verifyLatestElementDoesNotExistInList (String domain) {
 		assertFalse (
-			latestService.getLatestResults().body,
 			jsonObjectService.jsonArrayContainsObjectWithElement(
 				latestService.getLatestArr(),
 				latestService.getKeyName(),
@@ -285,7 +278,6 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		assertTrue (element + " is not an array", obj.get(element).isJsonArray());
 
 		assertTrue (
-			pService.getLatestResults().body,
 			jsonObjectService.jsonArrayContainsObjectWithElement(
 				obj.get(element).getAsJsonArray(),
 				cService.getKeyName(),
@@ -309,7 +301,6 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 	@Then("the response matches")
 	public void verifyElement (DataTable data) {
 		assertTrue(
-			latestService.getLatestResults().body,
 			jsonObjectService.jsonObjectMatches(
 				latestService.getLatestObj(), data)
 		);
