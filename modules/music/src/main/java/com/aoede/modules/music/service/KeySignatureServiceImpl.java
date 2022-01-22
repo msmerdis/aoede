@@ -26,3 +26,6 @@ public class KeySignatureServiceImpl extends AbstractServiceEntityImpl <Short, K
 	}
 
 }
+
+
+

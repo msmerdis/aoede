@@ -150,18 +150,18 @@
 			</plugin>
 
 			<!--
-			 - Scans a project's dependencies and produces a report of those dependencies which have newer
-			 - versions available:
-			 - mvn versions:display-dependency-updates
-			 -
-			 - Scans a project and produces a report of those properties which are used to control artifact
-			 - versions and which properties have newer versions available:
-			 - mvn versions:display-property-updates
-			 -
-			 - Scans a project's plugins and produces a report of those plugins which have newer versions
-			 - available, taking care of Maven version prerequisites:
-			 - mvn versions:display-plugin-updates
-			 -->
+			- Scans a project's dependencies and produces a report of those dependencies which have newer
+			- versions available:
+			- mvn versions:display-dependency-updates
+			-
+			- Scans a project and produces a report of those properties which are used to control artifact
+			- versions and which properties have newer versions available:
+			- mvn versions:display-property-updates
+			-
+			- Scans a project's plugins and produces a report of those plugins which have newer versions
+			- available, taking care of Maven version prerequisites:
+			- mvn versions:display-plugin-updates
+			-->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>versions-maven-plugin</artifactId>

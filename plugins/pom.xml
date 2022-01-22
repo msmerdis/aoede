@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<!-- Packaging -->
+	<modelVersion>4.0.0</modelVersion>
+	<packaging>pom</packaging>
+
+	<groupId>com.aoede</groupId>
+	<artifactId>plugins-parent</artifactId>
+	<version>0-SNAPSHOT</version>
+
+	<!-- Meta-data -->
+	<name>[${project.artifactId}]</name>
+	<description>Aggregate of all plugins</description>
+	<inceptionYear>2022</inceptionYear>
+
+	<!-- Modules -->
+	<modules>
+		<module>source-validation</module>
+	</modules>
+
+	<!-- Properties/Variables -->
+	<properties>
+		<!-- Desired Maven version -->
+		<maven.version>3.6</maven.version>
+		<!-- Build JDK -->
+		<java.version>11</java.version>
+
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+
+		<!-- Maven source encoding -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<!-- Library versions-->
+		<mvn-api.version>3.8.4</mvn-api.version>
+		<mvn-annotations.version>3.6.4</mvn-annotations.version>
+		<mvn-project.version>2.2.1</mvn-project.version>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-plugin-api</artifactId>
+			<version>${mvn-api.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.maven.plugin-tools</groupId>
+			<artifactId>maven-plugin-annotations</artifactId>
+			<version>${mvn-annotations.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-project</artifactId>
+			<version>${mvn-project.version}</version>
+		</dependency>
+
+	</dependencies>
+
+</project>

@@ -27,6 +27,7 @@
 
 	<!-- Modules -->
 	<modules>
+		<module>plugins</module>
 		<module>commons</module>
 		<module>modules</module>
 		<module>apps</module>
@@ -189,5 +190,28 @@
 		</dependency>
 
 	</dependencies>
+
+	<build>
+		<!-- Plugins and corresponding configuration used by all modules -->
+		<plugins>
+
+			<plugin>
+				<groupId>com.aoede.plugins</groupId>
+				<artifactId>plugin-source-validation</artifactId>
+				<version>${project.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>validate</goal>
+						</goals>
+						<configuration>
+							<includePom>true</includePom>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
 
 </project>
