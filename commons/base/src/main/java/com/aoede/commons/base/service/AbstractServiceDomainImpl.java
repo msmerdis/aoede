@@ -46,7 +46,6 @@ public abstract class AbstractServiceDomainImpl <
 		try {
 			entity = repository.saveAndFlush(entity);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
 			throw new ConflictException(domainName() + " could not be created");
 		}
 

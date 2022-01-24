@@ -23,6 +23,7 @@
 
 	<!-- Modules -->
 	<modules>
+		<module>user</module>
 		<module>music</module>
 	</modules>
 

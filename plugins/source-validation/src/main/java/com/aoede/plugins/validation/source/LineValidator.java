@@ -50,7 +50,7 @@ public class LineValidator implements Consumer<String> {
 				// check for java docs
 				if (
 					!ext.equals("java") ||
-					i + 2 > bytes.length ||
+					i + 1 >= bytes.length ||
 					bytes[ i ] != ' ' ||
 					bytes[i+1] != '*'
 				) {

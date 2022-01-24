@@ -1,4 +1,4 @@
-package com.aoede.commons.base.converters;
+package com.aoede.commons.base.converter;
 
 import java.io.IOException;
 
