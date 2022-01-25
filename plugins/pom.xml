@@ -40,6 +40,7 @@
 		<mvn-api.version>3.8.4</mvn-api.version>
 		<mvn-annotations.version>3.6.4</mvn-annotations.version>
 		<mvn-project.version>2.2.1</mvn-project.version>
+		<junit.version>5.7.2</junit.version>
 	</properties>
 
 	<dependencies>
@@ -61,6 +62,13 @@
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-project</artifactId>
 			<version>${mvn-project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>5.7.2</version>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>

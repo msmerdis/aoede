@@ -46,7 +46,7 @@ public class LineValidator implements Consumer<String> {
 			}
 
 			// line must not have leading whitespace other than tabs
-			if (checkLeading && Character.isWhitespace(bytes[i])) {
+			if (checkLeading && i < bytes.length && Character.isWhitespace(bytes[i])) {
 				// check for java docs
 				if (
 					!ext.equals("java") ||
