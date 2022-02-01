@@ -14,7 +14,7 @@ public class RoleTestServiceImpl extends AbstractTestServiceImpl implements Role
 
 	@Override
 	public String getPath() {
-		return "/test/role";
+		return "/admin/user/role";
 	}
 
 	@Override

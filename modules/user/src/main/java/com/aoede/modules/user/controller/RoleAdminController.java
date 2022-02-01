@@ -1,4 +1,4 @@
-package com.aoede.controller;
+package com.aoede.modules.user.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,10 +8,10 @@ import com.aoede.modules.user.domain.Role;
 import com.aoede.modules.user.service.RoleService;
 
 @RestController
-@RequestMapping ("/test/role")
-public class RoleController extends AbstractDomainController<Integer, Role, RoleService> {
+@RequestMapping ("/admin/user/role")
+public class RoleAdminController extends AbstractDomainController<Integer, Role, RoleService> {
 
-	public RoleController(RoleService service) {
+	public RoleAdminController(RoleService service) {
 		super(service);
 	}
 

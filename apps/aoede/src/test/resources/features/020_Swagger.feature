@@ -1,4 +1,4 @@
-@Swagger
+@Swagger @Regression
 Feature: Verify swagger endpoints are up and running
 ### Verify the setup of swagger
 

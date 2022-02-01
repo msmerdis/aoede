@@ -3,6 +3,7 @@ package com.aoede.modules.user.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.aoede.commons.base.domain.AbstractDomain;
@@ -28,8 +29,7 @@ public class User implements UserDetails, AbstractDomain<Long>  {
 	private UserStatus status;
 	private String username;
 	private String password;
-	private String passsalt;
-	private Set<Role> authorities = new HashSet<Role>();
+	private Set<SimpleGrantedAuthority> roles = new HashSet<SimpleGrantedAuthority>();
 
 	@Override
 	public boolean isAccountNonExpired() {
@@ -49,6 +49,11 @@ public class User implements UserDetails, AbstractDomain<Long>  {
 	@Override
 	public boolean isEnabled() {
 		return status == UserStatus.ACTIVE;
+	}
+
+	@Override
+	public Set<SimpleGrantedAuthority> getAuthorities() {
+		return roles;
 	}
 
 }

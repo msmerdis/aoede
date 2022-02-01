@@ -17,11 +17,17 @@ import lombok.ToString;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class Role implements AbstractDomain<Integer>, GrantedAuthority{
+public class Role implements AbstractDomain<Integer>, GrantedAuthority {
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
-	private String authority;
+	private String role;
+	private String desc;
+
+	@Override
+	public String getAuthority() {
+		return role;
+	}
 }
 
 

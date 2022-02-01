@@ -52,11 +52,8 @@ public class UserEntity extends AbstractJpaEntity<Long> implements AbstractEntit
 	@Column(length = 512, nullable = false)
 	private String username;
 
-	@Column(length = 40, nullable = false)
+	@Column(length = 128, nullable = false)
 	private String password;
-
-	@Column(length = 40, nullable = false)
-	private String passsalt;
 
 	@Fetch(FetchMode.SELECT)
 	@JoinTable(

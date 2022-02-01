@@ -1,4 +1,4 @@
-@Error
+@Error @Regression
 Feature: Verify handling of error cases
 ### Verify invalid requests are processed as expected
 

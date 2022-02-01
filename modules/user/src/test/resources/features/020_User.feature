@@ -10,57 +10,51 @@ Given a "user" with
 	| status   | string | ACTIVE |
 	| username | string | user_1 |
 	| password | string | pass_1 |
-	| passsalt | string | salt_1 |
 And the request was successful
 And the response has a status code of 201
 And a "user" with
 	| status   | string | ACTIVE |
 	| username | string | user_2 |
 	| password | string | pass_2 |
-	| passsalt | string | salt_2 |
 And the request was successful
 And the response has a status code of 201
 And a "user" with
 	| status   | string | ACTIVE |
 	| username | string | user_3 |
 	| password | string | pass_3 |
-	| passsalt | string | salt_3 |
 And the request was successful
 And the response has a status code of 201
 When request all available "user"
 Then the request was successful
 And the response has a status code of 200
 And prepare data table "userTemplate"
-	| id   | status | username | password | passsalt |
-	| long | string | string   | string   | string   |
+	| id   | status | username |
+	| long | string | string   |
 And the response array contains "userTemplate" objects
-	| id | status | username | password | passsalt |
-	|  1 | ACTIVE | user_1   | pass_1   | salt_1   |
-	|  2 | ACTIVE | user_2   | pass_2   | salt_2   |
-	|  3 | ACTIVE | user_3   | pass_3   | salt_3   |
+	| id | status | username |
+	|  1 | ACTIVE | user_1   |
+	|  2 | ACTIVE | user_2   |
+	|  3 | ACTIVE | user_3   |
 
 @TC020002
 @Negative
-Scenario: access a single ROLE
+Scenario: access a single user
 ### Retrieve an entity and verify its contents
 
 Given a "user" with
 	| status   | string | ACTIVE     |
 	| username | string | accessName |
 	| password | string | accessPass |
-	| passsalt | string | accessSalt |
 When request previously created "user"
 Then the request was successful
 And the response has a status code of 200
 And the response matches
 	| status   | string | ACTIVE     |
 	| username | string | accessName |
-	| password | string | accessPass |
-	| passsalt | string | accessSalt |
 
 @TC020003
 @Negative
-Scenario: access a ROLE that does not exist
+Scenario: access a user that does not exist
 ### Retrieve an entity that does not exist
 ### This should return with an error
 
@@ -81,14 +75,11 @@ Given a "user" with
 	| status   | string | ACTIVE     |
 	| username | string | createName |
 	| password | string | createPass |
-	| passsalt | string | createSalt |
 And the request was successful
 And the response has a status code of 201
 And the response matches
 	| status   | string | ACTIVE     |
 	| username | string | createName |
-	| password | string | createPass |
-	| passsalt | string | createSalt |
 When request previously created "user"
 And the request was successful
 And the response has a status code of 200
@@ -96,17 +87,15 @@ And the response matches
 	| id       | key    | user       |
 	| status   | string | ACTIVE     |
 	| username | string | createName |
-	| password | string | createPass |
-	| passsalt | string | createSalt |
 Then request all available "user"
 And the request was successful
 And the response has a status code of 200
 And prepare data table "userTemplate"
-	| id  | status | username | password | passsalt |
-	| key | string | string   | string   | string   |
+	| id  | status | username |
+	| key | string | string   |
 And the response array contains "userTemplate" objects
-	| id   | status | username   | password   | passsalt   |
-	| user | ACTIVE | createName | createPass | createSalt |
+	| id   | status | username   |
+	| user | ACTIVE | createName |
 And the response array contains latest "user"
 
 @TC020005
@@ -119,7 +108,6 @@ Given a "user" with
 	| status   | string | ACTIVE     |
 	| username | string | createName |
 	| password | string | createPass |
-	| passsalt | string | createSalt |
 And the request was not successful
 And the response has a status code of 409
 And the response matches
@@ -136,19 +124,14 @@ Given a "user" with
 	| status   | string | PENDING  |
 	| username | string | tempName |
 	| password | string | tempPass |
-	| passsalt | string | tempSalt |
 And the request was successful
 And the response has a status code of 201
 And the response matches
 	| status   | string | PENDING  |
 	| username | string | tempName |
-	| password | string | tempPass |
-	| passsalt | string | tempSalt |
 When update previously created "user"
 	| status   | string | ACTIVE     |
 	| username | string | updateName |
-	| password | string | updatePass |
-	| passsalt | string | updateSalt |
 And the request was successful
 And the response has a status code of 204
 Then request previously created "user"
@@ -158,17 +141,15 @@ And the response matches
 	| id       | key    | user       |
 	| status   | string | ACTIVE     |
 	| username | string | updateName |
-	| password | string | updatePass |
-	| passsalt | string | updateSalt |
 And request all available "user"
 And the request was successful
 And the response has a status code of 200
 And prepare data table "userTemplate"
-	| id  | status | username | password | passsalt |
-	| key | string | string   | string   | string   |
+	| id  | status | username |
+	| key | string | string   |
 And the response array contains "userTemplate" objects
-	| id   | status | username   | password   | passsalt   |
-	| user | ACTIVE | updateName | updatePass | updateSalt |
+	| id   | status | username   |
+	| user | ACTIVE | updateName |
 And the response array contains latest "user"
 And the response array contains "username" with "string" value "updateName"
 And the response array does not contain "username" with "string" value "tempName"
@@ -183,7 +164,6 @@ When update "user" with id "1000"
 	| status   | string | ACTIVE     |
 	| username | string | updateName |
 	| password | string | updatePass |
-	| passsalt | string | updateSalt |
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
@@ -200,14 +180,11 @@ Given a "user" with
 	| status   | string | ACTIVE     |
 	| username | string | deleteName |
 	| password | string | deletePass |
-	| passsalt | string | deleteSalt |
 And the request was successful
 And the response has a status code of 201
 And the response matches
 	| status   | string | ACTIVE     |
 	| username | string | deleteName |
-	| password | string | deletePass |
-	| passsalt | string | deleteSalt |
 When delete previously created "user"
 And the request was successful
 And the response has a status code of 204
@@ -235,3 +212,36 @@ And the response has a status code of 404
 And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
+
+@TC020010
+@Negative @Create
+Scenario: create a new user with invalid status
+### create a new entity with invalid values, this should not be successful
+
+Given a "user" with
+	| status   | string | DOESNOTEXIST |
+	| username | string | invalidName  |
+	| password | string | invalidPass  |
+And the request was not successful
+And the response has a status code of 400
+And the response matches
+	| code | integer | 400         |
+	| text | string  | BAD_REQUEST |
+
+@TC020011
+@Negative @Update
+Scenario: update users password
+### create a new user and update its password
+
+Given a "user" with
+	| status   | string | ACTIVE             |
+	| username | string | updatePasswordName |
+	| password | string | updatePasswordPass |
+And the request was successful
+And the response has a status code of 201
+And the response matches
+	| status   | string | ACTIVE             |
+	| username | string | updatePasswordName |
+When update latest users password to "updatedPasswordPass"
+And the request was successful
+And the response has a status code of 204

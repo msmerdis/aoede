@@ -18,6 +18,7 @@ public enum UserStatus implements EnumEntityField {
 	public Character toCharacter() {
 		return status;
 	}
+
 }
 
 

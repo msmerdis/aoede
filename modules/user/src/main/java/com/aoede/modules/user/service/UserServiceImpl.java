@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManagerFactory;
 
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.aoede.commons.base.exceptions.GenericException;
@@ -17,11 +19,13 @@ import com.aoede.modules.user.repository.UserRepository;
 
 @Service
 public class UserServiceImpl extends AbstractServiceDomainImpl <Long, User, Long, UserEntity, UserRepository> implements UserService {
-	private RoleService roleService;
 
-	public UserServiceImpl(UserRepository repository, EntityManagerFactory entityManagerFactory, RoleService roleService) {
+	private PasswordEncoder passwordEncoder;
+
+	public UserServiceImpl(UserRepository repository, EntityManagerFactory entityManagerFactory, PasswordEncoder passwordEncoder) {
 		super(repository, entityManagerFactory);
-		this.roleService = roleService;
+
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override
@@ -49,19 +53,27 @@ public class UserServiceImpl extends AbstractServiceDomainImpl <Long, User, Long
 	public UserEntity createEntity(User domain, boolean includeParent, boolean cascade) throws GenericException {
 		UserEntity entity = new UserEntity();
 
-		updateEntity(domain, entity, includeParent, cascade);
-
-		entity.setId(domain.getId());
+		entity.setStatus(domain.getStatus());
+		entity.setUsername(domain.getUsername());
+		entity.setPassword(
+			passwordEncoder.encode(domain.getPassword())
+		);
 
 		return entity;
 	}
 
 	@Override
 	public void updateEntity(User domain, UserEntity entity, boolean includeParent, boolean cascade) throws GenericException {
-		entity.setStatus(domain.getStatus());
-		entity.setUsername(domain.getUsername());
-		entity.setPassword(domain.getPassword());
-		entity.setPasssalt(domain.getPasssalt());
+		if (domain.getStatus() != null)
+			entity.setStatus(domain.getStatus());
+
+		if (domain.getUsername() != null)
+			entity.setUsername(domain.getUsername());
+
+		if (domain.getPassword() != null)
+			entity.setPassword(
+				passwordEncoder.encode(domain.getPassword())
+			);
 	}
 
 	@Override
@@ -78,13 +90,11 @@ public class UserServiceImpl extends AbstractServiceDomainImpl <Long, User, Long
 		domain.setId(entity.getId());
 		domain.setStatus(entity.getStatus());
 		domain.setUsername(entity.getUsername());
-		domain.setPassword(entity.getPassword());
-		domain.setPasssalt(entity.getPasssalt());
 
 		if (cascade) {
-			domain.setAuthorities(
+			domain.setRoles(
 				entity.getRoles().stream()
-					.map(r -> roleService.createDomain(r, false, false))
+					.map(r -> new SimpleGrantedAuthority(r.getRole()))
 					.collect(Collectors.toSet())
 			);
 		}

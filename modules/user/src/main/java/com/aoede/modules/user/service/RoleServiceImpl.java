@@ -40,8 +40,8 @@ public class RoleServiceImpl extends AbstractServiceDomainImpl <Integer, Role, I
 
 	@Override
 	public void updateEntity(Role domain, RoleEntity entity, boolean includeParent, boolean cascade) throws GenericException {
-		entity.setDesc(domain.getAuthority());
-		entity.setRole(domain.getAuthority());
+		entity.setDesc(domain.getDesc());
+		entity.setRole(domain.getRole());
 	}
 
 	@Override
@@ -55,8 +55,9 @@ public class RoleServiceImpl extends AbstractServiceDomainImpl <Integer, Role, I
 
 	@Override
 	public void updateDomain(RoleEntity entity, Role domain, boolean includeParent, boolean cascade) {
-		domain.setAuthority(entity.getRole());
 		domain.setId(entity.getId());
+		domain.setRole(entity.getRole());
+		domain.setDesc(entity.getDesc());
 	}
 
 	@Override
