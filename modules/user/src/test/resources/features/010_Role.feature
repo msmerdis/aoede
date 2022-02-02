@@ -7,28 +7,31 @@ Feature: Basic Role CRUD functionality
 Scenario: retrieve all available roles
 
 Given a "role" with
-	| role | string | VIEW |
+	| role | string | VIEW             |
+	| desc | string | view description |
 And the request was successful
 And the response has a status code of 201
 And a "role" with
-	| role | string | EDIT |
+	| role | string | EDIT             |
+	| desc | string | edit description |
 And the request was successful
 And the response has a status code of 201
 And a "role" with
-	| role | string | ADMIN |
+	| role | string | TEST             |
+	| desc | string | test description |
 And the request was successful
 And the response has a status code of 201
 When request all available "role"
 Then the request was successful
 And the response has a status code of 200
 And prepare data table "roleTemplate"
-	| id      | role |
-	| integer | string    |
+	| id      | role   | desc   |
+	| integer | string | string |
 And the response array contains "roleTemplate" objects
-	| id | role |
-	|  1 | VIEW      |
-	|  2 | EDIT      |
-	|  3 | ADMIN     |
+	| id | role | desc             |
+	|  1 | VIEW | view description |
+	|  2 | EDIT | edit description |
+	|  3 | TEST | test description |
 
 @TC010002
 @Negative
@@ -37,12 +40,14 @@ Scenario: access a single role
 
 Given a "role" with
 	| role | string | CREATE |
+	| desc | string | create |
 When request previously created "role"
 Then the request was successful
 And the response has a status code of 200
 And the response matches
-	| id        | key     | role   |
+	| id   | key     | role   |
 	| role | string  | CREATE |
+	| desc | string  | create |
 
 @TC010003
 @Negative
@@ -65,25 +70,28 @@ Scenario: create a new role
 
 Given a "role" with
 	| role | string | INVITE |
+	| desc | string | invite |
 And the request was successful
 And the response has a status code of 201
 And the response matches
 	| role | string | INVITE |
+	| desc | string | invite |
 When request previously created "role"
 And the request was successful
 And the response has a status code of 200
 And the response matches
-	| id        | key    | role   |
+	| id   | key    | role   |
 	| role | string | INVITE |
+	| desc | string | invite |
 Then request all available "role"
 And the request was successful
 And the response has a status code of 200
 And prepare data table "roleTemplate"
-	| id  | role  |
-	| key | string     |
+	| id  | role   | desc   |
+	| key | string | string |
 And the response array contains "roleTemplate" objects
-	| id   | role |
-	| role | INVITE    |
+	| id   |  role  |  desc  |
+	| role | INVITE | invite |
 And the response array contains latest "role"
 
 @TC010005
@@ -94,6 +102,7 @@ Scenario: create a dublicate role
 
 Given a "role" with
 	| role | string | VIEW |
+	| desc | string | view |
 And the request was not successful
 And the response has a status code of 409
 And the response matches
@@ -116,7 +125,7 @@ And the response matches
 	| desc | string | nope |
 When update previously created "role"
 	| role | string | UPDATE |
-	| desc | string | UPDATE |
+	| desc | string | update |
 And the request was successful
 And the response has a status code of 204
 Then request previously created "role"
@@ -125,7 +134,7 @@ And the response has a status code of 200
 And the response matches
 	| id   | key    | role   |
 	| role | string | UPDATE |
-	| desc | string | UPDATE |
+	| desc | string | update |
 And request all available "role"
 And the request was successful
 And the response has a status code of 200
@@ -134,7 +143,7 @@ And prepare data table "roleTemplate"
 	| key  | string | string |
 And the response array contains "roleTemplate" objects
 	| id   | role   | desc   |
-	| role | UPDATE | UPDATE |
+	| role | UPDATE | update |
 And the response array contains latest "role"
 And the response array contains "role" with "string" value "UPDATE"
 And the response array does not contain "role" with "string" value "nope"
@@ -147,7 +156,7 @@ Scenario: update a non existing entity
 
 When update "role" with id "1000"
 	| role | string | UPDATE |
-	| desc | string | UPDATE |
+	| desc | string | update |
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
@@ -162,12 +171,12 @@ Scenario: delete an entity
 
 Given a "role" with
 	| role | string | DELETE |
-	| desc | string | DELETE |
+	| desc | string | delete |
 And the request was successful
 And the response has a status code of 201
 And the response matches
 	| role | string | DELETE |
-	| desc | string | DELETE |
+	| desc | string | delete |
 When delete previously created "role"
 And the request was successful
 And the response has a status code of 204
@@ -182,6 +191,7 @@ And the request was successful
 And the response has a status code of 200
 And the response array does not contain "id" with "key" value "role"
 And the response array does not contain "role" with "string" value "DELETE"
+And the response array does not contain "desc" with "string" value "delete"
 
 @TC010009
 @Negative @Delete

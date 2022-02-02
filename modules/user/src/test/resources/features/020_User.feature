@@ -227,21 +227,3 @@ And the response has a status code of 400
 And the response matches
 	| code | integer | 400         |
 	| text | string  | BAD_REQUEST |
-
-@TC020011
-@Negative @Update
-Scenario: update users password
-### create a new user and update its password
-
-Given a "user" with
-	| status   | string | ACTIVE             |
-	| username | string | updatePasswordName |
-	| password | string | updatePasswordPass |
-And the request was successful
-And the response has a status code of 201
-And the response matches
-	| status   | string | ACTIVE             |
-	| username | string | updatePasswordName |
-When update latest users password to "updatedPasswordPass"
-And the request was successful
-And the response has a status code of 204

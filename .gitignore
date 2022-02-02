@@ -55,6 +55,7 @@ dependency-reduced-pom.xml
 **/.externalToolBuilders/
 *Servers/
 .cucumber
+.factorypath
 
 # JetBrains #
 # based on https://github.com/github/gitignore/blob/master/Global/JetBrains.gitignore #

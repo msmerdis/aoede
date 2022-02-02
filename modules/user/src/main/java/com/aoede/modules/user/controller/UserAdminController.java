@@ -79,16 +79,7 @@ public class UserAdminController extends AbstractResourceController<
 
 		domain.setUsername(data.getUsername());
 		domain.setPassword(data.getPassword());
-		domain.setStatus(
-			Stream.of(UserStatus.values())
-				.filter(s -> s.toString().equals(data.getStatus()))
-				.findFirst()
-				.orElseThrow(() -> {
-					return new GenericExceptionContainer (
-						new BadRequestException("Invalid status: " + data.getStatus())
-					);
-				})
-		);
+		domain.setStatus(parseStatus (data.getStatus()));
 
 		return domain;
 	}
@@ -97,19 +88,24 @@ public class UserAdminController extends AbstractResourceController<
 	public User updateDomain(UpdateUser data) {
 		User domain = new User ();
 
-		domain.setStatus(
-			Stream.of(UserStatus.values())
-				.filter(s -> s.toString().equals(data.getStatus()))
-				.findFirst()
-				.orElseThrow(() -> {
-					return new GenericExceptionContainer (
-						new BadRequestException("Invalid status: " + data.getStatus())
-					);
-				})
-		);
 		domain.setUsername(data.getUsername());
+		domain.setStatus(parseStatus (data.getStatus()));
 
 		return domain;
+	}
+
+	private UserStatus parseStatus (String status) {
+		if (status == null)
+			return null;
+
+		return Stream.of(UserStatus.values())
+			.filter(s -> s.toString().equals(status))
+			.findFirst()
+			.orElseThrow(() -> {
+				return new GenericExceptionContainer (
+					new BadRequestException("Invalid status: " + status)
+				);
+			});
 	}
 
 	@Override
