@@ -18,6 +18,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
@@ -59,6 +60,7 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 		basePath = "http://localhost:" + serverProperties.getPort();
 
 		restTemplate.setErrorHandler(new ResponseResultsErrorHandler());
+		restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 	}
 
 	private class ResponseResultsErrorHandler implements ResponseErrorHandler {

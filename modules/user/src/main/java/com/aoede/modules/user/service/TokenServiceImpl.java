@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Service;
 
 import com.aoede.commons.base.component.BaseComponent;
 import com.aoede.commons.base.exceptions.GenericException;
@@ -27,6 +28,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
+@Service
 public class TokenServiceImpl extends BaseComponent implements TokenService {
 
 	private Key jwtKey;

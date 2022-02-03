@@ -28,13 +28,13 @@ When request all available "user"
 Then the request was successful
 And the response has a status code of 200
 And prepare data table "userTemplate"
-	| id   | status | username |
+	|  id  | status | username |
 	| long | string | string   |
 And the response array contains "userTemplate" objects
-	| id | status | username |
-	|  1 | ACTIVE | user_1   |
-	|  2 | ACTIVE | user_2   |
-	|  3 | ACTIVE | user_3   |
+	|  id  | status | username |
+	|   1  | ACTIVE | user_1   |
+	|   2  | ACTIVE | user_2   |
+	|   3  | ACTIVE | user_3   |
 
 @TC020002
 @Negative
@@ -91,8 +91,8 @@ Then request all available "user"
 And the request was successful
 And the response has a status code of 200
 And prepare data table "userTemplate"
-	| id  | status | username |
-	| key | string | string   |
+	| id   | status | username   |
+	| key  | string | string     |
 And the response array contains "userTemplate" objects
 	| id   | status | username   |
 	| user | ACTIVE | createName |
@@ -145,8 +145,8 @@ And request all available "user"
 And the request was successful
 And the response has a status code of 200
 And prepare data table "userTemplate"
-	| id  | status | username |
-	| key | string | string   |
+	| id   | status | username   |
+	| key  | string | string     |
 And the response array contains "userTemplate" objects
 	| id   | status | username   |
 	| user | ACTIVE | updateName |

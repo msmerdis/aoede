@@ -10,12 +10,17 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aoede.commons.base.exceptions.GenericException;
+import com.aoede.commons.base.exceptions.UnauthorizedException;
 import com.aoede.commons.base.service.AbstractServiceDomainImpl;
 import com.aoede.modules.user.domain.User;
 import com.aoede.modules.user.entity.UserEntity;
 import com.aoede.modules.user.repository.UserRepository;
+import com.aoede.modules.user.transfer.user.UserStatus;
 
 @Service
 public class UserServiceImpl extends AbstractServiceDomainImpl <Long, User, Long, UserEntity, UserRepository> implements UserService {
@@ -39,6 +44,7 @@ public class UserServiceImpl extends AbstractServiceDomainImpl <Long, User, Long
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
 	public User loadUserByUsername(String username) throws UsernameNotFoundException {
 		Optional<UserEntity> entity = repository.findByUsername(username);
 
@@ -47,6 +53,21 @@ public class UserServiceImpl extends AbstractServiceDomainImpl <Long, User, Long
 		}
 
 		return createDomain(entity.get(), true, true);
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+	public User login(String username, String password) throws UsernameNotFoundException, GenericException {
+		User user = loadUserByUsername(username);
+
+		if (
+			passwordEncoder.matches(password, user.getPassword()) &&
+			user.getStatus().equals(UserStatus.ACTIVE)
+		) {
+			return user;
+		}
+
+		throw new UnauthorizedException("Unable to authenticate user");
 	}
 
 	@Override
@@ -90,6 +111,7 @@ public class UserServiceImpl extends AbstractServiceDomainImpl <Long, User, Long
 		domain.setId(entity.getId());
 		domain.setStatus(entity.getStatus());
 		domain.setUsername(entity.getUsername());
+		domain.setPassword(entity.getPassword());
 
 		if (cascade) {
 			domain.setRoles(

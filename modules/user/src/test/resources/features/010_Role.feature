@@ -87,8 +87,8 @@ Then request all available "role"
 And the request was successful
 And the response has a status code of 200
 And prepare data table "roleTemplate"
-	| id  | role   | desc   |
-	| key | string | string |
+	| id   | role   | desc   |
+	| key  | string | string |
 And the response array contains "roleTemplate" objects
 	| id   |  role  |  desc  |
 	| role | INVITE | invite |
