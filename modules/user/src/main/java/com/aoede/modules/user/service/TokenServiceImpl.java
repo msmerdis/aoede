@@ -18,9 +18,6 @@ import com.aoede.commons.base.exceptions.GenericExceptionContainer;
 import com.aoede.commons.base.exceptions.UnauthorizedException;
 import com.aoede.modules.user.domain.User;
 import com.aoede.modules.user.transfer.user.UserStatus;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
@@ -33,7 +30,6 @@ public class TokenServiceImpl extends BaseComponent implements TokenService {
 
 	private Key jwtKey;
 	private JwtParser parser;
-	private ObjectMapper mapper;
 
 	public TokenServiceImpl (@Value("${secret:}") String secret) {
 		// in case of an empty secret generate a random one
@@ -48,7 +44,6 @@ public class TokenServiceImpl extends BaseComponent implements TokenService {
 
 		jwtKey = Keys.hmacShaKeyFor(secret.getBytes());
 		parser = Jwts.parserBuilder().setSigningKey(jwtKey).build();
-		mapper = new ObjectMapper();
 	}
 
 	@Override
@@ -97,18 +92,8 @@ public class TokenServiceImpl extends BaseComponent implements TokenService {
 	}
 
 	@Override
-	public <T> String encodeClass(T value, Class<T> type) throws JsonProcessingException {
-		return encodeToken (mapper.writerFor(type).writeValueAsString(value));
-	}
-
-	@Override
 	public Claims decode(String token) {
 		return parser.parseClaimsJws(token).getBody();
-	}
-
-	@Override
-	public <T> T decodeClass(String token, Class<T> type) throws JsonProcessingException, JsonMappingException {
-		return mapper.readerFor(type).readValue(decodeToken(token));
 	}
 
 	@Override

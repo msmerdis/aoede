@@ -167,21 +167,6 @@ public class TestTokenServiceImpl extends TokenServiceImplTestCaseSetup {
 	}
 
 	@Test
-	public void decodeEncodedClass () throws Exception {
-		TokenServiceImpl uut = uut ();
-
-		Payload payload = new Payload();
-		payload.key = "key";
-		payload.value = "value";
-
-		String  encoded = uut.encodeClass(payload, Payload.class);
-		Payload decoded = uut.decodeClass(encoded, Payload.class);
-
-		assertEquals("key",   decoded.key);
-		assertEquals("value", decoded.value);
-	}
-
-	@Test
 	public void decodeEncodedUser () throws Exception {
 		TokenServiceImpl uut = uut ();
 
