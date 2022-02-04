@@ -3,7 +3,7 @@ package com.aoede;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
-import com.aoede.commons.base.BaseTestComponent;
+import com.aoede.commons.cucumber.BaseTestComponent;
 
 import io.cucumber.java.Before;
 import io.cucumber.spring.CucumberContextConfiguration;

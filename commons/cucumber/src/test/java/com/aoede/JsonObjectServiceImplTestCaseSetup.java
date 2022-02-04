@@ -7,10 +7,10 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.aoede.commons.base.BaseTestComponent;
-import com.aoede.commons.service.AbstractTestServiceDiscoveryService;
-import com.aoede.commons.service.CompositeIdService;
-import com.aoede.commons.service.JsonObjectServiceImpl;
+import com.aoede.commons.cucumber.BaseTestComponent;
+import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
+import com.aoede.commons.cucumber.service.CompositeIdService;
+import com.aoede.commons.cucumber.service.JsonObjectServiceImpl;
 
 @RunWith(SpringRunner.class)
 public class JsonObjectServiceImplTestCaseSetup extends BaseTestComponent {

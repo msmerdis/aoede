@@ -5,8 +5,8 @@ import java.lang.reflect.Field;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.aoede.commons.base.BaseTestComponent;
-import com.aoede.commons.service.AbstractTestServiceImpl;
+import com.aoede.commons.cucumber.BaseTestComponent;
+import com.aoede.commons.cucumber.service.AbstractTestServiceImpl;
 
 @RunWith(SpringRunner.class)
 public class AbstractTestServiceImplTestCaseSetup extends BaseTestComponent {

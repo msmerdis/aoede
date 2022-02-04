@@ -22,7 +22,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements UserDetails, AbstractDomain<Long>  {
+public class User implements UserDetails, AbstractDomain<Long> {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;

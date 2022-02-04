@@ -5,10 +5,10 @@ import static org.junit.Assert.assertTrue;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.aoede.commons.base.BaseStepDefinition;
-import com.aoede.commons.base.ResponseResults;
-import com.aoede.commons.service.AbstractTestService;
-import com.aoede.service.LoginTestService;
+import com.aoede.commons.cucumber.BaseStepDefinition;
+import com.aoede.commons.cucumber.ResponseResults;
+import com.aoede.commons.cucumber.service.AbstractTestService;
+import com.aoede.modules.user.service.LoginTestService;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 

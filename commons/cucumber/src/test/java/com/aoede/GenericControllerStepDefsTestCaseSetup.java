@@ -4,8 +4,8 @@ import java.lang.reflect.Field;
 
 import org.mockito.Mockito;
 
-import com.aoede.commons.base.stepdefs.GenericControllerStepDefs;
-import com.aoede.commons.service.AbstractTestService;
+import com.aoede.commons.cucumber.service.AbstractTestService;
+import com.aoede.commons.cucumber.stepdefs.GenericControllerStepDefs;
 
 public class GenericControllerStepDefsTestCaseSetup extends BaseStepDefinitionTestCaseSetup {
 

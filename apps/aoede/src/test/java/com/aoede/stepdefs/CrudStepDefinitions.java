@@ -10,8 +10,8 @@ import java.util.List;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
-import com.aoede.commons.base.BaseStepDefinition;
-import com.aoede.commons.base.ResponseResults;
+import com.aoede.commons.cucumber.BaseStepDefinition;
+import com.aoede.commons.cucumber.ResponseResults;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 

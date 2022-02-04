@@ -10,13 +10,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
-import com.aoede.commons.base.BaseStepDefinition;
-import com.aoede.commons.base.BaseTestComponent;
-import com.aoede.commons.service.AbstractTestServiceDiscoveryService;
-import com.aoede.commons.service.CompositeIdServiceImpl;
-import com.aoede.commons.service.DataTableServiceImpl;
-import com.aoede.commons.service.JsonObjectServiceImpl;
-import com.aoede.commons.service.TestCaseIdTrackerService;
+import com.aoede.commons.cucumber.BaseStepDefinition;
+import com.aoede.commons.cucumber.BaseTestComponent;
+import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
+import com.aoede.commons.cucumber.service.CompositeIdServiceImpl;
+import com.aoede.commons.cucumber.service.DataTableServiceImpl;
+import com.aoede.commons.cucumber.service.JsonObjectServiceImpl;
+import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 
 @RunWith(SpringRunner.class)
 public class BaseStepDefinitionTestCaseSetup extends BaseTestComponent {

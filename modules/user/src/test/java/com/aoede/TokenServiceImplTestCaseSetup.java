@@ -6,7 +6,7 @@ import java.util.Random;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.aoede.commons.base.BaseTestComponent;
+import com.aoede.commons.cucumber.BaseTestComponent;
 import com.aoede.modules.user.service.TokenServiceImpl;
 
 @RunWith(SpringRunner.class)
