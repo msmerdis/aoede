@@ -9,7 +9,6 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.ListableBeanFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aoede.commons.cucumber.BaseTestComponent;
@@ -17,11 +16,14 @@ import com.aoede.commons.cucumber.BaseTestComponent;
 @Service
 public class AbstractTestServiceDiscoveryServiceImpl extends BaseTestComponent implements AbstractTestServiceDiscoveryService {
 
-	@Autowired
 	private ListableBeanFactory listableBeanFactory;
 	private Map<String, AbstractTestService> services = new HashMap<String, AbstractTestService> ();
 
 	private AbstractTestService latestService;
+
+	public AbstractTestServiceDiscoveryServiceImpl (ListableBeanFactory listableBeanFactory) {
+		this.listableBeanFactory = listableBeanFactory;
+	}
 
 	@PostConstruct
 	private void discoverTestServices () {

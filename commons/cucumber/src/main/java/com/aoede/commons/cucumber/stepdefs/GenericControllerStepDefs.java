@@ -5,11 +5,17 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.http.HttpHeaders;
 
 import com.aoede.commons.cucumber.BaseStepDefinition;
 import com.aoede.commons.cucumber.ResponseResults;
 import com.aoede.commons.cucumber.service.AbstractTestService;
+import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
+import com.aoede.commons.cucumber.service.CompositeIdService;
+import com.aoede.commons.cucumber.service.DataTableService;
+import com.aoede.commons.cucumber.service.JsonObjectService;
+import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -26,6 +32,24 @@ import io.cucumber.java.en.When;
  * Utilises domain test services to build and verify the results
  */
 public class GenericControllerStepDefs extends BaseStepDefinition {
+
+	public GenericControllerStepDefs (
+		ServerProperties serverProperties,
+		AbstractTestServiceDiscoveryService services,
+		TestCaseIdTrackerService testCaseIdTrackerService,
+		CompositeIdService compositeIdService,
+		JsonObjectService jsonObjectService,
+		DataTableService dataTableService
+	) {
+		super (
+			serverProperties,
+			services,
+			testCaseIdTrackerService,
+			compositeIdService,
+			jsonObjectService,
+			dataTableService
+		);
+	}
 
 	/**
 	 * Data preparation steps

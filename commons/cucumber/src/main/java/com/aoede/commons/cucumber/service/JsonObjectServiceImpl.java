@@ -9,8 +9,6 @@ import java.math.BigInteger;
 import java.util.Random;
 import java.util.regex.Pattern;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
@@ -28,14 +26,17 @@ public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> im
 	private Random random = new Random (System.currentTimeMillis());
 	private Pattern stringPattern;
 
-	@Autowired
 	private AbstractTestServiceDiscoveryService abstractTestServiceDiscoveryService;
-
-	@Lazy
-	@Autowired
 	private CompositeIdService compositeIdService;
 
-	public JsonObjectServiceImpl () {
+	public JsonObjectServiceImpl (
+		AbstractTestServiceDiscoveryService abstractTestServiceDiscoveryService,
+		CompositeIdService compositeIdService
+	) {
+		this.abstractTestServiceDiscoveryService = abstractTestServiceDiscoveryService;
+		this.compositeIdService = compositeIdService;
+		this.compositeIdService.updateJsonObjectService(this);
+
 		stringPattern = Pattern.compile(STRING_REGEX, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 	}
 

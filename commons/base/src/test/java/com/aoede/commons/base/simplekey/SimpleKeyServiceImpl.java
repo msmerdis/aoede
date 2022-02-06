@@ -2,7 +2,6 @@ package com.aoede.commons.base.simplekey;
 
 import javax.persistence.EntityManagerFactory;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aoede.commons.base.exceptions.BadRequestException;
@@ -12,7 +11,6 @@ import com.aoede.commons.base.service.AbstractServiceDomainImpl;
 @Service
 public class SimpleKeyServiceImpl extends AbstractServiceDomainImpl <Integer, SimpleKeyDomain, Integer, SimpleKeyEntity, SimpleKeyRepository> implements SimpleKeyService {
 
-	@Autowired
 	public SimpleKeyServiceImpl(SimpleKeyRepository repository, EntityManagerFactory entityManagerFactory) {
 		super(repository, entityManagerFactory);
 	}

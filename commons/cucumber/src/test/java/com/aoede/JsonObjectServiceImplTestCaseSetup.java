@@ -17,19 +17,17 @@ public class JsonObjectServiceImplTestCaseSetup extends BaseTestComponent {
 
 	protected Random random = new Random(0);
 
-	@MockBean
-	protected AbstractTestServiceDiscoveryService abstractTestServiceDiscoveryService;
-
-	@MockBean
-	protected CompositeIdService compositeIdService;
+	@MockBean protected AbstractTestServiceDiscoveryService abstractTestServiceDiscoveryService;
+	@MockBean protected CompositeIdService compositeIdService;
 
 	// unit under test
 	protected JsonObjectServiceImpl uut () throws Exception {
-		JsonObjectServiceImpl uut = new JsonObjectServiceImpl ();
+		JsonObjectServiceImpl uut = new JsonObjectServiceImpl (
+			this.abstractTestServiceDiscoveryService,
+			this.compositeIdService
+		);
 
 		setField (uut, "random", this.random);
-		setField (uut, "compositeIdService", this.compositeIdService);
-		setField (uut, "abstractTestServiceDiscoveryService", this.abstractTestServiceDiscoveryService);
 
 		return uut;
 	}

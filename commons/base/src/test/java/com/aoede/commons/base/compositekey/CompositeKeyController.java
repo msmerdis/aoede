@@ -1,6 +1,5 @@
 package com.aoede.commons.base.compositekey;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +18,6 @@ public class CompositeKeyController extends AbstractCompositeResourceController<
 	CompositeKeyService
 > {
 
-	@Autowired
 	public CompositeKeyController(CompositeKeyService service) {
 		super(service);
 	}

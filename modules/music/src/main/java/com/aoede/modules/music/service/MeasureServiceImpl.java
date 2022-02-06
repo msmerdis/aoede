@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityManagerFactory;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -25,14 +24,19 @@ import com.aoede.modules.music.repository.MeasureRepository;
 @Service
 public class MeasureServiceImpl extends AbstractServiceDomainImpl <MeasureKey, Measure, MeasureId, MeasureEntity, MeasureRepository> implements MeasureService {
 
-	@Autowired
 	private SectionService sectionService;
-
-	@Autowired
 	private NoteService noteService;
 
-	public MeasureServiceImpl(MeasureRepository repository, EntityManagerFactory entityManagerFactory) {
+	public MeasureServiceImpl(MeasureRepository repository, EntityManagerFactory entityManagerFactory, NoteService noteService) {
 		super(repository, entityManagerFactory);
+
+		this.noteService = noteService;
+		this.noteService.updateMeasureService(this);
+	}
+
+	@Override
+	public void updateSectionService (SectionService sectionService) {
+		this.sectionService = sectionService;
 	}
 
 	@Override

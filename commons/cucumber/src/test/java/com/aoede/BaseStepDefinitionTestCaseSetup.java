@@ -21,38 +21,26 @@ import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 @RunWith(SpringRunner.class)
 public class BaseStepDefinitionTestCaseSetup extends BaseTestComponent {
 
-	@MockBean
-	protected RestTemplate restTemplate;
-
-	@MockBean
-	protected ServerProperties serverProperties;
-
-	@MockBean
-	protected AbstractTestServiceDiscoveryService services;
-
-	@MockBean
-	protected TestCaseIdTrackerService testCaseIdTrackerService;
-
-	@MockBean
-	protected CompositeIdServiceImpl compositeIdService;
-
-	@MockBean
-	protected JsonObjectServiceImpl jsonObjectService;
-
-	@MockBean
-	protected DataTableServiceImpl dataTableService;
+	@MockBean protected RestTemplate restTemplate;
+	@MockBean protected ServerProperties serverProperties;
+	@MockBean protected AbstractTestServiceDiscoveryService services;
+	@MockBean protected TestCaseIdTrackerService testCaseIdTrackerService;
+	@MockBean protected CompositeIdServiceImpl compositeIdService;
+	@MockBean protected JsonObjectServiceImpl jsonObjectService;
+	@MockBean protected DataTableServiceImpl dataTableService;
 
 	// unit under test
 	protected BaseStepDefinition uut () throws Exception {
-		BaseStepDefinition uut = new BaseStepDefinition ();
+		BaseStepDefinition uut = new BaseStepDefinition (
+			this.serverProperties,
+			this.services,
+			this.testCaseIdTrackerService,
+			this.compositeIdService,
+			this.jsonObjectService,
+			this.dataTableService
+		);
 
 		setField (uut, "restTemplate", this.restTemplate);
-		setField (uut, "serverProperties", this.serverProperties);
-		setField (uut, "services", this.services);
-		setField (uut, "testCaseIdTrackerService", this.testCaseIdTrackerService);
-		setField (uut, "jsonObjectService", this.jsonObjectService);
-		setField (uut, "compositeIdService", this.compositeIdService);
-		setField (uut, "dataTableService", this.dataTableService);
 
 		return uut;
 	}

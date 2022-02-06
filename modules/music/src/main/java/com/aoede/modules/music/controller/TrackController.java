@@ -3,7 +3,6 @@ package com.aoede.modules.music.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,14 +35,15 @@ public class TrackController extends AbstractCompositeResourceController<
 	DetailTrackResponse,
 	TrackService
 > {
-	@Autowired
-	ClefService clefService;
+	private ClefService clefService;
+	private SectionController sectionController;
 
-	@Autowired
-	SectionController sectionController;
-
-	public TrackController(TrackService service) {
+	public TrackController(TrackService service, ClefService clefService, SectionController sectionController) {
 		super(service);
+
+		this.clefService = clefService;
+		this.sectionController = sectionController;
+		this.sectionController.updateTrackController(this);
 	}
 
 	@Override

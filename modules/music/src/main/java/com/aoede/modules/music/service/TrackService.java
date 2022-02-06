@@ -11,6 +11,8 @@ import com.aoede.modules.music.entity.TrackId;
 
 public interface TrackService extends AbstractServiceDomain <TrackKey, Track, TrackId, TrackEntity> {
 
+	void updateSheetService (SheetService sheetService);
+
 	void updateSectionEntity(SectionEntity entity, TrackKey key);
 
 	List<Track> findBySheetId(Long id);

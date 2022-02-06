@@ -40,6 +40,9 @@ public class SheetEntity extends AbstractJpaEntity<Long> implements AbstractEnti
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sheetIdGenerator")
 	private Long id;
 
+	@Column(nullable = false)
+	private Long userId;
+
 	@Column(length = 512, nullable = false)
 	private String name;
 

@@ -25,7 +25,7 @@ public class SheetController extends AbstractResourceController<
 	DetailSheetResponse,
 	SheetService
 > {
-	TrackController trackController;
+	private TrackController trackController;
 
 	public SheetController(SheetService sheetService, TrackController trackController) {
 		super(sheetService);

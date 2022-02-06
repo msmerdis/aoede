@@ -7,11 +7,17 @@ import static org.junit.Assert.assertTrue;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 import com.aoede.commons.cucumber.BaseStepDefinition;
 import com.aoede.commons.cucumber.ResponseResults;
+import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
+import com.aoede.commons.cucumber.service.CompositeIdService;
+import com.aoede.commons.cucumber.service.DataTableService;
+import com.aoede.commons.cucumber.service.JsonObjectService;
+import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -20,6 +26,25 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 public class CrudStepDefinitions extends BaseStepDefinition {
+
+	public CrudStepDefinitions (
+		ServerProperties serverProperties,
+		AbstractTestServiceDiscoveryService services,
+		TestCaseIdTrackerService testCaseIdTrackerService,
+		CompositeIdService compositeIdService,
+		JsonObjectService jsonObjectService,
+		DataTableService dataTableService
+	) {
+		super (
+			serverProperties,
+			services,
+			testCaseIdTrackerService,
+			compositeIdService,
+			jsonObjectService,
+			dataTableService
+		);
+	}
+
 	private ResponseResults latestResults = new ResponseResults ();
 
 	/**

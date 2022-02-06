@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityManagerFactory;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -26,14 +25,19 @@ import com.aoede.modules.music.transfer.Fraction;
 @Service
 public class SectionServiceImpl extends AbstractServiceDomainImpl <SectionKey, Section, SectionId, SectionEntity, SectionRepository> implements SectionService {
 
-	@Autowired
 	private TrackService trackService;
-
-	@Autowired
 	private MeasureService measureService;
 
-	public SectionServiceImpl(SectionRepository repository, EntityManagerFactory entityManagerFactory) {
+	public SectionServiceImpl(SectionRepository repository, EntityManagerFactory entityManagerFactory, MeasureService measureService) {
 		super(repository, entityManagerFactory);
+
+		this.measureService = measureService;
+		this.measureService.updateSectionService(this);
+	}
+
+	@Override
+	public void updateTrackService (TrackService trackService) {
+		this.trackService = trackService;
 	}
 
 	@Override

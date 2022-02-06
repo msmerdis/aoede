@@ -1,7 +1,5 @@
 package com.aoede.commons.base.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.aoede.commons.base.domain.AbstractDomain;
 import com.aoede.commons.base.service.AbstractService;
 import com.aoede.commons.base.transfer.AbstractCompositeResponse;
@@ -26,7 +24,6 @@ public abstract class AbstractCompositeResourceController<
 	Service extends AbstractService<DomainKey, Domain>
 > extends AbstractResourceController <DomainKey, Domain, AccessKey, CreateData, UpdateData, SimpleResponse, DetailResponse, Service> {
 
-	@Autowired
 	public AbstractCompositeResourceController(Service service) {
 		super(service);
 	}

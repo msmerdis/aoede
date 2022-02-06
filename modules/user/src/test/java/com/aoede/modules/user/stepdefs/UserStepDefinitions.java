@@ -5,11 +5,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
 
 import com.aoede.commons.cucumber.BaseStepDefinition;
 import com.aoede.commons.cucumber.ResponseResults;
 import com.aoede.commons.cucumber.service.AbstractTestService;
+import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
+import com.aoede.commons.cucumber.service.CompositeIdService;
+import com.aoede.commons.cucumber.service.DataTableService;
+import com.aoede.commons.cucumber.service.JsonObjectService;
+import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 import com.aoede.modules.user.service.LoginTestService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -23,8 +28,28 @@ import io.cucumber.java.en.When;
 
 public class UserStepDefinitions extends BaseStepDefinition {
 
-	@Autowired
 	private LoginTestService loginTestService;
+
+	public UserStepDefinitions (
+		ServerProperties serverProperties,
+		AbstractTestServiceDiscoveryService services,
+		TestCaseIdTrackerService testCaseIdTrackerService,
+		CompositeIdService compositeIdService,
+		JsonObjectService jsonObjectService,
+		DataTableService dataTableService,
+		LoginTestService loginTestService
+	) {
+		super (
+			serverProperties,
+			services,
+			testCaseIdTrackerService,
+			compositeIdService,
+			jsonObjectService,
+			dataTableService
+		);
+
+		this.loginTestService = loginTestService;
+	}
 
 	/**
 	 * Requests

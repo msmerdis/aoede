@@ -3,8 +3,15 @@ package com.aoede.commons.base.stepdefs;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.springframework.boot.autoconfigure.web.ServerProperties;
+
 import com.aoede.commons.cucumber.BaseStepDefinition;
 import com.aoede.commons.cucumber.ResponseResults;
+import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
+import com.aoede.commons.cucumber.service.CompositeIdService;
+import com.aoede.commons.cucumber.service.DataTableService;
+import com.aoede.commons.cucumber.service.JsonObjectService;
+import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -13,6 +20,24 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 public class ExceptionTestDefinitions extends BaseStepDefinition {
+
+	public ExceptionTestDefinitions (
+		ServerProperties serverProperties,
+		AbstractTestServiceDiscoveryService services,
+		TestCaseIdTrackerService testCaseIdTrackerService,
+		CompositeIdService compositeIdService,
+		JsonObjectService jsonObjectService,
+		DataTableService dataTableService
+	) {
+		super (
+			serverProperties,
+			services,
+			testCaseIdTrackerService,
+			compositeIdService,
+			jsonObjectService,
+			dataTableService
+		);
+	}
 
 	private ResponseResults latestResults = new ResponseResults ();
 

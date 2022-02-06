@@ -14,17 +14,18 @@ public class GenericControllerStepDefsTestCaseSetup extends BaseStepDefinitionTe
 	// unit under test
 	@Override
 	protected GenericControllerStepDefs uut () throws Exception {
-		GenericControllerStepDefs uut = new GenericControllerStepDefs ();
-
-		latestService = createLatestServiceMock ();
+		GenericControllerStepDefs uut = new GenericControllerStepDefs (
+			this.serverProperties,
+			this.services,
+			this.testCaseIdTrackerService,
+			this.compositeIdService,
+			this.jsonObjectService,
+			this.dataTableService
+		);
 
 		super.setField (uut, "restTemplate", this.restTemplate);
-		super.setField (uut, "serverProperties", this.serverProperties);
-		super.setField (uut, "services", this.services);
-		super.setField (uut, "testCaseIdTrackerService", this.testCaseIdTrackerService);
-		super.setField (uut, "jsonObjectService", this.jsonObjectService);
-		super.setField (uut, "compositeIdService", this.compositeIdService);
-		super.setField (uut, "dataTableService", this.dataTableService);
+
+		latestService = createLatestServiceMock ();
 
 		return uut;
 	}

@@ -9,7 +9,7 @@ import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-	plugin = {"pretty", "com.aoede.commons.cucumber.BaseStepDefinition"},
+	plugin = {"pretty"},
 	tags = "not @Skip",
 	features = {"src/test/resources/features"}
 )

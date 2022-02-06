@@ -2,7 +2,6 @@ package com.aoede.commons.base.compositekey;
 
 import javax.persistence.EntityManagerFactory;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aoede.commons.base.exceptions.GenericException;
@@ -11,7 +10,6 @@ import com.aoede.commons.base.service.AbstractServiceDomainImpl;
 @Service
 public class CompositeKeyServiceImpl extends AbstractServiceDomainImpl <CompositeKeyDomainKey, CompositeKeyDomain, CompositeKeyEntityKey, CompositeKeyEntity, CompositeKeyRepository> implements CompositeKeyService {
 
-	@Autowired
 	public CompositeKeyServiceImpl(CompositeKeyRepository repository, EntityManagerFactory entityManagerFactory) {
 		super(repository, entityManagerFactory);
 	}

@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -35,7 +34,6 @@ public abstract class AbstractResourceController<
 
 	final protected Service service;
 
-	@Autowired
 	public AbstractResourceController (Service service) {
 		this.service = service;
 	}

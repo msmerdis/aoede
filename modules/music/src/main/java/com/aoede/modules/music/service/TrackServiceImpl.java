@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityManagerFactory;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -23,17 +22,26 @@ import com.aoede.modules.music.repository.TrackRepository;
 @Service
 public class TrackServiceImpl extends AbstractServiceDomainImpl <TrackKey, Track, TrackId, TrackEntity, TrackRepository> implements TrackService {
 
-	@Autowired
 	private ClefService clefService;
-
-	@Autowired
 	private SheetService sheetService;
-
-	@Autowired
 	private SectionService sectionService;
 
-	public TrackServiceImpl(TrackRepository repository, EntityManagerFactory entityManagerFactory) {
+	public TrackServiceImpl(
+		TrackRepository repository,
+		EntityManagerFactory entityManagerFactory,
+		ClefService clefService,
+		SectionService sectionService
+	) {
 		super(repository, entityManagerFactory);
+
+		this.clefService = clefService;
+		this.sectionService = sectionService;
+		this.sectionService.updateTrackService(this);
+	}
+
+	@Override
+	public void updateSheetService (SheetService sheetService) {
+		this.sheetService = sheetService;
 	}
 
 	@Override

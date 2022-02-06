@@ -1,8 +1,8 @@
 package com.aoede.commons.cucumber.service;
 
+import static org.junit.Assert.assertNotNull;
+
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import io.cucumber.datatable.DataTable;
@@ -10,9 +10,15 @@ import io.cucumber.datatable.DataTable;
 @Service
 public class CompositeIdServiceImpl extends TestStorageServiceImpl<String> implements CompositeIdService {
 
-	@Lazy
-	@Autowired
 	private JsonObjectService jsonObjectService;
+
+	public CompositeIdServiceImpl () {
+	}
+
+	@Override
+	public void updateJsonObjectService(JsonObjectService jsonObjectService) {
+		this.jsonObjectService = jsonObjectService;
+	}
 
 	@Override
 	public String generateBase64 (String data) {
@@ -32,6 +38,7 @@ public class CompositeIdServiceImpl extends TestStorageServiceImpl<String> imple
 
 	@Override
 	public String generateCompositeKey (DataTable data) {
+		assertNotNull("json object service is null", jsonObjectService);
 		return generatePaddedBase64(
 			jsonObjectService.generateJson(data).toString()
 		);

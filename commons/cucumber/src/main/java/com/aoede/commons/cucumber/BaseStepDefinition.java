@@ -9,7 +9,6 @@ import java.util.Collection;
 
 import javax.annotation.PostConstruct;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -32,24 +31,29 @@ import io.cucumber.plugin.event.EventPublisher;
 public class BaseStepDefinition extends BaseTestComponent implements EventListener {
 	private RestTemplate restTemplate = new RestTemplate();
 
-	@Autowired
 	private ServerProperties serverProperties;
 	private String basePath;
-
-	@Autowired
 	protected AbstractTestServiceDiscoveryService services;
-
-	@Autowired
 	private TestCaseIdTrackerService testCaseIdTrackerService;
-
-	@Autowired
 	protected CompositeIdService compositeIdService;
-
-	@Autowired
 	protected JsonObjectService jsonObjectService;
-
-	@Autowired
 	protected DataTableService dataTableService;
+
+	public BaseStepDefinition (
+		ServerProperties serverProperties,
+		AbstractTestServiceDiscoveryService services,
+		TestCaseIdTrackerService testCaseIdTrackerService,
+		CompositeIdService compositeIdService,
+		JsonObjectService jsonObjectService,
+		DataTableService dataTableService
+	) {
+		this.serverProperties = serverProperties;
+		this.services = services;
+		this.testCaseIdTrackerService = testCaseIdTrackerService;
+		this.compositeIdService = compositeIdService;
+		this.jsonObjectService = jsonObjectService;
+		this.dataTableService = dataTableService;
+	}
 
 	@PostConstruct
 	void init () {

@@ -56,7 +56,7 @@ public class TestGenericControllerStepDefsDataPreparation extends GenericControl
 		GenericControllerStepDefs uut = uut ();
 
 		// use actual json object service for the test
-		JsonObjectServiceImpl jsonObjectServiceImpl = new JsonObjectServiceImpl ();
+		JsonObjectServiceImpl jsonObjectServiceImpl = new JsonObjectServiceImpl(null, new CompositeIdServiceImpl ());
 		setField ((BaseStepDefinition)uut, "jsonObjectService", jsonObjectServiceImpl);
 
 		DataTable table = buildDataTable(List.of(

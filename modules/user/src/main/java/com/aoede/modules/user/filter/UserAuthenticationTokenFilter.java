@@ -21,11 +21,11 @@ import com.aoede.modules.user.domain.User;
 import com.aoede.modules.user.service.TokenService;
 
 @Component
-public class TestFilter extends BaseComponent implements Filter {
+public class UserAuthenticationTokenFilter extends BaseComponent implements Filter {
 
 	private TokenService tokenService;
 
-	public TestFilter (TokenService tokenService) {
+	public UserAuthenticationTokenFilter (TokenService tokenService) {
 		this.tokenService = tokenService;
 	}
 

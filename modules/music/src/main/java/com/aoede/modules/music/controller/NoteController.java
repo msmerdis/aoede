@@ -3,7 +3,6 @@ package com.aoede.modules.music.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,14 +37,17 @@ public class NoteController extends AbstractCompositeResourceController<
 	DetailNoteResponse,
 	NoteService
 > {
-	@Autowired
-	MeasureController measureController;
+	private ConversionService conversionService;
+	private MeasureController measureController;
 
-	@Autowired
-	ConversionService conversionService;
-
-	public NoteController(NoteService service) {
+	public NoteController(NoteService service, ConversionService conversionService) {
 		super(service);
+
+		this.conversionService = conversionService;
+	}
+
+	public void updateMeasureController (MeasureController measureController) {
+		this.measureController = measureController;
 	}
 
 	@Override

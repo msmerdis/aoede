@@ -1,6 +1,5 @@
 package com.aoede.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +16,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfiguration extends WebMvcConfigurationSupport {
 
-	@Autowired SwaggerRelativePathProvider swaggerRelativePathProvider;
+	SwaggerRelativePathProvider swaggerRelativePathProvider;
+
+	public SwaggerConfiguration(SwaggerRelativePathProvider swaggerRelativePathProvider) {
+		this.swaggerRelativePathProvider = swaggerRelativePathProvider;
+	}
 
 	@Value("${server.port}")
 	private int serverPort;

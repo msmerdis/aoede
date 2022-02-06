@@ -4,7 +4,6 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityManagerFactory;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aoede.commons.base.service.AbstractServiceDomainImpl;
@@ -12,15 +11,20 @@ import com.aoede.modules.music.domain.Sheet;
 import com.aoede.modules.music.entity.SheetEntity;
 import com.aoede.modules.music.entity.TrackEntity;
 import com.aoede.modules.music.repository.SheetRepository;
+import com.aoede.modules.user.service.UserService;
 
 @Service
 public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Long, SheetEntity, SheetRepository> implements SheetService {
 
-	@Autowired
 	private TrackService trackService;
+	private UserService userService;
 
-	public SheetServiceImpl(SheetRepository repository, EntityManagerFactory entityManagerFactory) {
+	public SheetServiceImpl(SheetRepository repository, EntityManagerFactory entityManagerFactory, TrackService trackService, UserService userService) {
 		super(repository, entityManagerFactory);
+
+		this.trackService = trackService;
+		this.userService  = userService;
+		this.trackService.updateSheetService(this);
 	}
 
 	@Override
@@ -37,6 +41,7 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Lo
 	public SheetEntity createEntity(Sheet domain, boolean includeParent, boolean cascade) {
 		SheetEntity entity = new SheetEntity ();
 
+		entity.setUserId(userService.currentUserId());
 		updateEntity (domain, entity, includeParent, cascade);
 
 		return entity;
