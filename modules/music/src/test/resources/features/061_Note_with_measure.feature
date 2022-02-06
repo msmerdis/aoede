@@ -4,7 +4,8 @@ Feature: Basic Note CRUD functionality with measure dependency
 
 Background: Create a measure under a random section
 
-Given a "sheet" with
+Given a logged in user "moduleMusicTest"
+And a "sheet" with
 	| name | random string | sheet_{string:12} |
 And the request was successful
 And the response has a status code of 201

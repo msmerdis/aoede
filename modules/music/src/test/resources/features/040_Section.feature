@@ -2,6 +2,10 @@
 Feature: Basic Section CRUD functionality
 ### Verify the ability to create/read/update and delete Sections
 
+Background: Create a track under a random sheet
+
+Given a logged in user "moduleMusicTest"
+
 @TC0401
 @Positive
 Scenario: retrieve all available Sections

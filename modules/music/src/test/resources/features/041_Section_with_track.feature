@@ -4,7 +4,8 @@ Feature: Basic Section CRUD functionality with track dependency
 
 Background: Create a section under a random track
 
-Given a "sheet" with
+Given a logged in user "moduleMusicTest"
+And a "sheet" with
 	| name | random string | sheet_{string:12} |
 And the request was successful
 And the response has a status code of 201

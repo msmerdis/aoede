@@ -2,6 +2,10 @@
 Feature: Basic Note CRUD functionality
 ### Verify the ability to create/read/update and delete Note
 
+Background: Create a track under a random sheet
+
+Given a logged in user "moduleMusicTest"
+
 @TC0601
 @Positive
 Scenario: retrieve all available Notes

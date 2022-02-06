@@ -81,6 +81,11 @@ public class UserStepDefinitions extends BaseStepDefinition {
 		loginTestService.results(results);
 	}
 
+	@Given("a logged in user {string}")
+	public void ensureUserIsLoggedin(String username) {
+		ensureUserIsLoggedin(username, "Tester123!");
+	}
+
 	@Given("a logged in user {string} with password {string}")
 	public void ensureUserIsLoggedin(String username, String password) {
 		getByUsername (username);

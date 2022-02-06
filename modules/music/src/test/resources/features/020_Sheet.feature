@@ -2,6 +2,10 @@
 Feature: Basic Sheet CRUD functionality
 ### Verify the ability to create/read/update and delete Sheets
 
+Background: Create a track under a random sheet
+
+Given a logged in user "moduleMusicTest"
+
 @TC0201
 @Positive
 Scenario: retrieve all available Sheets

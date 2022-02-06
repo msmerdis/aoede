@@ -4,7 +4,8 @@ Feature: Basic Track CRUD functionality with sheet dependency
 
 Background: Create a track under a random sheet
 
-Given a "sheet" with
+Given a logged in user "moduleMusicTest"
+And a "sheet" with
 	| name | random string | sheet_{string:12} |
 And the request was successful
 And the response has a status code of 201

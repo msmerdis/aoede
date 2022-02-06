@@ -2,6 +2,10 @@
 Feature: Basic Measure CRUD functionality
 ### Verify the ability to create/read/update and delete Measure
 
+Background: Create a track under a random sheet
+
+Given a logged in user "moduleMusicTest"
+
 @TC0501
 @Positive
 Scenario: retrieve all available Measures

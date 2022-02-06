@@ -2,6 +2,10 @@
 Feature: Basic Track CRUD functionality
 ### Verify the ability to create/read/update and delete Tracks
 
+Background: Create a track under a random sheet
+
+Given a logged in user "moduleMusicTest"
+
 @TC0301
 @Positive
 Scenario: retrieve all available Tracks
