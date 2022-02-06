@@ -28,6 +28,7 @@ public class Role implements AbstractDomain<Integer>, GrantedAuthority {
 	public String getAuthority() {
 		return role;
 	}
+
 }
 
 

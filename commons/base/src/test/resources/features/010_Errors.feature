@@ -101,3 +101,13 @@ When testing "genericExceptionContainer" error
 Then the response has a status code of 208 and matches
 	| code | 208              |
 	| text | ALREADY_REPORTED |
+
+@TC010011
+@Negative
+Scenario: test authentication exceptions
+### force application to throw a method argument type mismatch exception and verify the generated response
+
+When testing "authentication" error
+Then the response has a status code of 401 and matches
+	| code | 401          |
+	| text | UNAUTHORIZED |

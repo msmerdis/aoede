@@ -2,6 +2,7 @@ package com.aoede.commons.base.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -123,6 +124,12 @@ public class ExceptionTestController {
 	@ResponseStatus(HttpStatus.OK)
 	public void genericExceptionContainer() {
 		throw new GenericExceptionContainer(HttpStatus.ALREADY_REPORTED, "container exception");
+	}
+
+	@GetMapping("/authentication")
+	@ResponseStatus(HttpStatus.OK)
+	public void authentication() {
+		throw new AuthenticationServiceException("user not found");
 	}
 
 }

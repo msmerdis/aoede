@@ -1,6 +1,8 @@
 package com.aoede.modules.user.stepdefs;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +11,13 @@ import com.aoede.commons.cucumber.BaseStepDefinition;
 import com.aoede.commons.cucumber.ResponseResults;
 import com.aoede.commons.cucumber.service.AbstractTestService;
 import com.aoede.modules.user.service.LoginTestService;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -62,6 +67,86 @@ public class UserStepDefinitions extends BaseStepDefinition {
 		ResponseResults results = executeGet("/login");
 
 		loginTestService.results(results);
+	}
+
+	@Given("a logged in user {string} with password {string}")
+	public void ensureUserIsLoggedin(String username, String password) {
+		var userService = services.getService("user");
+
+		assertNotNull("user service was not found", userService);
+
+		JsonObject user = lookForUser (username, userService);
+
+		// if user not found create it
+		if (user == null) {
+			user = createUser (username, password, userService);
+		}
+
+		// update status to active if its not
+		if (!user.get("status").getAsString().equals("ACTIVE")) {
+			updateStatus(user.get(userService.getKeyName()).getAsLong(), userService);
+		}
+
+		// finally try to login the user
+		login(username, password);
+
+		// if not successful, change the password and try again
+		if (!loginTestService.isSuccess()) {
+			updatePassword(password);
+			login(username, password);
+		}
+	}
+
+	private JsonObject lookForUser (String username, AbstractTestService service) {
+		ResponseResults results = executeGet (service.getPath());
+
+		assertEquals("accessing all users was not successful", 200, results.status.value());
+		assertNotNull("results did not contain a body", results.body);
+
+		JsonElement body = JsonParser.parseString(results.body);
+
+		assertTrue ("results is not an array", body.isJsonArray());
+
+		for (JsonElement element : body.getAsJsonArray()) {
+			if (element.isJsonObject()) {
+				JsonObject object = element.getAsJsonObject();
+
+				if (object.has("username") && object.get("username").getAsString().equals(username)) {
+					return object;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	private JsonObject createUser (String username, String password, AbstractTestService service) {
+		JsonObject object = new JsonObject();
+
+		object.add("status", new JsonPrimitive("ACTIVE"));
+		object.add("username", new JsonPrimitive(username));
+		object.add("password", new JsonPrimitive(password));
+
+		ResponseResults results = executePost (service.getPath(), object.toString());
+
+		assertEquals("creating user was not successful", 201, results.status.value());
+		assertNotNull("user creation did not contain a body", results.body);
+
+		JsonElement body = JsonParser.parseString(results.body);
+
+		assertTrue ("user creation results is not an object", body.isJsonObject());
+
+		return body.getAsJsonObject();
+	}
+
+	private void updateStatus (long id, AbstractTestService service) {
+		JsonObject object = new JsonObject();
+
+		object.add("status", new JsonPrimitive("ACTIVE"));
+
+		ResponseResults results = executePut (service.getPath() + "/" + id, object.toString());
+
+		assertEquals("updating user status was not successful", 204, results.status.value());
 	}
 
 	/**

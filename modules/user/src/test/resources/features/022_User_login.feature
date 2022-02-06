@@ -136,3 +136,50 @@ And login has failed
 And login results match
 	| code | integer | 400         |
 	| text | string  | BAD_REQUEST |
+
+@TC022006
+@Positive @Create
+Scenario: create and login a user for testing
+### create a new user and login
+### login should be succesful
+
+Given a logged in user "test" with password "test"
+When check user status
+Then login is successful
+And login results match
+	| status   | string | ACTIVE |
+	| username | string | test   |
+
+@TC022007
+@Positive
+Scenario: activate user to use for testing
+### create a suspended new user and login
+### login should be succesful
+
+Given a "user" with
+	| status   | string | SUSPENDED      |
+	| username | string | toActivateName |
+	| password | string | toActivatePass |
+Given a logged in user "toActivateName" with password "toActivatePass"
+When check user status
+Then login is successful
+And login results match
+	| status   | string | ACTIVE         |
+	| username | string | toActivateName |
+
+@TC022008
+@Positive
+Scenario: change users password to use for testing
+### create a new user and reset password to login
+### login should be succesful
+
+Given a "user" with
+	| status   | string | ACTIVE               |
+	| username | string | toChangePasswordName |
+	| password | string | toChangePasswordPass |
+Given a logged in user "toChangePasswordName" with password "test"
+When check user status
+Then login is successful
+And login results match
+	| status   | string | ACTIVE               |
+	| username | string | toChangePasswordName |
