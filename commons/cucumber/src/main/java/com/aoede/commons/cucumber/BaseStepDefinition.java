@@ -6,8 +6,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -16,10 +14,8 @@ import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
@@ -74,41 +70,6 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 		public void handleError(ClientHttpResponse response) throws IOException {
 		}
 
-	}
-
-	private class RequestParametersCallback implements RequestCallback {
-		public HttpHeaders requestHeaders;
-		public String      requestBody;
-
-		public RequestParametersCallback (HttpHeaders headers, String body) {
-			this.requestHeaders = headers;
-			this.requestBody    = body;
-
-			if (this.requestHeaders.getAccept().size() == 0) {
-				this.requestHeaders.setAccept(defaultAccept());
-			}
-		}
-
-		private List<MediaType> defaultAccept () {
-			List<MediaType> accept = new LinkedList<MediaType> ();
-
-			accept.add(MediaType.APPLICATION_JSON);
-
-			return accept;
-		}
-
-		@Override
-		public void doWithRequest(ClientHttpRequest request) throws IOException {
-			// setup headers for the request
-			if (requestHeaders != null) {
-				request.getHeaders().addAll(requestHeaders);
-			}
-
-			// setup a body for the request
-			if (requestBody != null) {
-				request.getBody().write(requestBody.getBytes());
-			}
-		}
 	}
 
 	private ResponseResults execute (String url, HttpMethod method, HttpHeaders headers, String body) {

@@ -55,6 +55,15 @@ public class UserStepDefinitions extends BaseStepDefinition {
 		loginTestService.results(results);
 	}
 
+	@When("check user status")
+	public void status() {
+		logger.info("check user status");
+
+		ResponseResults results = executeGet("/login");
+
+		loginTestService.results(results);
+	}
+
 	/**
 	 * assertions
 	 */

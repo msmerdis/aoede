@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aoede.commons.base.component.BaseComponent;
@@ -36,19 +35,18 @@ public class LoginController extends BaseComponent {
 
 	@PostMapping
 	public ResponseEntity<UserDetailResponse> login (@Valid @RequestBody LoginRequest loginDetails) throws GenericException {
-		return responseEntity(HttpStatus.ACCEPTED, userService.login(loginDetails.getUsername(), loginDetails.getPassword()));
+		return responseEntity(
+			userService.login(loginDetails.getUsername(), loginDetails.getPassword()));
 	}
 
 	@GetMapping
-	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<UserDetailResponse> status (@RequestHeader(UserConfiguration.TOKEN_HEADER_NAME) String token) throws GenericException {
-		Long userId = tokenService.decodeUser(token).getId();
-		User user = userService.find(userId);
-
-		return responseEntity(HttpStatus.OK, user);
+		return responseEntity(
+			userService.find(
+				tokenService.decodeUser(token).getId()));
 	}
 
-	private ResponseEntity<UserDetailResponse> responseEntity (HttpStatus status, User user) {
+	private ResponseEntity<UserDetailResponse> responseEntity (User user) {
 		UserDetailResponse userDetails = new UserDetailResponse();
 
 		userDetails.setStatus(user.getStatus().toString());
@@ -61,7 +59,7 @@ public class LoginController extends BaseComponent {
 			tokenService.encodeUser(user, UserConfiguration.TOKEN_TIME_TO_LIVE)
 		);
 
-		return new ResponseEntity<UserDetailResponse>(userDetails, headers, status);
+		return new ResponseEntity<UserDetailResponse>(userDetails, headers, HttpStatus.OK);
 	}
 
 }
