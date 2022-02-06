@@ -19,7 +19,7 @@ And prepare json "clefTreble"
 And the response matches
 	| clef    |  json  | clefTreble |
 
-@TC0311
+@TC031001
 @Positive @Create
 Scenario: create a new Track
 ### create a new track and verify the track is created with the same data as provided
@@ -37,7 +37,7 @@ And the response has a status code of 200
 And "sheet" contains latest "track" in "tracks"
 And "sheet" has "tracks" array of size 1
 
-@TC0312
+@TC031002
 @Positive @Update
 Scenario: update a Track
 ### create a track and then update it
@@ -55,7 +55,7 @@ And prepare json "clefBass"
 And the response matches
 	| clef | json | clefBass |
 
-@TC0313
+@TC031003
 @Positive @Delete
 Scenario: delete a Track
 ### create a track and then delete it

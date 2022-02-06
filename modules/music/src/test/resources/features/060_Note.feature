@@ -6,7 +6,7 @@ Background: Create a track under a random sheet
 
 Given a logged in user "moduleMusicTest"
 
-@TC0601
+@TC060001
 @Positive
 Scenario: retrieve all available Notes
 ### Retrieve the list of all available note
@@ -17,7 +17,7 @@ When request all available "note"
 Then the request was successful
 And the response has a status code of 200
 
-@TC0602
+@TC060002
 @Negative
 Scenario: search for note is not available
 ### Attempt to search for a Note
@@ -30,7 +30,7 @@ And the response matches
 	| code | integer | 501             |
 	| text | string  | NOT_IMPLEMENTED |
 
-@TC0603
+@TC060003
 @Negative
 Scenario: access a Note that does not exist
 ### Retrieve a note that does not exist
@@ -48,7 +48,7 @@ And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
 
-@TC0604
+@TC060004
 @Negative @Update
 Scenario: update a non existing note
 ### attempt to update a note that does not exist
@@ -69,7 +69,7 @@ And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
 
-@TC0605
+@TC060005
 @Negative @Delete
 Scenario: delete a non existing Note
 ### attempt to delete a note that does not exist

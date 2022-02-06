@@ -2,7 +2,7 @@
 Feature: Basic Key signature CRUD functionality
 ### Verify the ability to create/read/update and delete Key signatures
 
-@TC0701
+@TC070001
 @Positive
 Scenario: retrieve all available Key signatures
 ### Retrieve the list of all available key signatures
@@ -34,7 +34,7 @@ And the response array contains "keySignatureObject" objects
 	|  7 |   C+  |   a+  |
 And "keySignature" returned array of size 15
 
-@TC0702
+@TC070002
 @Negative
 Scenario: search for Key signature is not available
 ### Attempt to search for a key signature
@@ -47,7 +47,7 @@ And the response matches
 	| code | integer | 501             |
 	| text | string  | NOT_IMPLEMENTED |
 
-@TC0703
+@TC070003
 @Positive
 Scenario: access a single Key signature by id
 ### Retrieve one of the common key signatures
@@ -61,7 +61,7 @@ And the response matches
 	| major | string  | C |
 	| minor | string  | a |
 
-@TC0704
+@TC070004
 @Negative
 Scenario: access a Key signature that does not exist
 ### Retrieve a key signature that does not exist
@@ -74,7 +74,7 @@ And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
 
-@TC0705
+@TC070005
 @Negative @Create
 Scenario: create a new Key signature
 ### create a new key signature is not allowed
@@ -89,7 +89,7 @@ And the response matches
 	| code | integer | 400         |
 	| text | string  | BAD_REQUEST |
 
-@TC0706
+@TC070006
 @Negative @Update
 Scenario: update a Key signature
 ### updating key signatures is not allowed
@@ -111,7 +111,7 @@ And the response matches
 	| major | string  | B  |
 	| minor | string  | g+ |
 
-@TC0707
+@TC070007
 @Negative @Delete
 Scenario: delete a Key signature
 ### deleting key signatures is not allowed

@@ -6,7 +6,7 @@ Background: Create a track under a random sheet
 
 Given a logged in user "moduleMusicTest"
 
-@TC0401
+@TC040001
 @Positive
 Scenario: retrieve all available Sections
 ### Retrieve the list of all available sections
@@ -18,7 +18,7 @@ Then the request was successful
 And the response has a status code of 200
 And "section" returned array of size 0
 
-@TC0402
+@TC040002
 @Negative
 Scenario: search for section is not available
 ### Attempt to search for a Section
@@ -31,7 +31,7 @@ And the response matches
 	| code | integer | 501             |
 	| text | string  | NOT_IMPLEMENTED |
 
-@TC0403
+@TC040003
 @Negative
 Scenario: access a Section that does not exist
 ### Retrieve a section that does not exist
@@ -46,7 +46,7 @@ And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
 
-@TC0404
+@TC040004
 @Negative @Update
 Scenario: update a non existing Section
 ### attempt to update a section that does not exist
@@ -66,7 +66,7 @@ And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
 
-@TC0405
+@TC040005
 @Negative @Delete
 Scenario: delete a non existing Section
 ### attempt to delete a section that does not exist

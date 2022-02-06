@@ -6,7 +6,7 @@ Background: Create a track under a random sheet
 
 Given a logged in user "moduleMusicTest"
 
-@TC0501
+@TC050001
 @Positive
 Scenario: retrieve all available Measures
 ### Retrieve the list of all available measures
@@ -17,7 +17,7 @@ When request all available "measure"
 Then the request was successful
 And the response has a status code of 200
 
-@TC0502
+@TC050002
 @Negative
 Scenario: search for measure is not available
 ### Attempt to search for a Measure
@@ -30,7 +30,7 @@ And the response matches
 	| code | integer | 501             |
 	| text | string  | NOT_IMPLEMENTED |
 
-@TC0503
+@TC050003
 @Negative
 Scenario: access a Measure that does not exist
 ### Retrieve a measure that does not exist
@@ -47,7 +47,7 @@ And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
 
-@TC0504
+@TC050004
 @Negative @Update
 Scenario: update a non existing measure
 ### attempt to update a measure that does not exist
@@ -66,7 +66,7 @@ And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
 
-@TC0505
+@TC050005
 @Negative @Delete
 Scenario: delete a non existing Measure
 ### attempt to delete a measure that does not exist

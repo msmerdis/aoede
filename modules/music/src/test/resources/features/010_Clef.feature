@@ -2,7 +2,7 @@
 Feature: Basic Clef CRUD functionality
 ### Verify the ability to create/read/update and delete Clefs
 
-@TC0101
+@TC010001
 @Positive
 Scenario: retrieve all available Clefs
 ### Retrieve the list of all available clefs
@@ -30,7 +30,7 @@ And the response array does not contain "id" with "string" value "New Clef"
 And the response array does not contain "id" with "string" value "Updated Clef"
 And "clef" returned array of size 9
 
-@TC0102
+@TC010002
 @Negative
 Scenario: search for Clef is not available
 ### Attempt to search for a clef
@@ -43,7 +43,7 @@ And the response matches
 	| code | integer | 501             |
 	| text | string  | NOT_IMPLEMENTED |
 
-@TC0103
+@TC010003
 @Positive
 Scenario: access a single Clef by id
 ### Retrieve one of the common clefs
@@ -58,7 +58,7 @@ And the response matches
 	| note | integer | 64     |
 	| spos | integer | -2     |
 
-@TC0104
+@TC010004
 @Negative
 Scenario: access a Clef that does not exist
 ### Retrieve a clef that does not exist
@@ -71,7 +71,7 @@ And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
 
-@TC0105
+@TC010005
 @Negative @Create
 Scenario: create a new Clef
 ### create a new clef is not allowed
@@ -87,7 +87,7 @@ And the response matches
 	| code | integer | 400         |
 	| text | string  | BAD_REQUEST |
 
-@TC0106
+@TC010006
 @Negative @Update
 Scenario: update a Clef
 ### updating clefs is not allowed
@@ -103,7 +103,7 @@ And the response matches
 	| code | integer | 400         |
 	| text | string  | BAD_REQUEST |
 
-@TC0107
+@TC010007
 @Negative @Delete
 Scenario: delete a Clef
 ### deleting clefs is not allowed

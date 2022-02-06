@@ -6,7 +6,7 @@ Background: Create a track under a random sheet
 
 Given a logged in user "moduleMusicTest"
 
-@TC0201
+@TC020001
 @Positive
 Scenario: retrieve all available Sheets
 ### Retrieve the list of all available sheets
@@ -18,7 +18,7 @@ Then the request was successful
 And the response has a status code of 200
 And "sheet" returned array of size 0
 
-@TC0202
+@TC020002
 @Negative
 Scenario: search for sheet is not available
 ### Attempt to search for a sheet
@@ -31,7 +31,7 @@ And the response matches
 	| code | integer | 501             |
 	| text | string  | NOT_IMPLEMENTED |
 
-@TC0203
+@TC020003
 @Negative
 Scenario: access a Sheet that does not exist
 ### Retrieve a sheet that does not exist
@@ -44,7 +44,7 @@ And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
 
-@TC0204
+@TC020004
 @Positive @Create
 Scenario: create a new Sheet
 ### create a new sheet and verify the sheet is created with the same data as provided
@@ -74,7 +74,7 @@ And the response array contains "sheetObject" objects
 And the response array contains latest "sheet"
 And "sheet" returned array of size 1
 
-@TC0205
+@TC020005
 @Positive @Update
 Scenario: update a Sheet
 ### create a sheet and then update it
@@ -97,7 +97,7 @@ And the response array contains "name" with "string" value "Sheet 2 Updated"
 And the response array contains latest "sheet"
 And the response array does not contain "name" with "string" value "Sheet 2 Update"
 
-@TC0206
+@TC020006
 @Negative @Update
 Scenario: update a non existing Sheet
 ### attempt to update a sheet that does not exist
@@ -111,7 +111,7 @@ And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
 
-@TC0207
+@TC020007
 @Positive @Delete
 Scenario: delete a Sheet
 ### create a sheet and then delete it
@@ -132,7 +132,7 @@ And the response has a status code of 200
 And the response array does not contain "name" with "string" value "Sheet 2 Delete"
 And the response array does not contain latest "sheet"
 
-@TC0208
+@TC020008
 @Negative @Delete
 Scenario: delete a non existing Sheet
 ### attempt to delete a sheet that does not exist

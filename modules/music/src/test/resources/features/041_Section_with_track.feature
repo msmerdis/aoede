@@ -30,7 +30,7 @@ And the response matches
 	| keySignature  | integer  |  0  |
 	| timeSignature | fraction | 3/4 |
 
-@TC0411
+@TC041001
 @Positive @Create
 Scenario: create a new Section
 ### create a new section and verify the track is created with the same data as provided
@@ -49,7 +49,7 @@ And the request was successful
 And "track" contains latest "section" in "sections"
 And "track" has "sections" array of size 1
 
-@TC0412
+@TC041002
 @Positive @Update
 Scenario: update a Section
 ### create a section and then update it
@@ -74,7 +74,7 @@ And the request was successful
 And "track" contains latest "section" in "sections"
 And "track" has "sections" array of size 1
 
-@TC0413
+@TC041003
 @Positive @Delete
 Scenario: delete a Section
 ### create a section and then delete it

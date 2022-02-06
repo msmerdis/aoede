@@ -39,7 +39,7 @@ And the response matches
 	| value | fraction | 1/4 |
 And the response has a status code of 201
 
-@TC0611
+@TC061001
 @Positive @Create
 Scenario: create a new Note
 ### create a new note and verify the measure is created with the same data as provided
@@ -55,7 +55,7 @@ Then request previously created "measure"
 And the request was successful
 And "measure" contains latest "note" in "notes"
 
-@TC0612
+@TC061002
 @Positive @Update
 Scenario: update a Note
 ### create a note and then update it
@@ -71,7 +71,7 @@ And the request was successful
 And the response has a status code of 200
 And the response array contains latest "note"
 
-@TC0613
+@TC061003
 @Positive @Delete
 Scenario: delete a Note
 ### create a note and then delete it

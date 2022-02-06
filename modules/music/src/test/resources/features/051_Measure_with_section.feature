@@ -30,7 +30,7 @@ And a "measure" with
 And the request was successful
 And the response has a status code of 201
 
-@TC0511
+@TC051001
 @Positive @Create
 Scenario: create a new Measure
 ### create a new measure and verify the measure is created with the same data as provided
@@ -44,7 +44,7 @@ Then request previously created "section"
 And the request was successful
 And "section" contains latest "measure" in "measures"
 
-@TC0512
+@TC051002
 @Positive @Update
 Scenario: update a Measure
 ### create a measure and then update it
@@ -59,7 +59,7 @@ And the request was successful
 And the response has a status code of 200
 And the response array contains latest "measure"
 
-@TC0513
+@TC051003
 @Positive @Delete
 Scenario: delete a Measure
 ### create a measure and then delete it
