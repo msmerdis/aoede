@@ -30,10 +30,22 @@ public class UserStepDefinitions extends BaseStepDefinition {
 	 * Requests
 	 */
 
+	@When("request user with username {string}")
+	public void getByUsername(String username) {
+		logger.info("get user with username " + username);
+		AbstractTestService service = services.getLatestService("user");
+
+		ResponseResults results = executeGet(
+			service.getPath() + "/username/" + username
+		);
+
+		service.accessResults(results);
+	}
+
 	@When("update latest users password to {string}")
 	public void updatePassword(String password) {
 		logger.info("updating users password to " + password);
-		AbstractTestService service = services.getService("user");
+		AbstractTestService service = services.getLatestService("user");
 		JsonObject object = new JsonObject ();
 
 		object.add("password", new JsonPrimitive(password));
@@ -71,14 +83,17 @@ public class UserStepDefinitions extends BaseStepDefinition {
 
 	@Given("a logged in user {string} with password {string}")
 	public void ensureUserIsLoggedin(String username, String password) {
-		var userService = services.getService("user");
+		getByUsername (username);
+
+		var userService = services.getLatestService();
+		JsonObject user = null;
 
 		assertNotNull("user service was not found", userService);
 
-		JsonObject user = lookForUser (username, userService);
-
 		// if user not found create it
-		if (user == null) {
+		if (userService.isSuccess()) {
+			user = userService.getLatestObj();
+		} else {
 			user = createUser (username, password, userService);
 		}
 
@@ -95,29 +110,6 @@ public class UserStepDefinitions extends BaseStepDefinition {
 			updatePassword(password);
 			login(username, password);
 		}
-	}
-
-	private JsonObject lookForUser (String username, AbstractTestService service) {
-		ResponseResults results = executeGet (service.getPath());
-
-		assertEquals("accessing all users was not successful", 200, results.status.value());
-		assertNotNull("results did not contain a body", results.body);
-
-		JsonElement body = JsonParser.parseString(results.body);
-
-		assertTrue ("results is not an array", body.isJsonArray());
-
-		for (JsonElement element : body.getAsJsonArray()) {
-			if (element.isJsonObject()) {
-				JsonObject object = element.getAsJsonObject();
-
-				if (object.has("username") && object.get("username").getAsString().equals(username)) {
-					return object;
-				}
-			}
-		}
-
-		return null;
 	}
 
 	private JsonObject createUser (String username, String password, AbstractTestService service) {

@@ -26,8 +26,6 @@ public class GenericControllerStepDefsTestCaseSetup extends BaseStepDefinitionTe
 		super.setField (uut, "compositeIdService", this.compositeIdService);
 		super.setField (uut, "dataTableService", this.dataTableService);
 
-		setField (uut, "latestService", this.latestService);
-
 		return uut;
 	}
 

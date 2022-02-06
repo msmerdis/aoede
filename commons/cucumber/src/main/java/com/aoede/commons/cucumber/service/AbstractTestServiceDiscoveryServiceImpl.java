@@ -21,6 +21,8 @@ public class AbstractTestServiceDiscoveryServiceImpl extends BaseTestComponent i
 	private ListableBeanFactory listableBeanFactory;
 	private Map<String, AbstractTestService> services = new HashMap<String, AbstractTestService> ();
 
+	private AbstractTestService latestService;
+
 	@PostConstruct
 	private void discoverTestServices () {
 		// get all abstract test service beans
@@ -49,6 +51,15 @@ public class AbstractTestServiceDiscoveryServiceImpl extends BaseTestComponent i
 		return services.get(domain);
 	}
 
+	public AbstractTestService getLatestService (String domain) {
+		latestService = getService(domain);
+		return latestService;
+	}
+
+	public AbstractTestService getLatestService () {
+		return latestService;
+	}
+
 	@Override
 	public String getPathForService (String domain) {
 		return getService(domain).getPath();
@@ -61,6 +72,7 @@ public class AbstractTestServiceDiscoveryServiceImpl extends BaseTestComponent i
 
 	@Override
 	public void setup() {
+		latestService = null;
 		for (var service : services.values()) {
 			service.setup ();
 		}
@@ -68,6 +80,7 @@ public class AbstractTestServiceDiscoveryServiceImpl extends BaseTestComponent i
 
 	@Override
 	public void clear() {
+		latestService = null;
 		for (var service : services.values()) {
 			service.clear ();
 		}

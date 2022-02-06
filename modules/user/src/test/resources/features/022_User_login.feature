@@ -160,7 +160,7 @@ Given a "user" with
 	| status   | string | SUSPENDED      |
 	| username | string | toActivateName |
 	| password | string | toActivatePass |
-Given a logged in user "toActivateName" with password "toActivatePass"
+And a logged in user "toActivateName" with password "toActivatePass"
 When check user status
 Then login is successful
 And login results match
@@ -177,7 +177,7 @@ Given a "user" with
 	| status   | string | ACTIVE               |
 	| username | string | toChangePasswordName |
 	| password | string | toChangePasswordPass |
-Given a logged in user "toChangePasswordName" with password "test"
+And a logged in user "toChangePasswordName" with password "test"
 When check user status
 Then login is successful
 And login results match

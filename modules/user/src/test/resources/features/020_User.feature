@@ -46,7 +46,13 @@ Given a "user" with
 	| username | string | accessName |
 	| password | string | accessPass |
 When request previously created "user"
-Then the request was successful
+And the request was successful
+And the response has a status code of 200
+And the response matches
+	| status   | string | ACTIVE     |
+	| username | string | accessName |
+Then request user with username "accessName"
+And the request was successful
 And the response has a status code of 200
 And the response matches
 	| status   | string | ACTIVE     |
@@ -66,6 +72,19 @@ And the response matches
 	| text | string  | NOT_FOUND |
 
 @TC020004
+@Negative
+Scenario: access a user with a username that does not exist
+### Retrieve an entity that does not exist
+### This should return with an error
+
+When request user with username "doesNotExist"
+Then the request was not successful
+And the response has a status code of 404
+And the response matches
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
+
+@TC020005
 @Positive @Create
 Scenario: create a new user
 ### create a new entity and verify it is created with the same data as provided
@@ -98,7 +117,7 @@ And the response array contains "userTemplate" objects
 	| user | ACTIVE | createName |
 And the response array contains latest "user"
 
-@TC020005
+@TC020006
 @Negative @Create
 Scenario: create a dublicate user
 ### create an entity that already exists
@@ -114,7 +133,7 @@ And the response matches
 	| code | integer | 409      |
 	| text | string  | CONFLICT |
 
-@TC020006
+@TC020007
 @Positive @Update
 Scenario: update an entity
 ### create an entity and then update it
@@ -154,7 +173,7 @@ And the response array contains latest "user"
 And the response array contains "username" with "string" value "updateName"
 And the response array does not contain "username" with "string" value "tempName"
 
-@TC020007
+@TC020008
 @Negative @Update
 Scenario: update a non existing entity
 ### attempt to update an entity that does not exist
@@ -170,7 +189,7 @@ And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
 
-@TC020008
+@TC020009
 @Positive @Delete
 Scenario: delete an entity
 ### create an entity and then delete it
@@ -200,7 +219,7 @@ And the response has a status code of 200
 And the response array does not contain "id" with "key" value "user"
 And the response array does not contain "username" with "string" value "deleteName"
 
-@TC020009
+@TC020010
 @Negative @Delete
 Scenario: delete a non existing entity
 ### attempt to delete an entity that does not exist
@@ -213,7 +232,7 @@ And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
 
-@TC020010
+@TC020011
 @Negative @Create
 Scenario: create a new user with invalid status
 ### create a new entity with invalid values, this should not be successful

@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityManagerFactory;
 
-import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,7 +48,7 @@ public class UserServiceImpl extends AbstractServiceDomainImpl <Long, User, Long
 		Optional<UserEntity> entity = repository.findByUsername(username);
 
 		if (entity.isEmpty()) {
-			throw new AuthenticationServiceException("user not found");
+			throw new UsernameNotFoundException("user not found");
 		}
 
 		return createDomain(entity.get(), true, true);

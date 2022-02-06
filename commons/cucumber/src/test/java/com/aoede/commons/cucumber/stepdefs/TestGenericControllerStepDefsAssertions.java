@@ -23,6 +23,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 	private void verifySuccessfulRequest (boolean status) throws Exception {
 		GenericControllerStepDefs uut = uut ();
 
+		when(services.getLatestService()).thenReturn(latestService);
 		when(latestService.isSuccess()).thenReturn(status);
 
 		uut.verifySuccessfulRequest();
@@ -30,6 +31,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 
 	@Test
 	public void verifySuccessfulRequestSuccess () throws Exception {
+		when(services.getLatestService()).thenReturn(latestService);
 		verifySuccessfulRequest(true);
 		verify(latestService).isSuccess();
 	}
@@ -44,6 +46,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 	private void verifyNotSuccessfulRequest (boolean status) throws Exception {
 		GenericControllerStepDefs uut = uut ();
 
+		when(services.getLatestService()).thenReturn(latestService);
 		when(latestService.isSuccess()).thenReturn(status);
 
 		uut.verifyNotSuccessfulRequest();
@@ -51,6 +54,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 
 	@Test
 	public void verifyNotSuccessfulRequestSuccess () throws Exception {
+		when(services.getLatestService()).thenReturn(latestService);
 		verifyNotSuccessfulRequest(false);
 		verify(latestService).isSuccess();
 	}
@@ -67,6 +71,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 		ResponseResults results = new ResponseResults();
 		results.status = HttpStatus.OK;
 
+		when(services.getLatestService()).thenReturn(latestService);
 		when(latestService.getLatestResults()).thenReturn(results);
 
 		uut.verifyStatus(status);
@@ -74,6 +79,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 
 	@Test
 	public void verifyStatusSuccess () throws Exception {
+		when(services.getLatestService()).thenReturn(latestService);
 		verifyStatus(200);
 		verify(latestService).getLatestResults();
 	}
@@ -88,6 +94,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 	private void verifyElementList (JsonArray latest, JsonArray generated, boolean status) throws Exception {
 		GenericControllerStepDefs uut = uut ();
 
+		when(services.getLatestService()).thenReturn(latestService);
 		when(dataTableService.get(eq("objectName"))).thenReturn(DataTable.emptyDataTable());
 		when(jsonObjectService.generateJsonArray(any(DataTable.class), any(DataTable.class))).thenReturn(generated);
 		when(latestService.getLatestArr()).thenReturn(latest);
@@ -100,6 +107,8 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 	public void verifyElementListSuccess () throws Exception {
 		JsonArray latest = new JsonArray();
 		JsonArray generated = new JsonArray();
+
+		when(services.getLatestService()).thenReturn(latestService);
 
 		verifyElementList(latest, generated, true);
 		verify(jsonObjectService).jsonArrayMatches(latest, generated);
@@ -118,6 +127,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 	private void verifyElementExistInList (JsonArray latest, boolean status) throws Exception {
 		GenericControllerStepDefs uut = uut ();
 
+		when(services.getLatestService()).thenReturn(latestService);
 		when(latestService.getLatestArr()).thenReturn(latest);
 		when(jsonObjectService.jsonArrayContainsObject(any(JsonArray.class), eq("id"), eq("type"), eq("value"))).thenReturn(status);
 
@@ -141,6 +151,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 	private void verifyElementDoesNotExistInList (JsonArray latest, boolean status) throws Exception {
 		GenericControllerStepDefs uut = uut ();
 
+		when(services.getLatestService()).thenReturn(latestService);
 		when(latestService.getLatestArr()).thenReturn(latest);
 		when(jsonObjectService.jsonArrayContainsObject(any(JsonArray.class), eq("id"), eq("type"), eq("value"))).thenReturn(status);
 
@@ -164,6 +175,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 	private void verifyLatestElementExistsInList (JsonArray array, JsonElement key, boolean status) throws Exception {
 		GenericControllerStepDefs uut = uut ();
 
+		when(services.getLatestService()).thenReturn(latestService);
 		when(latestService.getLatestArr()).thenReturn(array);
 		when(latestService.getKeyName()).thenReturn("key");
 		when(latestService.getLatestKey()).thenReturn(key);
@@ -194,6 +206,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 	private void verifyLatestElementDoesNotExistInList (JsonArray array, JsonElement key, boolean status) throws Exception {
 		GenericControllerStepDefs uut = uut ();
 
+		when(services.getLatestService()).thenReturn(latestService);
 		when(latestService.getLatestArr()).thenReturn(array);
 		when(latestService.getKeyName()).thenReturn("key");
 		when(latestService.getLatestKey()).thenReturn(key);
@@ -306,6 +319,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 		GenericControllerStepDefs uut = uut ();
 		JsonObject object = new JsonObject();
 
+		when(services.getLatestService()).thenReturn(latestService);
 		when(latestService.getLatestObj()).thenReturn(object);
 		when(jsonObjectService.jsonObjectMatches(eq(object), eq(DataTable.emptyDataTable()))).thenReturn(status);
 

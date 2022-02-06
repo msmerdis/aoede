@@ -6,6 +6,8 @@ import java.util.stream.Stream;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aoede.commons.base.controller.AbstractResourceController;
 import com.aoede.commons.base.exceptions.BadRequestException;
 import com.aoede.commons.base.exceptions.GenericExceptionContainer;
+import com.aoede.commons.base.exceptions.NotFoundException;
 import com.aoede.modules.user.domain.User;
 import com.aoede.modules.user.service.UserService;
 import com.aoede.modules.user.transfer.user.ChangePassword;
@@ -50,6 +53,16 @@ public class UserAdminController extends AbstractResourceController<
 		user.setPassword(data.getPassword());
 
 		service.update(id, user);
+	}
+
+	@GetMapping("/username/{username}")
+	@ResponseStatus(HttpStatus.OK)
+	public DetailUserResponse get(@PathVariable("username") final String username) throws Exception {
+		try {
+			return detailResponse(service.loadUserByUsername(username), true, true);
+		} catch (UsernameNotFoundException e) {
+			throw new NotFoundException(e.getMessage());
+		}
 	}
 
 	@Override
