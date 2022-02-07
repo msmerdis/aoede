@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aoede.commons.base.exceptions.GenericException;
+import com.aoede.commons.base.exceptions.GenericExceptionContainer;
+import com.aoede.commons.base.exceptions.UnauthorizedException;
 import com.aoede.commons.base.service.AbstractServiceDomainImpl;
 import com.aoede.modules.music.domain.Measure;
 import com.aoede.modules.music.domain.MeasureKey;
@@ -20,18 +22,26 @@ import com.aoede.modules.music.entity.MeasureId;
 import com.aoede.modules.music.entity.NoteEntity;
 import com.aoede.modules.music.entity.SectionId;
 import com.aoede.modules.music.repository.MeasureRepository;
+import com.aoede.modules.user.service.UserService;
 
 @Service
 public class MeasureServiceImpl extends AbstractServiceDomainImpl <MeasureKey, Measure, MeasureId, MeasureEntity, MeasureRepository> implements MeasureService {
 
 	private SectionService sectionService;
 	private NoteService noteService;
+	private UserService userService;
 
-	public MeasureServiceImpl(MeasureRepository repository, EntityManagerFactory entityManagerFactory, NoteService noteService) {
+	public MeasureServiceImpl(
+		MeasureRepository repository,
+		EntityManagerFactory entityManagerFactory,
+		NoteService noteService,
+		UserService userService
+	) {
 		super(repository, entityManagerFactory);
 
 		this.noteService = noteService;
 		this.noteService.updateMeasureService(this);
+		this.userService = userService;
 	}
 
 	@Override
@@ -47,6 +57,14 @@ public class MeasureServiceImpl extends AbstractServiceDomainImpl <MeasureKey, M
 	@Override
 	public String domainName() {
 		return "Measure";
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+	public List<Measure> findAll() throws GenericException {
+		return repository.findBySheetUserId(
+			userService.currentUserId()
+		).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -66,6 +84,7 @@ public class MeasureServiceImpl extends AbstractServiceDomainImpl <MeasureKey, M
 
 	@Override
 	public void updateEntity(Measure domain, MeasureEntity entity, boolean includeParent, boolean cascade) throws GenericException {
+		authenticationChecks(entity);
 	}
 
 	@Override
@@ -79,6 +98,8 @@ public class MeasureServiceImpl extends AbstractServiceDomainImpl <MeasureKey, M
 
 	@Override
 	public void updateDomain(MeasureEntity entity, Measure domain, boolean includeParent, boolean cascade) {
+		authenticationChecks(entity);
+
 		domain.setId(createDomainKey(entity.getId()));
 
 		if (includeParent) {
@@ -99,6 +120,7 @@ public class MeasureServiceImpl extends AbstractServiceDomainImpl <MeasureKey, M
 
 	@Override
 	public boolean verifyDelete(MeasureEntity entity) {
+		authenticationChecks (entity);
 		return true;
 	}
 
@@ -129,6 +151,14 @@ public class MeasureServiceImpl extends AbstractServiceDomainImpl <MeasureKey, M
 		key.setMeasureId(id.getMeasureId());
 
 		return key;
+	}
+
+	private void authenticationChecks (MeasureEntity entity) {
+		if (entity.getSheet() != null && !entity.getSheet().getUserId().equals(userService.currentUserId())) {
+			throw new GenericExceptionContainer(
+				new UnauthorizedException("Cannot access measures created by a different user")
+			);
+		}
 	}
 
 }

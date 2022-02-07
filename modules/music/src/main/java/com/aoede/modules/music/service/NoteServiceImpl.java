@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aoede.commons.base.exceptions.GenericException;
+import com.aoede.commons.base.exceptions.GenericExceptionContainer;
+import com.aoede.commons.base.exceptions.UnauthorizedException;
 import com.aoede.commons.base.service.AbstractServiceDomainImpl;
 import com.aoede.modules.music.domain.MeasureKey;
 import com.aoede.modules.music.domain.Note;
@@ -20,14 +22,18 @@ import com.aoede.modules.music.entity.NoteEntity;
 import com.aoede.modules.music.entity.NoteId;
 import com.aoede.modules.music.repository.NoteRepository;
 import com.aoede.modules.music.transfer.Fraction;
+import com.aoede.modules.user.service.UserService;
 
 @Service
 public class NoteServiceImpl extends AbstractServiceDomainImpl <NoteKey, Note, NoteId, NoteEntity, NoteRepository> implements NoteService {
 
 	private MeasureService measureService;
+	private UserService userService;
 
-	public NoteServiceImpl(NoteRepository repository, EntityManagerFactory entityManagerFactory) {
+	public NoteServiceImpl(NoteRepository repository, EntityManagerFactory entityManagerFactory, UserService userService) {
 		super(repository, entityManagerFactory);
+
+		this.userService = userService;
 	}
 
 	@Override
@@ -43,6 +49,14 @@ public class NoteServiceImpl extends AbstractServiceDomainImpl <NoteKey, Note, N
 	@Override
 	public String domainName() {
 		return "Note";
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+	public List<Note> findAll() throws GenericException {
+		return repository.findBySheetUserId(
+			userService.currentUserId()
+		).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -68,6 +82,8 @@ public class NoteServiceImpl extends AbstractServiceDomainImpl <NoteKey, Note, N
 
 	@Override
 	public void updateEntity(Note domain, NoteEntity entity, boolean includeParent, boolean cascade) throws GenericException {
+		authenticationChecks(entity);
+
 		entity.setNote(domain.getNote());
 		entity.setValueNum(domain.getValue().getNumerator());
 		entity.setValueDen(domain.getValue().getDenominator());
@@ -84,6 +100,8 @@ public class NoteServiceImpl extends AbstractServiceDomainImpl <NoteKey, Note, N
 
 	@Override
 	public void updateDomain(NoteEntity entity, Note domain, boolean includeParent, boolean cascade) {
+		authenticationChecks(entity);
+
 		domain.setId(createDomainKey(entity.getId()));
 		domain.setNote(entity.getNote());
 		domain.setValue(
@@ -99,6 +117,7 @@ public class NoteServiceImpl extends AbstractServiceDomainImpl <NoteKey, Note, N
 
 	@Override
 	public boolean verifyDelete(NoteEntity entity) {
+		authenticationChecks (entity);
 		return true;
 	}
 
@@ -127,6 +146,14 @@ public class NoteServiceImpl extends AbstractServiceDomainImpl <NoteKey, Note, N
 		key.setNoteId(id.getNoteId());
 
 		return key;
+	}
+
+	private void authenticationChecks (NoteEntity entity) {
+		if (entity.getSheet() != null && !entity.getSheet().getUserId().equals(userService.currentUserId())) {
+			throw new GenericExceptionContainer(
+				new UnauthorizedException("Cannot access notes created by a different user")
+			);
+		}
 	}
 
 }

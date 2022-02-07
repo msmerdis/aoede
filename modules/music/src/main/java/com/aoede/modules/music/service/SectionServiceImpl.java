@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aoede.commons.base.exceptions.GenericException;
+import com.aoede.commons.base.exceptions.GenericExceptionContainer;
+import com.aoede.commons.base.exceptions.UnauthorizedException;
 import com.aoede.commons.base.service.AbstractServiceDomainImpl;
 import com.aoede.modules.music.domain.KeySignature;
 import com.aoede.modules.music.domain.Section;
@@ -21,18 +23,26 @@ import com.aoede.modules.music.entity.SectionEntity;
 import com.aoede.modules.music.entity.SectionId;
 import com.aoede.modules.music.repository.SectionRepository;
 import com.aoede.modules.music.transfer.Fraction;
+import com.aoede.modules.user.service.UserService;
 
 @Service
 public class SectionServiceImpl extends AbstractServiceDomainImpl <SectionKey, Section, SectionId, SectionEntity, SectionRepository> implements SectionService {
 
 	private TrackService trackService;
 	private MeasureService measureService;
+	private UserService userService;
 
-	public SectionServiceImpl(SectionRepository repository, EntityManagerFactory entityManagerFactory, MeasureService measureService) {
+	public SectionServiceImpl(
+		SectionRepository repository,
+		EntityManagerFactory entityManagerFactory,
+		MeasureService measureService,
+		UserService userService
+	) {
 		super(repository, entityManagerFactory);
 
 		this.measureService = measureService;
 		this.measureService.updateSectionService(this);
+		this.userService = userService;
 	}
 
 	@Override
@@ -48,6 +58,14 @@ public class SectionServiceImpl extends AbstractServiceDomainImpl <SectionKey, S
 	@Override
 	public String domainName() {
 		return "Section";
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+	public List<Section> findAll() throws GenericException {
+		return repository.findBySheetUserId(
+			userService.currentUserId()
+		).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -67,6 +85,8 @@ public class SectionServiceImpl extends AbstractServiceDomainImpl <SectionKey, S
 
 	@Override
 	public void updateEntity(Section domain, SectionEntity entity, boolean includeParent, boolean cascade) throws GenericException {
+		authenticationChecks(entity);
+
 		entity.setKeySignature(domain.getKeySignature().getId());
 		entity.setTempo(domain.getTempo());
 		entity.setTimeSignatureNumerator(domain.getTimeSignature().getNumerator());
@@ -84,6 +104,8 @@ public class SectionServiceImpl extends AbstractServiceDomainImpl <SectionKey, S
 
 	@Override
 	public void updateDomain(SectionEntity entity, Section domain, boolean includeParent, boolean cascade) {
+		authenticationChecks(entity);
+
 		KeySignature keySignature = new KeySignature ();
 		keySignature.setId(entity.getKeySignature());
 
@@ -113,6 +135,12 @@ public class SectionServiceImpl extends AbstractServiceDomainImpl <SectionKey, S
 		}
 	}
 
+	@Override
+	public boolean verifyDelete(SectionEntity entity) {
+		authenticationChecks (entity);
+		return true;
+	}
+
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
 	public List<Section> findByTrackId(TrackKey trackKey) {
 		return repository.findByTrackId(
@@ -138,6 +166,14 @@ public class SectionServiceImpl extends AbstractServiceDomainImpl <SectionKey, S
 		key.setSectionId(id.getSectionId());
 
 		return key;
+	}
+
+	private void authenticationChecks (SectionEntity entity) {
+		if (entity.getSheet() != null && !entity.getSheet().getUserId().equals(userService.currentUserId())) {
+			throw new GenericExceptionContainer(
+				new UnauthorizedException("Cannot access sections created by a different user")
+			);
+		}
 	}
 
 }

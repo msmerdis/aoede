@@ -13,6 +13,7 @@ import com.aoede.modules.music.entity.NoteId;
 public interface NoteRepository extends AbstractJpaRepository <NoteId, NoteEntity> {
 
 	List<NoteEntity> findByMeasureId(MeasureId id);
+	List<NoteEntity> findBySheetUserId(Long currentUserId);
 
 	Short countByMeasureId(MeasureId id);
 

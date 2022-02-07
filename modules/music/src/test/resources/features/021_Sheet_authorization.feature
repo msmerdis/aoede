@@ -1,4 +1,4 @@
-@Sheet
+@Sheet @Authorization
 Feature: Verify sheets are not accessible cross user
 ### Verify the ability to create/read/update and delete Sheets
 

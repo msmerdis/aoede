@@ -1,4 +1,4 @@
-@Track @Other
+@Track @Authorization
 Feature: Verify tracks are not accessible cross user
 ### Verify the ability to create/read/update and delete Tracks
 
