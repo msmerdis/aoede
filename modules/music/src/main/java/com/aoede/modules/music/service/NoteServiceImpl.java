@@ -58,9 +58,9 @@ public class NoteServiceImpl extends AbstractServiceDomainImpl <NoteKey, Note, N
 			measureId.getTrackId(),
 			measureId.getSectionId(),
 			measureId.getMeasureId(),
-			repository.countByMeasureId(
+			(short) (repository.countByMeasureId(
 				measureService.createEntityKey(measureId)
-			)
+			) + 1)
 		));
 
 		return entity;

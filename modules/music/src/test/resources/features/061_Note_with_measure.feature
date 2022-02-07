@@ -86,3 +86,58 @@ And the response has a status code of 404
 And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
+
+@TC061004
+@Positive @Create
+Scenario: create multiple Notes
+### create three new notes and verify the notes are created with the same data as provided
+### retrieve the measure and verify the same data are returned
+
+When a "note" with
+	| measureId | key      | measure |
+	| note      | integer  |    66   |
+	| value     | fraction |   1/8   |
+And the request was successful
+And the response matches
+	| note  | integer  |  66 |
+	| value | fraction | 1/8 |
+And the response has a status code of 201
+And a "note" with
+	| measureId | key      | measure |
+	| note      | integer  |    68   |
+	| value     | fraction |   3/8   |
+And the request was successful
+And the response matches
+	| note  | integer  |  68 |
+	| value | fraction | 3/8 |
+And the response has a status code of 201
+Then request previously created "measure"
+And the request was successful
+And the response has a status code of 200
+And "measure" has "notes" array of size 3
+And prepare composite id "noteKey1"
+	|   sheetId  | key | sheet |
+	|   trackId  | int | 1     |
+	|  sectionId | int | 1     |
+	|  measureId | int | 1     |
+	|   noteId   | int | 1     |
+And prepare composite id "noteKey2"
+	|   sheetId  | key | sheet |
+	|   trackId  | int | 1     |
+	|  sectionId | int | 1     |
+	|  measureId | int | 1     |
+	|   noteId   | int | 2     |
+And prepare composite id "noteKey3"
+	|   sheetId  | key | sheet |
+	|   trackId  | int | 1     |
+	|  sectionId | int | 1     |
+	|  measureId | int | 1     |
+	|   noteId   | int | 3     |
+And prepare data table "noteObject"
+	| id          | note | value    |
+	| compositeId | int  | fraction |
+And the response array contains "noteObject" objects in "notes"
+	| id          | note | value    |
+	| noteKey1    |  64  |  1/4     |
+	| noteKey2    |  66  |  1/8     |
+	| noteKey3    |  68  |  3/8     |
