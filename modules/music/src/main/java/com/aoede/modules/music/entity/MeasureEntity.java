@@ -10,7 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
-import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -38,12 +37,10 @@ public class MeasureEntity extends AbstractJpaEntity<MeasureId> implements Abstr
 	private MeasureId id;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@MapsId("sheedId")
-	@JoinColumn(name = "sheetId", referencedColumnName = "sheetId", nullable = false)
+	@JoinColumn(name = "sheetId", referencedColumnName = "sheetId", nullable = false, insertable = false, updatable = false)
 	private SheetEntity sheet;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@MapsId("sheetId, trackId")
 	@JoinColumns({
 		@JoinColumn(name = "sheetId", referencedColumnName = "sheetId", nullable = false, insertable = false, updatable = false),
 		@JoinColumn(name = "trackId", referencedColumnName = "trackId", nullable = false, insertable = false, updatable = false)
@@ -51,7 +48,6 @@ public class MeasureEntity extends AbstractJpaEntity<MeasureId> implements Abstr
 	private TrackEntity track;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@MapsId("sheetId, trackId, sectionId")
 	@JoinColumns({
 		@JoinColumn(name = "sheetId", referencedColumnName = "sheetId", nullable = false, insertable = false, updatable = false),
 		@JoinColumn(name = "trackId", referencedColumnName = "trackId", nullable = false, insertable = false, updatable = false),

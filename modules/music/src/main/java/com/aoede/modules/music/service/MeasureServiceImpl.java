@@ -57,9 +57,9 @@ public class MeasureServiceImpl extends AbstractServiceDomainImpl <MeasureKey, M
 		updateEntity(domain, entity, includeParent, cascade);
 
 		sectionService.updateMeasureEntity(entity, sectionId);
-		entity.setId(new MeasureId(sectionId.getSheetId(), sectionId.getTrackId(), sectionId.getSectionId(), repository.countBySectionId(
-			sectionService.createEntityKey(sectionId)
-		)));
+		entity.setId(new MeasureId(sectionId.getSheetId(), sectionId.getTrackId(), sectionId.getSectionId(),
+			(short)(repository.countBySectionId(sectionService.createEntityKey(sectionId)) + 1)
+		));
 
 		return entity;
 	}

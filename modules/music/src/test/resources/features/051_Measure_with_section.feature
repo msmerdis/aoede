@@ -74,3 +74,45 @@ And the response has a status code of 404
 And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
+
+@TC051004
+@Positive @Create
+Scenario: create multiple Measures
+### create three new measures and verify the measures are created with the same data as provided
+### retrieve the section and verify the same data are returned
+
+When a "measure" with
+	| sectionId | key | section |
+And the request was successful
+And the response has a status code of 201
+And a "measure" with
+	| sectionId | key | section |
+And the request was successful
+And the response has a status code of 201
+Then request previously created "section"
+And the request was successful
+And the response has a status code of 200
+And "section" has "measures" array of size 3
+And prepare composite id "measureKey1"
+	|   sheetId  | key | sheet |
+	|   trackId  | int | 1     |
+	|  sectionId | int | 1     |
+	|  measureId | int | 1     |
+And prepare composite id "measureKey2"
+	|   sheetId  | key | sheet |
+	|   trackId  | int | 1     |
+	|  sectionId | int | 1     |
+	|  measureId | int | 2     |
+And prepare composite id "measureKey3"
+	|   sheetId  | key | sheet |
+	|   trackId  | int | 1     |
+	|  sectionId | int | 1     |
+	|  measureId | int | 3     |
+And prepare data table "measureObject"
+	| id          |
+	| compositeId |
+And the response array contains "measureObject" objects in "measures"
+	| id          |
+	| measureKey1 |
+	| measureKey2 |
+	| measureKey3 |
