@@ -96,21 +96,49 @@ Scenario: create multiple Sections
 ### create three new sections and verify the sections are created with the same data as provided
 ### retrieve the track and verify the same data are returned
 
-When a "track" with
-	| sheetId | key    | sheet  |
-	| clef    | string | Treble |
+When a "section" with
+	| trackId       | key      | track |
+	| tempo         | integer  |  125  |
+	| keySignature  | integer  |   0   |
+	| timeSignature | fraction |  4/4  |
 And the request was successful
 And the response has a status code of 201
 And the response matches
-	| clef    |  json  | clefTreble |
-And a "track" with
-	| sheetId | key    | sheet  |
-	| clef    | string | Treble |
+	| tempo         | integer  | 125 |
+	| keySignature  | integer  |  0  |
+	| timeSignature | fraction | 4/4 |
+And a "section" with
+	| trackId       | key      | track |
+	| tempo         | integer  |  135  |
+	| keySignature  | integer  |   0   |
+	| timeSignature | fraction |  2/4  |
 And the request was successful
 And the response has a status code of 201
 And the response matches
-	| clef    |  json  | clefTreble |
-Then request previously created "sheet"
+	| tempo         | integer  | 135 |
+	| keySignature  | integer  |  0  |
+	| timeSignature | fraction | 2/4 |
+Then request previously created "track"
 And the request was successful
 And the response has a status code of 200
-And "sheet" has "tracks" array of size 3
+And "track" has "sections" array of size 3
+And prepare composite id "sectionKey1"
+	|   sheetId  | key | sheet |
+	|   trackId  | int | 1     |
+	|  sectionId | int | 1     |
+And prepare composite id "sectionKey2"
+	|   sheetId  | key | sheet |
+	|   trackId  | int | 1     |
+	|  sectionId | int | 2     |
+And prepare composite id "sectionKey3"
+	|   sheetId  | key | sheet |
+	|   trackId  | int | 1     |
+	|  sectionId | int | 3     |
+And prepare data table "sectionObject"
+	| id          | tempo | timeSignature |
+	| compositeId | int   | fraction      |
+And the response array contains "sectionObject" objects in "sections"
+	| id          | tempo | timeSignature |
+	| sectionKey1 |  120  |      3/4      |
+	| sectionKey2 |  125  |      4/4      |
+	| sectionKey3 |  135  |      2/4      |

@@ -58,9 +58,9 @@ public class SectionServiceImpl extends AbstractServiceDomainImpl <SectionKey, S
 		updateEntity(domain, entity, includeParent, cascade);
 
 		trackService.updateSectionEntity(entity, trackId);
-		entity.setId(new SectionId(trackId.getSheetId(), trackId.getTrackId(), repository.countByTrackId(
-			trackService.createEntityKey(trackId)
-		)));
+		entity.setId(new SectionId(trackId.getSheetId(), trackId.getTrackId(),
+			(short) (repository.countByTrackId(trackService.createEntityKey(trackId)) + 1)
+		));
 
 		return entity;
 	}
