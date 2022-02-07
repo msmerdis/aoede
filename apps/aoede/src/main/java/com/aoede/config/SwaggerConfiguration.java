@@ -39,7 +39,7 @@ public class SwaggerConfiguration extends WebMvcConfigurationSupport {
 			.useDefaultResponseMessages(true)
 			.select()
 			.apis(RequestHandlerSelectors.any())
-			.paths(PathSelectors.ant("/api/**"))
+			.paths(PathSelectors.ant("/**"))
 			.build();
 	}
 
