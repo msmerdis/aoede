@@ -28,10 +28,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(
-	name = "ttrack",
-	indexes = {
-		@Index(columnList = "sheetId, trackId", unique = true)
-	}
+	name = "ttrack"
 )
 public class TrackEntity extends AbstractJpaEntity<TrackId> implements AbstractEntity<TrackId> {
 	@EmbeddedId
@@ -41,8 +38,7 @@ public class TrackEntity extends AbstractJpaEntity<TrackId> implements AbstractE
 	private String clef;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@MapsId("sheedId")
-	@JoinColumn(name = "sheetId", referencedColumnName = "sheetId", nullable = false)
+	@JoinColumn(name = "sheetId", referencedColumnName = "sheetId", nullable = false, insertable = false, updatable = false)
 	private SheetEntity sheet;
 
 	@Fetch(FetchMode.SELECT)

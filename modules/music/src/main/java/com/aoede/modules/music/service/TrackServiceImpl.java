@@ -64,7 +64,7 @@ public class TrackServiceImpl extends AbstractServiceDomainImpl <TrackKey, Track
 		// update parent entities
 		sheetService.updateTrackEntity(entity, sheetId);
 
-		entity.setId(new TrackId(sheetId, repository.countBySheetId(sheetId)));
+		entity.setId(new TrackId(sheetId, (short) (repository.countBySheetId(sheetId) + 1)));
 
 		return entity;
 	}

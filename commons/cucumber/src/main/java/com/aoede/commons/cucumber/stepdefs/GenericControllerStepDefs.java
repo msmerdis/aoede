@@ -247,6 +247,22 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		);
 	}
 
+	@Then("the response array contains {string} objects in {string}")
+	public void verifyElementList (String dataTableName, String element, DataTable data) {
+		// generate a json array using a previously stored template
+		JsonArray array = jsonObjectService.generateJsonArray(
+			dataTableService.get(dataTableName), data);
+
+		JsonObject obj = services.getLatestService().getLatestObj();
+
+		assertTrue ("does not have element " + element, obj.has(element));
+		assertTrue (element + " is not an array", obj.get(element).isJsonArray());
+
+		assertTrue(
+			jsonObjectService.jsonArrayMatches(obj.get(element).getAsJsonArray(), array)
+		);
+	}
+
 	@Then("the response array contains {string} with {string} value {string}")
 	public void verifyElementExistInList (String id, String type, String value) {
 		assertTrue(

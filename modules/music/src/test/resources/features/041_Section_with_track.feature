@@ -89,3 +89,28 @@ And the response has a status code of 404
 And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
+
+@TC041004
+@Positive @Create
+Scenario: create multiple Sections
+### create three new sections and verify the sections are created with the same data as provided
+### retrieve the track and verify the same data are returned
+
+When a "track" with
+	| sheetId | key    | sheet  |
+	| clef    | string | Treble |
+And the request was successful
+And the response has a status code of 201
+And the response matches
+	| clef    |  json  | clefTreble |
+And a "track" with
+	| sheetId | key    | sheet  |
+	| clef    | string | Treble |
+And the request was successful
+And the response has a status code of 201
+And the response matches
+	| clef    |  json  | clefTreble |
+Then request previously created "sheet"
+And the request was successful
+And the response has a status code of 200
+And "sheet" has "tracks" array of size 3

@@ -69,3 +69,45 @@ And the request was successful
 And the response has a status code of 200
 And the response array does not contain "clef" with "string" value "Treble"
 And the response array does not contain latest "track"
+
+@TC031004
+@Positive @Create
+Scenario: create multiple Tracks
+### create three new track and verify the tracks are created with the same data as provided
+### retrieve the track and verify the same data are returned
+
+When a "track" with
+	| sheetId | key    | sheet  |
+	| clef    | string | Treble |
+And the request was successful
+And the response has a status code of 201
+And the response matches
+	| clef    |  json  | clefTreble |
+And a "track" with
+	| sheetId | key    | sheet  |
+	| clef    | string | Treble |
+And the request was successful
+And the response has a status code of 201
+And the response matches
+	| clef    |  json  | clefTreble |
+Then request previously created "sheet"
+And the request was successful
+And the response has a status code of 200
+And "sheet" has "tracks" array of size 3
+And prepare composite id "trackKey1"
+	|  sheetId  | key | sheet |
+	|  trackId  | int | 1     |
+And prepare composite id "trackKey2"
+	|  sheetId  | key | sheet |
+	|  trackId  | int | 2     |
+And prepare composite id "trackKey3"
+	|  sheetId  | key | sheet |
+	|  trackId  | int | 3     |
+And prepare data table "trackObject"
+	| clef       | id          |
+	| json       | compositeId |
+And the response array contains "trackObject" objects in "tracks"
+	| clef       | id          |
+	| clefTreble | trackKey1   |
+	| clefTreble | trackKey2   |
+	| clefTreble | trackKey3   |
