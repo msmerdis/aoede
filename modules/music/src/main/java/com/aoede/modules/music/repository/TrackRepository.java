@@ -11,6 +11,7 @@ import com.aoede.modules.music.entity.TrackId;
 @Repository
 public interface TrackRepository extends AbstractJpaRepository <TrackId, TrackEntity> {
 	public List<TrackEntity> findBySheetId(Long id);
+	public List<TrackEntity> findBySheetUserId(Long currentUserId);
 
 	public Short countBySheetId(Long id);
 }

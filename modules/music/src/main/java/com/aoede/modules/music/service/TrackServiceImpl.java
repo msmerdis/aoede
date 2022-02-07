@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aoede.commons.base.exceptions.GenericException;
+import com.aoede.commons.base.exceptions.GenericExceptionContainer;
+import com.aoede.commons.base.exceptions.UnauthorizedException;
 import com.aoede.commons.base.service.AbstractServiceDomainImpl;
 import com.aoede.modules.music.domain.Track;
 import com.aoede.modules.music.domain.TrackKey;
@@ -18,6 +20,7 @@ import com.aoede.modules.music.entity.SectionEntity;
 import com.aoede.modules.music.entity.TrackEntity;
 import com.aoede.modules.music.entity.TrackId;
 import com.aoede.modules.music.repository.TrackRepository;
+import com.aoede.modules.user.service.UserService;
 
 @Service
 public class TrackServiceImpl extends AbstractServiceDomainImpl <TrackKey, Track, TrackId, TrackEntity, TrackRepository> implements TrackService {
@@ -25,18 +28,21 @@ public class TrackServiceImpl extends AbstractServiceDomainImpl <TrackKey, Track
 	private ClefService clefService;
 	private SheetService sheetService;
 	private SectionService sectionService;
+	private UserService userService;
 
 	public TrackServiceImpl(
 		TrackRepository repository,
 		EntityManagerFactory entityManagerFactory,
 		ClefService clefService,
-		SectionService sectionService
+		SectionService sectionService,
+		UserService userService
 	) {
 		super(repository, entityManagerFactory);
 
 		this.clefService = clefService;
 		this.sectionService = sectionService;
 		this.sectionService.updateTrackService(this);
+		this.userService = userService;
 	}
 
 	@Override
@@ -52,6 +58,14 @@ public class TrackServiceImpl extends AbstractServiceDomainImpl <TrackKey, Track
 	@Override
 	public String domainName() {
 		return "Track";
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+	public List<Track> findAll() throws GenericException {
+		return repository.findBySheetUserId(
+			userService.currentUserId()
+		).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -71,6 +85,9 @@ public class TrackServiceImpl extends AbstractServiceDomainImpl <TrackKey, Track
 
 	@Override
 	public void updateEntity(Track domain, TrackEntity entity, boolean includeParent, boolean cascade) throws GenericException {
+		if (entity.getSheet() != null)
+			authenticationChecks(entity);
+
 		entity.setClef(domain.getClef().getId());
 	}
 
@@ -85,6 +102,8 @@ public class TrackServiceImpl extends AbstractServiceDomainImpl <TrackKey, Track
 
 	@Override
 	public void updateDomain(TrackEntity entity, Track domain, boolean includeParent, boolean cascade) {
+		authenticationChecks(entity);
+
 		try {
 			domain.setId(createDomainKey(entity.getId()));
 			domain.setClef(clefService.find(entity.getClef()));
@@ -103,6 +122,12 @@ public class TrackServiceImpl extends AbstractServiceDomainImpl <TrackKey, Track
 					.collect(Collectors.toList())
 			);
 		}
+	}
+
+	@Override
+	public boolean verifyDelete(TrackEntity entity) {
+		authenticationChecks (entity);
+		return true;
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
@@ -126,6 +151,14 @@ public class TrackServiceImpl extends AbstractServiceDomainImpl <TrackKey, Track
 		key.setTrackId(id.getTrackId());
 
 		return key;
+	}
+
+	private void authenticationChecks (TrackEntity entity) {
+		if (!entity.getSheet().getUserId().equals(userService.currentUserId())) {
+			throw new GenericExceptionContainer(
+				new UnauthorizedException("Cannot access tracks created by a different user")
+			);
+		}
 	}
 
 }
