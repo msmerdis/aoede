@@ -20,6 +20,7 @@ import com.aoede.modules.user.config.UserConfiguration;
 import com.aoede.modules.user.domain.User;
 import com.aoede.modules.user.service.TokenService;
 
+// TODO: should be added as part of the authentication filters
 @Component
 public class UserAuthenticationTokenFilter extends BaseComponent implements Filter {
 
@@ -42,6 +43,8 @@ public class UserAuthenticationTokenFilter extends BaseComponent implements Filt
 		}
 
 		chain.doFilter(req, res);
+
+		SecurityContextHolder.clearContext();
 	}
 
 	private void authenticate(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

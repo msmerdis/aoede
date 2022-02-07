@@ -2,7 +2,7 @@
 Feature: Basic Track CRUD functionality
 ### Verify the ability to create/read/update and delete Tracks
 
-Background: Create a track under a random sheet
+Background: Log user in
 
 Given a logged in user "moduleMusicTest"
 

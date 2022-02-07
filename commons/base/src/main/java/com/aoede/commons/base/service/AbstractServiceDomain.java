@@ -13,6 +13,10 @@ public interface AbstractServiceDomain <
 	public Domain createDomain (final Entity entity,                      boolean includeParent, boolean cascade);
 	public void   updateDomain (final Entity entity, final Domain domain, boolean includeParent, boolean cascade);
 
+	public default boolean verifyDelete (final Entity entity) {
+		return true;
+	}
+
 	public EntityKey createEntityKey (final DomainKey key);
 }
 

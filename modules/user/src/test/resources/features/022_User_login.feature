@@ -183,3 +183,22 @@ Then login is successful
 And login results match
 	| status   | string | ACTIVE               |
 	| username | string | toChangePasswordName |
+
+@TC022009
+@Positive
+Scenario: login to a different user
+### create and login as a different user while already logged in
+### login should be succesful
+
+Given a logged in user "test" with password "test"
+And check user status
+And login is successful
+And login results match
+	| status   | string | ACTIVE |
+	| username | string | test   |
+When a logged in user "test2" with password "test"
+And check user status
+Then login is successful
+And login results match
+	| status   | string | ACTIVE |
+	| username | string | test2  |

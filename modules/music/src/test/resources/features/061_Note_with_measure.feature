@@ -2,7 +2,7 @@
 Feature: Basic Note CRUD functionality with measure dependency
 ### Verify the ability to create/read/update and delete Note
 
-Background: Create a measure under a random section
+Background: Create a note under a random measure
 
 Given a logged in user "moduleMusicTest"
 And a "sheet" with

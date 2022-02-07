@@ -98,6 +98,11 @@ public class MeasureServiceImpl extends AbstractServiceDomainImpl <MeasureKey, M
 	}
 
 	@Override
+	public boolean verifyDelete(MeasureEntity entity) {
+		return true;
+	}
+
+	@Override
 	public void updateNoteEntity(NoteEntity entity, MeasureKey key) {
 		entity.setMeasure(repository.getById(createEntityKey(key)));
 	}

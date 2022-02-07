@@ -98,6 +98,11 @@ public class NoteServiceImpl extends AbstractServiceDomainImpl <NoteKey, Note, N
 	}
 
 	@Override
+	public boolean verifyDelete(NoteEntity entity) {
+		return true;
+	}
+
+	@Override
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
 	public List<Note> findByMeasureId(MeasureKey id) {
 		MeasureId key = measureService.createEntityKey(id);

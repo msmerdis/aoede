@@ -17,6 +17,7 @@ import com.aoede.commons.base.exceptions.ConflictException;
 import com.aoede.commons.base.exceptions.GenericException;
 import com.aoede.commons.base.exceptions.NotFoundException;
 import com.aoede.commons.base.exceptions.NotImplementedException;
+import com.aoede.commons.base.exceptions.UnauthorizedException;
 import com.aoede.commons.base.repository.AbstractRepository;
 
 /**
@@ -82,6 +83,10 @@ public abstract class AbstractServiceDomainImpl <
 
 		if (entity.isEmpty()) {
 			throw new NotFoundException(domainName() + " not found.");
+		}
+
+		if (!verifyDelete(entity.get())) {
+			throw new UnauthorizedException("Cannot delete " + domainName());
 		}
 
 		repository.deleteById(key);

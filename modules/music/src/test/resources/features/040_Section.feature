@@ -2,7 +2,7 @@
 Feature: Basic Section CRUD functionality
 ### Verify the ability to create/read/update and delete Sections
 
-Background: Create a track under a random sheet
+Background: Log user in
 
 Given a logged in user "moduleMusicTest"
 

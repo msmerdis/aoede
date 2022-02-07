@@ -77,15 +77,17 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 	}
 
 	private ResponseResults execute (String url, HttpMethod method, HttpHeaders headers, String body) {
-		logger.info ("----------------------------------------------------------------");
-		logger.info ("- Request:  " + method + " " + basePath + url);
-		logger.info ("Headers:");
-		for (var header : headers.entrySet())
-			logger.info (" - " + header.getKey() + ": " + header.getValue());
-		logger.info ("body:");
-		logger.info (body);
+		RequestParametersCallback parameters = new RequestParametersCallback(headers, body);
 
-		ResponseResults responseResults = restTemplate.execute(basePath + url, method, new RequestParametersCallback(headers, body), response -> {
+		logger.info ("--------------------------------------------------------------------------------------------------------------------------");
+		logger.info ("- Request:  " + method + " " + basePath + url);
+		logger.info ("  Headers:");
+		for (var header : parameters.requestHeaders.entrySet())
+			logger.info ("   - " + header.getKey() + ": " + header.getValue());
+		logger.info ("  body:");
+		logger.info (parameters.requestBody);
+
+		ResponseResults responseResults = restTemplate.execute(basePath + url, method, parameters, response -> {
 			ResponseResults results = new ResponseResults ();
 
 			results.headers = response.getHeaders();
@@ -95,12 +97,12 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 			return results;
 		});
 
-		logger.info ("----------------------------------------------------------------");
+		logger.info ("---------------------------------------------------");
 		logger.info ("- Response: " + responseResults.status.toString());
-		logger.info ("Headers:");
+		logger.info ("  Headers:");
 		for (var header : responseResults.headers.entrySet())
-			logger.info (" - " + header.getKey() + ": " + header.getValue());
-		logger.info ("body:");
+			logger.info ("   - " + header.getKey() + ": " + header.getValue());
+		logger.info ("  body:");
 		logger.info (responseResults.body);
 
 		return responseResults;

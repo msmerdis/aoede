@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import com.aoede.commons.cucumber.BaseTestComponent;
 import com.aoede.commons.cucumber.RequestParametersCallback;
 import com.aoede.commons.cucumber.ResponseResults;
 import com.aoede.modules.user.config.UserConfiguration;
@@ -17,7 +18,7 @@ import lombok.Getter;
 
 @Getter
 @Component
-public class LoginTestServiceImpl implements LoginTestService {
+public class LoginTestServiceImpl extends BaseTestComponent implements LoginTestService {
 	private boolean success;
 	private String loginToken;
 	private ResponseResults latestResults;

@@ -1,11 +1,18 @@
 package com.aoede.modules.music.service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManagerFactory;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.aoede.commons.base.exceptions.GenericException;
+import com.aoede.commons.base.exceptions.GenericExceptionContainer;
+import com.aoede.commons.base.exceptions.UnauthorizedException;
 import com.aoede.commons.base.service.AbstractServiceDomainImpl;
 import com.aoede.modules.music.domain.Sheet;
 import com.aoede.modules.music.entity.SheetEntity;
@@ -38,17 +45,30 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Lo
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+	public List<Sheet> findAll() throws GenericException {
+		return repository.findByUserId(
+			userService.currentUserId()
+		).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
+	}
+
+	@Override
 	public SheetEntity createEntity(Sheet domain, boolean includeParent, boolean cascade) {
 		SheetEntity entity = new SheetEntity ();
 
 		entity.setUserId(userService.currentUserId());
-		updateEntity (domain, entity, includeParent, cascade);
+		entity.setName(domain.getName());
 
 		return entity;
 	}
 
 	@Override
 	public void updateEntity(Sheet domain, SheetEntity entity, boolean includeParent, boolean cascade) {
+		if (!entity.getUserId().equals(userService.currentUserId())) {
+			throw new GenericExceptionContainer(
+				new UnauthorizedException("Cannot update sheets created by a different user")
+			);
+		}
 		entity.setName(domain.getName());
 	}
 
@@ -56,6 +76,11 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Lo
 	public Sheet createDomain(SheetEntity entity, boolean includeParent, boolean cascade) {
 		Sheet sheet = new Sheet ();
 
+		if (!entity.getUserId().equals(userService.currentUserId())) {
+			throw new GenericExceptionContainer(
+				new UnauthorizedException("Cannot access sheets created by a different user")
+			);
+		}
 		updateDomain (entity, sheet, includeParent, cascade);
 
 		return sheet;
@@ -74,6 +99,11 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Lo
 					.collect(Collectors.toList())
 			);
 		}
+	}
+
+	@Override
+	public boolean verifyDelete(SheetEntity entity) {
+		return entity.getUserId().equals(userService.currentUserId());
 	}
 
 	public void updateTrackEntity(TrackEntity entity, Long id) {
