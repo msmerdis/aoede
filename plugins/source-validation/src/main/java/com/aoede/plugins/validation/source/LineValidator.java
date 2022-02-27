@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 public class LineValidator implements Consumer<String> {
 	public static List<String> ignoreTrailingList = List.of("", "txt");
 	public static List<String> ignoreLeadingList = List.of("", "txt", "yml", "yaml");
+	public static List<String> ignoreJavaDocList = List.of("java", "ts");
 
 	private int lineNo = 0;
 	private int consecutiveEmptyLines = 0;
@@ -49,7 +50,7 @@ public class LineValidator implements Consumer<String> {
 			if (checkLeading && i < bytes.length && Character.isWhitespace(bytes[i])) {
 				// check for java docs
 				if (
-					!ext.equals("java") ||
+					!ignoreJavaDocList.contains(ext) ||
 					i + 1 >= bytes.length ||
 					bytes[ i ] != ' ' ||
 					bytes[i+1] != '*'

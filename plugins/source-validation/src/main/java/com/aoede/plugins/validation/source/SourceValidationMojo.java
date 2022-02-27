@@ -26,14 +26,20 @@ public class SourceValidationMojo extends AbstractMojo {
 	@Parameter(defaultValue = "src", required = true)
 	private String[] sourceFolders;
 
-	@Parameter(defaultValue = "txt", required = true)
+	@Parameter(defaultValue = "txt,ico", required = true)
 	private String[] ignoreFileExtensions;
+
+	@Parameter(defaultValue = "java,ts", required = false)
+	private String[] ignoreJavaDocWhiteSpaceFileExtensions;
 
 	@Parameter(defaultValue = "txt", required = false)
 	private String[] ignoreTrailingWhiteSpaceFileExtensions;
 
-	@Parameter(defaultValue = "yml,yaml", required = false)
+	@Parameter(defaultValue = "txt,yml,yaml", required = false)
 	private String[] ignoreLeadingWhiteSpaceFileExtensions;
+
+	@Parameter(defaultValue = "", required = false)
+	private String[] excludePaths;
 
 	@Parameter(defaultValue = "java", required = false)
 	private String[] checkFileEndingFileExtensions;
@@ -44,6 +50,10 @@ public class SourceValidationMojo extends AbstractMojo {
 	private List<String> failures = new LinkedList<String>();
 
 	public void execute() throws MojoExecutionException {
+		LineValidator.ignoreJavaDocList  = List.of(ignoreJavaDocWhiteSpaceFileExtensions);
+		LineValidator.ignoreLeadingList  = List.of(ignoreLeadingWhiteSpaceFileExtensions);
+		LineValidator.ignoreTrailingList = List.of(ignoreTrailingWhiteSpaceFileExtensions);
+
 		// check files on all source folders
 		for(String folder : sourceFolders) {
 			File file = new File(project.getBasedir().getAbsolutePath() + "/" + folder);
@@ -66,12 +76,22 @@ public class SourceValidationMojo extends AbstractMojo {
 
 	// recursively look into all files under this file to check each file individually
 	private void checkFile(File file, boolean report) throws MojoExecutionException {
+		// check if file is in the exclude path
+		if (excludePaths != null) {
+			for (String excludePath : excludePaths) {
+				if (file.getAbsolutePath().endsWith(excludePath)) {
+					return;
+				}
+			}
+		}
 
+		// in case this is a file proceed with validations
 		if (file.isFile()) {
 			if (validateFile(file))
 				failures.add(file.getAbsolutePath());
 		}
 
+		// if that is a directory recursively process all files int he directory
 		if (file.isDirectory()) {
 			for (File cfile : file.listFiles()) {
 				checkFile (cfile, false);
