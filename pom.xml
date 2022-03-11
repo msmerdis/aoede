@@ -57,7 +57,7 @@
 
 		<!-- System versions -->
 		<nodejs.version>v16.14.0</nodejs.version>
-		<npm.version>8.5.0</npm.version>
+		<npm.version>8.5.4</npm.version>
 
 		<!-- Apache Log4j 2 Vulnerability fix -->
 		<log4j2.version>2.16.0</log4j2.version>

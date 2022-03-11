@@ -1,0 +1,27 @@
+* {
+	width: auto;
+	margin: 0;
+	border: 0;
+	padding: 0;
+	text-align: center;
+}
+
+body * {
+	background-color: $global-bg-colour;
+	color: $global-fg-colour;
+}
+
+.header, .header * {
+	background-color: $header-bg-colour;
+	color: $header-fg-colour;
+}
+
+.error, .error * {
+	background-color: $error-bg-colour;
+	color: $error-fg-colour;
+}
+
+.warning, .warning * {
+	background-color: $warning-bg-colour;
+	color: $warning-fg-colour;
+}

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 @Component({
 	selector: 'app-create',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SheetCreateComponent implements OnInit {
 
+	title = new FormControl('title');
+
 	constructor() { }
 
 	ngOnInit(): void {
 	}
 
+	onSubmit (): void {
+		alert("submitting form");
+	}
 }

@@ -14,8 +14,8 @@ public class StaticResourceConfiguration extends BaseComponent implements WebMvc
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry
-			.addResourceHandler("/index.html")
-			.addResourceLocations("classpath:/static/index.html");
+			.addResourceHandler("/app/**")
+			.addResourceLocations("classpath:/static/");
 
 		registry
 			.addResourceHandler("/static/**")

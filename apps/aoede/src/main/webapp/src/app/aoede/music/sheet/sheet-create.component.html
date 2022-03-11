@@ -1,1 +1,9 @@
-<p>create works!</p>
+<form (ngSubmit)="onSubmit()">
+	<fieldset>
+		<legend>Create new sheet</legend>
+		<label for="title">Title</label>
+		<input id="title" type="text" [formControl]="title">
+		<br />
+		<button type="submit">Submit</button>
+	</fieldset>
+</form>
