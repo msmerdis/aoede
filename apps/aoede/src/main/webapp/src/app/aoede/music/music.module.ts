@@ -5,6 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MusicRoutingModule } from './music-routing.module';
 import { SheetComponent } from './sheet/sheet.component';
 import { SheetCreateComponent } from './sheet/sheet-create.component';
+import { StoreModule } from '@ngrx/store';
+import * as fromMusicState from './reducers';
 
 @NgModule({
 	declarations: [
@@ -15,7 +17,8 @@ import { SheetCreateComponent } from './sheet/sheet-create.component';
 		MusicRoutingModule,
 		CommonModule,
 		FormsModule,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		StoreModule.forFeature(fromMusicState.musicStateFeatureKey, fromMusicState.reducers, { metaReducers: fromMusicState.metaReducers })
 	],
 	exports: [
 		CommonModule,

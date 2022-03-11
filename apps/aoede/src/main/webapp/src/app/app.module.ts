@@ -7,6 +7,10 @@ import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 
 import { MusicModule } from './aoede/music/music.module';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './reducers';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
 
 @NgModule({
 	declarations: [
@@ -17,7 +21,9 @@ import { MusicModule } from './aoede/music/music.module';
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
-		MusicModule
+		MusicModule,
+		StoreModule.forRoot(reducers, { metaReducers }),
+		!environment.production ? StoreDevtoolsModule.instrument() : []
 	],
 	providers: [],
 	bootstrap: [AppComponent]
