@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SheetSearchComponent } from './create.component';
+import { SheetResultComponent } from './create.component';
 
-describe('SheetSearchComponent', () => {
-	let component: SheetSearchComponent;
-	let fixture: ComponentFixture<SheetSearchComponent>;
+describe('SheetResultComponent', () => {
+	let component: SheetResultComponent;
+	let fixture: ComponentFixture<SheetResultComponent>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [ SheetSearchComponent ]
+			declarations: [ SheetResultComponent ]
 		})
 		.compileComponents();
 	});
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(SheetSearchComponent);
+		fixture = TestBed.createComponent(SheetResultComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

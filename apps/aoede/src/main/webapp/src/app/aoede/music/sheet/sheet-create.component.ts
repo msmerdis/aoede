@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
-	selector: 'app-create',
+	selector: 'aoede-music-sheet-create',
 	templateUrl: './sheet-create.component.html',
 	styleUrls: ['./sheet-create.component.scss']
 })

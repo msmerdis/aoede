@@ -3,12 +3,12 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { SheetComponent } from './sheet/sheet.component';
 import { SheetCreateComponent } from './sheet/sheet-create.component';
-import { SheetSearchComponent } from './sheet/sheet-search.component';
+import { SheetResultComponent } from './sheet/sheet-result.component';
 
 const routes: Routes = [
 	{ path: '', redirectTo: 'sheet/search', pathMatch: 'full'},
 	{ path: 'sheet/create', component: SheetCreateComponent },
-	{ path: 'sheet/search', component: SheetSearchComponent },
+	{ path: 'sheet/result', component: SheetResultComponent },
 	{ path: 'sheet/:id', component: SheetComponent }
 ];
 

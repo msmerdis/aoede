@@ -1,29 +1,34 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { StoreModule } from '@ngrx/store';
 
 import { MusicRoutingModule } from './music-routing.module';
 import { SheetComponent } from './sheet/sheet.component';
 import { SheetCreateComponent } from './sheet/sheet-create.component';
-import { StoreModule } from '@ngrx/store';
-import * as fromMusicState from './reducers';
+import { SheetResultComponent } from './sheet/sheet-result.component';
+import * as fromMusicState from './sheet/sheet.reducer';
 
 @NgModule({
 	declarations: [
 		SheetComponent,
-		SheetCreateComponent
+		SheetCreateComponent,
+		SheetResultComponent
 	],
 	imports: [
 		MusicRoutingModule,
 		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,
-		StoreModule.forFeature(fromMusicState.musicStateFeatureKey, fromMusicState.reducers, { metaReducers: fromMusicState.metaReducers })
+		HttpClientModule,
+		StoreModule.forFeature(fromMusicState.musicSheetFeatureKey, fromMusicState.musicSheetReducer, {})
 	],
 	exports: [
 		CommonModule,
 		FormsModule,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		HttpClientModule
 	]
 })
 export class MusicModule { }
