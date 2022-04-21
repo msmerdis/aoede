@@ -1,0 +1,12 @@
+<form (ngSubmit)="onSubmit()">
+	<fieldset>
+		<legend>User Login : {{title$ | async}}</legend>
+		<label for="username">Username</label>
+		<input id="username" type="text" placeholder="Username" [formControl]="username">
+		<br />
+		<label for="password">Password</label>
+		<input id="password" type="pass" placeholder="Password" [formControl]="password">
+		<br />
+		<button type="submit">Login</button>
+	</fieldset>
+</form>
