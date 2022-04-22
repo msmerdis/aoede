@@ -4,7 +4,8 @@ import {
 	loginSuccess,
 	loginFailure
 } from './user.actions';
-import { User } from './model/user.model';
+import { User } from '../model/user.model';
+import { LoginDetails } from '../model/login-details.model';
 
 export interface UserState {
 	authenticated : boolean;
@@ -19,16 +20,34 @@ export const userInitialState : UserState = {
 	authTimestamp : "",
 	authToken     : "",
 	user : {
-		username : "empty",
+		username : "",
 		status   : ""
 	}
 };
 
+function doLoginRequest (state : UserState, details : LoginDetails) : UserState {
+	return {
+		...state,
+		user : {
+			...state.user,
+			username : details.username
+		}
+	}
+}
+
+function doLoginSuccess (state : UserState, user : User) : UserState {
+	return state;
+}
+
+function doLoginFailure (state : UserState, failure : {code: number; text: string; desc: string;}) : UserState {
+	return state;
+}
+
 export const userReducer = createReducer (
 	userInitialState,
-	on(loginRequest, (state, details) => ({...state, user : {...state.user, username : details.username}})),
-	on(loginSuccess, (state) => state),
-	on(loginFailure, (state) => state)
+	on(loginRequest, doLoginRequest),
+	on(loginSuccess, doLoginSuccess),
+	on(loginFailure, doLoginFailure)
 );
 
 export function reducer(state: UserState, action: Action): UserState {

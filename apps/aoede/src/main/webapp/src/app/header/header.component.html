@@ -1,6 +1,7 @@
 <ul class='header'>
 	<li>[logo] Aoede</li>
-	<li><a [routerLink]="['/music/sheet/create']">Create</a></li>
-	<li><a [routerLink]="['/music/sheet/result']">List</a></li>
-	<li><a [routerLink]="['/user/login']">Login</a></li>
+	<li *ngIf="(loggedin$ | async)"><a [routerLink]="['/music/sheet/create']">Create</a></li>
+	<li *ngIf="(loggedin$ | async)"><a [routerLink]="['/music/sheet/result']">List</a></li>
+	<li *ngIf="!(loggedin$ | async)"><a [routerLink]="['/user/login']">Login</a></li>
+	<li>hello, {{ username$ | async }}</li>
 </ul>

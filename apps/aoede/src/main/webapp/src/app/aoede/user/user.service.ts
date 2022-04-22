@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { loginRequest } from './user.actions';
-import { UserState } from './user.reducer';
+import { Observable, of } from 'rxjs';
+
+import { User } from './model/user.model';
+import { LoginDetails } from './model/login-details.model';
 
 @Injectable()
 export class UserService {
@@ -9,8 +11,13 @@ export class UserService {
 		private httpClient: HttpClient
 	) {}
 
-	login (username: string, password: string) {
-		alert('login : ' + username + '/' + password);
+	public login (details : LoginDetails) : Observable<User> {
+		return of({
+			username : details.username,
+			status   : "ACTIVE"
+		});
+
+		//return this.http.post<LoginDetails>(this.url, details);
 	}
 }
 

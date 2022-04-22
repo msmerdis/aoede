@@ -5,9 +5,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 
 import { UserRoutingModule } from './user-routing.module';
-import { UserLoginComponent } from './user-login.component';
 import { UserService } from './user.service';
-import * as fromUserState from './user.reducer';
+import { UserLoginComponent } from './component/user-login.component';
+import * as fromUserState from './store/user.reducer';
 
 @NgModule({
 	declarations: [

@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 
-import { User } from './model/user.model';
-import { UserState } from './user.reducer';
-import { loginRequest } from './user.actions';
-import { getUsername } from './user.selectors';
+import { loginRequest } from '../store/user.actions';
+import { UserState } from '../store/user.reducer';
 
 @Component({
 	selector: 'aoede-user-login',
@@ -17,12 +14,10 @@ export class UserLoginComponent implements OnInit {
 
 	username = new FormControl('');
 	password = new FormControl('');
-	title$ : Observable<String>;
 
 	constructor(
 		private store : Store<UserState>
 	) {
-		this.title$ = this.store.select (getUsername);
 	}
 
 	ngOnInit(): void {

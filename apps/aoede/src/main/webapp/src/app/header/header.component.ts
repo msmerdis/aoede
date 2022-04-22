@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+
+import { UserState } from '../aoede/user/store/user.reducer';
+import { isAuthenticated, getUsername } from '../aoede/user/store/user.selectors';
 
 @Component({
 	selector: 'app-header',
@@ -7,7 +12,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-	constructor() { }
+	loggedin$ : Observable<boolean>;
+	username$ : Observable<string>;
+
+	constructor(
+		private store : Store<UserState>
+	) {
+		this.loggedin$ = this.store.select (isAuthenticated);
+		this.username$ = this.store.select (getUsername);
+	}
 
 	ngOnInit(): void {
 	}
