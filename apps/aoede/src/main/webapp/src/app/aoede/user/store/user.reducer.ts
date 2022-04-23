@@ -9,7 +9,7 @@ import { LoginDetails } from '../model/login-details.model';
 
 export interface UserState {
 	authenticated : boolean;
-	authTimestamp : string;
+	authTimestamp : number;
 	authToken     : string;
 	user          : User;
 }
@@ -17,7 +17,7 @@ export interface UserState {
 export const userFeatureKey : string = 'aoedeUserState';
 export const userInitialState : UserState = {
 	authenticated : false,
-	authTimestamp : "",
+	authTimestamp : 0,
 	authToken     : "",
 	user : {
 		username : "",
@@ -26,26 +26,24 @@ export const userInitialState : UserState = {
 };
 
 function doLoginRequest (state : UserState, details : LoginDetails) : UserState {
-	return {
-		...state,
-		user : {
-			...state.user,
-			username : details.username
-		}
-	}
+	return state;
 }
 
 function doLoginSuccess (state : UserState, user : User) : UserState {
-	return state;
+	return {
+		authenticated : true,
+		authTimestamp : Date.now(),
+		authToken     : "todo",
+		user          : user
+	}
 }
 
 function doLoginFailure (state : UserState, failure : {code: number; text: string; desc: string;}) : UserState {
-	return state;
+	return userInitialState;
 }
 
 export const userReducer = createReducer (
 	userInitialState,
-	on(loginRequest, doLoginRequest),
 	on(loginSuccess, doLoginSuccess),
 	on(loginFailure, doLoginFailure)
 );

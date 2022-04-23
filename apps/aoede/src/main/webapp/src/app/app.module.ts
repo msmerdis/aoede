@@ -1,5 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -8,10 +12,10 @@ import { HeaderComponent } from './header/header.component';
 
 import { UserModule } from './aoede/user/user.module';
 import { MusicModule } from './aoede/music/music.module';
-import { StoreModule } from '@ngrx/store';
-import { reducers, metaReducers } from './reducers';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import * as fromAppState from './store/app.reducer';
+import { AppEffects } from './store/app.effects';
 import { environment } from '../environments/environment';
+import { ApiInterceptor } from './interceptors/api.interceptor';
 
 @NgModule({
 	declarations: [
@@ -24,10 +28,15 @@ import { environment } from '../environments/environment';
 		AppRoutingModule,
 		UserModule,
 		MusicModule,
-		StoreModule.forRoot(reducers, { metaReducers }),
+		StoreModule.forRoot(fromAppState.reducer, {}),
+		EffectsModule.forRoot(
+			!environment.production ? [AppEffects] : []
+		),
 		!environment.production ? StoreDevtoolsModule.instrument() : []
 	],
-	providers: [],
+	providers: [
+		{ provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true }
+	],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }

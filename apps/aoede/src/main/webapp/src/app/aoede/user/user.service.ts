@@ -11,13 +11,15 @@ export class UserService {
 		private httpClient: HttpClient
 	) {}
 
-	public login (details : LoginDetails) : Observable<User> {
-		return of({
-			username : details.username,
-			status   : "ACTIVE"
-		});
+	private loginUrl : string = '/login';
 
-		//return this.http.post<LoginDetails>(this.url, details);
+	public login (details : LoginDetails) : Observable<User> {
+			//return of({
+			//username : details.username,
+			//status   : "ACTIVE"
+			//});
+
+		return this.httpClient.post<User>(this.loginUrl, details);
 	}
 }
 
