@@ -23,6 +23,7 @@ import com.aoede.commons.base.exceptions.GenericExceptionContainer;
 import com.aoede.commons.base.exceptions.MethodNotAllowedException;
 import com.aoede.commons.base.exceptions.NotFoundException;
 import com.aoede.commons.base.exceptions.UnauthorizedException;
+import com.aoede.commons.base.exceptions.ValidationFailure;
 
 /**
  * Implementation of a generic exception handler to handle system exceptions
@@ -148,8 +149,12 @@ public class GenericExceptionHandler extends BaseComponent {
 		BadRequestException bre = new BadRequestException ("Validation errors");
 
 		// build validation info
-		bre.info = ex.getBindingResult().getFieldErrors().stream()
-			.map(err -> err.getField() + " for value " +  err.getRejectedValue() + " : " + err.getDefaultMessage())
+		bre.validations = ex.getBindingResult().getFieldErrors().stream()
+			.map(err -> new ValidationFailure(
+				err.getField(),
+				err.getRejectedValue().toString(),
+				err.getDefaultMessage()
+			))
 			.distinct()
 			.collect(Collectors.toList());
 

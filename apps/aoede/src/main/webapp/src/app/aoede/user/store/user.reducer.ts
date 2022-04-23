@@ -25,20 +25,20 @@ export const userInitialState : UserState = {
 	}
 };
 
-function doLoginRequest (state : UserState, details : LoginDetails) : UserState {
+function doLoginRequest (state : UserState, details : {payload: LoginDetails}) : UserState {
 	return state;
 }
 
-function doLoginSuccess (state : UserState, user : User) : UserState {
+function doLoginSuccess (state : UserState, user : {success: User}) : UserState {
 	return {
 		authenticated : true,
 		authTimestamp : Date.now(),
 		authToken     : "todo",
-		user          : user
+		user          : user.success
 	}
 }
 
-function doLoginFailure (state : UserState, failure : {code: number; text: string; desc: string;}) : UserState {
+function doLoginFailure (state : UserState, data : {failure: {code: number; text: string; desc: string;}}) : UserState {
 	return userInitialState;
 }
 

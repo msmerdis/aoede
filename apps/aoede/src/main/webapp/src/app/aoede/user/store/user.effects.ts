@@ -19,16 +19,12 @@ export class UserEffects {
 
 	login$ = createEffect(() => this.actions$.pipe(
 		ofType(loginRequest),
-		switchMap((details) =>
-			this.service.login({
-				username : details.username,
-				password : details.password
-			}).pipe(
+		switchMap((details) => this.service.login(details.payload).pipe(
 				map(data => {
 					this.router.navigate(['']);
-					return loginSuccess(data);
+					return loginSuccess({success: data});
 				}),
-				catchError(err => of(loginFailure(err)))
+				catchError(err => of(loginFailure({failure: err.error})))
 			)
 		)
 	));

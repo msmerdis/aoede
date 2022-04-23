@@ -11,8 +11,23 @@ export class AppEffects {
 		private actions$ : Actions
 	) {
 		this.actions$.subscribe (
-			(a) => console.log ('got action: ' + JSON.stringify(a))
+			(a : any) => {
+				console.log ('got action: ' + JSON.stringify(a.type))
+
+				if ('failure' in a) {
+					this.processFailure (a.failure);
+				}
+			}
 		);
 	}
 
+	private processFailure (failure : any) {
+		if (
+			'code' in failure &&
+			'text' in failure &&
+			'desc' in failure
+		) {
+			console.log ('got failure: ' + JSON.stringify(failure))
+		}
+	}
 }

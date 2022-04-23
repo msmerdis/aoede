@@ -30,7 +30,11 @@ public class GenericException extends Exception implements Serializable {
 
 	@JsonProperty
 	@JsonInclude(Include.NON_NULL)
-	public List<String> info;
+	public List<GenericInfo> info;
+
+	@JsonProperty
+	@JsonInclude(Include.NON_NULL)
+	public List<ValidationFailure> validations;
 
 	public GenericException (HttpStatus status, String desc) {
 		this.status = status;

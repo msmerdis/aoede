@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 
-import { loginRequest } from '../store/user.actions';
+import { loginRequest, loginFailure } from '../store/user.actions';
 import { UserState } from '../store/user.reducer';
 
 @Component({
@@ -12,8 +12,11 @@ import { UserState } from '../store/user.reducer';
 })
 export class UserLoginComponent implements OnInit {
 
-	username = new FormControl('');
-	password = new FormControl('');
+	public username : FormControl = new FormControl('');
+	public password : FormControl = new FormControl('');
+
+	public usernameError : string = '';
+	public passwordError : string = '';
 
 	constructor(
 		private store : Store<UserState>
@@ -25,8 +28,10 @@ export class UserLoginComponent implements OnInit {
 
 	onSubmit (): void {
 		this.store.dispatch (loginRequest({
-			username : this.username.value,
-			password : this.password.value
+			payload: {
+				username : this.username.value,
+				password : this.password.value
+			}
 		}));
 	}
 }
