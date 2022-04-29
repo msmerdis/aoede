@@ -111,7 +111,7 @@ And prepare composite id "measureKey3"
 And prepare data table "measureObject"
 	| id          |
 	| compositeId |
-And the response array contains "measureObject" objects in "measures"
+And the response contains "measureObject" objects in "measures"
 	| id          |
 	| measureKey1 |
 	| measureKey2 |

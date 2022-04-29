@@ -136,7 +136,7 @@ And prepare composite id "noteKey3"
 And prepare data table "noteObject"
 	| id          | note | value    |
 	| compositeId | int  | fraction |
-And the response array contains "noteObject" objects in "notes"
+And the response contains "noteObject" objects in "notes"
 	| id          | note | value    |
 	| noteKey1    |  64  |  1/4     |
 	| noteKey2    |  66  |  1/8     |

@@ -137,7 +137,7 @@ And prepare composite id "sectionKey3"
 And prepare data table "sectionObject"
 	| id          | tempo | timeSignature |
 	| compositeId | int   | fraction      |
-And the response array contains "sectionObject" objects in "sections"
+And the response contains "sectionObject" objects in "sections"
 	| id          | tempo | timeSignature |
 	| sectionKey1 |  120  |      3/4      |
 	| sectionKey2 |  125  |      4/4      |

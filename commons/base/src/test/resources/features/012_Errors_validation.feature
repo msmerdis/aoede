@@ -8,7 +8,7 @@ Scenario: test validation info
 ### force application to throw a bad request exception with validation info and verify the generated response
 
 When testing "username" validation info
-Then the response has a status code of 400 and matches
+Then the error response has a status code of 400 and matches
 	| code | 400         |
 	| text | BAD_REQUEST |
 	| desc | username    |
@@ -20,7 +20,7 @@ Scenario: test validation info
 ### force application to throw a bad request exception with validation info and verify the generated response
 
 When testing "password" validation info
-Then the response has a status code of 400 and matches
+Then the error response has a status code of 400 and matches
 	| code | 400         |
 	| text | BAD_REQUEST |
 	| desc | password    |
@@ -32,7 +32,7 @@ Scenario: test validation info
 ### force application to throw a bad request exception with validation info and verify the generated response
 
 When testing "all" validation info
-Then the response has a status code of 400 and matches
+Then the error response has a status code of 400 and matches
 	| code | 400         |
 	| text | BAD_REQUEST |
 	| desc | all         |

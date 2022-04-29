@@ -65,7 +65,7 @@ public class ExceptionTestDefinitions extends BaseStepDefinition {
 	 * assertions
 	 */
 
-	@Then("the response has a status code of {int} and matches")
+	@Then("the error response has a status code of {int} and matches")
 	public void verifyResponse (int code, DataTable data) {
 		assertEquals(code, latestResults.status.value());
 
@@ -185,13 +185,13 @@ public class ExceptionTestDefinitions extends BaseStepDefinition {
 		);
 	}
 
-	@Then("the response has a status code of {int} and no body")
+	@Then("the error response has a status code of {int} and no body")
 	public void verifyResponse (int code) {
 		assertEquals(code, latestResults.status.value());
 		assertEquals( "" , latestResults.body);
 	}
 
-	@Then("the response contains {string} objects in {string}")
+	@Then("the error response contains {string} objects in {string}")
 	public void verifyElementList (String dataTableName, String element, DataTable data) {
 		// generate a json array using a previously stored template
 		JsonArray array = jsonObjectService.generateJsonArray(

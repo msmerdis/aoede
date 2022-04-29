@@ -22,7 +22,7 @@ And the response matches
 	| code | integer | 400               |
 	| text | string  | BAD_REQUEST       |
 	| desc | string  | Validation errors |
-And the response array contains "validationInfo" objects in "validations"
+And the response contains "validationInfo" objects in "validations"
 	| field  | value  | error                          |
 	| status |        | User must define a user status |
 
@@ -40,7 +40,7 @@ And the response matches
 	| code | integer | 400               |
 	| text | string  | BAD_REQUEST       |
 	| desc | string  | Validation errors |
-And the response array contains "validationInfo" objects in "validations"
+And the response contains "validationInfo" objects in "validations"
 	| field    | value  | error                       |
 	| username |        | User must define a username |
 
@@ -58,7 +58,7 @@ And the response matches
 	| code | integer | 400               |
 	| text | string  | BAD_REQUEST       |
 	| desc | string  | Validation errors |
-And the response array contains "validationInfo" objects in "validations"
+And the response contains "validationInfo" objects in "validations"
 	| field    | value  | error                       |
 	| password |        | User must define a password |
 
@@ -76,7 +76,7 @@ And the response matches
 	| code | integer | 400               |
 	| text | string  | BAD_REQUEST       |
 	| desc | string  | Validation errors |
-And the response array contains "validationInfo" objects in "validations"
+And the response contains "validationInfo" objects in "validations"
 	| field  | value  | error                |
 	| status | status | Invalid status value |
 
@@ -94,7 +94,7 @@ And the response matches
 	| code | integer | 400               |
 	| text | string  | BAD_REQUEST       |
 	| desc | string  | Validation errors |
-And the response array contains "validationInfo" objects in "validations"
+And the response contains "validationInfo" objects in "validations"
 	| field    | value  | error                          |
 	| status   |        | User must define a user status |
 	| username |        | User must define a username    |
@@ -113,7 +113,7 @@ And the response matches
 	| code | integer | 400               |
 	| text | string  | BAD_REQUEST       |
 	| desc | string  | Validation errors |
-And the response array contains "validationInfo" objects in "validations"
+And the response contains "validationInfo" objects in "validations"
 	| field  | value  | error                |
 	| status | status | Invalid status value |
 
@@ -133,7 +133,7 @@ And the response matches
 	| code | integer | 400               |
 	| text | string  | BAD_REQUEST       |
 	| desc | string  | Validation errors |
-And the response array contains "validationInfo" objects in "validations"
+And the response contains "validationInfo" objects in "validations"
 	| field    | value  | error                    |
 	| password |        | Password cannot be empty |
 

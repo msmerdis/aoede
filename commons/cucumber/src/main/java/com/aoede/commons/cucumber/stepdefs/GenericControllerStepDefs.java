@@ -247,7 +247,7 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		);
 	}
 
-	@Then("the response array contains {string} objects in {string}")
+	@Then("the response contains {string} objects in {string}")
 	public void verifyElementList (String dataTableName, String element, DataTable data) {
 		// generate a json array using a previously stored template
 		JsonArray array = jsonObjectService.generateJsonArray(

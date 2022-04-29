@@ -8,7 +8,7 @@ Scenario: test fatal info
 ### force application to throw a bad request exception with fatal info and verify the generated response
 
 When testing "fatal" error info
-Then the response has a status code of 400 and matches
+Then the error response has a status code of 400 and matches
 	| code | 400         |
 	| text | BAD_REQUEST |
 	| desc | fatal       |
@@ -20,7 +20,7 @@ Scenario: test error info
 ### force application to throw a bad request exception with error info and verify the generated response
 
 When testing "error" error info
-Then the response has a status code of 400 and matches
+Then the error response has a status code of 400 and matches
 	| code | 400         |
 	| text | BAD_REQUEST |
 	| desc | error       |
@@ -32,7 +32,7 @@ Scenario: test warning info
 ### force application to throw a bad request exception with warning info and verify the generated response
 
 When testing "warning" error info
-Then the response has a status code of 400 and matches
+Then the error response has a status code of 400 and matches
 	| code | 400         |
 	| text | BAD_REQUEST |
 	| desc | warning     |
@@ -44,7 +44,7 @@ Scenario: test info info
 ### force application to throw a bad request exception with info info and verify the generated response
 
 When testing "info" error info
-Then the response has a status code of 400 and matches
+Then the error response has a status code of 400 and matches
 	| code | 400         |
 	| text | BAD_REQUEST |
 	| desc | info        |
@@ -56,7 +56,7 @@ Scenario: test debug info
 ### force application to throw a bad request exception with debug info and verify the generated response
 
 When testing "debug" error info
-Then the response has a status code of 400 and matches
+Then the error response has a status code of 400 and matches
 	| code | 400         |
 	| text | BAD_REQUEST |
 	| desc | debug       |
@@ -68,7 +68,7 @@ Scenario: test trace info
 ### force application to throw a bad request exception with trace info and verify the generated response
 
 When testing "trace" error info
-Then the response has a status code of 400 and matches
+Then the error response has a status code of 400 and matches
 	| code | 400         |
 	| text | BAD_REQUEST |
 	| desc | trace       |
@@ -80,7 +80,7 @@ Scenario: test trace info
 ### force application to throw a bad request exception with all info and verify the generated response
 
 When testing "all" error info
-Then the response has a status code of 400 and matches
+Then the error response has a status code of 400 and matches
 	| code | 400         |
 	| text | BAD_REQUEST |
 	| desc | all         |

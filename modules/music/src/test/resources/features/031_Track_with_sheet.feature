@@ -106,7 +106,7 @@ And prepare composite id "trackKey3"
 And prepare data table "trackObject"
 	| clef       | id          |
 	| json       | compositeId |
-And the response array contains "trackObject" objects in "tracks"
+And the response contains "trackObject" objects in "tracks"
 	| clef       | id          |
 	| clefTreble | trackKey1   |
 	| clefTreble | trackKey2   |

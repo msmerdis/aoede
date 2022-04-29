@@ -17,7 +17,7 @@ When a "role" with
 	| desc | string | description |
 Then the request was not successful
 And the response has a status code of 400
-And the response array contains "validationInfo" objects in "validations"
+And the response contains "validationInfo" objects in "validations"
 	| field  | value  | error                   |
 	| role   |        | Role must define a name |
 
@@ -30,7 +30,7 @@ When a "role" with
 	| desc | string |      |
 Then the request was not successful
 And the response has a status code of 400
-And the response array contains "validationInfo" objects in "validations"
+And the response contains "validationInfo" objects in "validations"
 	| field  | value  | error                          |
 	| desc   |        | Role must define a description |
 
@@ -43,7 +43,7 @@ When a "role" with
 	| desc | string | |
 Then the request was not successful
 And the response has a status code of 400
-And the response array contains "validationInfo" objects in "validations"
+And the response contains "validationInfo" objects in "validations"
 	| field  | value  | error                          |
 	| role   |        | Role must define a name        |
 	| desc   |        | Role must define a description |
@@ -57,7 +57,7 @@ When update "role" with id "1000"
 	| desc | string | description |
 Then the request was not successful
 And the response has a status code of 400
-And the response array contains "validationInfo" objects in "validations"
+And the response contains "validationInfo" objects in "validations"
 	| field  | value  | error                   |
 	| role   |        | Role must define a name |
 
@@ -70,7 +70,7 @@ When update "role" with id "1000"
 	| desc | string |      |
 Then the request was not successful
 And the response has a status code of 400
-And the response array contains "validationInfo" objects in "validations"
+And the response contains "validationInfo" objects in "validations"
 	| field  | value  | error                          |
 	| desc   |        | Role must define a description |
 
@@ -83,7 +83,7 @@ When update "role" with id "1000"
 	| desc | string | |
 Then the request was not successful
 And the response has a status code of 400
-And the response array contains "validationInfo" objects in "validations"
+And the response contains "validationInfo" objects in "validations"
 	| field  | value  | error                          |
 	| role   |        | Role must define a name        |
 	| desc   |        | Role must define a description |
