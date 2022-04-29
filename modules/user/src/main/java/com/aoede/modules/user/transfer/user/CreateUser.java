@@ -10,8 +10,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
-public class CreateUser {
+@EqualsAndHashCode(callSuper = true)
+public class CreateUser extends UpdateUser {
 	@NotEmpty(message = "User must define a user status")
 	private String status;
 

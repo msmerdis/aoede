@@ -23,6 +23,7 @@ import com.aoede.commons.base.exceptions.GenericExceptionContainer;
 import com.aoede.commons.base.exceptions.MethodNotAllowedException;
 import com.aoede.commons.base.exceptions.NotFoundException;
 import com.aoede.commons.base.exceptions.UnauthorizedException;
+import com.aoede.commons.base.exceptions.ValidationException;
 import com.aoede.commons.base.exceptions.ValidationFailure;
 
 /**
@@ -146,19 +147,19 @@ public class GenericExceptionHandler extends BaseComponent {
 	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public final ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-		BadRequestException bre = new BadRequestException ("Validation errors");
+		ValidationException ve = new ValidationException ();
 
 		// build validation info
-		bre.validations = ex.getBindingResult().getFieldErrors().stream()
+		ve.validations = ex.getBindingResult().getFieldErrors().stream()
 			.map(err -> new ValidationFailure(
 				err.getField(),
-				err.getRejectedValue().toString(),
+				err.getRejectedValue(),
 				err.getDefaultMessage()
 			))
 			.distinct()
 			.collect(Collectors.toList());
 
-		return generateResponse (bre);
+		return generateResponse (ve);
 	}
 
 	/**

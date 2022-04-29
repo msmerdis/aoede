@@ -10,6 +10,12 @@ public class ValidationFailure {
 		this.value = value;
 		this.error = error;
 	}
+
+	public ValidationFailure (String field, Object value, String error) {
+		this.field = field;
+		this.value = value == null ? null : value.toString();
+		this.error = error;
+	}
 }
 
 

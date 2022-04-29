@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aoede.commons.base.controller.AbstractResourceController;
-import com.aoede.commons.base.exceptions.BadRequestException;
 import com.aoede.commons.base.exceptions.GenericExceptionContainer;
 import com.aoede.commons.base.exceptions.NotFoundException;
+import com.aoede.commons.base.exceptions.ValidationException;
 import com.aoede.modules.user.domain.User;
 import com.aoede.modules.user.service.UserService;
 import com.aoede.modules.user.transfer.user.ChangePassword;
@@ -116,7 +116,7 @@ public class UserAdminController extends AbstractResourceController<
 			.findFirst()
 			.orElseThrow(() -> {
 				return new GenericExceptionContainer (
-					new BadRequestException("Invalid status: " + status)
+					new ValidationException("status", status, "Invalid status value")
 				);
 			});
 	}

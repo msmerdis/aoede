@@ -12,6 +12,7 @@ import com.aoede.commons.cucumber.service.CompositeIdService;
 import com.aoede.commons.cucumber.service.DataTableService;
 import com.aoede.commons.cucumber.service.JsonObjectService;
 import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -188,6 +189,22 @@ public class ExceptionTestDefinitions extends BaseStepDefinition {
 	public void verifyResponse (int code) {
 		assertEquals(code, latestResults.status.value());
 		assertEquals( "" , latestResults.body);
+	}
+
+	@Then("the response contains {string} objects in {string}")
+	public void verifyElementList (String dataTableName, String element, DataTable data) {
+		// generate a json array using a previously stored template
+		JsonArray array = jsonObjectService.generateJsonArray(
+			dataTableService.get(dataTableName), data);
+
+		JsonObject obj = JsonParser.parseString(latestResults.body).getAsJsonObject();
+
+		assertTrue ("does not have element " + element, obj.has(element));
+		assertTrue (element + " is not an array", obj.get(element).isJsonArray());
+
+		assertTrue(
+			jsonObjectService.jsonArrayMatches(obj.get(element).getAsJsonArray(), array)
+		);
 	}
 
 }

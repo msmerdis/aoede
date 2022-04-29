@@ -239,6 +239,11 @@ public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> im
 
 	private JsonElement generateJsonElement (String type, String value) {
 
+		if (value == null) {
+			assertTrue(type + " elements can not have an empty value", type.equals("string") || type.equals("string"));
+			value = "";
+		}
+
 		switch (type) {
 		case "int":
 		case "integer":

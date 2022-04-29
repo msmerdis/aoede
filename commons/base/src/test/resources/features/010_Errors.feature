@@ -95,7 +95,7 @@ Then the response has a status code of 400 and matches
 @TC010010
 @Negative
 Scenario: test method argument type mismatch exceptions
-### force application to throw a method argument type mismatch exception and verify the generated response
+### force application to throw a generic exception container and verify the generated response
 
 When testing "genericExceptionContainer" error
 Then the response has a status code of 208 and matches
@@ -105,9 +105,26 @@ Then the response has a status code of 208 and matches
 @TC010011
 @Negative
 Scenario: test authentication exceptions
-### force application to throw a method argument type mismatch exception and verify the generated response
+### force application to throw a method authentication exception and verify the generated response
 
 When testing "authentication" error
 Then the response has a status code of 401 and matches
 	| code | 401          |
 	| text | UNAUTHORIZED |
+
+@TC010012
+@Negative
+Scenario: test validation exceptions
+### force application to throw a validation exception and verify the generated response
+
+When testing "validation" error
+Then the response has a status code of 400 and matches
+	| code | 400               |
+	| text | BAD_REQUEST       |
+	| desc | Validation errors |
+And prepare data table "validationInfo"
+	| field  | value  | error  |
+	| string | null   | string |
+And the response contains "validationInfo" objects in "validations"
+	| field | value  | error            |
+	| valid | null   | test validations |

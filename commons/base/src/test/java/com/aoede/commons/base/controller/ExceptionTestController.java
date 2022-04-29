@@ -24,6 +24,7 @@ import com.aoede.commons.base.exceptions.NotImplementedException;
 import com.aoede.commons.base.exceptions.RequestTimeoutException;
 import com.aoede.commons.base.exceptions.SuccessStatus;
 import com.aoede.commons.base.exceptions.UnauthorizedException;
+import com.aoede.commons.base.exceptions.ValidationException;
 
 /**
  * Define a controller in the test scope to generate the errors
@@ -130,6 +131,12 @@ public class ExceptionTestController {
 	@ResponseStatus(HttpStatus.OK)
 	public void authentication() {
 		throw new AuthenticationServiceException("user not found");
+	}
+
+	@GetMapping("/validation")
+	@ResponseStatus(HttpStatus.OK)
+	public void validation() throws GenericException {
+		throw new ValidationException("valid", null, "test validations");
 	}
 
 }
