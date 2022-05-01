@@ -98,24 +98,24 @@ Scenario: create multiple Sections
 
 When a "section" with
 	| trackId       | key      | track |
-	| tempo         | integer  |  125  |
+	| tempo         | integer  |   32  |
 	| keySignature  | integer  |   0   |
 	| timeSignature | fraction |  4/4  |
 And the request was successful
 And the response has a status code of 201
 And the response matches
-	| tempo         | integer  | 125 |
+	| tempo         | integer  |  32 |
 	| keySignature  | integer  |  0  |
 	| timeSignature | fraction | 4/4 |
 And a "section" with
 	| trackId       | key      | track |
-	| tempo         | integer  |  135  |
+	| tempo         | integer  |  512  |
 	| keySignature  | integer  |   0   |
 	| timeSignature | fraction |  2/4  |
 And the request was successful
 And the response has a status code of 201
 And the response matches
-	| tempo         | integer  | 135 |
+	| tempo         | integer  | 512 |
 	| keySignature  | integer  |  0  |
 	| timeSignature | fraction | 2/4 |
 Then request previously created "track"
@@ -140,5 +140,5 @@ And prepare data table "sectionObject"
 And the response contains "sectionObject" objects in "sections"
 	| id          | tempo | timeSignature |
 	| sectionKey1 |  120  |      3/4      |
-	| sectionKey2 |  125  |      4/4      |
-	| sectionKey3 |  135  |      2/4      |
+	| sectionKey2 |   32  |      4/4      |
+	| sectionKey3 |  512  |      2/4      |

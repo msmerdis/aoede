@@ -4,10 +4,7 @@ Feature: Basic Track field vaildation
 
 Background: Setup validation info table
 
-Given a logged in user "moduleMusicTest"
-And a "sheet" with
-	| name | random string | sheet_{string:12} |
-And prepare data table "validationInfo"
+Given prepare data table "validationInfo"
 	| name   | field  | value  | error  |
 	| string | string | string | string |
 And prepare data table "nullValidationInfo"
@@ -19,8 +16,8 @@ And prepare data table "nullValidationInfo"
 Scenario: create track with empty clef
 
 When a "track" with
-	| sheetId | key   | sheet  |
-	| clef    | null  |        |
+	| sheetId | int   | 1 |
+	| clef    | null  |   |
 Then the request was not successful
 And the response has a status code of 400
 And the response contains "nullValidationInfo" objects in "validations"
@@ -57,7 +54,7 @@ And the response contains "nullValidationInfo" objects in "validations"
 Scenario: create track without a clef
 
 When a "track" with
-	| sheetId | key   | sheet  |
+	| sheetId | int | 1 |
 Then the request was not successful
 And the response has a status code of 400
 And the response contains "nullValidationInfo" objects in "validations"

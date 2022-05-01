@@ -95,20 +95,20 @@ Scenario: create multiple Notes
 
 When a "note" with
 	| measureId | key      | measure |
-	| note      | integer  |    66   |
+	| note      | integer  |    -1   |
 	| value     | fraction |   1/8   |
 And the request was successful
 And the response matches
-	| note  | integer  |  66 |
+	| note  | integer  |  -1 |
 	| value | fraction | 1/8 |
 And the response has a status code of 201
 And a "note" with
 	| measureId | key      | measure |
-	| note      | integer  |    68   |
+	| note      | integer  |   127   |
 	| value     | fraction |   3/8   |
 And the request was successful
 And the response matches
-	| note  | integer  |  68 |
+	| note  | integer  | 127 |
 	| value | fraction | 3/8 |
 And the response has a status code of 201
 Then request previously created "measure"
@@ -139,5 +139,5 @@ And prepare data table "noteObject"
 And the response contains "noteObject" objects in "notes"
 	| id          | note | value    |
 	| noteKey1    |  64  |  1/4     |
-	| noteKey2    |  66  |  1/8     |
-	| noteKey3    |  68  |  3/8     |
+	| noteKey2    |  -1  |  1/8     |
+	| noteKey3    | 127  |  3/8     |

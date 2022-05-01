@@ -17,7 +17,7 @@ public class Fraction {
 	@Positive(message = "numerator must be a positive value")
 	private int numerator;
 
-	@Positive(message = "numerator must be a positive value")
+	@Positive(message = "denominator must be a positive value")
 	private int denominator;
 }
 

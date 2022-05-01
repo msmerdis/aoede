@@ -1,9 +1,9 @@
 package com.aoede.modules.music.transfer.section;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
 import com.aoede.modules.music.transfer.Fraction;
 
@@ -17,13 +17,13 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class UpdateSection {
-	@Positive(message = "Section must define a positive tempo")
 	@Min(value =  32, message = "minimum allowed tempo is 32")
 	@Max(value = 512, message = "maximum allowed tempo is 512")
 	private short tempo;
 
 	private short keySignature;
 
+	@Valid
 	@NotNull(message = "Section must define a time signature")
 	private Fraction timeSignature;
 }
