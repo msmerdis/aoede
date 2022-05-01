@@ -10,11 +10,11 @@ public class ValidationException extends BadRequestException {
 		super (error);
 	}
 
-	public ValidationException (String field, String value, String error) {
+	public ValidationException (String name, String field, String value, String error) {
 		this ();
 
 		super.validations = List.of (
-			new ValidationFailure(field, value, error)
+			new ValidationFailure(name, field, value, error)
 		);
 	}
 }

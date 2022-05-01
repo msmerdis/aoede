@@ -12,7 +12,7 @@ Then the error response has a status code of 400 and matches
 	| code | 400         |
 	| text | BAD_REQUEST |
 	| desc | username    |
-And contains validation array with field "username", value "" and error "cannot be empty"
+And contains validation array with name "user" field "username", value "" and error "cannot be empty"
 
 @TC012002
 @Negative
@@ -24,7 +24,7 @@ Then the error response has a status code of 400 and matches
 	| code | 400         |
 	| text | BAD_REQUEST |
 	| desc | password    |
-And contains validation array with field "password", value "abcde" and error "try harder"
+And contains validation array with name "user" field "password", value "abcde" and error "try harder"
 
 @TC012003
 @Negative
@@ -36,5 +36,5 @@ Then the error response has a status code of 400 and matches
 	| code | 400         |
 	| text | BAD_REQUEST |
 	| desc | all         |
-And contains validation array with field "username", value "" and error "cannot be empty"
-And contains validation array with field "password", value "abcde" and error "try harder"
+And contains validation array with name "user" field "username", value "" and error "cannot be empty"
+And contains validation array with name "user" field "password", value "abcde" and error "try harder"

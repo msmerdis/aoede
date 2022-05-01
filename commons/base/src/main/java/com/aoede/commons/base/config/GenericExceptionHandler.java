@@ -1,5 +1,6 @@
 package com.aoede.commons.base.config;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.TypeMismatchException;
@@ -152,6 +153,7 @@ public class GenericExceptionHandler extends BaseComponent {
 		// build validation info
 		ve.validations = ex.getBindingResult().getFieldErrors().stream()
 			.map(err -> new ValidationFailure(
+				err.getObjectName(),
 				err.getField(),
 				err.getRejectedValue(),
 				err.getDefaultMessage()
@@ -177,10 +179,19 @@ public class GenericExceptionHandler extends BaseComponent {
 	 */
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public final ResponseEntity<?> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
-		BadRequestException bre = new BadRequestException ("required : " + ex.getRequiredType());
-		logger.error(ex.getMessage());
+		ValidationException ve = new ValidationException ();
 
-		return generateResponse (bre);
+		// build validation info
+		ve.validations = List.of(
+			new ValidationFailure(
+				ex.getRequiredType() == null ? null : ex.getRequiredType().getSimpleName(),
+				ex.getName(),
+				ex.getValue(),
+				"Invalid value"
+			)
+		);
+
+		return generateResponse (ve);
 	}
 
 	/**

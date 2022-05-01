@@ -94,7 +94,7 @@ public abstract class AbstractServiceEntityImpl <
 		Optional<Domain> domain = repository.findById(id);
 
 		if (domain.isEmpty()) {
-			throw new NotFoundException("Entity not found.");
+			throw new NotFoundException(domainName() + " not found.");
 		}
 
 		return domain.get();

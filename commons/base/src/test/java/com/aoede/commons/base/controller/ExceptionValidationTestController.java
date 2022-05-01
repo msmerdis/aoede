@@ -27,7 +27,7 @@ public class ExceptionValidationTestController {
 		BadRequestException e = new BadRequestException("username");
 
 		e.validations = new LinkedList<ValidationFailure>();
-		e.validations.add(new ValidationFailure("username", "", "cannot be empty"));
+		e.validations.add(new ValidationFailure("user", "username", "", "cannot be empty"));
 
 		throw e;
 	}
@@ -38,7 +38,7 @@ public class ExceptionValidationTestController {
 		BadRequestException e = new BadRequestException("password");
 
 		e.validations = new LinkedList<ValidationFailure>();
-		e.validations.add(new ValidationFailure("password", "abcde", "try harder"));
+		e.validations.add(new ValidationFailure("user", "password", "abcde", "try harder"));
 
 		throw e;
 	}
@@ -49,8 +49,8 @@ public class ExceptionValidationTestController {
 		BadRequestException e = new BadRequestException("all");
 
 		e.validations = new LinkedList<ValidationFailure>();
-		e.validations.add(new ValidationFailure("username", "", "cannot be empty"));
-		e.validations.add(new ValidationFailure("password", "abcde", "try harder"));
+		e.validations.add(new ValidationFailure("user", "username", "", "cannot be empty"));
+		e.validations.add(new ValidationFailure("user", "password", "abcde", "try harder"));
 
 		throw e;
 	}

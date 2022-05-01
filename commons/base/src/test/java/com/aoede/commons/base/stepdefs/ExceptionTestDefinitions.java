@@ -131,8 +131,8 @@ public class ExceptionTestDefinitions extends BaseStepDefinition {
 		);
 	}
 
-	@Then("contains validation array with field {string}, value {string} and error {string}")
-	public void verifyValidationResponse (String field, String value, String error) {
+	@Then("contains validation array with name {string} field {string}, value {string} and error {string}")
+	public void verifyValidationResponse (String name, String field, String value, String error) {
 		boolean match = false;
 		JsonObject object = JsonParser.parseString(latestResults.body).getAsJsonObject();
 
@@ -156,6 +156,11 @@ public class ExceptionTestDefinitions extends BaseStepDefinition {
 			var inner = element.getAsJsonObject();
 
 			assertTrue (
+				"validations array element does not contain name",
+				inner.has("name") && inner.get("name").isJsonPrimitive()
+			);
+
+			assertTrue (
 				"validations array element does not contain field",
 				inner.has("field") && inner.get("field").isJsonPrimitive()
 			);
@@ -171,6 +176,7 @@ public class ExceptionTestDefinitions extends BaseStepDefinition {
 			);
 
 			if (
+				inner.get("name" ).getAsString().equals(name ) &&
 				inner.get("field").getAsString().equals(field) &&
 				inner.get("value").getAsString().equals(value) &&
 				inner.get("error").getAsString().equals(error)

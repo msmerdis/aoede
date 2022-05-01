@@ -5,8 +5,11 @@ Feature: Basic User field vaildation
 Background: Setup validation info table
 
 Given prepare data table "validationInfo"
-	| field  | value  | error  |
-	| string | string | string |
+	| name   | field  | value  | error  |
+	| string | string | string | string |
+And prepare data table "nullValidationInfo"
+	| name   | field  | value  | error  |
+	| string | string | null   | string |
 
 @TC023001
 @Create
@@ -23,8 +26,8 @@ And the response matches
 	| text | string  | BAD_REQUEST       |
 	| desc | string  | Validation errors |
 And the response contains "validationInfo" objects in "validations"
-	| field  | value  | error                          |
-	| status |        | User must define a user status |
+	| name       | field  | value  | error                          |
+	| createUser | status |        | User must define a user status |
 
 @TC023002
 @Create
@@ -41,8 +44,8 @@ And the response matches
 	| text | string  | BAD_REQUEST       |
 	| desc | string  | Validation errors |
 And the response contains "validationInfo" objects in "validations"
-	| field    | value  | error                       |
-	| username |        | User must define a username |
+	| name       | field    | value  | error                       |
+	| createUser | username |        | User must define a username |
 
 @TC023003
 @Create
@@ -59,8 +62,8 @@ And the response matches
 	| text | string  | BAD_REQUEST       |
 	| desc | string  | Validation errors |
 And the response contains "validationInfo" objects in "validations"
-	| field    | value  | error                       |
-	| password |        | User must define a password |
+	| name       | field    | value  | error                       |
+	| createUser | password |        | User must define a password |
 
 @TC023004
 @Create
@@ -77,8 +80,8 @@ And the response matches
 	| text | string  | BAD_REQUEST       |
 	| desc | string  | Validation errors |
 And the response contains "validationInfo" objects in "validations"
-	| field  | value  | error                |
-	| status | status | Invalid status value |
+	| name       | field  | value  | error                |
+	| UserStatus | status | status | Invalid status value |
 
 @TC023005
 @Create
@@ -95,12 +98,49 @@ And the response matches
 	| text | string  | BAD_REQUEST       |
 	| desc | string  | Validation errors |
 And the response contains "validationInfo" objects in "validations"
-	| field    | value  | error                          |
-	| status   |        | User must define a user status |
-	| username |        | User must define a username    |
-	| password |        | User must define a password    |
+	| name       | field    | value  | error                          |
+	| createUser | status   |        | User must define a user status |
+	| createUser | username |        | User must define a username    |
+	| createUser | password |        | User must define a password    |
 
 @TC023006
+@Create
+Scenario: create user with null status, username and password
+
+When a "user" with
+	| status   | null | |
+	| username | null | |
+	| password | null | |
+Then the request was not successful
+And the response has a status code of 400
+And the response matches
+	| code | integer | 400               |
+	| text | string  | BAD_REQUEST       |
+	| desc | string  | Validation errors |
+And the response contains "nullValidationInfo" objects in "validations"
+	| name       | field    | value  | error                          |
+	| createUser | status   |        | User must define a user status |
+	| createUser | username |        | User must define a username    |
+	| createUser | password |        | User must define a password    |
+
+@TC023007
+@Create
+Scenario: create user with null status, username and password
+
+When a "user" without data
+Then the request was not successful
+And the response has a status code of 400
+And the response matches
+	| code | integer | 400               |
+	| text | string  | BAD_REQUEST       |
+	| desc | string  | Validation errors |
+And the response contains "nullValidationInfo" objects in "validations"
+	| name       | field    | value  | error                          |
+	| createUser | status   |        | User must define a user status |
+	| createUser | username |        | User must define a username    |
+	| createUser | password |        | User must define a password    |
+
+@TC023009
 @Update
 Scenario: update user with incorrect status
 
@@ -114,10 +154,10 @@ And the response matches
 	| text | string  | BAD_REQUEST       |
 	| desc | string  | Validation errors |
 And the response contains "validationInfo" objects in "validations"
-	| field  | value  | error                |
-	| status | status | Invalid status value |
+	| name       | field  | value  | error                |
+	| UserStatus | status | status | Invalid status value |
 
-@TC023007
+@TC023010
 @Update
 Scenario: update users password with empty value
 
@@ -134,10 +174,10 @@ And the response matches
 	| text | string  | BAD_REQUEST       |
 	| desc | string  | Validation errors |
 And the response contains "validationInfo" objects in "validations"
-	| field    | value  | error                    |
-	| password |        | Password cannot be empty |
+	| name           | field    | value  | error                    |
+	| changePassword | password |        | Password cannot be empty |
 
-@TC023008
+@TC023011
 Scenario: log in with empty username
 
 When "" attempts to login with password "password"
@@ -146,7 +186,7 @@ And login results match
 	| text | string  | BAD_REQUEST       |
 	| desc | string  | Validation errors |
 
-@TC023009
+@TC023012
 Scenario: log in with empty password
 
 When "username" attempts to login with password ""
@@ -155,7 +195,7 @@ And login results match
 	| text | string  | BAD_REQUEST       |
 	| desc | string  | Validation errors |
 
-@TC023010
+@TC023013
 Scenario: log in with empty username and password
 
 When "" attempts to login with password ""

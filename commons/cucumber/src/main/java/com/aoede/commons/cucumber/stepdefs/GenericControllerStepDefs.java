@@ -5,6 +5,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collections;
+import java.util.Locale;
+
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.http.HttpHeaders;
 
@@ -21,6 +24,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import io.cucumber.datatable.DataTable;
+import io.cucumber.datatable.DataTableTypeRegistry;
+import io.cucumber.datatable.DataTableTypeRegistryTableConverter;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -155,6 +160,16 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		services.getLatestService(domain).createResults(results);
 	}
 
+	@Given("a {string} without data")
+	public void createEmpty(String domain) {
+		create (domain, DataTable.create(
+			Collections.emptyList(),
+			new DataTableTypeRegistryTableConverter (
+				new DataTableTypeRegistry (Locale.ENGLISH)
+			)
+		));
+	}
+
 	@When("update {string} with id {string}")
 	public void updateSimple(String domain, String id, DataTable data) {
 		logger.info("updating " + domain + " with id " + id);
@@ -165,6 +180,16 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 
 		// update test controller with data
 		services.getLatestService(domain).updateResults(results);
+	}
+
+	@When("update {string} with id {string} without data")
+	public void updateSimpleEmpty(String domain, String id) {
+		updateSimple(domain, id, DataTable.create(
+			Collections.emptyList(),
+			new DataTableTypeRegistryTableConverter (
+				new DataTableTypeRegistry (Locale.ENGLISH)
+			)
+		));
 	}
 
 	@When("update {string} with composite id {string}")

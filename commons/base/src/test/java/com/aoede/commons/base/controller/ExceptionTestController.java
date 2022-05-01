@@ -136,7 +136,7 @@ public class ExceptionTestController {
 	@GetMapping("/validation")
 	@ResponseStatus(HttpStatus.OK)
 	public void validation() throws GenericException {
-		throw new ValidationException("valid", null, "test validations");
+		throw new ValidationException("object", "valid", null, "test validations");
 	}
 
 }

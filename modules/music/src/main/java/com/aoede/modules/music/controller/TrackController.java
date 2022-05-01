@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aoede.commons.base.controller.AbstractCompositeResourceController;
 import com.aoede.commons.base.exceptions.GenericException;
+import com.aoede.commons.base.exceptions.GenericExceptionContainer;
 import com.aoede.modules.music.domain.Sheet;
 import com.aoede.modules.music.domain.Track;
 import com.aoede.modules.music.domain.TrackKey;
@@ -96,7 +97,7 @@ public class TrackController extends AbstractCompositeResourceController<
 		try {
 			track.setClef(clefService.find(request.getClef()));
 		} catch (GenericException e) {
-			throw new RuntimeException(e.getMessage());
+			throw new GenericExceptionContainer(e);
 		}
 
 		return track;

@@ -116,7 +116,12 @@ public class UserAdminController extends AbstractResourceController<
 			.findFirst()
 			.orElseThrow(() -> {
 				return new GenericExceptionContainer (
-					new ValidationException("status", status, "Invalid status value")
+					new ValidationException(
+						UserStatus.class.getSimpleName(),
+						"status",
+						status,
+						"Invalid status value"
+					)
 				);
 			});
 	}
