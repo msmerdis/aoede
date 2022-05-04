@@ -1,8 +1,11 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import {
+	UserLoginSuccess,
+	UserLoginFailure,
 	loginRequest,
 	loginSuccess,
-	loginFailure
+	loginFailure,
+	resetRequest
 } from './user.actions';
 import { User } from '../model/user.model';
 import { LoginDetails } from '../model/login-details.model';
@@ -25,27 +28,28 @@ export const userInitialState : UserState = {
 	}
 };
 
-function doLoginRequest (state : UserState, details : {payload: LoginDetails}) : UserState {
-	return state;
-}
-
-function doLoginSuccess (state : UserState, user : {success: User}) : UserState {
+function doLoginSuccess (state : UserState, data : {success: UserLoginSuccess}) : UserState {
 	return {
 		authenticated : true,
-		authTimestamp : Date.now(),
-		authToken     : "todo",
-		user          : user.success
+		authTimestamp : data.success.time,
+		authToken     : data.success.token,
+		user          : data.success.user
 	}
 }
 
-function doLoginFailure (state : UserState, data : {failure: {code: number; text: string; desc: string;}}) : UserState {
+function doLoginFailure (state : UserState, data : {failure: UserLoginFailure}) : UserState {
+	return userInitialState;
+}
+
+function doResetRequest () : UserState {
 	return userInitialState;
 }
 
 export const userReducer = createReducer (
 	userInitialState,
 	on(loginSuccess, doLoginSuccess),
-	on(loginFailure, doLoginFailure)
+	on(loginFailure, doLoginFailure),
+	on(resetRequest, doResetRequest),
 );
 
 export function reducer(state: UserState, action: Action): UserState {

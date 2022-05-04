@@ -7,6 +7,7 @@ import { LoginDetails } from './model/login-details.model';
 
 @Injectable()
 export class UserService {
+
 	constructor(
 		private httpClient: HttpClient
 	) {}
@@ -14,11 +15,6 @@ export class UserService {
 	private loginUrl : string = '/login';
 
 	public login (details : LoginDetails) : Observable<User> {
-			//return of({
-			//username : details.username,
-			//status   : "ACTIVE"
-			//});
-
 		return this.httpClient.post<User>(this.loginUrl, details);
 	}
 }

@@ -10,6 +10,10 @@ import { UserService } from './user.service';
 import { UserLoginComponent } from './component/user-login.component';
 import * as fromUserState from './store/user.reducer';
 import { UserEffects } from './store/user.effects';
+import {
+	UserAuthGuard,
+	AnonymousUserGuard
+} from './user.guards';
 
 @NgModule({
 	declarations: [
@@ -31,7 +35,9 @@ import { UserEffects } from './store/user.effects';
 		HttpClientModule
 	],
 	providers: [
-		UserService
+		UserService,
+		UserAuthGuard,
+		AnonymousUserGuard
 	]
 })
 export class UserModule { }

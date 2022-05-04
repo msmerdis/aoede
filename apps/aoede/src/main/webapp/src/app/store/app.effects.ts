@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { map, switchMap, mergeMap, catchError, debounceTime } from 'rxjs/operators';
+import { map, switchMap, mergeMap, catchError, debounceTime, tap } from 'rxjs/operators';
 
 import { loginSuccess } from '../aoede/user/store/user.actions';
 
@@ -9,17 +9,20 @@ import { loginSuccess } from '../aoede/user/store/user.actions';
 export class AppEffects {
 	constructor (
 		private actions$ : Actions
-	) {
-		this.actions$.subscribe (
-			(a : any) => {
-				console.log ('got action: ' + JSON.stringify(a.type))
+	) { }
 
-				if ('failure' in a) {
-					this.processFailure (a.failure);
+	logActions$ = createEffect(
+		() => this.actions$.pipe(
+			tap((action : any) => {
+				console.log('got action: ' + JSON.stringify(action.type))
+
+				if ('failure' in action) {
+					this.processFailure (action.failure);
 				}
-			}
-		);
-	}
+			})
+		),
+		{ dispatch: false }
+	);
 
 	private processFailure (failure : any) {
 		if (

@@ -2,44 +2,41 @@ import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot,RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
+import { first } from 'rxjs/operators';
 
-import { UserState } from '../aoede/user/user.reducer';
-import { isAuthenticated } from '../aoede/user/user.selectors';
+import { UserState } from './store/user.reducer';
+import { isAuthenticated, isAnonymous } from './store/user.selectors';
 
 @Injectable()
 export class UserAuthGuard implements CanActivate {
-	authenticated$ : Observable<boolean>;
 
 	constructor (
-		private store : Store<UserState>
-	) {
-		this.authenticated$ = this.store.select (isAuthenticated);
-	}
+		private store  : Store<UserState>,
+		private router : Router
+	) { }
 
 	canActivate(
 		route: ActivatedRouteSnapshot,
 		state: RouterStateSnapshot
 	): Observable<boolean> {
-		return authenticated$;
+		return this.store.select (isAuthenticated);
 	}
 
 }
 
 @Injectable()
 export class AnonymousUserGuard implements CanActivate {
-	authenticated$ : Observable<boolean>;
 
 	constructor (
-		private store : Store<UserState>
-	) {
-		this.authenticated$ = this.store.select (isAuthenticated);
-	}
+		private store  : Store<UserState>,
+		private router : Router
+	) { }
 
 	canActivate(
 		route: ActivatedRouteSnapshot,
 		state: RouterStateSnapshot
 	): Observable<boolean> {
-		return authenticated$;
+		return this.store.select (isAnonymous);
 	}
 
 }

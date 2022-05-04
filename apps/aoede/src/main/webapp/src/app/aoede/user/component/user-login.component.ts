@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 
-import { loginRequest, loginFailure } from '../store/user.actions';
+import { loginRequest } from '../store/user.actions';
 import { UserState } from '../store/user.reducer';
 
 @Component({
