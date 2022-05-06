@@ -23,6 +23,7 @@
 
 	<!-- Modules -->
 	<modules>
+		<module>cucumber-resources</module>
 		<module>cucumber</module>
 		<module>base</module>
 	</modules>
