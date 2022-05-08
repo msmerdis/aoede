@@ -181,8 +181,8 @@ And the response contains "validationInfo" objects in "validations"
 Scenario: log in with empty username
 
 When "" attempts to login with password "password"
-And login has failed
-And login results match
+And the "login" request was not successful
+And the "login" response matches
 	| text | string  | BAD_REQUEST       |
 	| desc | string  | Validation errors |
 
@@ -190,8 +190,8 @@ And login results match
 Scenario: log in with empty password
 
 When "username" attempts to login with password ""
-And login has failed
-And login results match
+And the "login" request was not successful
+And the "login" response matches
 	| text | string  | BAD_REQUEST       |
 	| desc | string  | Validation errors |
 
@@ -199,7 +199,7 @@ And login results match
 Scenario: log in with empty username and password
 
 When "" attempts to login with password ""
-And login has failed
-And login results match
+And the "login" request was not successful
+And the "login" response matches
 	| text | string  | BAD_REQUEST       |
 	| desc | string  | Validation errors |

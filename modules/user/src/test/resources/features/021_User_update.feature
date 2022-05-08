@@ -17,16 +17,16 @@ And the response matches
 	| status   | string | ACTIVE             |
 	| username | string | updatePasswordName |
 And "updatePasswordName" attempts to login with password "updatePasswordPass"
-And login is successful
-And login results match
+And the "login" request was successful
+And the "login" response matches
 	| status   | string | ACTIVE             |
 	| username | string | updatePasswordName |
 When update latest users password to "updatedPasswordPass"
 And the request was successful
 And the response has a status code of 204
 Then "updatePasswordName" attempts to login with password "updatedPasswordPass"
-And login is successful
-And login results match
+And the "login" request was successful
+And the "login" response matches
 	| status   | string | ACTIVE             |
 	| username | string | updatePasswordName |
 
@@ -45,8 +45,8 @@ And the response matches
 	| status   | string | ACTIVE              |
 	| username | string | updateUsernameName  |
 And "updateUsernameName" attempts to login with password "updateUsernamePass"
-And login is successful
-And login results match
+And the "login" request was successful
+And the "login" response matches
 	| status   | string | ACTIVE              |
 	| username | string | updateUsernameName  |
 When update previously created "user"
@@ -61,8 +61,8 @@ And the response matches
 	| status   | string | ACTIVE              |
 	| username | string | updatedUsernameName |
 And "updatedUsernameName" attempts to login with password "updateUsernamePass"
-And login is successful
-And login results match
+And the "login" request was successful
+And the "login" response matches
 	| status   | string | ACTIVE              |
 	| username | string | updatedUsernameName |
 
@@ -81,8 +81,8 @@ And the response matches
 	| status   | string | ACTIVE           |
 	| username | string | updateStatusName |
 And "updateStatusName" attempts to login with password "updateStatusPass"
-And login is successful
-And login results match
+And the "login" request was successful
+And the "login" response matches
 	| status   | string | ACTIVE           |
 	| username | string | updateStatusName |
 When update previously created "user"
@@ -97,7 +97,7 @@ And the response matches
 	| status   | string | SUSPENDED        |
 	| username | string | updateStatusName |
 And "updateStatusName" attempts to login with password "updateStatusPass"
-And login has failed
-And login results match
+And the "login" request was not successful
+And the "login" response matches
 	| code | integer | 401          |
 	| text | string  | UNAUTHORIZED |

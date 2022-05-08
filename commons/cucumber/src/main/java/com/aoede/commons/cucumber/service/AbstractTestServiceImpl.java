@@ -21,7 +21,7 @@ public abstract class AbstractTestServiceImpl extends BaseTestComponent implemen
 	private JsonArray latestArr;
 	private ResponseResults latestResults;
 
-	private void results (ResponseResults results, int expectedStatus, boolean expectingBody, boolean multipleResults) {
+	protected void results (ResponseResults results, int expectedStatus, boolean expectingBody, boolean multipleResults) {
 		success =
 			(results.status.value() == expectedStatus) &&
 			((results.body.isEmpty()) != expectingBody);

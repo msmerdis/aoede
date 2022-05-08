@@ -1,28 +1,23 @@
 package com.aoede.modules.user.service;
 
+import static org.junit.Assert.assertTrue;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import com.aoede.commons.cucumber.BaseTestComponent;
 import com.aoede.commons.cucumber.RequestParametersCallback;
 import com.aoede.commons.cucumber.ResponseResults;
+import com.aoede.commons.cucumber.service.AbstractTestServiceImpl;
 import com.aoede.modules.user.config.UserConfiguration;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import lombok.Getter;
 
 @Getter
 @Component
-public class LoginTestServiceImpl extends BaseTestComponent implements LoginTestService {
-	private boolean success;
+public class LoginTestServiceImpl extends AbstractTestServiceImpl implements LoginTestService {
 	private String loginToken;
-	private ResponseResults latestResults;
-	private JsonObject userDetails;
 
 	@PostConstruct
 	public void registerAddon () {
@@ -30,29 +25,44 @@ public class LoginTestServiceImpl extends BaseTestComponent implements LoginTest
 	}
 
 	@Override
-	public void results (ResponseResults results) {
-		JsonElement element = JsonParser.parseString(results.body);
-
-		success =
-			results.status.value() == HttpStatus.OK.value() &&
-			results.headers.containsKey(UserConfiguration.TOKEN_HEADER_NAME) &&
-			element.isJsonObject();
-		latestResults = results;
-
-		if (success)
-			loginToken = results.headers.get(UserConfiguration.TOKEN_HEADER_NAME).get(0);
-
-		if (element.isJsonObject())
-			userDetails = element.getAsJsonObject();
-	}
-
-	@Override
 	public void configure(HttpHeaders headers) {
-		if (success) {
+		if (isSuccess()) {
 			headers.add(UserConfiguration.TOKEN_HEADER_NAME, loginToken);
 		}
 	}
 
+	@Override
+	public String getName() {
+		return "login";
+	}
+
+	@Override
+	public String getPath() {
+		return "/login";
+	}
+
+	@Override
+	public String getKeyName() {
+		return "username";
+	}
+
+	@Override
+	public void loginResults (ResponseResults results) {
+		if (results.headers.containsKey(UserConfiguration.TOKEN_HEADER_NAME)) {
+			super.results(results, 200, true, false);
+		} else {
+			super.results(results, -1, true, false);
+		}
+
+		if (isSuccess()) {
+			loginToken = results.headers.get(UserConfiguration.TOKEN_HEADER_NAME).get(0);
+		}
+	}
+
+	@Override
+	protected void results (ResponseResults results, int expectedStatus, boolean expectingBody, boolean multipleResults) {
+		assertTrue("login service does not support this operation", false);
+	}
 }
 
 

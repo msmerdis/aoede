@@ -18,13 +18,13 @@ And the response matches
 	| status   | string | ACTIVE         |
 	| username | string | activeUserName |
 When "activeUserName" attempts to login with password "activeUserPass"
-And login is successful
-And login results match
+And the "login" request was successful
+And the "login" response matches
 	| status   | string | ACTIVE         |
 	| username | string | activeUserName |
 Then check user status
-And login is successful
-And login results match
+And the "login" request was successful
+And the "login" response matches
 	| status   | string | ACTIVE         |
 	| username | string | activeUserName |
 
@@ -44,18 +44,18 @@ And the response matches
 	| status   | string | ACTIVE        |
 	| username | string | wrongPassName |
 When "wrongPassName" attempts to login with password "wrongPassPass"
-And login is successful
-And login results match
+And the "login" request was successful
+And the "login" response matches
 	| status   | string | ACTIVE        |
 	| username | string | wrongPassName |
 Then "wrongPassName" attempts to login with password "thisIsNotTheRightPassword"
-And login has failed
-And login results match
+And the "login" request was not successful
+And the "login" response matches
 	| code | integer | 401          |
 	| text | string  | UNAUTHORIZED |
 And check user status
-And login has failed
-And login results match
+And the "login" request was not successful
+And the "login" response matches
 	| code | integer | 400         |
 	| text | string  | BAD_REQUEST |
 
@@ -75,13 +75,13 @@ And the response matches
 	| status   | string | PENDING         |
 	| username | string | pendingUserName |
 When "pendingUserName" attempts to login with password "pendingUserPass"
-And login has failed
-And login results match
+And the "login" request was not successful
+And the "login" response matches
 	| code | integer | 401          |
 	| text | string  | UNAUTHORIZED |
 Then check user status
-And login has failed
-And login results match
+And the "login" request was not successful
+And the "login" response matches
 	| code | integer | 400         |
 	| text | string  | BAD_REQUEST |
 
@@ -101,13 +101,13 @@ And the response matches
 	| status   | string | LOCKED         |
 	| username | string | lockedUserName |
 When "lockedUserName" attempts to login with password "lockedUserPass"
-And login has failed
-And login results match
+And the "login" request was not successful
+And the "login" response matches
 	| code | integer | 401          |
 	| text | string  | UNAUTHORIZED |
 Then check user status
-And login has failed
-And login results match
+And the "login" request was not successful
+And the "login" response matches
 	| code | integer | 400         |
 	| text | string  | BAD_REQUEST |
 
@@ -127,13 +127,13 @@ And the response matches
 	| status   | string | SUSPENDED         |
 	| username | string | suspendedUserName |
 When "suspendedUserName" attempts to login with password "suspendedUserPass"
-And login has failed
-And login results match
+And the "login" request was not successful
+And the "login" response matches
 	| code | integer | 401          |
 	| text | string  | UNAUTHORIZED |
 Then check user status
-And login has failed
-And login results match
+And the "login" request was not successful
+And the "login" response matches
 	| code | integer | 400         |
 	| text | string  | BAD_REQUEST |
 
@@ -145,8 +145,8 @@ Scenario: create and login a user for testing
 
 Given a logged in user "test" with password "test"
 When check user status
-Then login is successful
-And login results match
+Then the "login" request was successful
+And the "login" response matches
 	| status   | string | ACTIVE |
 	| username | string | test   |
 
@@ -162,8 +162,8 @@ Given a "user" with
 	| password | string | toActivatePass |
 And a logged in user "toActivateName" with password "toActivatePass"
 When check user status
-Then login is successful
-And login results match
+Then the "login" request was successful
+And the "login" response matches
 	| status   | string | ACTIVE         |
 	| username | string | toActivateName |
 
@@ -179,8 +179,8 @@ Given a "user" with
 	| password | string | toChangePasswordPass |
 And a logged in user "toChangePasswordName" with password "test"
 When check user status
-Then login is successful
-And login results match
+Then the "login" request was successful
+And the "login" response matches
 	| status   | string | ACTIVE               |
 	| username | string | toChangePasswordName |
 
@@ -192,13 +192,13 @@ Scenario: login to a different user
 
 Given a logged in user "test" with password "test"
 And check user status
-And login is successful
-And login results match
+And the "login" request was successful
+And the "login" response matches
 	| status   | string | ACTIVE |
 	| username | string | test   |
 When a logged in user "test2" with password "test"
 And check user status
-Then login is successful
-And login results match
+Then the "login" request was successful
+And the "login" response matches
 	| status   | string | ACTIVE |
 	| username | string | test2  |

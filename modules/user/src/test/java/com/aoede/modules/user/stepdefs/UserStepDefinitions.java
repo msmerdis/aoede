@@ -1,7 +1,6 @@
 package com.aoede.modules.user.stepdefs;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -20,9 +19,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
-import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 public class UserStepDefinitions extends BaseStepDefinition {
@@ -89,9 +86,9 @@ public class UserStepDefinitions extends BaseStepDefinition {
 		object.add("username", new JsonPrimitive(username));
 		object.add("password", new JsonPrimitive(password));
 
-		ResponseResults results = executePost("/login", object.toString());
+		ResponseResults results = executePost(loginTestService.getPath(), object.toString());
 
-		loginTestService.results(results);
+		loginTestService.loginResults(results);
 	}
 
 	@When("check user status")
@@ -100,7 +97,7 @@ public class UserStepDefinitions extends BaseStepDefinition {
 
 		ResponseResults results = executeGet("/login");
 
-		loginTestService.results(results);
+		loginTestService.loginResults(results);
 	}
 
 	@Given("a logged in user {string}")
@@ -166,32 +163,6 @@ public class UserStepDefinitions extends BaseStepDefinition {
 		ResponseResults results = executePut (service.getPath() + "/" + id, object.toString());
 
 		assertEquals("updating user status was not successful", 204, results.status.value());
-	}
-
-	/**
-	 * assertions
-	 */
-
-	@Then("login is successful")
-	public void loginSuccess() {
-		logger.info("verify user was able to login");
-
-		assertTrue(loginTestService.isSuccess());
-	}
-
-	@Then("login has failed")
-	public void loginFailure() {
-		logger.info("verify user was not able to login");
-
-		assertFalse(loginTestService.isSuccess());
-	}
-
-	@Then("login results match")
-	public void verifyElement (DataTable data) {
-		assertTrue(
-			jsonService.jsonObjectMatches(
-				loginTestService.getUserDetails(), data)
-		);
 	}
 
 }
