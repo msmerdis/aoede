@@ -14,9 +14,8 @@ import org.springframework.http.MediaType;
 import com.aoede.commons.cucumber.BaseStepDefinition;
 import com.aoede.commons.cucumber.ResponseResults;
 import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
-import com.aoede.commons.cucumber.service.CompositeIdService;
 import com.aoede.commons.cucumber.service.DataTableService;
-import com.aoede.commons.cucumber.service.JsonObjectService;
+import com.aoede.commons.cucumber.service.JsonService;
 import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -31,16 +30,14 @@ public class CrudStepDefinitions extends BaseStepDefinition {
 		ServerProperties serverProperties,
 		AbstractTestServiceDiscoveryService services,
 		TestCaseIdTrackerService testCaseIdTrackerService,
-		CompositeIdService compositeIdService,
-		JsonObjectService jsonObjectService,
+		JsonService jsonService,
 		DataTableService dataTableService
 	) {
 		super (
 			serverProperties,
 			services,
 			testCaseIdTrackerService,
-			compositeIdService,
-			jsonObjectService,
+			jsonService,
 			dataTableService
 		);
 	}

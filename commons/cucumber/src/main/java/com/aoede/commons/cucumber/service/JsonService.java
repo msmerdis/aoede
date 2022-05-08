@@ -6,8 +6,16 @@ import com.google.gson.JsonObject;
 
 import io.cucumber.datatable.DataTable;
 
-public interface JsonObjectService extends TestStorageService<JsonObject> {
-	public JsonObject generateJson(DataTable data);
+public interface JsonService extends TestStorageService<JsonElement> {
+
+	public String generateBase64(String data);
+	public String generatePaddedBase64(String data);
+	public String generateCompositeKey(DataTable data);
+
+	public String putCompositeKey(String name, DataTable data);
+	public String getCompositeKey(String name);
+
+	public JsonObject generateJsonObject(DataTable data);
 
 	public boolean jsonObjectMatches(JsonObject object, DataTable  data);
 	public boolean jsonObjectMatches(JsonObject object, JsonObject data);
@@ -21,6 +29,8 @@ public interface JsonObjectService extends TestStorageService<JsonObject> {
 	public boolean jsonArrayContainsObject(JsonArray array, JsonObject data);
 
 	public boolean jsonArrayContainsObjectWithElement(JsonArray array, String key, JsonElement element);
+
+	public JsonElement put (String name, DataTable data);
 }
 
 

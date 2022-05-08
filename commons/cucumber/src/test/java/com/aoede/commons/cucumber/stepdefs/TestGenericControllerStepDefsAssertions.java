@@ -161,9 +161,9 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 
 		when(services.getLatestService()).thenReturn(latestService);
 		when(dataTableService.get(eq("objectName"))).thenReturn(DataTable.emptyDataTable());
-		when(jsonObjectService.generateJsonArray(any(DataTable.class), any(DataTable.class))).thenReturn(generated);
+		when(jsonService.generateJsonArray(any(DataTable.class), any(DataTable.class))).thenReturn(generated);
 		when(latestService.getLatestArr()).thenReturn(latest);
-		when(jsonObjectService.jsonArrayMatches(any(JsonArray.class), any(JsonArray.class))).thenReturn(status);
+		when(jsonService.jsonArrayMatches(any(JsonArray.class), any(JsonArray.class))).thenReturn(status);
 
 		uut.verifyArrayList("objectName", DataTable.emptyDataTable());
 	}
@@ -174,7 +174,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 		JsonArray generated = new JsonArray();
 
 		verifyArrayList(latest, generated, true);
-		verify(jsonObjectService).jsonArrayMatches(latest, generated);
+		verify(jsonService).jsonArrayMatches(latest, generated);
 	}
 
 	@Test
@@ -192,9 +192,9 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 
 		when(services.getService(domain)).thenReturn(latestService);
 		when(dataTableService.get(eq("objectName"))).thenReturn(DataTable.emptyDataTable());
-		when(jsonObjectService.generateJsonArray(any(DataTable.class), any(DataTable.class))).thenReturn(generated);
+		when(jsonService.generateJsonArray(any(DataTable.class), any(DataTable.class))).thenReturn(generated);
 		when(latestService.getLatestArr()).thenReturn(latest);
-		when(jsonObjectService.jsonArrayMatches(any(JsonArray.class), any(JsonArray.class))).thenReturn(status);
+		when(jsonService.jsonArrayMatches(any(JsonArray.class), any(JsonArray.class))).thenReturn(status);
 
 		uut.verifyArrayList(domain, "objectName", DataTable.emptyDataTable());
 	}
@@ -205,7 +205,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 		JsonArray generated = new JsonArray();
 
 		verifyNamedArrayList("test", latest, generated, true);
-		verify(jsonObjectService).jsonArrayMatches(latest, generated);
+		verify(jsonService).jsonArrayMatches(latest, generated);
 	}
 
 	@Test
@@ -223,9 +223,9 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 
 		when(services.getLatestService()).thenReturn(latestService);
 		when(dataTableService.get(eq("tableName"))).thenReturn(DataTable.emptyDataTable());
-		when(jsonObjectService.generateJsonArray(any(DataTable.class), any(DataTable.class))).thenReturn(generated);
+		when(jsonService.generateJsonArray(any(DataTable.class), any(DataTable.class))).thenReturn(generated);
 		when(latestService.getLatestObj()).thenReturn(latest);
-		when(jsonObjectService.jsonArrayMatches(any(JsonArray.class), any(JsonArray.class))).thenReturn(status);
+		when(jsonService.jsonArrayMatches(any(JsonArray.class), any(JsonArray.class))).thenReturn(status);
 
 		uut.verifyElementList("tableName", "element", DataTable.emptyDataTable());
 	}
@@ -252,9 +252,9 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 
 		when(services.getService(domain)).thenReturn(latestService);
 		when(dataTableService.get(eq("tableName"))).thenReturn(DataTable.emptyDataTable());
-		when(jsonObjectService.generateJsonArray(any(DataTable.class), any(DataTable.class))).thenReturn(generated);
+		when(jsonService.generateJsonArray(any(DataTable.class), any(DataTable.class))).thenReturn(generated);
 		when(latestService.getLatestObj()).thenReturn(latest);
-		when(jsonObjectService.jsonArrayMatches(any(JsonArray.class), any(JsonArray.class))).thenReturn(status);
+		when(jsonService.jsonArrayMatches(any(JsonArray.class), any(JsonArray.class))).thenReturn(status);
 
 		uut.verifyElementList(domain, "tableName", "element", DataTable.emptyDataTable());
 	}
@@ -281,7 +281,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 
 		when(services.getLatestService()).thenReturn(latestService);
 		when(latestService.getLatestArr()).thenReturn(latest);
-		when(jsonObjectService.jsonArrayContainsObject(any(JsonArray.class), eq("id"), eq("type"), eq("value"))).thenReturn(status);
+		when(jsonService.jsonArrayContainsObject(any(JsonArray.class), eq("id"), eq("type"), eq("value"))).thenReturn(status);
 
 		uut.verifyElementExistInList("id", "type", "value");
 	}
@@ -290,7 +290,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 	public void verifyElementExistInListSuccess () throws Exception {
 		JsonArray latest = new JsonArray();
 		verifyElementExistInList(latest, true);
-		verify(jsonObjectService).jsonArrayContainsObject(latest, "id", "type", "value");
+		verify(jsonService).jsonArrayContainsObject(latest, "id", "type", "value");
 	}
 
 	@Test
@@ -305,7 +305,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 
 		when(services.getLatestService()).thenReturn(latestService);
 		when(latestService.getLatestArr()).thenReturn(latest);
-		when(jsonObjectService.jsonArrayContainsObject(any(JsonArray.class), eq("id"), eq("type"), eq("value"))).thenReturn(status);
+		when(jsonService.jsonArrayContainsObject(any(JsonArray.class), eq("id"), eq("type"), eq("value"))).thenReturn(status);
 
 		uut.verifyElementDoesNotExistInList("id", "type", "value");
 	}
@@ -314,7 +314,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 	public void verifyElementDoesNotExistInListSuccess () throws Exception {
 		JsonArray latest = new JsonArray();
 		verifyElementDoesNotExistInList(latest, false);
-		verify(jsonObjectService).jsonArrayContainsObject(latest, "id", "type", "value");
+		verify(jsonService).jsonArrayContainsObject(latest, "id", "type", "value");
 	}
 
 	@Test
@@ -331,7 +331,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 		when(latestService.getLatestArr()).thenReturn(array);
 		when(latestService.getKeyName()).thenReturn("key");
 		when(latestService.getLatestKey()).thenReturn(key);
-		when(jsonObjectService.jsonArrayContainsObjectWithElement(eq(array), eq("key"), eq(key))).thenReturn(status);
+		when(jsonService.jsonArrayContainsObjectWithElement(eq(array), eq("key"), eq(key))).thenReturn(status);
 
 		uut.verifyLatestElementExistsInList("domain");
 	}
@@ -342,7 +342,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 		JsonElement key = new JsonPrimitive("latest");
 
 		verifyLatestElementExistsInList(array, key, true);
-		verify(jsonObjectService).jsonArrayContainsObjectWithElement(eq(array), eq("key"), eq(key));
+		verify(jsonService).jsonArrayContainsObjectWithElement(eq(array), eq("key"), eq(key));
 	}
 
 	@Test
@@ -362,7 +362,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 		when(latestService.getLatestArr()).thenReturn(array);
 		when(latestService.getKeyName()).thenReturn("key");
 		when(latestService.getLatestKey()).thenReturn(key);
-		when(jsonObjectService.jsonArrayContainsObjectWithElement(eq(array), eq("key"), eq(key))).thenReturn(status);
+		when(jsonService.jsonArrayContainsObjectWithElement(eq(array), eq("key"), eq(key))).thenReturn(status);
 
 		uut.verifyLatestElementDoesNotExistInList("domain");
 	}
@@ -373,7 +373,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 		JsonElement key = new JsonPrimitive("latest");
 
 		verifyLatestElementDoesNotExistInList(array, key, false);
-		verify(jsonObjectService).jsonArrayContainsObjectWithElement(eq(array), eq("key"), eq(key));
+		verify(jsonService).jsonArrayContainsObjectWithElement(eq(array), eq("key"), eq(key));
 	}
 
 	@Test
@@ -400,7 +400,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 		when(pservice.getLatestObj()).thenReturn(obj);
 		when(cservice.getKeyName()).thenReturn("key");
 		when(cservice.getLatestKey()).thenReturn(new JsonPrimitive(1));
-		when(jsonObjectService.jsonArrayContainsObjectWithElement(eq(arr), eq("key"), eq(new JsonPrimitive(1)))).thenReturn(status);
+		when(jsonService.jsonArrayContainsObjectWithElement(eq(arr), eq("key"), eq(new JsonPrimitive(1)))).thenReturn(status);
 
 		uut.verifyDependentDomains("pname", "cname", "element");
 	}
@@ -473,7 +473,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 
 		when(services.getLatestService()).thenReturn(latestService);
 		when(latestService.getLatestObj()).thenReturn(object);
-		when(jsonObjectService.jsonObjectMatches(eq(object), eq(DataTable.emptyDataTable()))).thenReturn(status);
+		when(jsonService.jsonObjectMatches(eq(object), eq(DataTable.emptyDataTable()))).thenReturn(status);
 
 		uut.verifyElement(DataTable.emptyDataTable());
 	}
@@ -496,7 +496,7 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 
 		when(services.getService(domain)).thenReturn(latestService);
 		when(latestService.getLatestObj()).thenReturn(object);
-		when(jsonObjectService.jsonObjectMatches(eq(object), eq(DataTable.emptyDataTable()))).thenReturn(status);
+		when(jsonService.jsonObjectMatches(eq(object), eq(DataTable.emptyDataTable()))).thenReturn(status);
 
 		uut.verifyElement(domain, DataTable.emptyDataTable());
 	}

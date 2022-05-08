@@ -18,8 +18,7 @@ public class GenericControllerStepDefsTestCaseSetup extends BaseStepDefinitionTe
 			this.serverProperties,
 			this.services,
 			this.testCaseIdTrackerService,
-			this.compositeIdService,
-			this.jsonObjectService,
+			this.jsonService,
 			this.dataTableService
 		);
 

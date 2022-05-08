@@ -11,9 +11,8 @@ import com.aoede.commons.cucumber.BaseStepDefinition;
 import com.aoede.commons.cucumber.ResponseResults;
 import com.aoede.commons.cucumber.service.AbstractTestService;
 import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
-import com.aoede.commons.cucumber.service.CompositeIdService;
 import com.aoede.commons.cucumber.service.DataTableService;
-import com.aoede.commons.cucumber.service.JsonObjectService;
+import com.aoede.commons.cucumber.service.JsonService;
 import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 import com.aoede.modules.user.service.LoginTestService;
 import com.google.gson.JsonElement;
@@ -34,8 +33,7 @@ public class UserStepDefinitions extends BaseStepDefinition {
 		ServerProperties serverProperties,
 		AbstractTestServiceDiscoveryService services,
 		TestCaseIdTrackerService testCaseIdTrackerService,
-		CompositeIdService compositeIdService,
-		JsonObjectService jsonObjectService,
+		JsonService jsonService,
 		DataTableService dataTableService,
 		LoginTestService loginTestService
 	) {
@@ -43,8 +41,7 @@ public class UserStepDefinitions extends BaseStepDefinition {
 			serverProperties,
 			services,
 			testCaseIdTrackerService,
-			compositeIdService,
-			jsonObjectService,
+			jsonService,
 			dataTableService
 		);
 
@@ -192,7 +189,7 @@ public class UserStepDefinitions extends BaseStepDefinition {
 	@Then("login results match")
 	public void verifyElement (DataTable data) {
 		assertTrue(
-			jsonObjectService.jsonObjectMatches(
+			jsonService.jsonObjectMatches(
 				loginTestService.getUserDetails(), data)
 		);
 	}

@@ -17,7 +17,7 @@ public class TestJsonObjectServiceImplBuildFraction extends JsonObjectServiceImp
 	@Test
 	public void buildFraction () throws Exception {
 		// execute function
-		Method buildFraction = JsonObjectServiceImpl.class.getDeclaredMethod("buildFraction", BigInteger.class, BigInteger.class);
+		Method buildFraction = JsonServiceImpl.class.getDeclaredMethod("buildFraction", BigInteger.class, BigInteger.class);
 		buildFraction.setAccessible(true);
 		JsonObject object = (JsonObject) buildFraction.invoke(uut(), new BigInteger("10"), new BigInteger("20"));
 
@@ -27,7 +27,7 @@ public class TestJsonObjectServiceImplBuildFraction extends JsonObjectServiceImp
 	@Test
 	public void buildSecondFraction () throws Exception {
 		// execute function
-		Method buildFraction = JsonObjectServiceImpl.class.getDeclaredMethod("buildFraction", BigInteger.class, BigInteger.class);
+		Method buildFraction = JsonServiceImpl.class.getDeclaredMethod("buildFraction", BigInteger.class, BigInteger.class);
 		buildFraction.setAccessible(true);
 		JsonObject object = (JsonObject) buildFraction.invoke(uut(), new BigInteger("1"), new BigInteger("99"));
 
@@ -37,7 +37,7 @@ public class TestJsonObjectServiceImplBuildFraction extends JsonObjectServiceImp
 	@Test
 	public void buildFractionFromString () throws Exception {
 		// execute function
-		Method buildFraction = JsonObjectServiceImpl.class.getDeclaredMethod("buildFraction", String.class);
+		Method buildFraction = JsonServiceImpl.class.getDeclaredMethod("buildFraction", String.class);
 		buildFraction.setAccessible(true);
 		JsonObject object = (JsonObject) buildFraction.invoke(uut(), " 3 / 4 ");
 
@@ -47,7 +47,7 @@ public class TestJsonObjectServiceImplBuildFraction extends JsonObjectServiceImp
 	@Test
 	public void buildFractionFromStringTwo () throws Exception {
 		// execute function
-		Method buildFraction = JsonObjectServiceImpl.class.getDeclaredMethod("buildFraction", String.class);
+		Method buildFraction = JsonServiceImpl.class.getDeclaredMethod("buildFraction", String.class);
 		buildFraction.setAccessible(true);
 		JsonObject object = (JsonObject) buildFraction.invoke(uut(), "1/8");
 
@@ -57,7 +57,7 @@ public class TestJsonObjectServiceImplBuildFraction extends JsonObjectServiceImp
 	@Test
 	public void buildFractionFromStringNoDivision () throws Exception {
 		// execute function
-		Method buildFraction = JsonObjectServiceImpl.class.getDeclaredMethod("buildFraction", String.class);
+		Method buildFraction = JsonServiceImpl.class.getDeclaredMethod("buildFraction", String.class);
 		buildFraction.setAccessible(true);
 
 		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
@@ -68,7 +68,7 @@ public class TestJsonObjectServiceImplBuildFraction extends JsonObjectServiceImp
 	@Test
 	public void buildFractionFromStringMultipleParts () throws Exception {
 		// execute function
-		Method buildFraction = JsonObjectServiceImpl.class.getDeclaredMethod("buildFraction", String.class);
+		Method buildFraction = JsonServiceImpl.class.getDeclaredMethod("buildFraction", String.class);
 		buildFraction.setAccessible(true);
 
 		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
@@ -79,7 +79,7 @@ public class TestJsonObjectServiceImplBuildFraction extends JsonObjectServiceImp
 	@Test
 	public void buildFractionFromStringNoNumerator () throws Exception {
 		// execute function
-		Method buildFraction = JsonObjectServiceImpl.class.getDeclaredMethod("buildFraction", String.class);
+		Method buildFraction = JsonServiceImpl.class.getDeclaredMethod("buildFraction", String.class);
 		buildFraction.setAccessible(true);
 
 		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
@@ -90,7 +90,7 @@ public class TestJsonObjectServiceImplBuildFraction extends JsonObjectServiceImp
 	@Test
 	public void buildFractionFromStringNoDenomerator () throws Exception {
 		// execute function
-		Method buildFraction = JsonObjectServiceImpl.class.getDeclaredMethod("buildFraction", String.class);
+		Method buildFraction = JsonServiceImpl.class.getDeclaredMethod("buildFraction", String.class);
 		buildFraction.setAccessible(true);
 
 		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {

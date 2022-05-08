@@ -2,8 +2,6 @@ package com.aoede.commons.cucumber.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
 
 import java.util.List;
 
@@ -13,6 +11,7 @@ import com.aoede.JsonObjectServiceImplTestCaseSetup;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import io.cucumber.datatable.DataTable;
 
@@ -119,13 +118,12 @@ public class TestJsonObjectServiceImplGenerateJsonArray extends JsonObjectServic
 		var uut = uut ();
 
 		// mock internal calls
-		when (compositeIdService.containsKey(eq("id name"))).thenReturn(true);
-		when (compositeIdService.get(eq("id name"))).thenReturn("id value");
 		JsonObject theJson = new JsonObject();
 
 		theJson.add("nada", JsonNull.INSTANCE);
 
 		uut.put("data name", theJson);
+		uut.put("id name", new JsonPrimitive("id value"));
 
 		JsonArray array = uut.generateJsonArray(template, table);
 

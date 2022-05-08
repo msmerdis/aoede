@@ -19,9 +19,8 @@ import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
-import com.aoede.commons.cucumber.service.CompositeIdService;
 import com.aoede.commons.cucumber.service.DataTableService;
-import com.aoede.commons.cucumber.service.JsonObjectService;
+import com.aoede.commons.cucumber.service.JsonService;
 import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 
 import io.cucumber.java.Scenario;
@@ -35,23 +34,20 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 	private String basePath;
 	protected AbstractTestServiceDiscoveryService services;
 	private TestCaseIdTrackerService testCaseIdTrackerService;
-	protected CompositeIdService compositeIdService;
-	protected JsonObjectService jsonObjectService;
+	protected JsonService jsonService;
 	protected DataTableService dataTableService;
 
 	public BaseStepDefinition (
 		ServerProperties serverProperties,
 		AbstractTestServiceDiscoveryService services,
 		TestCaseIdTrackerService testCaseIdTrackerService,
-		CompositeIdService compositeIdService,
-		JsonObjectService jsonObjectService,
+		JsonService jsonService,
 		DataTableService dataTableService
 	) {
 		this.serverProperties = serverProperties;
 		this.services = services;
 		this.testCaseIdTrackerService = testCaseIdTrackerService;
-		this.compositeIdService = compositeIdService;
-		this.jsonObjectService = jsonObjectService;
+		this.jsonService = jsonService;
 		this.dataTableService = dataTableService;
 	}
 
@@ -155,8 +151,7 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 	protected void setup (Scenario scenario) {
 		services.setup();
 
-		assertNotNull("json object service is not autowired", jsonObjectService);
-		assertNotNull("composite id service is not autowired", compositeIdService);
+		assertNotNull("json object service is not autowired", jsonService);
 
 		// verify all test cases are properly tagged
 		boolean isPositive = false;
@@ -207,8 +202,7 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 
 	protected void cleanup () {
 		services.clear();
-		jsonObjectService.clear();
-		compositeIdService.clear();
+		jsonService.clear();
 		dataTableService.clear();
 	}
 

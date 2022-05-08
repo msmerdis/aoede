@@ -15,9 +15,8 @@ import com.aoede.commons.cucumber.BaseStepDefinition;
 import com.aoede.commons.cucumber.ResponseResults;
 import com.aoede.commons.cucumber.service.AbstractTestService;
 import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
-import com.aoede.commons.cucumber.service.CompositeIdService;
 import com.aoede.commons.cucumber.service.DataTableService;
-import com.aoede.commons.cucumber.service.JsonObjectService;
+import com.aoede.commons.cucumber.service.JsonService;
 import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -42,16 +41,14 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		ServerProperties serverProperties,
 		AbstractTestServiceDiscoveryService services,
 		TestCaseIdTrackerService testCaseIdTrackerService,
-		CompositeIdService compositeIdService,
-		JsonObjectService jsonObjectService,
+		JsonService jsonService,
 		DataTableService dataTableService
 	) {
 		super (
 			serverProperties,
 			services,
 			testCaseIdTrackerService,
-			compositeIdService,
-			jsonObjectService,
+			jsonService,
 			dataTableService
 		);
 	}
@@ -62,12 +59,12 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 
 	@When("prepare composite id {string}")
 	public void prepareCompositeId(String name, DataTable data) {
-		compositeIdService.put(name, data);
+		jsonService.putCompositeKey(name, data);
 	}
 
 	@When("prepare json {string}")
 	public void prepareJson(String name, DataTable data) {
-		jsonObjectService.put(name, data);
+		jsonService.put(name, data);
 	}
 
 	@When("prepare data table {string}")
@@ -110,12 +107,12 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 
 	@When("request a {string} with composite id")
 	public void getComposite(String domain, DataTable data) {
-		getSimple(domain, compositeIdService.generateCompositeKey(data));
+		getSimple(domain, jsonService.generateCompositeKey(data));
 	}
 
 	@When("request a {string} with composite id {string}")
 	public void getCompositePrepared(String domain, String name) {
-		String id = compositeIdService.get(name);
+		String id = jsonService.getCompositeKey(name);
 
 		assertNotNull("composite id has not been prepared", id);
 
@@ -165,7 +162,7 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		logger.info("creating " + domain);
 		ResponseResults results = executePost (
 			services.getPathForService(domain),
-			jsonObjectService.generateJson(data).toString()
+			jsonService.generateJsonObject(data).toString()
 		);
 
 		// update test controller with data
@@ -190,7 +187,7 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		logger.info("updating " + domain + " with id " + id);
 		ResponseResults results = executePut (
 			services.getPathForService(domain, "/" + id),
-			jsonObjectService.generateJson(data).toString()
+			jsonService.generateJsonObject(data).toString()
 		);
 
 		// update test controller with data
@@ -209,7 +206,7 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 
 	@When("update {string} with composite id {string}")
 	public void updateCompositePrepared(String domain, String name, DataTable data) {
-		String id = compositeIdService.get(name);
+		String id = jsonService.getCompositeKey(name);
 
 		assertNotNull(id, "composite id has not been prepared");
 
@@ -239,7 +236,7 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 
 	@When("delete {string} with composite id {string}")
 	public void deleteCompositePrepared(String domain, String name) {
-		String id = compositeIdService.get(name);
+		String id = jsonService.getCompositeKey(name);
 
 		assertNotNull(id, "composite id has not been prepared");
 
@@ -248,7 +245,7 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 
 	@When("delete {string} with composite id")
 	public void deleteComposite(String domain, DataTable data) {
-		deleteSimple(domain, compositeIdService.generateCompositeKey(data));
+		deleteSimple(domain, jsonService.generateCompositeKey(data));
 	}
 
 	@When("delete previously created {string}")
@@ -318,13 +315,13 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 
 	private void verifyArrayList (AbstractTestService service, String dataTableName, DataTable data) {
 		// generate a json array using a previously stored template
-		JsonArray array = jsonObjectService.generateJsonArray(
+		JsonArray array = jsonService.generateJsonArray(
 			dataTableService.get(dataTableName), data);
 
 		assertNotNull("could not generate json array", array);
 
 		assertTrue(
-			jsonObjectService.jsonArrayMatches(service.getLatestArr(), array)
+			jsonService.jsonArrayMatches(service.getLatestArr(), array)
 		);
 	}
 
@@ -340,7 +337,7 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 
 	private void verifyElementList (AbstractTestService service, String dataTableName, String element, DataTable data) {
 		// generate a json array using a previously stored template
-		JsonArray array = jsonObjectService.generateJsonArray(
+		JsonArray array = jsonService.generateJsonArray(
 			dataTableService.get(dataTableName), data);
 
 		assertNotNull("could not generate json array", array);
@@ -351,21 +348,21 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		assertTrue (element + " is not an array", obj.get(element).isJsonArray());
 
 		assertTrue(
-			jsonObjectService.jsonArrayMatches(obj.get(element).getAsJsonArray(), array)
+			jsonService.jsonArrayMatches(obj.get(element).getAsJsonArray(), array)
 		);
 	}
 
 	@Then("the response array contains {string} with {string} value {string}")
 	public void verifyElementExistInList (String id, String type, String value) {
 		assertTrue(
-			jsonObjectService.jsonArrayContainsObject(services.getLatestService().getLatestArr(), id, type, value)
+			jsonService.jsonArrayContainsObject(services.getLatestService().getLatestArr(), id, type, value)
 		);
 	}
 
 	@Then("the response array does not contain {string} with {string} value {string}")
 	public void verifyElementDoesNotExistInList (String id, String type, String value) {
 		assertFalse(
-			jsonObjectService.jsonArrayContainsObject(services.getLatestService().getLatestArr(), id, type, value)
+			jsonService.jsonArrayContainsObject(services.getLatestService().getLatestArr(), id, type, value)
 		);
 	}
 
@@ -374,7 +371,7 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		var latestService = services.getLatestService();
 
 		assertTrue (
-			jsonObjectService.jsonArrayContainsObjectWithElement(
+			jsonService.jsonArrayContainsObjectWithElement(
 				latestService.getLatestArr(),
 				latestService.getKeyName(),
 				latestService.getLatestKey()
@@ -387,7 +384,7 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		var latestService = services.getLatestService();
 
 		assertFalse (
-			jsonObjectService.jsonArrayContainsObjectWithElement(
+			jsonService.jsonArrayContainsObjectWithElement(
 				latestService.getLatestArr(),
 				latestService.getKeyName(),
 				latestService.getLatestKey()
@@ -406,7 +403,7 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		assertTrue (element + " is not an array", obj.get(element).isJsonArray());
 
 		assertTrue (
-			jsonObjectService.jsonArrayContainsObjectWithElement(
+			jsonService.jsonArrayContainsObjectWithElement(
 				obj.get(element).getAsJsonArray(),
 				cService.getKeyName(),
 				cService.getLatestKey()
@@ -438,7 +435,7 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 
 	private void verifyElement (AbstractTestService service, DataTable data) {
 		assertTrue(
-			jsonObjectService.jsonObjectMatches(
+			jsonService.jsonObjectMatches(
 				service.getLatestObj(), data)
 		);
 	}

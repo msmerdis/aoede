@@ -278,8 +278,7 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 
 		// setup stubs
 		doNothing().when(services).clear();
-		doNothing().when(jsonObjectService).clear();
-		doNothing().when(compositeIdService).clear();
+		doNothing().when(jsonService).clear();
 		doNothing().when(dataTableService).clear();
 
 		// execute function
@@ -289,8 +288,7 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 
 		// assert services are cleared
 		verify(services, times(1)).clear();
-		verify(jsonObjectService, times(1)).clear();
-		verify(compositeIdService, times(1)).clear();
+		verify(jsonService, times(1)).clear();
 		verify(dataTableService, times(1)).clear();
 	}
 

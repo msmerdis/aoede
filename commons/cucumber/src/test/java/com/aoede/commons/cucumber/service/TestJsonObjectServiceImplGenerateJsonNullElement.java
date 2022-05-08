@@ -37,7 +37,7 @@ public class TestJsonObjectServiceImplGenerateJsonNullElement extends JsonObject
 	@Test
 	public void generateString () throws Exception {
 		// execute function
-		Method setup = JsonObjectServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
+		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
 		setup.setAccessible(true);
 		JsonElement element = (JsonElement) setup.invoke(uut(), "string", null);
 
@@ -73,7 +73,7 @@ public class TestJsonObjectServiceImplGenerateJsonNullElement extends JsonObject
 	@Test
 	public void generateNull () throws Exception {
 		// execute function
-		Method setup = JsonObjectServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
+		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
 		setup.setAccessible(true);
 		JsonElement element = (JsonElement) setup.invoke(uut(), "null", null);
 
@@ -93,7 +93,7 @@ public class TestJsonObjectServiceImplGenerateJsonNullElement extends JsonObject
 
 	private void generateInvalidNull (String type) throws Exception {
 		// execute function
-		Method setup = JsonObjectServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
+		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
 		setup.setAccessible(true);
 
 		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {

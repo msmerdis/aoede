@@ -16,7 +16,7 @@ public class TestJsonObjectServiceImplRandom extends JsonObjectServiceImplTestCa
 		mockRandomGenerator ();
 
 		// execute function
-		Method randomString = JsonObjectServiceImpl.class.getDeclaredMethod("randomString", int.class);
+		Method randomString = JsonServiceImpl.class.getDeclaredMethod("randomString", int.class);
 		randomString.setAccessible(true);
 
 		assertEquals ("string not generated correctly", "ly4q", randomString.invoke(uut(), 4));
@@ -28,7 +28,7 @@ public class TestJsonObjectServiceImplRandom extends JsonObjectServiceImplTestCa
 		mockRandomGenerator ();
 
 		// execute function
-		Method randomString = JsonObjectServiceImpl.class.getDeclaredMethod("randomString", int.class);
+		Method randomString = JsonServiceImpl.class.getDeclaredMethod("randomString", int.class);
 		randomString.setAccessible(true);
 
 		assertEquals ("string not generated correctly", "ly4qeYTuM2", randomString.invoke(uut(), 10));
@@ -40,7 +40,7 @@ public class TestJsonObjectServiceImplRandom extends JsonObjectServiceImplTestCa
 		mockRandomGenerator ();
 
 		// execute function
-		Method randomString = JsonObjectServiceImpl.class.getDeclaredMethod("randomString", int.class);
+		Method randomString = JsonServiceImpl.class.getDeclaredMethod("randomString", int.class);
 		randomString.setAccessible(true);
 
 		assertEquals ("string not generated correctly", "ly4qeYTuM22G", randomString.invoke(uut(), 12));
@@ -52,7 +52,7 @@ public class TestJsonObjectServiceImplRandom extends JsonObjectServiceImplTestCa
 		mockRandomGenerator ();
 
 		// execute function
-		Method randomString = JsonObjectServiceImpl.class.getDeclaredMethod("randomString", String.class);
+		Method randomString = JsonServiceImpl.class.getDeclaredMethod("randomString", String.class);
 		randomString.setAccessible(true);
 
 		assertEquals ("string not generated correctly", "template_ly4qeYTu_value", randomString.invoke(uut(), "template_{string:8}_value"));
@@ -64,7 +64,7 @@ public class TestJsonObjectServiceImplRandom extends JsonObjectServiceImplTestCa
 		mockRandomGenerator ();
 
 		// execute function
-		Method randomString = JsonObjectServiceImpl.class.getDeclaredMethod("randomString", String.class);
+		Method randomString = JsonServiceImpl.class.getDeclaredMethod("randomString", String.class);
 		randomString.setAccessible(true);
 
 		assertEquals ("string not generated correctly", "template_ly4qeYTu_M2", randomString.invoke(uut(), "template_{string:8}_{string:2}"));

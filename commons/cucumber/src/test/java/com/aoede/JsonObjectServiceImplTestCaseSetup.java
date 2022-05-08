@@ -9,8 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.aoede.commons.cucumber.BaseTestComponent;
 import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
-import com.aoede.commons.cucumber.service.CompositeIdService;
-import com.aoede.commons.cucumber.service.JsonObjectServiceImpl;
+import com.aoede.commons.cucumber.service.JsonServiceImpl;
 
 @RunWith(SpringRunner.class)
 public class JsonObjectServiceImplTestCaseSetup extends BaseTestComponent {
@@ -18,13 +17,11 @@ public class JsonObjectServiceImplTestCaseSetup extends BaseTestComponent {
 	protected Random random = new Random(0);
 
 	@MockBean protected AbstractTestServiceDiscoveryService abstractTestServiceDiscoveryService;
-	@MockBean protected CompositeIdService compositeIdService;
 
 	// unit under test
-	protected JsonObjectServiceImpl uut () throws Exception {
-		JsonObjectServiceImpl uut = new JsonObjectServiceImpl (
-			this.abstractTestServiceDiscoveryService,
-			this.compositeIdService
+	protected JsonServiceImpl uut () throws Exception {
+		JsonServiceImpl uut = new JsonServiceImpl (
+			this.abstractTestServiceDiscoveryService
 		);
 
 		setField (uut, "random", this.random);
@@ -32,14 +29,14 @@ public class JsonObjectServiceImplTestCaseSetup extends BaseTestComponent {
 		return uut;
 	}
 
-	protected void setField (JsonObjectServiceImpl uut, String fieldName, Object value) throws Exception {
-		Field field = JsonObjectServiceImpl.class.getDeclaredField(fieldName);
+	protected void setField (JsonServiceImpl uut, String fieldName, Object value) throws Exception {
+		Field field = JsonServiceImpl.class.getDeclaredField(fieldName);
 		field.setAccessible(true);
 		field.set(uut, value);
 	}
 
-	protected Object getField (JsonObjectServiceImpl uut, String fieldName) throws Exception {
-		Field field = JsonObjectServiceImpl.class.getDeclaredField(fieldName);
+	protected Object getField (JsonServiceImpl uut, String fieldName) throws Exception {
+		Field field = JsonServiceImpl.class.getDeclaredField(fieldName);
 
 		field.setAccessible(true);
 

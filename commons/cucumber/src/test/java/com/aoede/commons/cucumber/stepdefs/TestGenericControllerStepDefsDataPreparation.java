@@ -1,21 +1,15 @@
 package com.aoede.commons.cucumber.stepdefs;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import org.junit.Test;
 
 import com.aoede.GenericControllerStepDefsTestCaseSetup;
 import com.aoede.commons.cucumber.BaseStepDefinition;
-import com.aoede.commons.cucumber.service.CompositeIdServiceImpl;
 import com.aoede.commons.cucumber.service.DataTableServiceImpl;
-import com.aoede.commons.cucumber.service.JsonObjectServiceImpl;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.aoede.commons.cucumber.service.JsonServiceImpl;
 
 import io.cucumber.datatable.DataTable;
 
@@ -26,19 +20,8 @@ public class TestGenericControllerStepDefsDataPreparation extends GenericControl
 		GenericControllerStepDefs uut = uut ();
 
 		// use actual json object service for the test
-		CompositeIdServiceImpl compositeIdServiceImpl = new CompositeIdServiceImpl ();
-		setField ((BaseStepDefinition)uut, "compositeIdService", compositeIdServiceImpl);
-
-		Field field = CompositeIdServiceImpl.class.getDeclaredField("jsonObjectService");
-		field.setAccessible(true);
-		field.set(compositeIdServiceImpl, jsonObjectService);
-
-		JsonObject object = new JsonObject();
-
-		object.add("pid", new JsonPrimitive(1));
-		object.add("cid", new JsonPrimitive(1));
-
-		when(jsonObjectService.generateJson(any())).thenReturn(object);
+		JsonServiceImpl jsonServiceImpl = new JsonServiceImpl(null);
+		setField ((BaseStepDefinition)uut, "jsonService", jsonServiceImpl);
 
 		DataTable table = buildDataTable(List.of(
 			List.of("pid", "int", "1"),
@@ -48,7 +31,7 @@ public class TestGenericControllerStepDefsDataPreparation extends GenericControl
 		// execute function
 		uut.prepareCompositeId("cid", table);
 
-		assertEquals("composite key was not prepared correcty", "eyJwaWQiOjEsImNpZCI6MX0g", compositeIdServiceImpl.get("cid").toString());
+		assertEquals("composite key was not prepared correcty", "eyJwaWQiOjEsImNpZCI6MX0g", jsonServiceImpl.getCompositeKey("cid"));
 	}
 
 	@Test
@@ -56,8 +39,8 @@ public class TestGenericControllerStepDefsDataPreparation extends GenericControl
 		GenericControllerStepDefs uut = uut ();
 
 		// use actual json object service for the test
-		JsonObjectServiceImpl jsonObjectServiceImpl = new JsonObjectServiceImpl(null, new CompositeIdServiceImpl ());
-		setField ((BaseStepDefinition)uut, "jsonObjectService", jsonObjectServiceImpl);
+		JsonServiceImpl jsonServiceImpl = new JsonServiceImpl(null);
+		setField ((BaseStepDefinition)uut, "jsonService", jsonServiceImpl);
 
 		DataTable table = buildDataTable(List.of(
 			List.of("pid", "int", "1"),
@@ -67,7 +50,7 @@ public class TestGenericControllerStepDefsDataPreparation extends GenericControl
 		// execute function
 		uut.prepareJson("json", table);
 
-		assertEquals("json was not prepared correcty", "{\"pid\":1,\"cid\":1}", jsonObjectServiceImpl.get("json").toString());
+		assertEquals("json was not prepared correcty", "{\"pid\":1,\"cid\":1}", jsonServiceImpl.get("json").toString());
 	}
 
 	@Test

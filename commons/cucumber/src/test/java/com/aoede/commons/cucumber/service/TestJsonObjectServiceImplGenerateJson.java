@@ -26,7 +26,7 @@ public class TestJsonObjectServiceImplGenerateJson extends JsonObjectServiceImpl
 			List.of("name", "string", "test")
 		));
 
-		JsonObject object = uut ().generateJson(table);
+		JsonObject object = uut ().generateJsonObject(table);
 
 		assertEquals ("json is not generated correctly", "{\"id\":1,\"name\":\"test\"}", object.toString());
 	}
@@ -38,7 +38,7 @@ public class TestJsonObjectServiceImplGenerateJson extends JsonObjectServiceImpl
 			List.of("data", "long", "2")
 		));
 
-		JsonObject object = uut ().generateJson(table);
+		JsonObject object = uut ().generateJsonObject(table);
 
 		assertEquals ("json is not generated correctly", "{\"id\":1,\"data\":2}", object.toString());
 	}
@@ -50,23 +50,44 @@ public class TestJsonObjectServiceImplGenerateJson extends JsonObjectServiceImpl
 			List.of("nothing", "null", "")
 		));
 
-		JsonObject object = uut ().generateJson(table);
+		JsonObject object = uut ().generateJsonObject(table);
 
 		assertEquals ("json is not generated correctly", "{\"id\":{\"numerator\":7,\"denominator\":8},\"nothing\":null}", object.toString());
 	}
 
 	@Test
-	public void verifyGenerateCompositeIdJson () throws Exception {
-		when (compositeIdService.containsKey(eq("id name"))).thenReturn(true);
-		when (compositeIdService.get(eq("id name"))).thenReturn("id value");
+	public void verifyGenerateCompositeIdJsonDirect () throws Exception {
+		var uut = uut ();
+
+		uut.put("id name", new JsonPrimitive("id value"));
 
 		DataTable table = buildDataTable (List.of(
 			List.of("id", "compositeId", "id name")
 		));
 
-		JsonObject object = uut ().generateJson(table);
+		JsonObject object = uut.generateJsonObject(table);
 
 		assertEquals ("json is not generated correctly", "{\"id\":\"id value\"}", object.toString());
+	}
+
+	@Test
+	public void verifyGenerateCompositeIdJsonCalculated () throws Exception {
+		var uut = uut ();
+
+		DataTable id = buildDataTable (List.of(
+			List.of("pid", "integer", "100"),
+			List.of("cid",  "string", "100")
+		));
+
+		uut.putCompositeKey("id name", id);
+
+		DataTable table = buildDataTable (List.of(
+			List.of("id", "compositeId", "id name")
+		));
+
+		JsonObject object = uut.generateJsonObject(table);
+
+		assertEquals ("json is not generated correctly", "{\"id\":\"eyJwaWQiOjEwMCwiY2lkIjoiMTAwIn0g\"}", object.toString());
 	}
 
 	@Test
@@ -78,7 +99,6 @@ public class TestJsonObjectServiceImplGenerateJson extends JsonObjectServiceImpl
 				public String getName() {
 					return null;
 				}
-
 				@Override
 				public String getPath() {
 					return null;
@@ -101,14 +121,14 @@ public class TestJsonObjectServiceImplGenerateJson extends JsonObjectServiceImpl
 			List.of("id", "key", "serviceName")
 		));
 
-		JsonObject object = uut ().generateJson(table);
+		JsonObject object = uut ().generateJsonObject(table);
 
 		assertEquals ("json is not generated correctly", "{\"id\":\"latest service key\"}", object.toString());
 	}
 
 	@Test
 	public void verifyGenerateJsonJson () throws Exception {
-		JsonObjectServiceImpl uut = uut ();
+		JsonServiceImpl uut = uut ();
 		JsonObject theJson = new JsonObject();
 
 		theJson.add("nada", JsonNull.INSTANCE);
@@ -119,7 +139,7 @@ public class TestJsonObjectServiceImplGenerateJson extends JsonObjectServiceImpl
 			List.of("obj", "json", "json name")
 		));
 
-		JsonObject object = uut.generateJson(table);
+		JsonObject object = uut.generateJsonObject(table);
 
 		assertEquals ("json is not generated correctly", "{\"obj\":{\"nada\":null}}", object.toString());
 	}
@@ -132,7 +152,7 @@ public class TestJsonObjectServiceImplGenerateJson extends JsonObjectServiceImpl
 			List.of("data", "random string", "data_{string:12}")
 		));
 
-		JsonObject object = uut().generateJson(table);
+		JsonObject object = uut().generateJsonObject(table);
 
 		assertEquals ("json is not generated correctly", "{\"data\":\"data_ly4qeYTuM22G\"}", object.toString());
 	}
@@ -146,7 +166,7 @@ public class TestJsonObjectServiceImplGenerateJson extends JsonObjectServiceImpl
 		));
 
 		assertThrows ("json is not generated correctly", AssertionError.class, () -> {
-			uut().generateJson(table);
+			uut().generateJsonObject(table);
 		});
 	}
 
@@ -159,7 +179,7 @@ public class TestJsonObjectServiceImplGenerateJson extends JsonObjectServiceImpl
 		));
 
 		assertThrows ("json is not generated correctly", AssertionError.class, () -> {
-			uut().generateJson(table);
+			uut().generateJsonObject(table);
 		});
 	}
 
@@ -172,7 +192,7 @@ public class TestJsonObjectServiceImplGenerateJson extends JsonObjectServiceImpl
 		));
 
 		assertThrows ("json is not generated correctly", AssertionError.class, () -> {
-			uut().generateJson(table);
+			uut().generateJsonObject(table);
 		});
 	}
 
@@ -185,7 +205,7 @@ public class TestJsonObjectServiceImplGenerateJson extends JsonObjectServiceImpl
 		));
 
 		assertThrows ("json is not generated correctly", AssertionError.class, () -> {
-			uut().generateJson(table);
+			uut().generateJsonObject(table);
 		});
 	}
 

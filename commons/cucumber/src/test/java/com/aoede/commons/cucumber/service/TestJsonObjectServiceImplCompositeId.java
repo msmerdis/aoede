@@ -1,20 +1,17 @@
 package com.aoede.commons.cucumber.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 import java.util.Base64;
+import java.util.List;
 
 import org.junit.Test;
 
-import com.aoede.CompositeIdServiceImplTestCaseSetup;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.aoede.JsonObjectServiceImplTestCaseSetup;
 
 import io.cucumber.datatable.DataTable;
 
-public class TestCompositeIdServiceImpl extends CompositeIdServiceImplTestCaseSetup {
+public class TestJsonObjectServiceImplCompositeId extends JsonObjectServiceImplTestCaseSetup {
 
 	@Test
 	public void verifyGenerateBase64 () throws Exception {
@@ -45,14 +42,12 @@ public class TestCompositeIdServiceImpl extends CompositeIdServiceImplTestCaseSe
 
 	@Test
 	public void verifyGenerateCompositeKey () throws Exception {
-		JsonObject object = new JsonObject ();
+		DataTable table = buildDataTable (List.of(
+			List.of("parentId", "integer", "1"),
+			List.of( "childId", "integer", "1")
+		));
 
-		object.add("parentId", new JsonPrimitive(1));
-		object.add( "childId", new JsonPrimitive(1));
-
-		when(jsonObjectService.generateJson(any())).thenReturn(object);
-
-		String pack = uut().generateCompositeKey(DataTable.emptyDataTable());
+		String pack = uut().generateCompositeKey(table);
 
 		assertEquals ("data where not generated correctly", "eyJwYXJlbnRJZCI6MSwiY2hpbGRJZCI6MX0g", pack);
 		assertEquals ("data where not generated correctly", "{\"parentId\":1,\"childId\":1} ", new String(Base64.getDecoder().decode(pack)));

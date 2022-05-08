@@ -13,9 +13,8 @@ import org.springframework.web.client.RestTemplate;
 import com.aoede.commons.cucumber.BaseStepDefinition;
 import com.aoede.commons.cucumber.BaseTestComponent;
 import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
-import com.aoede.commons.cucumber.service.CompositeIdServiceImpl;
 import com.aoede.commons.cucumber.service.DataTableServiceImpl;
-import com.aoede.commons.cucumber.service.JsonObjectServiceImpl;
+import com.aoede.commons.cucumber.service.JsonServiceImpl;
 import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 
 @RunWith(SpringRunner.class)
@@ -25,8 +24,7 @@ public class BaseStepDefinitionTestCaseSetup extends BaseTestComponent {
 	@MockBean protected ServerProperties serverProperties;
 	@MockBean protected AbstractTestServiceDiscoveryService services;
 	@MockBean protected TestCaseIdTrackerService testCaseIdTrackerService;
-	@MockBean protected CompositeIdServiceImpl compositeIdService;
-	@MockBean protected JsonObjectServiceImpl jsonObjectService;
+	@MockBean protected JsonServiceImpl jsonService;
 	@MockBean protected DataTableServiceImpl dataTableService;
 
 	// unit under test
@@ -35,8 +33,7 @@ public class BaseStepDefinitionTestCaseSetup extends BaseTestComponent {
 			this.serverProperties,
 			this.services,
 			this.testCaseIdTrackerService,
-			this.compositeIdService,
-			this.jsonObjectService,
+			this.jsonService,
 			this.dataTableService
 		);
 

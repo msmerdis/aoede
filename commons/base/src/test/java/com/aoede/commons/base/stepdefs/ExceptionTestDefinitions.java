@@ -8,9 +8,8 @@ import org.springframework.boot.autoconfigure.web.ServerProperties;
 import com.aoede.commons.cucumber.BaseStepDefinition;
 import com.aoede.commons.cucumber.ResponseResults;
 import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
-import com.aoede.commons.cucumber.service.CompositeIdService;
 import com.aoede.commons.cucumber.service.DataTableService;
-import com.aoede.commons.cucumber.service.JsonObjectService;
+import com.aoede.commons.cucumber.service.JsonService;
 import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -26,16 +25,14 @@ public class ExceptionTestDefinitions extends BaseStepDefinition {
 		ServerProperties serverProperties,
 		AbstractTestServiceDiscoveryService services,
 		TestCaseIdTrackerService testCaseIdTrackerService,
-		CompositeIdService compositeIdService,
-		JsonObjectService jsonObjectService,
+		JsonService jsonService,
 		DataTableService dataTableService
 	) {
 		super (
 			serverProperties,
 			services,
 			testCaseIdTrackerService,
-			compositeIdService,
-			jsonObjectService,
+			jsonService,
 			dataTableService
 		);
 	}
@@ -200,7 +197,7 @@ public class ExceptionTestDefinitions extends BaseStepDefinition {
 	@Then("the error response contains {string} objects in {string}")
 	public void verifyElementList (String dataTableName, String element, DataTable data) {
 		// generate a json array using a previously stored template
-		JsonArray array = jsonObjectService.generateJsonArray(
+		JsonArray array = jsonService.generateJsonArray(
 			dataTableService.get(dataTableName), data);
 
 		JsonObject obj = JsonParser.parseString(latestResults.body).getAsJsonObject();
@@ -209,7 +206,7 @@ public class ExceptionTestDefinitions extends BaseStepDefinition {
 		assertTrue (element + " is not an array", obj.get(element).isJsonArray());
 
 		assertTrue(
-			jsonObjectService.jsonArrayMatches(obj.get(element).getAsJsonArray(), array)
+			jsonService.jsonArrayMatches(obj.get(element).getAsJsonArray(), array)
 		);
 	}
 

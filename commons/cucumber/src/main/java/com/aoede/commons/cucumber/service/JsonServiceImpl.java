@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.util.Random;
 import java.util.regex.Pattern;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
@@ -20,34 +21,70 @@ import com.google.gson.JsonPrimitive;
 import io.cucumber.datatable.DataTable;
 
 @Service
-public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> implements JsonObjectService {
+public class JsonServiceImpl extends TestStorageServiceImpl<JsonElement> implements JsonService {
 	private final static String STRING_REGEX = "\\{[^{}]*\\}";
 
 	private Random random = new Random (System.currentTimeMillis());
 	private Pattern stringPattern;
 
 	private AbstractTestServiceDiscoveryService abstractTestServiceDiscoveryService;
-	private CompositeIdService compositeIdService;
 
-	public JsonObjectServiceImpl (
-		AbstractTestServiceDiscoveryService abstractTestServiceDiscoveryService,
-		CompositeIdService compositeIdService
+	public JsonServiceImpl (
+		AbstractTestServiceDiscoveryService abstractTestServiceDiscoveryService
 	) {
 		this.abstractTestServiceDiscoveryService = abstractTestServiceDiscoveryService;
-		this.compositeIdService = compositeIdService;
-		this.compositeIdService.updateJsonObjectService(this);
 
 		stringPattern = Pattern.compile(STRING_REGEX, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 	}
 
 	@Override
-	public JsonObject put(String name, DataTable data) {
-		return put(name, generateJson(data));
+	public String generateBase64 (String data) {
+		return Base64.encodeBase64String(data.getBytes());
+	}
+
+	@Override
+	public String generatePaddedBase64 (String data) {
+		switch (data.length() % 3) {
+			case 1: data = data + "  "; break;
+			case 2: data = data + " ";  break;
+			default:
+				// no padding is needed
+		}
+		return generateBase64 (data);
+	}
+
+	@Override
+	public String generateCompositeKey (DataTable data) {
+		return generatePaddedBase64(generateJsonObject(data).toString());
+	}
+
+	@Override
+	public String putCompositeKey(String name, DataTable data) {
+		JsonElement previous = put(name, new JsonPrimitive(generateCompositeKey(data)));
+		return previous == null ? null : previous.getAsString();
+	}
+
+	@Override
+	public String getCompositeKey(String name) {
+		isCompositeKey(name);
+		return get(name).getAsString();
+	}
+
+	private boolean isCompositeKey (String name) {
+		return
+			containsKey(name) &&
+			get(name).isJsonPrimitive() &&
+			get(name).getAsJsonPrimitive().isString();
+	}
+
+	@Override
+	public JsonElement put(String name, DataTable data) {
+		return put(name, generateJsonObject(data));
 	}
 
 	// generate a json object base on data table
 	@Override
-	public JsonObject generateJson (DataTable data) {
+	public JsonObject generateJsonObject (DataTable data) {
 		JsonObject obj = new JsonObject ();
 
 		for (var row : data.asLists()) {
@@ -60,7 +97,7 @@ public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> im
 
 	@Override
 	public boolean jsonObjectMatches(JsonObject object, DataTable data) {
-		return jsonObjectMatches (object, generateJson (data));
+		return jsonObjectMatches (object, generateJsonObject (data));
 	}
 
 	@Override
@@ -207,7 +244,7 @@ public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> im
 
 	@Override
 	public boolean jsonArrayContainsObject(JsonArray array, DataTable data) {
-		return jsonArrayContainsObject (array, generateJson(data));
+		return jsonArrayContainsObject (array, generateJsonObject(data));
 	}
 
 	@Override
@@ -260,11 +297,8 @@ public class JsonObjectServiceImpl extends TestStorageServiceImpl<JsonObject> im
 		case "fraction":
 			return buildFraction(value);
 		case "compositeId":
-			assertTrue (
-				"composite id " + value + " was not found",
-				compositeIdService.containsKey(value)
-			);
-			return new JsonPrimitive(compositeIdService.get(value));
+			assertTrue("json value " + value + " is not a valid composite id", isCompositeKey(value));
+			return get(value);
 		case "key":
 			AbstractTestService service = abstractTestServiceDiscoveryService.getService(value);
 			assertNotNull("service for " + value + " was not found", service);

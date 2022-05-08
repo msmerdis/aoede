@@ -21,7 +21,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 	@Test
 	public void generateInt () throws Exception {
 		// execute function
-		Method setup = JsonObjectServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
+		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
 		setup.setAccessible(true);
 		JsonElement element = (JsonElement) setup.invoke(uut(), "int", "1");
 
@@ -32,7 +32,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 	@Test
 	public void generateInteger () throws Exception {
 		// execute function
-		Method setup = JsonObjectServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
+		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
 		setup.setAccessible(true);
 		JsonElement element = (JsonElement) setup.invoke(uut(), "int", "-123");
 
@@ -43,7 +43,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 	@Test
 	public void generateLong () throws Exception {
 		// execute function
-		Method setup = JsonObjectServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
+		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
 		setup.setAccessible(true);
 		JsonElement element = (JsonElement) setup.invoke(uut(), "long", "0");
 
@@ -56,7 +56,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 		String number = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
 
 		// execute function
-		Method setup = JsonObjectServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
+		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
 		setup.setAccessible(true);
 		JsonElement element = (JsonElement) setup.invoke(uut(), "number", number);
 
@@ -67,7 +67,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 	@Test
 	public void generateString () throws Exception {
 		// execute function
-		Method setup = JsonObjectServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
+		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
 		setup.setAccessible(true);
 		JsonElement element = (JsonElement) setup.invoke(uut(), "string", "Hello world!!!");
 
@@ -78,7 +78,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 	@Test
 	public void generateBool () throws Exception {
 		// execute function
-		Method setup = JsonObjectServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
+		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
 		setup.setAccessible(true);
 		JsonElement element = (JsonElement) setup.invoke(uut(), "bool", "true");
 
@@ -89,7 +89,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 	@Test
 	public void generateBoolean () throws Exception {
 		// execute function
-		Method setup = JsonObjectServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
+		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
 		setup.setAccessible(true);
 		JsonElement element = (JsonElement) setup.invoke(uut(), "boolean", "false");
 
@@ -99,14 +99,14 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 
 	@Test
 	public void generateCompositeId () throws Exception {
-		// mock internal calls
-		when(compositeIdService.containsKey(eq("id name"))).thenReturn(true);
-		when(compositeIdService.get(eq("id name"))).thenReturn("id value");
+		var uut = uut ();
+
+		uut.put("id name", new JsonPrimitive("id value"));
 
 		// execute function
-		Method setup = JsonObjectServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
+		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
 		setup.setAccessible(true);
-		JsonElement element = (JsonElement) setup.invoke(uut(), "compositeId", "id name");
+		JsonElement element = (JsonElement) setup.invoke(uut, "compositeId", "id name");
 
 		assertTrue ("element must me primitive", element.isJsonPrimitive());
 		assertEquals ("element value is incorrect", "\"id value\"", element.toString());
@@ -115,7 +115,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 	@Test
 	public void generateCompositeIdMissingId () throws Exception {
 		// execute function
-		Method setup = JsonObjectServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
+		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
 		setup.setAccessible(true);
 
 
@@ -130,7 +130,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 		setupKeyForService ("sevice name", new JsonPrimitive ("latest service key"));
 
 		// execute function
-		Method setup = JsonObjectServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
+		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
 		setup.setAccessible(true);
 		JsonElement element = (JsonElement) setup.invoke(uut(), "key", "sevice name");
 
@@ -141,7 +141,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 	@Test
 	public void generateKeyMissingKey () throws Exception {
 		// execute function
-		Method setup = JsonObjectServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
+		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
 		setup.setAccessible(true);
 
 		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
@@ -157,7 +157,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 		uut.put("json name", new JsonObject());
 
 		// execute function
-		Method setup = JsonObjectServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
+		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
 		setup.setAccessible(true);
 		JsonElement element = (JsonElement) setup.invoke(uut, "json", "json name");
 
@@ -168,7 +168,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 	@Test
 	public void generateJsonMissingJson () throws Exception {
 		// execute function
-		Method setup = JsonObjectServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
+		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
 		setup.setAccessible(true);
 
 		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
@@ -179,7 +179,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 	@Test
 	public void generateNull () throws Exception {
 		// execute function
-		Method setup = JsonObjectServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
+		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
 		setup.setAccessible(true);
 		JsonElement element = (JsonElement) setup.invoke(uut(), "null", "anything");
 
@@ -190,7 +190,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 	@Test
 	public void generateRandomString () throws Exception {
 		// execute function
-		Method setup = JsonObjectServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
+		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
 		setup.setAccessible(true);
 		JsonElement element = (JsonElement) setup.invoke(uut(), "random string", "anything");
 
@@ -201,7 +201,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 	@Test
 	public void generateFraction () throws Exception {
 		// execute function
-		Method setup = JsonObjectServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
+		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
 		setup.setAccessible(true);
 		JsonElement element = (JsonElement) setup.invoke(uut(), "fraction", " 3 / 4 ");
 
