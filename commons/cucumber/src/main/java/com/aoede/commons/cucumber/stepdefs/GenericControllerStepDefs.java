@@ -79,6 +79,9 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 	 * Requests
 	 */
 
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	// SEARCH
+
 	@When("search {string} with keyword {string}")
 	public void search(String domain, String keyword) {
 		logger.info("searching " + domain + " for " + keyword);
@@ -91,6 +94,9 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		// update test controller with data
 		services.getLatestService(domain).searchResults(results);
 	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	// ACCESS SINGLE ITEM
 
 	@When("request a {string} with id {string}")
 	public void getSimple(String domain, String id) {
@@ -125,6 +131,9 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		getSimple (domain, element.getAsString());
 	}
 
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	// ACCESS MULTIPLE ITEMS
+
 	@When("request all available {string}")
 	public void findAll (String domain) {
 		logger.info("retrieving all available " + domain);
@@ -148,6 +157,9 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		services.getService(childDomain).findAllResults(results);
 	}
 
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	// CREATE
+
 	@Given("a {string} with")
 	public void create(String domain, DataTable data) {
 		logger.info("creating " + domain);
@@ -169,6 +181,9 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 			)
 		));
 	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	// UPDATE
 
 	@When("update {string} with id {string}")
 	public void updateSimple(String domain, String id, DataTable data) {
@@ -210,6 +225,9 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		updateSimple (domain, element.getAsString(), data);
 	}
 
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	// DELETE
+
 	@When("delete {string} with id {string}")
 	public void deleteSimple(String domain, String id) {
 		logger.info("deleting " + domain + " with id " + id);
@@ -248,37 +266,86 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 
 	@Then("the request was successful")
 	public void verifySuccessfulRequest () {
-		assertTrue("request was not successful", services.getLatestService().isSuccess());
+		verifySuccessfulRequest(services.getLatestService());
+	}
+
+	@Then("the {string} request was successful")
+	public void verifySuccessfulRequest (String domain) {
+		verifySuccessfulRequest(services.getService(domain));
+	}
+
+	private void verifySuccessfulRequest(AbstractTestService service) {
+		assertTrue("request was not successful", service.isSuccess());
 	}
 
 	@Then("the request was not successful")
 	public void verifyNotSuccessfulRequest () {
-		assertFalse("request was successful", services.getLatestService().isSuccess());
+		verifyNotSuccessfulRequest(services.getLatestService());
+	}
+
+	@Then("the {string} request was not successful")
+	public void verifyNotSuccessfulRequest (String domain) {
+		verifyNotSuccessfulRequest(services.getService(domain));
+	}
+
+	private void verifyNotSuccessfulRequest(AbstractTestService service) {
+		assertFalse("request was successful", service.isSuccess());
 	}
 
 	@Then("the response has a status code of {int}")
 	public void verifyStatus (int code) {
-		assertEquals(code, services.getLatestService().getLatestResults().status.value());
+		verifyStatus(services.getLatestService(), code);
+	}
+
+	@Then("the {string} response has a status code of {int}")
+	public void verifyStatus (String domain, int code) {
+		verifyStatus(services.getService(domain), code);
+	}
+
+	private void verifyStatus (AbstractTestService service, int code) {
+		assertEquals(code, service.getLatestResults().status.value());
 	}
 
 	@Then("the response array contains {string} objects")
-	public void verifyElementList (String dataTableName, DataTable data) {
+	public void verifyArrayList (String dataTableName, DataTable data) {
+		verifyArrayList(services.getLatestService(), dataTableName, data);
+	}
+
+	@Then("the {string} response array contains {string} objects")
+	public void verifyArrayList (String domain, String dataTableName, DataTable data) {
+		verifyArrayList(services.getService(domain), dataTableName, data);
+	}
+
+	private void verifyArrayList (AbstractTestService service, String dataTableName, DataTable data) {
 		// generate a json array using a previously stored template
 		JsonArray array = jsonObjectService.generateJsonArray(
 			dataTableService.get(dataTableName), data);
 
+		assertNotNull("could not generate json array", array);
+
 		assertTrue(
-			jsonObjectService.jsonArrayMatches(services.getLatestService().getLatestArr(), array)
+			jsonObjectService.jsonArrayMatches(service.getLatestArr(), array)
 		);
 	}
 
 	@Then("the response contains {string} objects in {string}")
 	public void verifyElementList (String dataTableName, String element, DataTable data) {
+		verifyElementList (services.getLatestService(), dataTableName, element, data);
+	}
+
+	@Then("the {string} response contains {string} objects in {string}")
+	public void verifyElementList (String domain, String dataTableName, String element, DataTable data) {
+		verifyElementList (services.getService(domain), dataTableName, element, data);
+	}
+
+	private void verifyElementList (AbstractTestService service, String dataTableName, String element, DataTable data) {
 		// generate a json array using a previously stored template
 		JsonArray array = jsonObjectService.generateJsonArray(
 			dataTableService.get(dataTableName), data);
 
-		JsonObject obj = services.getLatestService().getLatestObj();
+		assertNotNull("could not generate json array", array);
+
+		JsonObject obj = service.getLatestObj();
 
 		assertTrue ("does not have element " + element, obj.has(element));
 		assertTrue (element + " is not an array", obj.get(element).isJsonArray());
@@ -361,9 +428,18 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 
 	@Then("the response matches")
 	public void verifyElement (DataTable data) {
+		verifyElement(services.getLatestService(), data);
+	}
+
+	@Then("the {string} response matches")
+	public void verifyElement (String domain, DataTable data) {
+		verifyElement(services.getService(domain), data);
+	}
+
+	private void verifyElement (AbstractTestService service, DataTable data) {
 		assertTrue(
 			jsonObjectService.jsonObjectMatches(
-				services.getLatestService().getLatestObj(), data)
+				service.getLatestObj(), data)
 		);
 	}
 

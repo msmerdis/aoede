@@ -31,7 +31,6 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 
 	@Test
 	public void verifySuccessfulRequestSuccess () throws Exception {
-		when(services.getLatestService()).thenReturn(latestService);
 		verifySuccessfulRequest(true);
 		verify(latestService).isSuccess();
 	}
@@ -40,6 +39,28 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 	public void verifySuccessfulRequestFailure () throws Exception {
 		assertThrows ("assertion not performed succesfully", AssertionError.class, () -> {
 			verifySuccessfulRequest(false);
+		});
+	}
+
+	private void verifyNamedSuccessfulRequest (String domain, boolean status) throws Exception {
+		GenericControllerStepDefs uut = uut ();
+
+		when(services.getService(eq(domain))).thenReturn(latestService);
+		when(latestService.isSuccess()).thenReturn(status);
+
+		uut.verifySuccessfulRequest(domain);
+	}
+
+	@Test
+	public void verifyNamedSuccessfulRequestSuccess () throws Exception {
+		verifyNamedSuccessfulRequest("test", true);
+		verify(latestService).isSuccess();
+	}
+
+	@Test
+	public void verifyNamedSuccessfulRequestFailure () throws Exception {
+		assertThrows ("assertion not performed succesfully", AssertionError.class, () -> {
+			verifyNamedSuccessfulRequest("test", false);
 		});
 	}
 
@@ -54,7 +75,6 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 
 	@Test
 	public void verifyNotSuccessfulRequestSuccess () throws Exception {
-		when(services.getLatestService()).thenReturn(latestService);
 		verifyNotSuccessfulRequest(false);
 		verify(latestService).isSuccess();
 	}
@@ -63,6 +83,28 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 	public void verifyNotSuccessfulRequestFailure () throws Exception {
 		assertThrows ("assertion not performed succesfully", AssertionError.class, () -> {
 			verifyNotSuccessfulRequest(true);
+		});
+	}
+
+	private void verifyNamedNotSuccessfulRequest (String domain, boolean status) throws Exception {
+		GenericControllerStepDefs uut = uut ();
+
+		when(services.getService(eq(domain))).thenReturn(latestService);
+		when(latestService.isSuccess()).thenReturn(status);
+
+		uut.verifyNotSuccessfulRequest(domain);
+	}
+
+	@Test
+	public void verifyNamedNotSuccessfulRequestSuccess () throws Exception {
+		verifyNamedNotSuccessfulRequest("fail", false);
+		verify(latestService).isSuccess();
+	}
+
+	@Test
+	public void verifyNamedNotSuccessfulRequestFailure () throws Exception {
+		assertThrows ("assertion not performed succesfully", AssertionError.class, () -> {
+			verifyNamedNotSuccessfulRequest("fail", true);
 		});
 	}
 
@@ -79,7 +121,6 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 
 	@Test
 	public void verifyStatusSuccess () throws Exception {
-		when(services.getLatestService()).thenReturn(latestService);
 		verifyStatus(200);
 		verify(latestService).getLatestResults();
 	}
@@ -91,7 +132,31 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 		});
 	}
 
-	private void verifyElementList (JsonArray latest, JsonArray generated, boolean status) throws Exception {
+	private void verifyNamedStatus (String domain, int status) throws Exception {
+		GenericControllerStepDefs uut = uut ();
+		ResponseResults results = new ResponseResults();
+		results.status = HttpStatus.OK;
+
+		when(services.getService(eq(domain))).thenReturn(latestService);
+		when(latestService.getLatestResults()).thenReturn(results);
+
+		uut.verifyStatus(domain, status);
+	}
+
+	@Test
+	public void verifyNamedStatusSuccess () throws Exception {
+		verifyNamedStatus("Status", 200);
+		verify(latestService).getLatestResults();
+	}
+
+	@Test
+	public void verifyNamedStatusFailure () throws Exception {
+		assertThrows ("assertion not performed succesfully", AssertionError.class, () -> {
+			verifyNamedStatus("Status", 201);
+		});
+	}
+
+	private void verifyArrayList (JsonArray latest, JsonArray generated, boolean status) throws Exception {
 		GenericControllerStepDefs uut = uut ();
 
 		when(services.getLatestService()).thenReturn(latestService);
@@ -100,27 +165,114 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 		when(latestService.getLatestArr()).thenReturn(latest);
 		when(jsonObjectService.jsonArrayMatches(any(JsonArray.class), any(JsonArray.class))).thenReturn(status);
 
-		uut.verifyElementList("objectName", DataTable.emptyDataTable());
+		uut.verifyArrayList("objectName", DataTable.emptyDataTable());
 	}
 
 	@Test
-	public void verifyElementListSuccess () throws Exception {
+	public void verifyArrayListSuccess () throws Exception {
 		JsonArray latest = new JsonArray();
 		JsonArray generated = new JsonArray();
 
-		when(services.getLatestService()).thenReturn(latestService);
-
-		verifyElementList(latest, generated, true);
+		verifyArrayList(latest, generated, true);
 		verify(jsonObjectService).jsonArrayMatches(latest, generated);
 	}
 
 	@Test
-	public void verifyElementListFailure () throws Exception {
+	public void verifyArrayListFailure () throws Exception {
 		JsonArray latest = new JsonArray();
 		JsonArray generated = new JsonArray();
 
 		assertThrows ("assertion not performed succesfully", AssertionError.class, () -> {
-			verifyElementList(latest, generated, false);
+			verifyArrayList(latest, generated, false);
+		});
+	}
+
+	private void verifyNamedArrayList (String domain, JsonArray latest, JsonArray generated, boolean status) throws Exception {
+		GenericControllerStepDefs uut = uut ();
+
+		when(services.getService(domain)).thenReturn(latestService);
+		when(dataTableService.get(eq("objectName"))).thenReturn(DataTable.emptyDataTable());
+		when(jsonObjectService.generateJsonArray(any(DataTable.class), any(DataTable.class))).thenReturn(generated);
+		when(latestService.getLatestArr()).thenReturn(latest);
+		when(jsonObjectService.jsonArrayMatches(any(JsonArray.class), any(JsonArray.class))).thenReturn(status);
+
+		uut.verifyArrayList(domain, "objectName", DataTable.emptyDataTable());
+	}
+
+	@Test
+	public void verifyNamedArrayListSuccess () throws Exception {
+		JsonArray latest = new JsonArray();
+		JsonArray generated = new JsonArray();
+
+		verifyNamedArrayList("test", latest, generated, true);
+		verify(jsonObjectService).jsonArrayMatches(latest, generated);
+	}
+
+	@Test
+	public void verifyNamedArrayListFailure () throws Exception {
+		JsonArray latest = new JsonArray();
+		JsonArray generated = new JsonArray();
+
+		assertThrows ("assertion not performed succesfully", AssertionError.class, () -> {
+			verifyNamedArrayList("test", latest, generated, false);
+		});
+	}
+
+	private void verifyElementList (JsonObject latest, JsonArray generated, boolean status) throws Exception {
+		GenericControllerStepDefs uut = uut ();
+
+		when(services.getLatestService()).thenReturn(latestService);
+		when(dataTableService.get(eq("tableName"))).thenReturn(DataTable.emptyDataTable());
+		when(jsonObjectService.generateJsonArray(any(DataTable.class), any(DataTable.class))).thenReturn(generated);
+		when(latestService.getLatestObj()).thenReturn(latest);
+		when(jsonObjectService.jsonArrayMatches(any(JsonArray.class), any(JsonArray.class))).thenReturn(status);
+
+		uut.verifyElementList("tableName", "element", DataTable.emptyDataTable());
+	}
+
+	@Test
+	public void verifyElementListSuccess () throws Exception {
+		JsonObject latest = new JsonObject();
+		JsonArray generated = new JsonArray();
+
+		latest.add("element", new JsonArray());
+
+		verifyElementList(latest, generated, true);
+	}
+
+	@Test
+	public void verifyElementListFailure () throws Exception {
+		assertThrows ("assertion not performed succesfully", AssertionError.class, () -> {
+			verifyElementList(new JsonObject(), new JsonArray(), false);
+		});
+	}
+
+	private void verifyNamedElementList (String domain, JsonObject latest, JsonArray generated, boolean status) throws Exception {
+		GenericControllerStepDefs uut = uut ();
+
+		when(services.getService(domain)).thenReturn(latestService);
+		when(dataTableService.get(eq("tableName"))).thenReturn(DataTable.emptyDataTable());
+		when(jsonObjectService.generateJsonArray(any(DataTable.class), any(DataTable.class))).thenReturn(generated);
+		when(latestService.getLatestObj()).thenReturn(latest);
+		when(jsonObjectService.jsonArrayMatches(any(JsonArray.class), any(JsonArray.class))).thenReturn(status);
+
+		uut.verifyElementList(domain, "tableName", "element", DataTable.emptyDataTable());
+	}
+
+	@Test
+	public void verifyNamedElementListSuccess () throws Exception {
+		JsonObject latest = new JsonObject();
+		JsonArray generated = new JsonArray();
+
+		latest.add("element", new JsonArray());
+
+		verifyNamedElementList("test", latest, generated, true);
+	}
+
+	@Test
+	public void verifyNamedElementListFailure () throws Exception {
+		assertThrows ("assertion not performed succesfully", AssertionError.class, () -> {
+			verifyNamedElementList("test", new JsonObject(), new JsonArray(), false);
 		});
 	}
 
@@ -324,6 +476,29 @@ public class TestGenericControllerStepDefsAssertions extends GenericControllerSt
 		when(jsonObjectService.jsonObjectMatches(eq(object), eq(DataTable.emptyDataTable()))).thenReturn(status);
 
 		uut.verifyElement(DataTable.emptyDataTable());
+	}
+
+	@Test
+	public void verifyNamedElementSuccess () throws Exception {
+		verifyNamedElement("test", true);
+	}
+
+	@Test
+	public void verifyNamedElementFailure () throws Exception {
+		assertThrows ("assertion not performed succesfully", AssertionError.class, () -> {
+			verifyNamedElement("fail", false);
+		});
+	}
+
+	private void verifyNamedElement (String domain, boolean status) throws Exception {
+		GenericControllerStepDefs uut = uut ();
+		JsonObject object = new JsonObject();
+
+		when(services.getService(domain)).thenReturn(latestService);
+		when(latestService.getLatestObj()).thenReturn(object);
+		when(jsonObjectService.jsonObjectMatches(eq(object), eq(DataTable.emptyDataTable()))).thenReturn(status);
+
+		uut.verifyElement(domain, DataTable.emptyDataTable());
 	}
 
 	@Test

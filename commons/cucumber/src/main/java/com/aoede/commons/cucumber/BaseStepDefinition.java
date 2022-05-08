@@ -211,6 +211,10 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 		compositeIdService.clear();
 		dataTableService.clear();
 	}
+
+	protected String getLatestTestCaseId() {
+		return testCaseIdTrackerService.getLatestTestCaseId();
+	}
 }
 
 
