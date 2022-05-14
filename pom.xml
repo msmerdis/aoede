@@ -350,6 +350,7 @@
 								<resourceBundle>com.aoede.commons:common-cucumber-resources:${project.version}</resourceBundle>
 							</resourceBundles>
 							<attachToMain>false</attachToMain>
+							<attachToTest>true</attachToTest>
 						</configuration>
 					</execution>
 				</executions>

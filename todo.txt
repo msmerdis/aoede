@@ -14,3 +14,4 @@ And the response contains "nullValidationInfo" objects in "validations"
 	| updateSection | trackId |       | Section must define a track id |
 
 2. verify if parent element exists - currently throws a conflict error
+3. log level on aoede app tests
