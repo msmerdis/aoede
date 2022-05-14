@@ -8,10 +8,10 @@ public interface AbstractServiceDomain <
 	DomainKey, Domain extends AbstractDomain<DomainKey>,
 	EntityKey, Entity extends AbstractEntity<EntityKey>
 > extends AbstractService<DomainKey, Domain> {
-	public Entity createEntity (final Domain domain,                      boolean includeParent, boolean cascade) throws GenericException;
-	public void   updateEntity (final Domain domain, final Entity entity, boolean includeParent, boolean cascade) throws GenericException;
-	public Domain createDomain (final Entity entity,                      boolean includeParent, boolean cascade);
-	public void   updateDomain (final Entity entity, final Domain domain, boolean includeParent, boolean cascade);
+	public Entity createEntity (final Domain domain                     ) throws GenericException;
+	public void   updateEntity (final Domain domain, final Entity entity) throws GenericException;
+	public Domain createDomain (final Entity entity                     );
+	public void   updateDomain (final Entity entity, final Domain domain);
 
 	public default boolean verifyDelete (final Entity entity) {
 		return true;

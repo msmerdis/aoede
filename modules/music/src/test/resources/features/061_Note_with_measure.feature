@@ -51,9 +51,10 @@ And the response matches
 	| note  | integer  |  64 |
 	| value | fraction | 1/4 |
 And the response has a status code of 200
-Then request previously created "measure"
+Then request all available "note" for latest "measure"
 And the request was successful
-And "measure" contains latest "note" in "notes"
+And the response has a status code of 200
+And "note" returned array of size 1
 
 @TC061002
 @Positive @Update
@@ -111,10 +112,10 @@ And the response matches
 	| note  | integer  | 127 |
 	| value | fraction | 3/8 |
 And the response has a status code of 201
-Then request previously created "measure"
+Then request all available "note" for latest "measure"
 And the request was successful
 And the response has a status code of 200
-And "measure" has "notes" array of size 3
+And "note" returned array of size 3
 And prepare composite id "noteKey1"
 	|   sheetId  | key | sheet |
 	|   trackId  | int | 1     |
@@ -136,7 +137,7 @@ And prepare composite id "noteKey3"
 And prepare data table "noteObject"
 	| id          | note | value    |
 	| compositeId | int  | fraction |
-And the response contains "noteObject" objects in "notes"
+And the response array contains "noteObject" objects
 	| id          | note | value    |
 	| noteKey1    |  64  |  1/4     |
 	| noteKey2    |  -1  |  1/8     |

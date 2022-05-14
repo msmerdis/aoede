@@ -12,8 +12,6 @@ import com.aoede.modules.music.entity.NoteEntity;
 
 public interface MeasureService extends AbstractServiceDomain <MeasureKey, Measure, MeasureId, MeasureEntity> {
 
-	void updateSectionService(SectionService sectionService);
-
 	void updateNoteEntity(NoteEntity entity, MeasureKey key);
 
 	List<Measure> findBySectionId(SectionKey id);

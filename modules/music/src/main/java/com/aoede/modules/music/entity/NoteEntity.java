@@ -25,7 +25,7 @@ import lombok.Setter;
 		@Index(columnList = "sheetId, trackId, sectionId, measureId, noteId", unique = true)
 	}
 )
-public class NoteEntity extends AbstractJpaEntity<NoteId> implements AbstractEntity<NoteId> {
+public class NoteEntity extends AbstractJpaEntity<NoteId> implements AbstractEntity<NoteId>, Sheetable {
 	@EmbeddedId
 	private NoteId id;
 

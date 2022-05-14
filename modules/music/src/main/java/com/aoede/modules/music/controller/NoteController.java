@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aoede.commons.base.controller.AbstractCompositeResourceController;
-import com.aoede.modules.music.domain.Measure;
 import com.aoede.modules.music.domain.Note;
 import com.aoede.modules.music.domain.NoteKey;
 import com.aoede.modules.music.service.NoteService;
@@ -22,8 +21,6 @@ import com.aoede.modules.music.transfer.note.CreateNote;
 import com.aoede.modules.music.transfer.note.DetailNoteResponse;
 import com.aoede.modules.music.transfer.note.SimpleNoteResponse;
 import com.aoede.modules.music.transfer.note.UpdateNote;
-import com.aoede.modules.music.transfer.section.AccessSection;
-import com.aoede.modules.music.transfer.track.AccessTrack;
 
 @RestController
 @RequestMapping ("/api/note")
@@ -40,18 +37,19 @@ public class NoteController extends AbstractCompositeResourceController<
 	private ConversionService conversionService;
 	private MeasureController measureController;
 
-	public NoteController(NoteService service, ConversionService conversionService) {
+	public NoteController(
+		NoteService service,
+		MeasureController measureController,
+		ConversionService conversionService
+	) {
 		super(service);
 
+		this.measureController = measureController;
 		this.conversionService = conversionService;
 	}
 
-	public void updateMeasureController (MeasureController measureController) {
-		this.measureController = measureController;
-	}
-
 	@Override
-	public SimpleNoteResponse simpleResponse(Note entity, boolean includeParent, boolean cascade) {
+	public SimpleNoteResponse simpleResponse(Note entity) {
 		SimpleNoteResponse response = new SimpleNoteResponse ();
 
 		updateSimpleNoteResponse (response, entity, entity.getId());
@@ -60,18 +58,10 @@ public class NoteController extends AbstractCompositeResourceController<
 	}
 
 	@Override
-	public DetailNoteResponse detailResponse(Note entity, boolean includeParent, boolean cascade) {
+	public DetailNoteResponse detailResponse(Note entity) {
 		DetailNoteResponse response = new DetailNoteResponse ();
-		NoteKey key = entity.getId();
 
 		updateSimpleNoteResponse (response, entity, entity.getId());
-
-		if (includeParent) {
-			response.setSheetId(key.getSheetId());
-			response.setTrackId(new AccessTrack(key.getSheetId(), key.getTrackId()));
-			response.setSectionId(new AccessSection(key.getSheetId(), key.getTrackId(), key.getSectionId()));
-			response.setMeasureId(new AccessMeasure(key.getSheetId(), key.getTrackId(), key.getSectionId(), key.getMeasureId()));
-		}
 
 		return response;
 	}
@@ -85,12 +75,12 @@ public class NoteController extends AbstractCompositeResourceController<
 	@Override
 	public Note createDomain(CreateNote request) {
 		Note note = updateDomain (request);
-		Measure measure = new Measure();
+		AccessMeasure key = conversionService.convert(request.getMeasureId(), AccessMeasure.class);
 
-		measure.setId(measureController.createDomainKey(
-			conversionService.convert(request.getMeasureId(), AccessMeasure.class)
-		));
-		note.setMeasure(measure);
+		note.getId().setSheetId(key.getSheetId());
+		note.getId().setTrackId(key.getTrackId());
+		note.getId().setSectionId(key.getSectionId());
+		note.getId().setMeasureId(key.getMeasureId());
 
 		return note;
 	}
@@ -101,6 +91,7 @@ public class NoteController extends AbstractCompositeResourceController<
 
 		note.setNote(request.getNote());
 		note.setValue(request.getValue());
+		note.setId(new NoteKey());
 
 		return note;
 	}
@@ -110,7 +101,7 @@ public class NoteController extends AbstractCompositeResourceController<
 	public List<SimpleNoteResponse> findAllByMeasure(@PathVariable("id") final AccessMeasure id) throws Exception {
 		return service.findByMeasureId(
 			measureController.createDomainKey(id)
-		).stream().map(e -> simpleResponse(e, true, true)).collect(Collectors.toList());
+		).stream().map(e -> simpleResponse(e)).collect(Collectors.toList());
 	}
 
 	@Override

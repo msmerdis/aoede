@@ -12,8 +12,6 @@ import com.aoede.modules.music.entity.SectionId;
 
 public interface SectionService extends AbstractServiceDomain <SectionKey, Section, SectionId, SectionEntity> {
 
-	void updateTrackService(TrackService trackService);
-
 	void updateMeasureEntity(MeasureEntity entity, SectionKey key);
 
 	List<Section> findByTrackId(TrackKey trackKey);

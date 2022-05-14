@@ -28,14 +28,12 @@ Scenario: create a new Track
 When request previously created "track"
 And the request was successful
 And the response has a status code of 200
-And "track" has "sections" array of size 0
 And the response matches
 	| clef | json | clefTreble |
-Then request previously created "sheet"
+Then request all available "track" for latest "sheet"
 And the request was successful
 And the response has a status code of 200
-And "sheet" contains latest "track" in "tracks"
-And "sheet" has "tracks" array of size 1
+And "track" returned array of size 1
 
 @TC031002
 @Positive @Update
@@ -64,11 +62,12 @@ Scenario: delete a Track
 When delete previously created "track"
 And the request was successful
 And the response has a status code of 204
-Then request all available "track" for latest "sheet"
-And the request was successful
-And the response has a status code of 200
-And the response array does not contain "clef" with "string" value "Treble"
-And the response array does not contain latest "track"
+Then request previously created "track"
+And the request was not successful
+And the response has a status code of 404
+And the response matches
+	| code | integer | 404       |
+	| text | string  | NOT_FOUND |
 
 @TC031004
 @Positive @Create
@@ -90,10 +89,10 @@ And the request was successful
 And the response has a status code of 201
 And the response matches
 	| clef    |  json  | clefTreble |
-Then request previously created "sheet"
+Then request all available "track" for latest "sheet"
 And the request was successful
 And the response has a status code of 200
-And "sheet" has "tracks" array of size 3
+And "track" returned array of size 3
 And prepare composite id "trackKey1"
 	|  sheetId  | key | sheet |
 	|  trackId  | int | 1     |
@@ -106,7 +105,7 @@ And prepare composite id "trackKey3"
 And prepare data table "trackObject"
 	| clef       | id          |
 	| json       | compositeId |
-And the response contains "trackObject" objects in "tracks"
+And the response array contains "trackObject" objects
 	| clef       | id          |
 	| clefTreble | trackKey1   |
 	| clefTreble | trackKey2   |

@@ -26,7 +26,7 @@ public class SimpleKeyServiceImpl extends AbstractServiceDomainImpl <Integer, Si
 	}
 
 	@Override
-	public SimpleKeyEntity createEntity(SimpleKeyDomain domain, boolean includeParent, boolean cascade) throws GenericException {
+	public SimpleKeyEntity createEntity(SimpleKeyDomain domain) throws GenericException {
 		SimpleKeyEntity simpleKeyEntity = new SimpleKeyEntity ();
 
 		if (domain.getId() != null)
@@ -38,7 +38,7 @@ public class SimpleKeyServiceImpl extends AbstractServiceDomainImpl <Integer, Si
 	}
 
 	@Override
-	public void updateEntity(SimpleKeyDomain domain, SimpleKeyEntity entity, boolean includeParent, boolean cascade) throws GenericException {
+	public void updateEntity(SimpleKeyDomain domain, SimpleKeyEntity entity) throws GenericException {
 		if (domain.getId() != null) {
 			if (domain.getId() != entity.getId())
 				throw new BadRequestException("SimpleKeyEntity's id cannot be updated");
@@ -49,12 +49,12 @@ public class SimpleKeyServiceImpl extends AbstractServiceDomainImpl <Integer, Si
 	}
 
 	@Override
-	public SimpleKeyDomain createDomain(SimpleKeyEntity entity, boolean includeParent, boolean cascade) {
+	public SimpleKeyDomain createDomain(SimpleKeyEntity entity) {
 		return new SimpleKeyDomain (entity.getId(), entity.getValue());
 	}
 
 	@Override
-	public void updateDomain(SimpleKeyEntity entity, SimpleKeyDomain domain, boolean includeParent, boolean cascade) {
+	public void updateDomain(SimpleKeyEntity entity, SimpleKeyDomain domain) {
 		domain.setId(entity.getId());
 		domain.setValue(entity.getValue());
 	}

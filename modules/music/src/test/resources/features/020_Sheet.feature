@@ -59,7 +59,6 @@ And the response matches
 When request previously created "sheet"
 And the request was successful
 And the response has a status code of 200
-And "sheet" has "tracks" array of size 0
 And the response matches
 	| name | string | New Sheet |
 Then request all available "sheet"

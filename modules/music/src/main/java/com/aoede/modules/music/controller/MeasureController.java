@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aoede.commons.base.controller.AbstractCompositeResourceController;
 import com.aoede.modules.music.domain.Measure;
 import com.aoede.modules.music.domain.MeasureKey;
-import com.aoede.modules.music.domain.Section;
 import com.aoede.modules.music.service.MeasureService;
 import com.aoede.modules.music.transfer.measure.AccessMeasure;
 import com.aoede.modules.music.transfer.measure.CreateMeasure;
@@ -22,7 +21,6 @@ import com.aoede.modules.music.transfer.measure.DetailMeasureResponse;
 import com.aoede.modules.music.transfer.measure.SimpleMeasureResponse;
 import com.aoede.modules.music.transfer.measure.UpdateMeasure;
 import com.aoede.modules.music.transfer.section.AccessSection;
-import com.aoede.modules.music.transfer.track.AccessTrack;
 
 @RestController
 @RequestMapping ("/api/measure")
@@ -36,24 +34,22 @@ public class MeasureController extends AbstractCompositeResourceController<
 	DetailMeasureResponse,
 	MeasureService
 > {
-	private NoteController noteController;
 	private ConversionService conversionService;
 	private SectionController sectionController;
 
-	public MeasureController(MeasureService service, NoteController noteController, ConversionService conversionService) {
+	public MeasureController(
+		MeasureService service,
+		SectionController sectionController,
+		ConversionService conversionService
+	) {
 		super(service);
 
-		this.conversionService = conversionService;
-		this.noteController    = noteController;
-		this.noteController.updateMeasureController(this);
-	}
-
-	public void updateSectionController (SectionController sectionController) {
 		this.sectionController = sectionController;
+		this.conversionService = conversionService;
 	}
 
 	@Override
-	public SimpleMeasureResponse simpleResponse(Measure entity, boolean includeParent, boolean cascade) {
+	public SimpleMeasureResponse simpleResponse(Measure entity) {
 		SimpleMeasureResponse response = new SimpleMeasureResponse ();
 
 		updateSimpleMeasureResponse (response, entity.getId());
@@ -62,23 +58,11 @@ public class MeasureController extends AbstractCompositeResourceController<
 	}
 
 	@Override
-	public DetailMeasureResponse detailResponse(Measure entity, boolean includeParent, boolean cascade) {
+	public DetailMeasureResponse detailResponse(Measure entity) {
 		DetailMeasureResponse response = new DetailMeasureResponse ();
 		MeasureKey key = entity.getId();
 
 		updateSimpleMeasureResponse (response, key);
-
-		if (includeParent) {
-			response.setSheetId(key.getSheetId());
-			response.setTrackId(new AccessTrack(key.getSheetId(), key.getTrackId()));
-			response.setSectionId(new AccessSection(key.getSheetId(), key.getTrackId(), key.getSectionId()));
-		}
-
-		if (cascade) {
-			response.setNotes(
-				entity.getNotes().stream().map(d -> noteController.simpleResponse(d, false, true)).collect(Collectors.toList())
-			);
-		}
 
 		return response;
 	}
@@ -90,12 +74,11 @@ public class MeasureController extends AbstractCompositeResourceController<
 	@Override
 	public Measure createDomain(CreateMeasure request) {
 		Measure measure = updateDomain (request);
-		Section section = new Section ();
+		AccessSection key = conversionService.convert(request.getSectionId(), AccessSection.class);
 
-		section.setId(sectionController.createDomainKey(
-				conversionService.convert(request.getSectionId(), AccessSection.class)
-		));
-		measure.setSection(section);
+		measure.getId().setSheetId(key.getSheetId());
+		measure.getId().setTrackId(key.getTrackId());
+		measure.getId().setSectionId(key.getSectionId());
 
 		return measure;
 	}
@@ -103,6 +86,8 @@ public class MeasureController extends AbstractCompositeResourceController<
 	@Override
 	public Measure updateDomain(UpdateMeasure request) {
 		Measure measure = new Measure ();
+
+		measure.setId(new MeasureKey());
 
 		return measure;
 	}
@@ -112,7 +97,7 @@ public class MeasureController extends AbstractCompositeResourceController<
 	public List<SimpleMeasureResponse> findAllBySection(@PathVariable("id") final AccessSection id) throws Exception {
 		return service.findBySectionId(
 			sectionController.createDomainKey(id)
-		).stream().map(e -> simpleResponse(e, true, true)).collect(Collectors.toList());
+		).stream().map(e -> simpleResponse(e)).collect(Collectors.toList());
 	}
 
 	@Override

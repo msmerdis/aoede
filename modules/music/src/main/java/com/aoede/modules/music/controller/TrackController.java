@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aoede.commons.base.controller.AbstractCompositeResourceController;
 import com.aoede.commons.base.exceptions.GenericException;
 import com.aoede.commons.base.exceptions.GenericExceptionContainer;
-import com.aoede.modules.music.domain.Sheet;
 import com.aoede.modules.music.domain.Track;
 import com.aoede.modules.music.domain.TrackKey;
 import com.aoede.modules.music.service.ClefService;
@@ -37,18 +36,15 @@ public class TrackController extends AbstractCompositeResourceController<
 	TrackService
 > {
 	private ClefService clefService;
-	private SectionController sectionController;
 
-	public TrackController(TrackService service, ClefService clefService, SectionController sectionController) {
+	public TrackController(TrackService service, ClefService clefService) {
 		super(service);
 
 		this.clefService = clefService;
-		this.sectionController = sectionController;
-		this.sectionController.updateTrackController(this);
 	}
 
 	@Override
-	public SimpleTrackResponse simpleResponse(Track entity, boolean includeParent, boolean cascade) {
+	public SimpleTrackResponse simpleResponse(Track entity) {
 		SimpleTrackResponse response = new SimpleTrackResponse ();
 		TrackKey key = entity.getId();
 
@@ -59,22 +55,12 @@ public class TrackController extends AbstractCompositeResourceController<
 	}
 
 	@Override
-	public DetailTrackResponse detailResponse(Track entity, boolean includeParent, boolean cascade) {
+	public DetailTrackResponse detailResponse(Track entity) {
 		DetailTrackResponse response = new DetailTrackResponse ();
 		TrackKey key = entity.getId();
 
 		response.setId(new AccessTrack(key.getSheetId(), key.getTrackId()));
 		response.setClef(entity.getClef());
-
-		if (includeParent) {
-			response.setSheetId(entity.getId().getSheetId());
-		}
-
-		if (cascade) {
-			response.setSections (
-				entity.getSections().stream().map(d -> sectionController.simpleResponse(d, false, true)).collect(Collectors.toList())
-			);
-		}
 
 		return response;
 	}
@@ -82,10 +68,8 @@ public class TrackController extends AbstractCompositeResourceController<
 	@Override
 	public Track createDomain(CreateTrack request) {
 		Track track = updateDomain(request);
-		Sheet sheet = new Sheet ();
 
-		sheet.setId(request.getSheetId());
-		track.setSheet(sheet);
+		track.getId().setSheetId(request.getSheetId());
 
 		return track;
 	}
@@ -96,6 +80,7 @@ public class TrackController extends AbstractCompositeResourceController<
 
 		try {
 			track.setClef(clefService.find(request.getClef()));
+			track.setId(new TrackKey());
 		} catch (GenericException e) {
 			throw new GenericExceptionContainer(e);
 		}
@@ -106,7 +91,7 @@ public class TrackController extends AbstractCompositeResourceController<
 	@GetMapping("/sheet/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public List<SimpleTrackResponse> findAllBySheet(@PathVariable("id") final Long id) throws Exception {
-		return service.findBySheetId(id).stream().map(e -> simpleResponse(e, true, true)).collect(Collectors.toList());
+		return service.findBySheetId(id).stream().map(e -> simpleResponse(e)).collect(Collectors.toList());
 	}
 
 	@Override

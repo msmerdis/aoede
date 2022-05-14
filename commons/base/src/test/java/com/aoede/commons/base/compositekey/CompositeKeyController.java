@@ -23,7 +23,7 @@ public class CompositeKeyController extends AbstractCompositeResourceController<
 	}
 
 	@Override
-	public CompositeKeySimpleResponse simpleResponse(CompositeKeyDomain entity, boolean includeParent, boolean cascade) {
+	public CompositeKeySimpleResponse simpleResponse(CompositeKeyDomain entity) {
 		CompositeKeySimpleResponse compositeKeySimpleResponse = new CompositeKeySimpleResponse ();
 
 		compositeKeySimpleResponse.setId(createAccessData(entity.getId()));
@@ -35,7 +35,7 @@ public class CompositeKeyController extends AbstractCompositeResourceController<
 	}
 
 	@Override
-	public CompositeKeyDetailResponse detailResponse(CompositeKeyDomain entity, boolean includeParent, boolean cascade) {
+	public CompositeKeyDetailResponse detailResponse(CompositeKeyDomain entity) {
 		CompositeKeyDetailResponse compositeKeyDetailResponse = new CompositeKeyDetailResponse ();
 
 		compositeKeyDetailResponse.setId(createAccessData(entity.getId()));

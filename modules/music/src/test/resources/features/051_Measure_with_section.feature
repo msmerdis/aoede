@@ -39,10 +39,10 @@ Scenario: create a new Measure
 When request previously created "measure"
 And the request was successful
 And the response has a status code of 200
-And "measure" has "notes" array of size 0
-Then request previously created "section"
+Then request all available "measure" for latest "section"
 And the request was successful
-And "section" contains latest "measure" in "measures"
+And the response has a status code of 200
+And "measure" returned array of size 1
 
 @TC051002
 @Positive @Update
@@ -89,10 +89,10 @@ And a "measure" with
 	| sectionId | key | section |
 And the request was successful
 And the response has a status code of 201
-Then request previously created "section"
+Then request all available "measure" for latest "section"
 And the request was successful
 And the response has a status code of 200
-And "section" has "measures" array of size 3
+And "measure" returned array of size 3
 And prepare composite id "measureKey1"
 	|   sheetId  | key | sheet |
 	|   trackId  | int | 1     |
@@ -111,7 +111,7 @@ And prepare composite id "measureKey3"
 And prepare data table "measureObject"
 	| id          |
 	| compositeId |
-And the response contains "measureObject" objects in "measures"
+And the response array contains "measureObject" objects
 	| id          |
 	| measureKey1 |
 	| measureKey2 |

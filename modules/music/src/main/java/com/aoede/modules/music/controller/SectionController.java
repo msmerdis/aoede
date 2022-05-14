@@ -15,7 +15,6 @@ import com.aoede.commons.base.controller.AbstractCompositeResourceController;
 import com.aoede.modules.music.domain.KeySignature;
 import com.aoede.modules.music.domain.Section;
 import com.aoede.modules.music.domain.SectionKey;
-import com.aoede.modules.music.domain.Track;
 import com.aoede.modules.music.service.SectionService;
 import com.aoede.modules.music.transfer.section.AccessSection;
 import com.aoede.modules.music.transfer.section.CreateSection;
@@ -36,24 +35,22 @@ public class SectionController extends AbstractCompositeResourceController<
 	DetailSectionResponse,
 	SectionService
 > {
-	private MeasureController measureController;
 	private ConversionService conversionService;
 	private TrackController trackController;
 
-	public SectionController(SectionService service, MeasureController measureController, ConversionService conversionService) {
+	public SectionController(
+		SectionService service,
+		ConversionService conversionService,
+		TrackController trackController
+	) {
 		super(service);
 
 		this.conversionService = conversionService;
-		this.measureController = measureController;
-		this.measureController.updateSectionController(this);
-	}
-
-	public void updateTrackController (TrackController trackController) {
 		this.trackController = trackController;
 	}
 
 	@Override
-	public SimpleSectionResponse simpleResponse(Section entity, boolean includeParent, boolean cascade) {
+	public SimpleSectionResponse simpleResponse(Section entity) {
 		SimpleSectionResponse response = new SimpleSectionResponse ();
 
 		updateSimpleSectionResponse (response, entity, entity.getId());
@@ -62,22 +59,11 @@ public class SectionController extends AbstractCompositeResourceController<
 	}
 
 	@Override
-	public DetailSectionResponse detailResponse(Section entity, boolean includeParent, boolean cascade) {
+	public DetailSectionResponse detailResponse(Section entity) {
 		DetailSectionResponse response = new DetailSectionResponse ();
 		SectionKey key = entity.getId();
 
 		updateSimpleSectionResponse (response, entity, key);
-
-		if (includeParent) {
-			response.setSheetId(key.getSheetId());
-			response.setTrackId(new AccessTrack(key.getSheetId(), key.getTrackId()));
-		}
-
-		if (cascade) {
-			response.setMeasures(
-				entity.getMeasures().stream().map(d -> measureController.simpleResponse(d, false, true)).collect(Collectors.toList())
-			);
-		}
 
 		return response;
 	}
@@ -92,12 +78,10 @@ public class SectionController extends AbstractCompositeResourceController<
 	@Override
 	public Section createDomain(CreateSection request) {
 		Section section = updateDomain (request);
-		Track track = new Track ();
+		AccessTrack key = conversionService.convert(request.getTrackId(), AccessTrack.class);
 
-		track.setId(trackController.createDomainKey(
-			conversionService.convert(request.getTrackId(), AccessTrack.class)
-		));
-		section.setTrack(track);
+		section.getId().setSheetId(key.getSheetId());
+		section.getId().setTrackId(key.getTrackId());
 
 		return section;
 	}
@@ -112,6 +96,7 @@ public class SectionController extends AbstractCompositeResourceController<
 		section.setKeySignature(keySignature);
 		section.setTempo(request.getTempo());
 		section.setTimeSignature(request.getTimeSignature());
+		section.setId(new SectionKey());
 
 		return section;
 	}
@@ -121,7 +106,7 @@ public class SectionController extends AbstractCompositeResourceController<
 	public List<SimpleSectionResponse> findAllByTrack(@PathVariable("id") final AccessTrack id) throws Exception {
 		return service.findByTrackId(
 			trackController.createDomainKey(id)
-		).stream().map(e -> simpleResponse(e, true, true)).collect(Collectors.toList());
+		).stream().map(e -> simpleResponse(e)).collect(Collectors.toList());
 	}
 
 	@Override

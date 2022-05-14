@@ -42,7 +42,7 @@ public abstract class AbstractServiceDomainImpl <
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
 	public Domain create(Domain domain) throws GenericException {
-		Entity entity = createEntity(domain, true, true);
+		Entity entity = createEntity(domain);
 
 		try {
 			entity = repository.saveAndFlush(entity);
@@ -50,7 +50,7 @@ public abstract class AbstractServiceDomainImpl <
 			throw new ConflictException(domainName() + " could not be created");
 		}
 
-		updateDomain(entity, domain, true, true);
+		updateDomain(entity, domain);
 
 		return domain;
 	}
@@ -66,7 +66,7 @@ public abstract class AbstractServiceDomainImpl <
 
 		Entity entity = optionalEntity.get();
 
-		updateEntity(domain, entity, true, true);
+		updateEntity(domain, entity);
 
 		try {
 			repository.saveAndFlush(entity);
@@ -107,13 +107,13 @@ public abstract class AbstractServiceDomainImpl <
 			throw new NotFoundException("Entity not found.");
 		}
 
-		return createDomain(entity.get(), true, true);
+		return createDomain(entity.get());
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
 	public List<Domain> findAll() throws GenericException {
-		return repository.findAll().stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
+		return repository.findAll().stream().map(e -> createDomain(e)).collect(Collectors.toList());
 	}
 
 	@Override

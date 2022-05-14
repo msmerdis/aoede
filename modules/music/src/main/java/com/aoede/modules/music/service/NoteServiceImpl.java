@@ -27,18 +27,22 @@ import com.aoede.modules.user.service.UserService;
 @Service
 public class NoteServiceImpl extends AbstractServiceDomainImpl <NoteKey, Note, NoteId, NoteEntity, NoteRepository> implements NoteService {
 
+	private SheetService sheetService;
 	private MeasureService measureService;
 	private UserService userService;
 
-	public NoteServiceImpl(NoteRepository repository, EntityManagerFactory entityManagerFactory, UserService userService) {
+	public NoteServiceImpl(
+		NoteRepository repository,
+		EntityManagerFactory entityManagerFactory,
+		SheetService sheetService,
+		MeasureService measureService,
+		UserService userService
+	) {
 		super(repository, entityManagerFactory);
 
-		this.userService = userService;
-	}
-
-	@Override
-	public void updateMeasureService (MeasureService measureService) {
+		this.sheetService = sheetService;
 		this.measureService = measureService;
+		this.userService = userService;
 	}
 
 	@Override
@@ -56,17 +60,19 @@ public class NoteServiceImpl extends AbstractServiceDomainImpl <NoteKey, Note, N
 	public List<Note> findAll() throws GenericException {
 		return repository.findBySheetUserId(
 			userService.currentUserId()
-		).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
+		).stream().map(e -> createDomain(e)).collect(Collectors.toList());
 	}
 
 	@Override
-	public NoteEntity createEntity(Note domain, boolean includeParent, boolean cascade) throws GenericException {
+	public NoteEntity createEntity(Note domain) throws GenericException {
 		NoteEntity entity = new NoteEntity ();
-		MeasureKey measureId = domain.getMeasure().getId();
-
-		updateEntity (domain, entity, includeParent, cascade);
+		MeasureKey measureId = domain.getId();
 
 		measureService.updateNoteEntity(entity, measureId);
+		sheetService.updateSheetableEntity(entity, measureId.getSheetId());
+
+		updateEntity (domain, entity);
+
 		entity.setId(new NoteId(
 			measureId.getSheetId(),
 			measureId.getTrackId(),
@@ -81,7 +87,7 @@ public class NoteServiceImpl extends AbstractServiceDomainImpl <NoteKey, Note, N
 	}
 
 	@Override
-	public void updateEntity(Note domain, NoteEntity entity, boolean includeParent, boolean cascade) throws GenericException {
+	public void updateEntity(Note domain, NoteEntity entity) throws GenericException {
 		authenticationChecks(entity);
 
 		entity.setNote(domain.getNote());
@@ -90,16 +96,16 @@ public class NoteServiceImpl extends AbstractServiceDomainImpl <NoteKey, Note, N
 	}
 
 	@Override
-	public Note createDomain(NoteEntity entity, boolean includeParent, boolean cascade) {
+	public Note createDomain(NoteEntity entity) {
 		Note note = new Note ();
 
-		updateDomain(entity, note, includeParent, cascade);
+		updateDomain(entity, note);
 
 		return note;
 	}
 
 	@Override
-	public void updateDomain(NoteEntity entity, Note domain, boolean includeParent, boolean cascade) {
+	public void updateDomain(NoteEntity entity, Note domain) {
 		authenticationChecks(entity);
 
 		domain.setId(createDomainKey(entity.getId()));
@@ -107,12 +113,6 @@ public class NoteServiceImpl extends AbstractServiceDomainImpl <NoteKey, Note, N
 		domain.setValue(
 			new Fraction (entity.getValueNum(), entity.getValueDen())
 		);
-
-		if (includeParent) {
-			domain.setMeasure(
-				measureService.createDomain(entity.getMeasure(), true, false)
-			);
-		}
 	}
 
 	@Override
@@ -126,7 +126,7 @@ public class NoteServiceImpl extends AbstractServiceDomainImpl <NoteKey, Note, N
 	public List<Note> findByMeasureId(MeasureKey id) {
 		MeasureId key = measureService.createEntityKey(id);
 
-		return repository.findByMeasureId(key).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
+		return repository.findByMeasureId(key).stream().map(e -> createDomain(e)).collect(Collectors.toList());
 	}
 
 	@Override

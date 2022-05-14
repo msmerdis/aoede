@@ -27,27 +27,20 @@ public class TrackServiceImpl extends AbstractServiceDomainImpl <TrackKey, Track
 
 	private ClefService clefService;
 	private SheetService sheetService;
-	private SectionService sectionService;
 	private UserService userService;
 
 	public TrackServiceImpl(
 		TrackRepository repository,
 		EntityManagerFactory entityManagerFactory,
 		ClefService clefService,
-		SectionService sectionService,
+		SheetService sheetService,
 		UserService userService
 	) {
 		super(repository, entityManagerFactory);
 
 		this.clefService = clefService;
-		this.sectionService = sectionService;
-		this.sectionService.updateTrackService(this);
-		this.userService = userService;
-	}
-
-	@Override
-	public void updateSheetService (SheetService sheetService) {
 		this.sheetService = sheetService;
+		this.userService = userService;
 	}
 
 	@Override
@@ -65,18 +58,18 @@ public class TrackServiceImpl extends AbstractServiceDomainImpl <TrackKey, Track
 	public List<Track> findAll() throws GenericException {
 		return repository.findBySheetUserId(
 			userService.currentUserId()
-		).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
+		).stream().map(e -> createDomain(e)).collect(Collectors.toList());
 	}
 
 	@Override
-	public TrackEntity createEntity(Track domain, boolean includeParent, boolean cascade) throws GenericException {
+	public TrackEntity createEntity(Track domain) throws GenericException {
 		TrackEntity entity = new TrackEntity ();
-		Long sheetId = domain.getSheet().getId();
-
-		updateEntity (domain, entity, includeParent, cascade);
+		Long sheetId = domain.getId().getSheetId();
 
 		// update parent entities
-		sheetService.updateTrackEntity(entity, sheetId);
+		sheetService.updateSheetableEntity(entity, sheetId);
+
+		updateEntity (domain, entity);
 
 		entity.setId(new TrackId(sheetId, (short) (repository.countBySheetId(sheetId) + 1)));
 
@@ -84,7 +77,7 @@ public class TrackServiceImpl extends AbstractServiceDomainImpl <TrackKey, Track
 	}
 
 	@Override
-	public void updateEntity(Track domain, TrackEntity entity, boolean includeParent, boolean cascade) throws GenericException {
+	public void updateEntity(Track domain, TrackEntity entity) throws GenericException {
 		if (entity.getSheet() != null)
 			authenticationChecks(entity);
 
@@ -92,16 +85,16 @@ public class TrackServiceImpl extends AbstractServiceDomainImpl <TrackKey, Track
 	}
 
 	@Override
-	public Track createDomain(TrackEntity entity, boolean includeParent, boolean cascade) {
+	public Track createDomain(TrackEntity entity) {
 		Track track = new Track ();
 
-		updateDomain (entity, track, includeParent, cascade);
+		updateDomain (entity, track);
 
 		return track;
 	}
 
 	@Override
-	public void updateDomain(TrackEntity entity, Track domain, boolean includeParent, boolean cascade) {
+	public void updateDomain(TrackEntity entity, Track domain) {
 		authenticationChecks(entity);
 
 		try {
@@ -109,18 +102,6 @@ public class TrackServiceImpl extends AbstractServiceDomainImpl <TrackKey, Track
 			domain.setClef(clefService.find(entity.getClef()));
 		} catch (GenericException e) {
 			throw new RuntimeException(e.getMessage());
-		}
-
-		if (includeParent)
-			domain.setSheet(sheetService.createDomain(entity.getSheet(), true, false));
-
-		if (cascade) {
-			domain.setSections (
-				entity.getSections().stream()
-					.map(e -> sectionService.createDomain(e, false, true))
-					.peek(d -> d.setTrack(domain))
-					.collect(Collectors.toList())
-			);
 		}
 	}
 
@@ -132,7 +113,7 @@ public class TrackServiceImpl extends AbstractServiceDomainImpl <TrackKey, Track
 
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
 	public List<Track> findBySheetId(Long id) {
-		return repository.findBySheetId(id).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
+		return repository.findBySheetId(id).stream().map(e -> createDomain(e)).collect(Collectors.toList());
 	}
 
 	public void updateSectionEntity(SectionEntity entity, TrackKey key) {

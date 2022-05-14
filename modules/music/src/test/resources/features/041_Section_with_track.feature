@@ -39,15 +39,14 @@ Scenario: create a new Section
 When request previously created "section"
 And the request was successful
 And the response has a status code of 200
-And "section" has "measures" array of size 0
 And the response matches
 	| tempo         | integer  | 120 |
 	| keySignature  | integer  |  0  |
 	| timeSignature | fraction | 3/4 |
-Then request previously created "track"
+Then request all available "section" for latest "track"
 And the request was successful
-And "track" contains latest "section" in "sections"
-And "track" has "sections" array of size 1
+And the response has a status code of 200
+And "section" returned array of size 1
 
 @TC041002
 @Positive @Update
@@ -68,11 +67,6 @@ And the response matches
 	| tempo         | integer  | 160 |
 	| keySignature  | integer  |  1  |
 	| timeSignature | fraction | 4/4 |
-And request previously created "track"
-And the response has a status code of 200
-And the request was successful
-And "track" contains latest "section" in "sections"
-And "track" has "sections" array of size 1
 
 @TC041003
 @Positive @Delete
@@ -118,10 +112,10 @@ And the response matches
 	| tempo         | integer  | 512 |
 	| keySignature  | integer  |  0  |
 	| timeSignature | fraction | 2/4 |
-Then request previously created "track"
+Then request all available "section" for latest "track"
 And the request was successful
 And the response has a status code of 200
-And "track" has "sections" array of size 3
+And "section" returned array of size 3
 And prepare composite id "sectionKey1"
 	|   sheetId  | key | sheet |
 	|   trackId  | int | 1     |
@@ -137,7 +131,7 @@ And prepare composite id "sectionKey3"
 And prepare data table "sectionObject"
 	| id          | tempo | timeSignature |
 	| compositeId | int   | fraction      |
-And the response contains "sectionObject" objects in "sections"
+And the response array contains "sectionObject" objects
 	| id          | tempo | timeSignature |
 	| sectionKey1 |  120  |      3/4      |
 	| sectionKey2 |   32  |      4/4      |

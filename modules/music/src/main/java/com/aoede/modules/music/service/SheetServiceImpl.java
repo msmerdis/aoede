@@ -16,22 +16,19 @@ import com.aoede.commons.base.exceptions.UnauthorizedException;
 import com.aoede.commons.base.service.AbstractServiceDomainImpl;
 import com.aoede.modules.music.domain.Sheet;
 import com.aoede.modules.music.entity.SheetEntity;
-import com.aoede.modules.music.entity.TrackEntity;
+import com.aoede.modules.music.entity.Sheetable;
 import com.aoede.modules.music.repository.SheetRepository;
 import com.aoede.modules.user.service.UserService;
 
 @Service
 public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Long, SheetEntity, SheetRepository> implements SheetService {
 
-	private TrackService trackService;
 	private UserService userService;
 
-	public SheetServiceImpl(SheetRepository repository, EntityManagerFactory entityManagerFactory, TrackService trackService, UserService userService) {
+	public SheetServiceImpl(SheetRepository repository, EntityManagerFactory entityManagerFactory, UserService userService) {
 		super(repository, entityManagerFactory);
 
-		this.trackService = trackService;
 		this.userService  = userService;
-		this.trackService.updateSheetService(this);
 	}
 
 	@Override
@@ -49,11 +46,11 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Lo
 	public List<Sheet> findAll() throws GenericException {
 		return repository.findByUserId(
 			userService.currentUserId()
-		).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
+		).stream().map(e -> createDomain(e)).collect(Collectors.toList());
 	}
 
 	@Override
-	public SheetEntity createEntity(Sheet domain, boolean includeParent, boolean cascade) {
+	public SheetEntity createEntity(Sheet domain) {
 		SheetEntity entity = new SheetEntity ();
 
 		entity.setUserId(userService.currentUserId());
@@ -63,7 +60,7 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Lo
 	}
 
 	@Override
-	public void updateEntity(Sheet domain, SheetEntity entity, boolean includeParent, boolean cascade) {
+	public void updateEntity(Sheet domain, SheetEntity entity) {
 		if (!entity.getUserId().equals(userService.currentUserId())) {
 			throw new GenericExceptionContainer(
 				new UnauthorizedException("Cannot update sheets created by a different user")
@@ -73,7 +70,7 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Lo
 	}
 
 	@Override
-	public Sheet createDomain(SheetEntity entity, boolean includeParent, boolean cascade) {
+	public Sheet createDomain(SheetEntity entity) {
 		Sheet sheet = new Sheet ();
 
 		if (!entity.getUserId().equals(userService.currentUserId())) {
@@ -81,24 +78,15 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Lo
 				new UnauthorizedException("Cannot access sheets created by a different user")
 			);
 		}
-		updateDomain (entity, sheet, includeParent, cascade);
+		updateDomain (entity, sheet);
 
 		return sheet;
 	}
 
 	@Override
-	public void updateDomain(SheetEntity entity, Sheet domain, boolean includeParent, boolean cascade) {
+	public void updateDomain(SheetEntity entity, Sheet domain) {
 		domain.setId(entity.getId());
 		domain.setName(entity.getName());
-
-		if (cascade) {
-			domain.setTracks(
-				entity.getTracks().stream()
-					.map(e -> trackService.createDomain(e, false, true))
-					.peek(d -> d.setSheet(domain))
-					.collect(Collectors.toList())
-			);
-		}
 	}
 
 	@Override
@@ -106,7 +94,7 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Lo
 		return entity.getUserId().equals(userService.currentUserId());
 	}
 
-	public void updateTrackEntity(TrackEntity entity, Long id) {
+	public void updateSheetableEntity(Sheetable entity, Long id) {
 		entity.setSheet(repository.getById(id));
 	}
 

@@ -40,22 +40,22 @@ public abstract class AbstractResourceController<
 
 	@Override
 	public List<SimpleResponse> search(@RequestHeader("X-Search-Terms") String keyword) throws Exception {
-		return service.freeTextSearch(keyword).stream().map(e -> simpleResponse(e, true, true)).collect(Collectors.toList());
+		return service.freeTextSearch(keyword).stream().map(e -> simpleResponse(e)).collect(Collectors.toList());
 	}
 
 	@Override
 	public DetailResponse get(@PathVariable("id") final AccessKey id) throws Exception {
-		return detailResponse(service.find(createDomainKey(id)), true, true);
+		return detailResponse(service.find(createDomainKey(id)));
 	}
 
 	@Override
 	public List<SimpleResponse> findAll() throws Exception {
-		return service.findAll().stream().map(e -> simpleResponse(e, true, true)).collect(Collectors.toList());
+		return service.findAll().stream().map(e -> simpleResponse(e)).collect(Collectors.toList());
 	}
 
 	@Override
 	public DetailResponse create(@Valid @RequestBody final CreateData data) throws Exception {
-		return detailResponse(service.create(createDomain(data)), true, true);
+		return detailResponse(service.create(createDomain(data)));
 	}
 
 	@Override
@@ -74,8 +74,8 @@ public abstract class AbstractResourceController<
 	 *
 	 * To resolve circular dependencies options to include parent and children are included
 	 */
-	abstract public SimpleResponse simpleResponse (Domain entity, boolean includeParent, boolean cascade);
-	abstract public DetailResponse detailResponse (Domain entity, boolean includeParent, boolean cascade);
+	abstract public SimpleResponse simpleResponse (Domain entity);
+	abstract public DetailResponse detailResponse (Domain entity);
 
 	/**
 	 * operations to generate the domain class from the create and update objects are abstract

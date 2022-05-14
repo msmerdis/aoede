@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.aoede.commons.base.exceptions.BadRequestException;
 import com.aoede.commons.base.exceptions.GenericException;
 import com.aoede.commons.base.exceptions.GenericExceptionContainer;
 import com.aoede.commons.base.exceptions.UnauthorizedException;
@@ -28,26 +29,22 @@ import com.aoede.modules.user.service.UserService;
 @Service
 public class SectionServiceImpl extends AbstractServiceDomainImpl <SectionKey, Section, SectionId, SectionEntity, SectionRepository> implements SectionService {
 
+	private SheetService sheetService;
 	private TrackService trackService;
-	private MeasureService measureService;
 	private UserService userService;
 
 	public SectionServiceImpl(
 		SectionRepository repository,
 		EntityManagerFactory entityManagerFactory,
-		MeasureService measureService,
+		SheetService sheetService,
+		TrackService trackService,
 		UserService userService
 	) {
 		super(repository, entityManagerFactory);
 
-		this.measureService = measureService;
-		this.measureService.updateSectionService(this);
-		this.userService = userService;
-	}
-
-	@Override
-	public void updateTrackService (TrackService trackService) {
+		this.sheetService = sheetService;
 		this.trackService = trackService;
+		this.userService = userService;
 	}
 
 	@Override
@@ -65,27 +62,33 @@ public class SectionServiceImpl extends AbstractServiceDomainImpl <SectionKey, S
 	public List<Section> findAll() throws GenericException {
 		return repository.findBySheetUserId(
 			userService.currentUserId()
-		).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
+		).stream().map(e -> createDomain(e)).collect(Collectors.toList());
 	}
 
 	@Override
-	public SectionEntity createEntity(Section domain, boolean includeParent, boolean cascade) throws GenericException {
+	public SectionEntity createEntity(Section domain) throws GenericException {
 		SectionEntity entity = new SectionEntity ();
-		TrackKey trackId = domain.getTrack().getId();
+		SectionKey key = domain.getId();
 
-		updateEntity(domain, entity, includeParent, cascade);
+		if (key == null) {
+			throw new BadRequestException("no id in section domain");
+		}
 
-		trackService.updateSectionEntity(entity, trackId);
-		entity.setId(new SectionId(trackId.getSheetId(), trackId.getTrackId(),
-			(short) (repository.countByTrackId(trackService.createEntityKey(trackId)) + 1)
+		sheetService.updateSheetableEntity(entity, key.getSheetId());
+		trackService.updateSectionEntity(entity, key);
+		updateEntity(domain, entity);
+
+		entity.setId(new SectionId(key.getSheetId(), key.getTrackId(),
+			(short) (repository.countByTrackId(trackService.createEntityKey(key)) + 1)
 		));
 
 		return entity;
 	}
 
 	@Override
-	public void updateEntity(Section domain, SectionEntity entity, boolean includeParent, boolean cascade) throws GenericException {
-		authenticationChecks(entity);
+	public void updateEntity(Section domain, SectionEntity entity) throws GenericException {
+		if (entity.getSheet() != null)
+			authenticationChecks(entity);
 
 		entity.setKeySignature(domain.getKeySignature().getId());
 		entity.setTempo(domain.getTempo());
@@ -94,16 +97,16 @@ public class SectionServiceImpl extends AbstractServiceDomainImpl <SectionKey, S
 	}
 
 	@Override
-	public Section createDomain(SectionEntity entity, boolean includeParent, boolean cascade) {
+	public Section createDomain(SectionEntity entity) {
 		Section section = new Section ();
 
-		updateDomain (entity, section, includeParent, cascade);
+		updateDomain (entity, section);
 
 		return section;
 	}
 
 	@Override
-	public void updateDomain(SectionEntity entity, Section domain, boolean includeParent, boolean cascade) {
+	public void updateDomain(SectionEntity entity, Section domain) {
 		authenticationChecks(entity);
 
 		KeySignature keySignature = new KeySignature ();
@@ -118,21 +121,6 @@ public class SectionServiceImpl extends AbstractServiceDomainImpl <SectionKey, S
 				entity.getTimeSignatureDenominator()
 			)
 		);
-
-		if (includeParent) {
-			domain.setTrack(
-				trackService.createDomain(entity.getTrack(), true, false)
-			);
-		}
-
-		if (cascade) {
-			domain.setMeasures(
-				entity.getMeasures().stream()
-					.map(e -> measureService.createDomain(e, false, true))
-					.peek(d -> d.setSection(domain))
-					.collect(Collectors.toList())
-			);
-		}
 	}
 
 	@Override
@@ -145,7 +133,7 @@ public class SectionServiceImpl extends AbstractServiceDomainImpl <SectionKey, S
 	public List<Section> findByTrackId(TrackKey trackKey) {
 		return repository.findByTrackId(
 			trackService.createEntityKey(trackKey)
-		).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
+		).stream().map(e -> createDomain(e)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -169,7 +157,7 @@ public class SectionServiceImpl extends AbstractServiceDomainImpl <SectionKey, S
 	}
 
 	private void authenticationChecks (SectionEntity entity) {
-		if (entity.getSheet() != null && !entity.getSheet().getUserId().equals(userService.currentUserId())) {
+		if (!entity.getSheet().getUserId().equals(userService.currentUserId())) {
 			throw new GenericExceptionContainer(
 				new UnauthorizedException("Cannot access sections created by a different user")
 			);

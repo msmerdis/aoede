@@ -23,7 +23,7 @@ public class SimpleKeyController extends AbstractResourceController<
 	}
 
 	@Override
-	public SimpleKeySimpleResponse simpleResponse(SimpleKeyDomain entity, boolean includeParent, boolean cascade) {
+	public SimpleKeySimpleResponse simpleResponse(SimpleKeyDomain entity) {
 		SimpleKeySimpleResponse simpleKeySimpleResponse = new SimpleKeySimpleResponse ();
 
 		simpleKeySimpleResponse.setId(entity.getId());
@@ -33,7 +33,7 @@ public class SimpleKeyController extends AbstractResourceController<
 	}
 
 	@Override
-	public SimpleKeyDetailResponse detailResponse(SimpleKeyDomain entity, boolean includeParent, boolean cascade) {
+	public SimpleKeyDetailResponse detailResponse(SimpleKeyDomain entity) {
 		SimpleKeyDetailResponse simpleKeyDetailResponse = new SimpleKeyDetailResponse ();
 
 		simpleKeyDetailResponse.setId(entity.getId());

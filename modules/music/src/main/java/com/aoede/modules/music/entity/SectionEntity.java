@@ -33,7 +33,7 @@ import lombok.Setter;
 		@Index(columnList = "sheetId, trackId, sectionId", unique = true)
 	}
 )
-public class SectionEntity extends AbstractJpaEntity<SectionId> implements AbstractEntity<SectionId> {
+public class SectionEntity extends AbstractJpaEntity<SectionId> implements AbstractEntity<SectionId>, Sheetable {
 	@EmbeddedId
 	private SectionId id;
 

@@ -29,12 +29,12 @@ public class RoleAdminController extends AbstractResourceController<
 	}
 
 	@Override
-	public SimpleRoleResponse simpleResponse(Role entity, boolean includeParent, boolean cascade) {
-		return detailResponse(entity, includeParent, cascade);
+	public SimpleRoleResponse simpleResponse(Role entity) {
+		return detailResponse(entity);
 	}
 
 	@Override
-	public DetailRoleResponse detailResponse(Role entity, boolean includeParent, boolean cascade) {
+	public DetailRoleResponse detailResponse(Role entity) {
 		DetailRoleResponse response = new DetailRoleResponse ();
 
 		response.setId(entity.getId());

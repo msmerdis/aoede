@@ -54,7 +54,7 @@ public class UserServiceImpl extends AbstractServiceDomainImpl <Long, User, Long
 			throw new UsernameNotFoundException("user not found");
 		}
 
-		return createDomain(entity.get(), true, true);
+		return createDomain(entity.get());
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class UserServiceImpl extends AbstractServiceDomainImpl <Long, User, Long
 	}
 
 	@Override
-	public UserEntity createEntity(User domain, boolean includeParent, boolean cascade) throws GenericException {
+	public UserEntity createEntity(User domain) throws GenericException {
 		UserEntity entity = new UserEntity();
 
 		entity.setStatus(domain.getStatus());
@@ -86,7 +86,7 @@ public class UserServiceImpl extends AbstractServiceDomainImpl <Long, User, Long
 	}
 
 	@Override
-	public void updateEntity(User domain, UserEntity entity, boolean includeParent, boolean cascade) throws GenericException {
+	public void updateEntity(User domain, UserEntity entity) throws GenericException {
 		if (domain.getStatus() != null)
 			entity.setStatus(domain.getStatus());
 
@@ -100,28 +100,25 @@ public class UserServiceImpl extends AbstractServiceDomainImpl <Long, User, Long
 	}
 
 	@Override
-	public User createDomain(UserEntity entity, boolean includeParent, boolean cascade) {
+	public User createDomain(UserEntity entity) {
 		User domain = new User ();
 
-		updateDomain(entity, domain, includeParent, cascade);
+		updateDomain(entity, domain);
 
 		return domain;
 	}
 
 	@Override
-	public void updateDomain(UserEntity entity, User domain, boolean includeParent, boolean cascade) {
+	public void updateDomain(UserEntity entity, User domain) {
 		domain.setId(entity.getId());
 		domain.setStatus(entity.getStatus());
 		domain.setUsername(entity.getUsername());
 		domain.setPassword(entity.getPassword());
-
-		if (cascade) {
-			domain.setRoles(
-				entity.getRoles().stream()
-					.map(r -> new SimpleGrantedAuthority(r.getRole()))
-					.collect(Collectors.toSet())
-			);
-		}
+		domain.setRoles(
+			entity.getRoles().stream()
+				.map(r -> new SimpleGrantedAuthority(r.getRole()))
+				.collect(Collectors.toSet())
+		);
 	}
 
 	@Override

@@ -59,19 +59,19 @@ public class UserAdminController extends AbstractResourceController<
 	@ResponseStatus(HttpStatus.OK)
 	public DetailUserResponse get(@PathVariable("username") final String username) throws Exception {
 		try {
-			return detailResponse(service.loadUserByUsername(username), true, true);
+			return detailResponse(service.loadUserByUsername(username));
 		} catch (UsernameNotFoundException e) {
 			throw new NotFoundException(e.getMessage());
 		}
 	}
 
 	@Override
-	public SimpleUserResponse simpleResponse(User entity, boolean includeParent, boolean cascade) {
-		return detailResponse(entity, includeParent, cascade);
+	public SimpleUserResponse simpleResponse(User entity) {
+		return detailResponse(entity);
 	}
 
 	@Override
-	public DetailUserResponse detailResponse(User entity, boolean includeParent, boolean cascade) {
+	public DetailUserResponse detailResponse(User entity) {
 		DetailUserResponse response = new DetailUserResponse ();
 
 		response.setId(entity.getId());

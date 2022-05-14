@@ -27,26 +27,22 @@ import com.aoede.modules.user.service.UserService;
 @Service
 public class MeasureServiceImpl extends AbstractServiceDomainImpl <MeasureKey, Measure, MeasureId, MeasureEntity, MeasureRepository> implements MeasureService {
 
+	private SheetService sheetService;
 	private SectionService sectionService;
-	private NoteService noteService;
 	private UserService userService;
 
 	public MeasureServiceImpl(
 		MeasureRepository repository,
 		EntityManagerFactory entityManagerFactory,
-		NoteService noteService,
+		SheetService sheetService,
+		SectionService sectionService,
 		UserService userService
 	) {
 		super(repository, entityManagerFactory);
 
-		this.noteService = noteService;
-		this.noteService.updateMeasureService(this);
-		this.userService = userService;
-	}
-
-	@Override
-	public void updateSectionService (SectionService sectionService) {
+		this.sheetService = sheetService;
 		this.sectionService = sectionService;
+		this.userService = userService;
 	}
 
 	@Override
@@ -64,17 +60,19 @@ public class MeasureServiceImpl extends AbstractServiceDomainImpl <MeasureKey, M
 	public List<Measure> findAll() throws GenericException {
 		return repository.findBySheetUserId(
 			userService.currentUserId()
-		).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
+		).stream().map(e -> createDomain(e)).collect(Collectors.toList());
 	}
 
 	@Override
-	public MeasureEntity createEntity(Measure domain, boolean includeParent, boolean cascade) throws GenericException {
+	public MeasureEntity createEntity(Measure domain) throws GenericException {
 		MeasureEntity entity = new MeasureEntity ();
-		SectionKey sectionId = domain.getSection().getId();
-
-		updateEntity(domain, entity, includeParent, cascade);
+		SectionKey sectionId = domain.getId();
 
 		sectionService.updateMeasureEntity(entity, sectionId);
+		sheetService.updateSheetableEntity(entity, sectionId.getSheetId());
+
+		updateEntity(domain, entity);
+
 		entity.setId(new MeasureId(sectionId.getSheetId(), sectionId.getTrackId(), sectionId.getSectionId(),
 			(short)(repository.countBySectionId(sectionService.createEntityKey(sectionId)) + 1)
 		));
@@ -83,39 +81,25 @@ public class MeasureServiceImpl extends AbstractServiceDomainImpl <MeasureKey, M
 	}
 
 	@Override
-	public void updateEntity(Measure domain, MeasureEntity entity, boolean includeParent, boolean cascade) throws GenericException {
-		authenticationChecks(entity);
+	public void updateEntity(Measure domain, MeasureEntity entity) throws GenericException {
+		if (entity.getSheet() != null)
+			authenticationChecks(entity);
 	}
 
 	@Override
-	public Measure createDomain(MeasureEntity entity, boolean includeParent, boolean cascade) {
+	public Measure createDomain(MeasureEntity entity) {
 		Measure measure = new Measure ();
 
-		updateDomain (entity, measure, includeParent, cascade);
+		updateDomain (entity, measure);
 
 		return measure;
 	}
 
 	@Override
-	public void updateDomain(MeasureEntity entity, Measure domain, boolean includeParent, boolean cascade) {
+	public void updateDomain(MeasureEntity entity, Measure domain) {
 		authenticationChecks(entity);
 
 		domain.setId(createDomainKey(entity.getId()));
-
-		if (includeParent) {
-			domain.setSection(
-				sectionService.createDomain(entity.getSection(), true, false)
-			);
-		}
-
-		if (cascade) {
-			domain.setNotes(
-				entity.getNotes().stream()
-					.map(e -> noteService.createDomain(e, false, true))
-					.peek(d -> d.setMeasure(domain))
-					.collect(Collectors.toList())
-			);
-		}
 	}
 
 	@Override
@@ -133,7 +117,7 @@ public class MeasureServiceImpl extends AbstractServiceDomainImpl <MeasureKey, M
 	public List<Measure> findBySectionId(SectionKey id) {
 		SectionId key = sectionService.createEntityKey(id);
 
-		return repository.findBySectionId(key).stream().map(e -> createDomain(e, true, true)).collect(Collectors.toList());
+		return repository.findBySectionId(key).stream().map(e -> createDomain(e)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -154,7 +138,7 @@ public class MeasureServiceImpl extends AbstractServiceDomainImpl <MeasureKey, M
 	}
 
 	private void authenticationChecks (MeasureEntity entity) {
-		if (entity.getSheet() != null && !entity.getSheet().getUserId().equals(userService.currentUserId())) {
+		if (!entity.getSheet().getUserId().equals(userService.currentUserId())) {
 			throw new GenericExceptionContainer(
 				new UnauthorizedException("Cannot access measures created by a different user")
 			);

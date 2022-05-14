@@ -16,7 +16,6 @@ public class Note implements AbstractDomain<NoteKey> {
 	private NoteKey id;
 	private int note;
 	private Fraction value;
-	private Measure measure;
 }
 
 

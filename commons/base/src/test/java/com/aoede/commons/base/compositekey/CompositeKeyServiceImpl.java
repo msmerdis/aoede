@@ -25,7 +25,7 @@ public class CompositeKeyServiceImpl extends AbstractServiceDomainImpl <Composit
 	}
 
 	@Override
-	public CompositeKeyEntity createEntity(CompositeKeyDomain domain, boolean includeParent, boolean cascade) throws GenericException {
+	public CompositeKeyEntity createEntity(CompositeKeyDomain domain) throws GenericException {
 		CompositeKeyEntity compositeKeyEntity = new CompositeKeyEntity ();
 
 		compositeKeyEntity.setId(createEntityKey(domain.getId()));
@@ -35,17 +35,17 @@ public class CompositeKeyServiceImpl extends AbstractServiceDomainImpl <Composit
 	}
 
 	@Override
-	public void updateEntity(CompositeKeyDomain domain, CompositeKeyEntity entity, boolean includeParent, boolean cascade) throws GenericException {
+	public void updateEntity(CompositeKeyDomain domain, CompositeKeyEntity entity) throws GenericException {
 		entity.setValue(domain.getValue());
 	}
 
 	@Override
-	public CompositeKeyDomain createDomain(CompositeKeyEntity entity, boolean includeParent, boolean cascade) {
+	public CompositeKeyDomain createDomain(CompositeKeyEntity entity) {
 		return new CompositeKeyDomain (createDomainKey(entity.getId()), entity.getValue());
 	}
 
 	@Override
-	public void updateDomain(CompositeKeyEntity entity, CompositeKeyDomain domain, boolean includeParent, boolean cascade) {
+	public void updateDomain(CompositeKeyEntity entity, CompositeKeyDomain domain) {
 		domain.setId(createDomainKey(entity.getId()));
 		domain.setValue(entity.getValue());
 	}
