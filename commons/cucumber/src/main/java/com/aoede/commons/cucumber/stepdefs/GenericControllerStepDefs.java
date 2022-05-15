@@ -63,13 +63,38 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 	}
 
 	@When("prepare json {string}")
-	public void prepareJson(String name, DataTable data) {
-		jsonService.put(name, data);
+	public void prepareJsonObject(String name, DataTable data) {
+		jsonService.putObject(name, data);
+	}
+
+	@When("prepare json array {string}")
+	public void prepareJsonArray(String name, DataTable data) {
+		jsonService.putArray(name, data);
+	}
+
+	@When("prepare empty json array {string}")
+	public void prepareJsonArray(String name) {
+		jsonService.put(name, new JsonArray());
+	}
+
+	@When("prepare json array {string} of {string}")
+	public void prepareJsonArray(String name, String template, DataTable data) {
+		jsonService.putArray(name, dataTableService.get(template), data);
 	}
 
 	@When("prepare data table {string}")
 	public void prepareDataTable(String name, DataTable data) {
 		dataTableService.put(name, data);
+	}
+
+	@When("prepare url {string}")
+	public void prepareUrl(String url) {
+		globalUrl = url;
+	}
+
+	@When("prepare url")
+	public void prepareUrl(DataTable data) {
+		globalUrl = jsonService.generateUrl(data);
 	}
 
 	/**

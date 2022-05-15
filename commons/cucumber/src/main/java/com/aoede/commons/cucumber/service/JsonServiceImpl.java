@@ -78,8 +78,18 @@ public class JsonServiceImpl extends TestStorageServiceImpl<JsonElement> impleme
 	}
 
 	@Override
-	public JsonElement put(String name, DataTable data) {
+	public JsonElement putObject(String name, DataTable data) {
 		return put(name, generateJsonObject(data));
+	}
+
+	@Override
+	public JsonElement putArray(String name, DataTable template, DataTable data) {
+		return put(name, generateJsonArray(template, data));
+	}
+
+	@Override
+	public JsonElement putArray(String name, DataTable data) {
+		return put(name, generateJsonArray(data));
 	}
 
 	// generate a json object base on data table
@@ -116,7 +126,7 @@ public class JsonServiceImpl extends TestStorageServiceImpl<JsonElement> impleme
 			if (objElem.isJsonPrimitive()) {
 				// elements must match
 				if (!objElem.equals(datElem)) {
-					logger.info("object's " + key + " does not match " + datElem.toString());
+					logger.info("object's " + key + " (" + objElem.toString() + ") does not match " + datElem.toString());
 					return false;
 				}
 
@@ -127,7 +137,7 @@ public class JsonServiceImpl extends TestStorageServiceImpl<JsonElement> impleme
 			if (objElem.isJsonNull()) {
 				// data element must be null too
 				if (!datElem.isJsonNull()) {
-					logger.info("object's " + key + " is null");
+					logger.info("object's " + key + " is not a null");
 					return false;
 				}
 
@@ -138,7 +148,7 @@ public class JsonServiceImpl extends TestStorageServiceImpl<JsonElement> impleme
 			if (objElem.isJsonObject()) {
 				// data element must be object too
 				if (!datElem.isJsonObject()) {
-					logger.info("object's " + key + " is an object");
+					logger.info("object's " + key + " is not a object");
 					return false;
 				}
 
@@ -154,7 +164,7 @@ public class JsonServiceImpl extends TestStorageServiceImpl<JsonElement> impleme
 			if (objElem.isJsonArray()) {
 				// data must be an array too
 				if (!datElem.isJsonArray()) {
-					logger.info("object's " + key + " is an array");
+					logger.info("object's " + key + " is not an array");
 					return false;
 				}
 
@@ -193,6 +203,18 @@ public class JsonServiceImpl extends TestStorageServiceImpl<JsonElement> impleme
 			}
 
 			arr.add(obj);
+		}
+
+		return arr;
+	}
+
+	@Override
+	public JsonArray generateJsonArray(DataTable data) {
+		JsonArray arr = new JsonArray ();
+
+		for (var row : data.asLists()) {
+			assertEquals("Json array row must have exactly two elements", 2, row.size());
+			arr.add(generateJsonElement(row.get(0), row.get(1)));
 		}
 
 		return arr;
@@ -371,6 +393,21 @@ public class JsonServiceImpl extends TestStorageServiceImpl<JsonElement> impleme
 		assertEquals("fraction must have two parts", 2, parts.length);
 
 		return buildFraction (new BigInteger(parts[0].trim()), new BigInteger(parts[1].trim()));
+	}
+
+	@Override
+	public String generateUrl(DataTable data) {
+		String url = "";
+
+		for (var row : data.asLists()) {
+			assertEquals("Url row must have exactly two elements", 2, row.size());
+			assertFalse("Cannot use a json to build a url", row.get(0).equals("json"));
+			assertFalse("Cannot use a fraciton to build a url", row.get(0).equals("fraction"));
+
+			url += "/" + generateJsonElement(row.get(0), row.get(1)).getAsString();
+		}
+
+		return url;
 	}
 
 }

@@ -67,6 +67,23 @@ public class TestGenericControllerStepDefsRequests extends GenericControllerStep
 	}
 
 	@Test
+	public void verifyGetSimpleCustomUrl () throws Exception {
+		GenericControllerStepDefs uut = uut ();
+		var service = createLatestServiceMock();
+
+		when(services.getLatestService(eq("domain"))).thenReturn(service);
+
+		setField ((BaseStepDefinition)uut, "globalUrl", "/custom");
+
+		ResponseResults results = stubRequestCall(uut, service, HttpStatus.OK, HttpMethod.GET, "body", "/custom");
+		when(restTemplate.execute(eq("https://localhost/custom"), any(), any(), any())).thenReturn(results);
+
+		uut.getSimple("domain", "1");
+
+		verify(service).accessResults(results);
+	}
+
+	@Test
 	public void verifyGetComposite () throws Exception {
 		GenericControllerStepDefs uut = uut ();
 		var service = createLatestServiceMock();
@@ -160,6 +177,24 @@ public class TestGenericControllerStepDefsRequests extends GenericControllerStep
 		when(jsonService.generateJsonObject(any(DataTable.class))).thenReturn(new JsonObject());
 
 		ResponseResults results = stubRequestCall(uut, service, HttpStatus.CREATED, HttpMethod.POST, "", "");
+
+		uut.create("domain", DataTable.emptyDataTable());
+
+		verify(service).createResults(results);
+	}
+
+	@Test
+	public void verifyCreateCustomUrl () throws Exception {
+		GenericControllerStepDefs uut = uut ();
+		var service = createLatestServiceMock();
+
+		when(services.getLatestService(eq("domain"))).thenReturn(service);
+		when(jsonService.generateJsonObject(any(DataTable.class))).thenReturn(new JsonObject());
+
+		setField ((BaseStepDefinition)uut, "globalUrl", "/custom");
+
+		ResponseResults results = stubRequestCall(uut, service, HttpStatus.CREATED, HttpMethod.POST, "", "/custom");
+		when(restTemplate.execute(eq("https://localhost/custom"), any(), any(), any())).thenReturn(results);
 
 		uut.create("domain", DataTable.emptyDataTable());
 

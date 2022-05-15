@@ -181,6 +181,19 @@ public class TestJsonObjectServiceImplGenerateJsonArray extends JsonObjectServic
 		});
 	}
 
+	@Test
+	public void verifyGenerateSimpleList () throws Exception {
+		DataTable table = buildDataTable (List.of(
+			List.of("int", "1"),
+			List.of("null", ""),
+			List.of("string", "")
+		));
+
+		JsonArray array = uut ().generateJsonArray(table);
+
+		assertEquals ("json is not generated correctly", "[1,null,\"\"]", array.toString());
+	}
+
 }
 
 

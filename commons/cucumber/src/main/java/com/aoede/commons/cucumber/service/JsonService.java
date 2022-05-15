@@ -8,6 +8,8 @@ import io.cucumber.datatable.DataTable;
 
 public interface JsonService extends TestStorageService<JsonElement> {
 
+	// composite key
+
 	public String generateBase64(String data);
 	public String generatePaddedBase64(String data);
 	public String generateCompositeKey(DataTable data);
@@ -15,12 +17,22 @@ public interface JsonService extends TestStorageService<JsonElement> {
 	public String putCompositeKey(String name, DataTable data);
 	public String getCompositeKey(String name);
 
+	// json object
+
 	public JsonObject generateJsonObject(DataTable data);
+
+	public JsonElement putObject (String name, DataTable data);
 
 	public boolean jsonObjectMatches(JsonObject object, DataTable  data);
 	public boolean jsonObjectMatches(JsonObject object, JsonObject data);
 
+	// json array
+
 	public JsonArray generateJsonArray(DataTable template, DataTable data);
+	public JsonArray generateJsonArray(DataTable data);
+
+	public JsonElement putArray  (String name, DataTable template, DataTable data);
+	public JsonElement putArray  (String name, DataTable data);
 
 	public boolean jsonArrayMatches(JsonArray object, JsonArray data);
 
@@ -30,7 +42,9 @@ public interface JsonService extends TestStorageService<JsonElement> {
 
 	public boolean jsonArrayContainsObjectWithElement(JsonArray array, String key, JsonElement element);
 
-	public JsonElement put (String name, DataTable data);
+	// url
+
+	public String generateUrl(DataTable data);
 }
 
 

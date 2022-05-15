@@ -36,6 +36,7 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 	private TestCaseIdTrackerService testCaseIdTrackerService;
 	protected JsonService jsonService;
 	protected DataTableService dataTableService;
+	protected String globalUrl;
 
 	public BaseStepDefinition (
 		ServerProperties serverProperties,
@@ -57,6 +58,7 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 
 		restTemplate.setErrorHandler(new ResponseResultsErrorHandler());
 		restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+		globalUrl = null;
 	}
 
 	private class ResponseResultsErrorHandler implements ResponseErrorHandler {
@@ -74,6 +76,14 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 
 	private ResponseResults execute (String url, HttpMethod method, HttpHeaders headers, String body) {
 		RequestParametersCallback parameters = new RequestParametersCallback(headers, body);
+
+		if (globalUrl != null) {
+			logger.info ("override default url " + url + " with " + globalUrl);
+			url = globalUrl;
+
+			// enforce one use only
+			globalUrl = null;
+		}
 
 		logger.info ("--------------------------------------------------------------------------------------------------------------------------");
 		logger.info ("- Request:  " + method + " " + basePath + url);
@@ -204,6 +214,7 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 		services.clear();
 		jsonService.clear();
 		dataTableService.clear();
+		globalUrl = null;
 	}
 
 	protected String getLatestTestCaseId() {
