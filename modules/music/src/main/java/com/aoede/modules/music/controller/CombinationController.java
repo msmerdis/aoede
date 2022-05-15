@@ -1,8 +1,5 @@
 package com.aoede.modules.music.controller;
 
-import java.util.LinkedList;
-import java.util.stream.Collectors;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,128 +8,25 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aoede.commons.base.exceptions.GenericException;
-import com.aoede.modules.music.domain.Measure;
-import com.aoede.modules.music.domain.Note;
-import com.aoede.modules.music.domain.Section;
-import com.aoede.modules.music.domain.Sheet;
-import com.aoede.modules.music.domain.Track;
-import com.aoede.modules.music.service.MeasureService;
-import com.aoede.modules.music.service.NoteService;
-import com.aoede.modules.music.service.SectionService;
-import com.aoede.modules.music.service.SheetService;
-import com.aoede.modules.music.service.TrackService;
-import com.aoede.modules.music.transfer.combination.FullMeasure;
-import com.aoede.modules.music.transfer.combination.FullNote;
-import com.aoede.modules.music.transfer.combination.FullSection;
+import com.aoede.modules.music.service.CombinationService;
 import com.aoede.modules.music.transfer.combination.FullSheet;
-import com.aoede.modules.music.transfer.combination.FullTrack;
-import com.aoede.modules.music.transfer.measure.AccessMeasure;
-import com.aoede.modules.music.transfer.note.AccessNote;
-import com.aoede.modules.music.transfer.section.AccessSection;
-import com.aoede.modules.music.transfer.track.AccessTrack;
 
 @RestController
 @RequestMapping ("/api/sheet")
 public class CombinationController {
 
-	private SheetService sheetService;
-	private TrackService trackService;
-	private SectionService sectionService;
-	private MeasureService measureService;
-	private NoteService noteService;
+	private CombinationService combinationService;
 
 	public CombinationController(
-		SheetService sheetService,
-		TrackService trackService,
-		SectionService sectionService,
-		MeasureService measureService,
-		NoteService noteService
+		CombinationService combinationService
 	) {
-		this.sheetService = sheetService;
-		this.trackService = trackService;
-		this.sectionService = sectionService;
-		this.measureService = measureService;
-		this.noteService = noteService;
+		this.combinationService = combinationService;
 	}
 
 	@GetMapping("/{id}/full")
 	@ResponseStatus(HttpStatus.OK)
 	public FullSheet get(@PathVariable("id") final Long id) throws GenericException {
-		FullSheet fullSheet = new FullSheet();
-		Sheet sheet = sheetService.find(id);
-
-		fullSheet.setId(sheet.getId());
-		fullSheet.setName(sheet.getName());
-		fullSheet.setTracks(
-			trackService.findBySheetId(id).stream()
-				.map((track) -> updateTrack(track))
-				.collect(Collectors.toList())
-		);
-
-		return fullSheet;
-	}
-
-	private FullTrack updateTrack(Track track) {
-		FullTrack fullTrack = new FullTrack();
-
-		fullTrack.setId(new AccessTrack(track.getId().getSheetId(), track.getId().getTrackId()));
-		fullTrack.setClef(track.getClef());
-		fullTrack.setSections(
-			sectionService.findByTrackId(track.getId()).stream()
-				.map((section) -> updateSection(section))
-				.collect(Collectors.toList())
-		);
-
-		return fullTrack;
-	}
-
-	private FullSection updateSection(Section section) {
-		FullSection fullSection = new FullSection();
-
-		fullSection.setId(new AccessSection(section.getId().getSheetId(), section.getId().getTrackId(), section.getId().getSectionId()));
-		fullSection.setKeySignature(section.getKeySignature().getId());
-		fullSection.setTempo(section.getTempo());
-		fullSection.setTimeSignature(section.getTimeSignature());
-		fullSection.setMeasures(new LinkedList<FullMeasure>());
-		fullSection.setMeasures(
-			measureService.findBySectionId(section.getId()).stream()
-				.map((measure) -> updateMeasure(measure))
-				.collect(Collectors.toList())
-		);
-		return fullSection;
-	}
-
-	private FullMeasure updateMeasure(Measure measure) {
-		FullMeasure fullMeasure = new FullMeasure();
-
-		fullMeasure.setId(new AccessMeasure(
-			measure.getId().getSheetId(),
-			measure.getId().getTrackId(),
-			measure.getId().getSectionId(),
-			measure.getId().getMeasureId()
-		));
-		fullMeasure.setNotes(
-			noteService.findByMeasureId(measure.getId()).stream()
-				.map((note) -> updateNote(note))
-				.collect(Collectors.toList())
-		);
-		return fullMeasure;
-	}
-
-	private FullNote updateNote(Note note) {
-		FullNote fullNote = new FullNote();
-
-		fullNote.setId(new AccessNote(
-			note.getId().getSheetId(),
-			note.getId().getTrackId(),
-			note.getId().getSectionId(),
-			note.getId().getMeasureId(),
-			note.getId().getNoteId()
-		));
-		fullNote.setNote(note.getNote());
-		fullNote.setValue(note.getValue());
-
-		return fullNote;
+		return combinationService.getSheet(id);
 	}
 }
 
