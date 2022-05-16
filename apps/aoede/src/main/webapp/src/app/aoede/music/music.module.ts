@@ -8,7 +8,7 @@ import { MusicRoutingModule } from './music-routing.module';
 import { SheetComponent } from './sheet/sheet.component';
 import { SheetCreateComponent } from './sheet/sheet-create.component';
 import { SheetResultComponent } from './sheet/sheet-result.component';
-import * as fromMusicState from './sheet/sheet.reducer';
+import * as fromMusicState from './store/music.reducer';
 
 @NgModule({
 	declarations: [
@@ -22,7 +22,7 @@ import * as fromMusicState from './sheet/sheet.reducer';
 		FormsModule,
 		ReactiveFormsModule,
 		HttpClientModule,
-		StoreModule.forFeature(fromMusicState.musicSheetFeatureKey, fromMusicState.musicSheetReducer, {})
+		StoreModule.forFeature(fromMusicState.musicFeatureKey, fromMusicState.musicReducer, {})
 	],
 	exports: [
 		CommonModule,

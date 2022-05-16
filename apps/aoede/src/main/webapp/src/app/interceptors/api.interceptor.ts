@@ -1,13 +1,23 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Location, LocationStrategy } from '@angular/common';
 
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
-	private baseUrl = 'http://localhost:8088'
+	private baseUrl = 'http://localhost:8088';
+
+	constructor(private location: Location, private locationStrategy: LocationStrategy) { }
+
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+		if (location.origin !== 'http://localhost:4200') {
+			console.log('not intercepting');
+			return next.handle(req);
+		}
+
 		console.log('intercepting: ' + req.url);
+
 		const apiReq = req.clone({
 			url: `${this.baseUrl}${req.url}`,
 			headers: req.headers

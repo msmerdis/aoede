@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 
+import { SheetCreate } from './model/sheet-create.model';
+
 @Injectable({
 	providedIn: 'root'
 })
@@ -12,11 +14,17 @@ export class MusicService {
 		private httpClient: HttpClient
 	) {}
 
-	getSheetList(): Observable<Sheet[]> {
-		return this.httpClient.get<Sheet[]>('/api/sheet');
+	private sheetUrl : string = '/api/sheet';
+
+	public getSheetList(): Observable<Sheet[]> {
+		return this.httpClient.get<Sheet[]>(this.sheetUrl);
 	}
 
-	getSheet(id: number): Observable<Sheet> {
-		return this.httpClient.get<Sheet[]>('/api/sheet/' + id);
+	public getSheet(id: number): Observable<Sheet> {
+		return this.httpClient.get<Sheet>(this.sheetUrl + id);
+	}
+
+	public createSheet(createSheet: CreateSheet): Observable<Sheet> {
+		return this.httpClient.post<Sheet>(this.sheetUrl, createSheet);
 	}
 }
