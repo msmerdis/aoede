@@ -3,8 +3,7 @@ import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/c
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class ApiInterceptor implements HttpInterceptor {
-	private baseUrl = 'http://localhost:8088';
+export class UserInterceptor implements HttpInterceptor {
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		if (location.origin !== 'http://localhost:4200') {
@@ -23,4 +22,5 @@ export class ApiInterceptor implements HttpInterceptor {
 		return next.handle(apiReq);
 	}
 }
+
 

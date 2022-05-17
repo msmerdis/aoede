@@ -25,6 +25,23 @@ public class KeySignatureServiceImpl extends AbstractServiceEntityImpl <Short, K
 		return "KeySignature";
 	}
 
+	@Override
+	public KeySignature findByMajor (String major) {
+		return repository.findAll()
+			.stream()
+			.filter(key -> key.getMajor().equals(major))
+			.findFirst()
+			.orElseThrow();
+	}
+
+	@Override
+	public KeySignature findByMinor (String minor) {
+		return repository.findAll()
+			.stream()
+			.filter(key -> key.getMinor().equals(minor))
+			.findFirst()
+			.orElseThrow();
+	}
 }
 
 

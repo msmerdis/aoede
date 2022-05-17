@@ -286,6 +286,9 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 	 * assertions
 	 */
 
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	// Status checks
+
 	@Then("the request was successful")
 	public void verifySuccessfulRequest () {
 		verifySuccessfulRequest(services.getLatestService());
@@ -328,6 +331,9 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		assertEquals(code, service.getLatestResults().status.value());
 	}
 
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	// Array response checks
+
 	@Then("the response array contains {string} objects")
 	public void verifyArrayList (String dataTableName, DataTable data) {
 		verifyArrayList(services.getLatestService(), dataTableName, data);
@@ -347,33 +353,6 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 
 		assertTrue(
 			jsonService.jsonArrayMatches(service.getLatestArr(), array)
-		);
-	}
-
-	@Then("the response contains {string} objects in {string}")
-	public void verifyElementList (String dataTableName, String element, DataTable data) {
-		verifyElementList (services.getLatestService(), dataTableName, element, data);
-	}
-
-	@Then("the {string} response contains {string} objects in {string}")
-	public void verifyElementList (String domain, String dataTableName, String element, DataTable data) {
-		verifyElementList (services.getService(domain), dataTableName, element, data);
-	}
-
-	private void verifyElementList (AbstractTestService service, String dataTableName, String element, DataTable data) {
-		// generate a json array using a previously stored template
-		JsonArray array = jsonService.generateJsonArray(
-			dataTableService.get(dataTableName), data);
-
-		assertNotNull("could not generate json array", array);
-
-		JsonObject obj = service.getLatestObj();
-
-		assertTrue ("does not have element " + element, obj.has(element));
-		assertTrue (element + " is not an array", obj.get(element).isJsonArray());
-
-		assertTrue(
-			jsonService.jsonArrayMatches(obj.get(element).getAsJsonArray(), array)
 		);
 	}
 
@@ -417,6 +396,18 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		);
 	}
 
+	@Then("{string} returned array of size {int}")
+	public void verifyResultCount (String domain, int size) {
+		AbstractTestService service = services.getService(domain);
+
+		var arr = service.getLatestArr();
+		assertNotNull("latest response is not an array", arr);
+
+		int actual = arr.size();
+
+		assertEquals (size, actual);
+	}
+
 	@Then("{string} contains latest {string} in {string}")
 	public void verifyDependentDomains (String parent, String child, String element) {
 		AbstractTestService pService = services.getService(parent);
@@ -436,16 +427,34 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		);
 	}
 
-	@Then("{string} returned array of size {int}")
-	public void verifyResultCount (String domain, int size) {
-		AbstractTestService service = services.getService(domain);
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	// Object response checks
 
-		var arr = service.getLatestArr();
-		assertNotNull("latest response is not an array", arr);
+	@Then("the response contains {string} objects in {string}")
+	public void verifyElementList (String dataTableName, String element, DataTable data) {
+		verifyElementList (services.getLatestService(), dataTableName, element, data);
+	}
 
-		int actual = arr.size();
+	@Then("the {string} response contains {string} objects in {string}")
+	public void verifyElementList (String domain, String dataTableName, String element, DataTable data) {
+		verifyElementList (services.getService(domain), dataTableName, element, data);
+	}
 
-		assertEquals (size, actual);
+	private void verifyElementList (AbstractTestService service, String dataTableName, String element, DataTable data) {
+		// generate a json array using a previously stored template
+		JsonArray array = jsonService.generateJsonArray(
+			dataTableService.get(dataTableName), data);
+
+		assertNotNull("could not generate json array", array);
+
+		JsonObject obj = service.getLatestObj();
+
+		assertTrue ("does not have element " + element, obj.has(element));
+		assertTrue (element + " is not an array", obj.get(element).isJsonArray());
+
+		assertTrue(
+			jsonService.jsonArrayMatches(obj.get(element).getAsJsonArray(), array)
+		);
 	}
 
 	@Then("the response matches")
@@ -479,6 +488,45 @@ public class GenericControllerStepDefs extends BaseStepDefinition {
 		int actual = element.getAsJsonArray().size();
 
 		assertEquals (size, actual);
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	// Response headers checks
+
+	@Then("the response returned header {string}")
+	public void verifyHeader (String header) {
+		verifyHeader (services.getLatestService(), header);
+	}
+
+	@Then("the {string} response returned header {string}")
+	public void verifyHeader (String domain, String header) {
+		verifyHeader (services.getService(domain), header);
+	}
+
+	private void verifyHeader (AbstractTestService service, String header) {
+		assertTrue(
+			"header " + header + " not found in response",
+			service.getLatestResults().headers.containsKey(header)
+		);
+	}
+
+	@Then("the response header {string} contains {string}")
+	public void matchHeader (String header, String value) {
+		matchHeader (services.getLatestService(), header, value);
+	}
+
+	@Then("the {string} response header {string} contains {string}")
+	public void matchHeader (String domain, String header, String value) {
+		matchHeader (services.getService(domain), header, value);
+	}
+
+	private void matchHeader (AbstractTestService service, String header, String value) {
+		verifyHeader(service, header);
+
+		assertTrue(
+			"header " + header + " not found in response",
+			service.getLatestResults().headers.get(header).contains(value)
+		);
 	}
 }
 

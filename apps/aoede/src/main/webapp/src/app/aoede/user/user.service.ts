@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 
 import { User } from './model/user.model';
@@ -14,8 +14,8 @@ export class UserService {
 
 	private loginUrl : string = '/login';
 
-	public login (details : LoginDetails) : Observable<User> {
-		return this.httpClient.post<User>(this.loginUrl, details);
+	public login (details : LoginDetails) : Observable<HttpResponse<User>> {
+		return this.httpClient.post<User>(this.loginUrl, details, { observe: 'response' })
 	}
 }
 

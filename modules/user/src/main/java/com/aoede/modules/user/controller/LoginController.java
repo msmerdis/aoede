@@ -1,5 +1,7 @@
 package com.aoede.modules.user.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.http.HttpHeaders;
@@ -54,9 +56,14 @@ public class LoginController extends BaseComponent {
 
 		HttpHeaders headers = new HttpHeaders ();
 
-		headers.add(
+		headers.set(
 			UserConfiguration.TOKEN_HEADER_NAME,
 			tokenService.encodeUser(user, UserConfiguration.TOKEN_TIME_TO_LIVE)
+		);
+
+		headers.add(
+			HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS,
+			UserConfiguration.TOKEN_HEADER_NAME
 		);
 
 		return new ResponseEntity<UserDetailResponse>(userDetails, headers, HttpStatus.OK);

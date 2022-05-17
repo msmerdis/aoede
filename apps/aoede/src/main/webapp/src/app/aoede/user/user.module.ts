@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -14,6 +14,11 @@ import {
 	UserAuthGuard,
 	AnonymousUserGuard
 } from './user.guards';
+import {
+	UserConfig,
+	UserConfigToken,
+	DefaultUserConfig
+} from './user.config'
 
 @NgModule({
 	declarations: [
@@ -40,4 +45,16 @@ import {
 		AnonymousUserGuard
 	]
 })
-export class UserModule { }
+export class UserModule {
+	static forRoot(config: UserConfig): ModuleWithProviders<UserModule> {
+		return {
+			ngModule: UserModule,
+			providers: [
+				{
+					provide  : UserConfigToken,
+					useValue : {...DefaultUserConfig, ...config}
+				}
+			]
+		}
+	}
+}

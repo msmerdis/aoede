@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
@@ -15,6 +15,7 @@ import {
 import { UserState } from './user.reducer';
 import { UserService } from '../user.service';
 import { getUserState } from './user.selectors';
+import { UserConfig, UserConfigToken } from '../user.config';
 
 @Injectable()
 export class UserEffects {
@@ -26,7 +27,8 @@ export class UserEffects {
 		private store    : Store<UserState>,
 		private actions$ : Actions,
 		private service  : UserService,
-		private router   : Router
+		private router   : Router,
+		@Inject(UserConfigToken) private config : UserConfig
 	) {
 		let state = localStorage.getItem(this.name);
 
@@ -45,11 +47,17 @@ export class UserEffects {
 		() => this.actions$.pipe(
 			ofType(loginRequest),
 			switchMap((details) => this.service.login(details.payload).pipe(
-					map(data => {
+					map(resp => {
 						this.router.navigate(['']);
-						return loginSuccess({success: {user: data, token: "todo", time: Date.now()}});
+						return loginSuccess({
+							success: {
+								user: resp.body!!,
+								token: resp.headers.get(this.config.authToken!!)!!,
+								time: Date.now()
+							}
+						});
 					}),
-					catchError(err => of(loginFailure({failure: err.error})))
+					catchError(err => of(loginFailure({failure: err.body.error})))
 				)
 			)
 		)

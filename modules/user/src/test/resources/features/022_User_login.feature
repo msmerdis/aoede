@@ -22,11 +22,15 @@ And the "login" request was successful
 And the "login" response matches
 	| status   | string | ACTIVE         |
 	| username | string | activeUserName |
+And the "login" response returned header "X-User-Token"
+And the "login" response header "Access-Control-Expose-Headers" contains "X-User-Token"
 Then check user status
 And the "login" request was successful
 And the "login" response matches
 	| status   | string | ACTIVE         |
 	| username | string | activeUserName |
+And the "login" response returned header "X-User-Token"
+And the "login" response header "Access-Control-Expose-Headers" contains "X-User-Token"
 
 @TC022002
 @Negative

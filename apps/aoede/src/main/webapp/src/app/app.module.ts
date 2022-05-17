@@ -26,7 +26,7 @@ import { ApiInterceptor } from './interceptors/api.interceptor';
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
-		UserModule,
+		UserModule.forRoot({}),
 		MusicModule,
 		StoreModule.forRoot(fromAppState.reducer, {}),
 		EffectsModule.forRoot(
