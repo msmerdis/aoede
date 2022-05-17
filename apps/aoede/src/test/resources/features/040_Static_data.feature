@@ -28,3 +28,14 @@ Scenario: Verify F clef are present
 When request "/static/clef/F.svg" from aoede
 Then the aoede response has a status code of 200
 And the aoede response contains "svg"
+
+@TC040004
+@Positive
+Scenario: Verify terms of service are present
+### verify terms of service are present
+
+When request "/static/tos.html" from aoede
+Then the aoede response has a status code of 200
+And the aoede response contains "<!DOCTYPE html>"
+And the aoede response contains "Terms of Service"
+
