@@ -27,7 +27,7 @@ import { ApiInterceptor } from './interceptors/api.interceptor';
 		BrowserModule,
 		AppRoutingModule,
 		UserModule.forRoot({}),
-		MusicModule,
+		MusicModule.forRoot({}),
 		StoreModule.forRoot(fromAppState.reducer, {}),
 		EffectsModule.forRoot(
 			!environment.production ? [AppEffects] : []

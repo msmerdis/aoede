@@ -18,7 +18,7 @@ import {
 	UserConfig,
 	UserConfigToken,
 	DefaultUserConfig
-} from './user.config'
+} from './user.config';
 
 @NgModule({
 	declarations: [

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -9,6 +9,11 @@ import { SheetComponent } from './sheet/sheet.component';
 import { SheetCreateComponent } from './sheet/sheet-create.component';
 import { SheetResultComponent } from './sheet/sheet-result.component';
 import * as fromMusicState from './store/music.reducer';
+import {
+	MusicConfig,
+	MusicConfigToken,
+	DefaultMusicConfig
+} from './music.config';
 
 @NgModule({
 	declarations: [
@@ -31,4 +36,16 @@ import * as fromMusicState from './store/music.reducer';
 		HttpClientModule
 	]
 })
-export class MusicModule { }
+export class MusicModule {
+	static forRoot(config: MusicConfig): ModuleWithProviders<MusicModule> {
+		return {
+			ngModule: MusicModule,
+			providers: [
+				{
+					provide  : MusicConfigToken,
+					useValue : {...DefaultMusicConfig, ...config}
+				}
+			]
+		}
+	}
+}
