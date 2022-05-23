@@ -1,4 +1,4 @@
-<form (ngSubmit)="onSubmit()">
+<form (ngSubmit)="onSubmit()" autocomplete="off">
 	<fieldset>
 		<legend>User Login</legend>
 		<label for="username">Username</label>
@@ -6,7 +6,7 @@
 		<div>{{ usernameError }}</div>
 		<br />
 		<label for="password">Password</label>
-		<input id="password" type="pass" placeholder="Password" [formControl]="password">
+		<input id="password" type="password" placeholder="Password" [formControl]="password">
 		<div>{{ passwordError }}</div>
 		<br />
 		<button type="submit">Login</button>

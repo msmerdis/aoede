@@ -1,1 +1,11 @@
-<div>sheet works!</div>
+<table *ngIf="(sheet$ | async) !== null">
+	<tr>
+		<td>Id</td>
+		<td>{{ (sheet$ | async)?.id }}</td>
+	</tr>
+	<tr>
+		<td>Name</td>
+		<td>{{ (sheet$ | async)?.name }}</td>
+	</tr>
+</table>
+<div *ngIf="(sheet$ | async) === null">Loading</div>

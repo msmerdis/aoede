@@ -11,7 +11,8 @@ body * {
 	color: $global-fg-colour;
 }
 
-.header, .header * {
+.header, .header *,
+.footer, .footer * {
 	background-color: $header-bg-colour;
 	color: $header-fg-colour;
 }

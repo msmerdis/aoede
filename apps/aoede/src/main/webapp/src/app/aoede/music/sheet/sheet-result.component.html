@@ -1,1 +1,9 @@
-<div>results work!</div>
+<table *ngIf="(sheetList$ | async)?.length!! > 0">
+	<tr *ngFor="let sheet of sheetList$ | async; index as i" [routerLink]="['../', sheet.id]">
+		<td>{{ i + 1 }}</td>
+		<td>{{ sheet.id }}</td>
+		<td>{{ sheet.name }}</td>
+	</tr>
+</table>
+<div *ngIf="(sheetList$ | async) === null">Loading</div>
+<div *ngIf="(sheetList$ | async)?.length!! == 0">Nothing to see here</div>

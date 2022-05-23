@@ -111,6 +111,7 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 	private void generateUsers () throws Exception {
 		userService.create(makeUser("pleb", "test"));
 		userService.create(makeUser("boss", "test"));
+		userService.create(makeUser("null", "test"));
 	}
 
 	private Sheet makeSheet (int startingNote, String name) {
