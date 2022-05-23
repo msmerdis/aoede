@@ -169,7 +169,7 @@ public class TestGenericControllerStepDefsRequests extends GenericControllerStep
 	}
 
 	@Test
-	public void verifyCreate () throws Exception {
+	public void verifyCreateWithTable () throws Exception {
 		GenericControllerStepDefs uut = uut ();
 		var service = createLatestServiceMock();
 
@@ -178,13 +178,13 @@ public class TestGenericControllerStepDefsRequests extends GenericControllerStep
 
 		ResponseResults results = stubRequestCall(uut, service, HttpStatus.CREATED, HttpMethod.POST, "", "");
 
-		uut.create("domain", DataTable.emptyDataTable());
+		uut.createWithTable("domain", DataTable.emptyDataTable());
 
 		verify(service).createResults(results);
 	}
 
 	@Test
-	public void verifyCreateCustomUrl () throws Exception {
+	public void verifyCreateWithTableCustomUrl () throws Exception {
 		GenericControllerStepDefs uut = uut ();
 		var service = createLatestServiceMock();
 
@@ -196,7 +196,71 @@ public class TestGenericControllerStepDefsRequests extends GenericControllerStep
 		ResponseResults results = stubRequestCall(uut, service, HttpStatus.CREATED, HttpMethod.POST, "", "/custom");
 		when(restTemplate.execute(eq("https://localhost/custom"), any(), any(), any())).thenReturn(results);
 
-		uut.create("domain", DataTable.emptyDataTable());
+		uut.createWithTable("domain", DataTable.emptyDataTable());
+
+		verify(service).createResults(results);
+	}
+
+	@Test
+	public void verifyCreateWithElement () throws Exception {
+		GenericControllerStepDefs uut = uut ();
+		var service = createLatestServiceMock();
+
+		when(services.getLatestService(eq("domain"))).thenReturn(service);
+		when(jsonService.get(eq("json"))).thenReturn(new JsonPrimitive("element value"));
+
+		ResponseResults results = stubRequestCall(uut, service, HttpStatus.CREATED, HttpMethod.POST, "element value", "");
+
+		uut.createWithElement("domain", "json");
+
+		verify(service).createResults(results);
+	}
+
+	@Test
+	public void verifyCreateWithElementCustomUrl () throws Exception {
+		GenericControllerStepDefs uut = uut ();
+		var service = createLatestServiceMock();
+
+		when(services.getLatestService(eq("domain"))).thenReturn(service);
+		when(jsonService.get(eq("json"))).thenReturn(new JsonPrimitive("element value"));
+
+		setField ((BaseStepDefinition)uut, "globalUrl", "/custom");
+
+		ResponseResults results = stubRequestCall(uut, service, HttpStatus.CREATED, HttpMethod.POST, "element value", "/custom");
+		when(restTemplate.execute(eq("https://localhost/custom"), any(), any(), any())).thenReturn(results);
+
+		uut.createWithElement("domain", "json");
+
+		verify(service).createResults(results);
+	}
+
+	@Test
+	public void verifyCreateWithBody () throws Exception {
+		GenericControllerStepDefs uut = uut ();
+		var service = createLatestServiceMock();
+
+		when(services.getLatestService(eq("domain"))).thenReturn(service);
+
+		ResponseResults results = stubRequestCall(uut, service, HttpStatus.CREATED, HttpMethod.POST, "body value", "");
+
+		uut.createWithBody("domain", "body value");
+
+		verify(service).createResults(results);
+	}
+
+	@Test
+	public void verifyCreateWithBodyCustomUrl () throws Exception {
+		GenericControllerStepDefs uut = uut ();
+		var service = createLatestServiceMock();
+
+		when(services.getLatestService(eq("domain"))).thenReturn(service);
+
+		setField ((BaseStepDefinition)uut, "globalUrl", "/custom");
+
+		ResponseResults results = stubRequestCall(uut, service, HttpStatus.CREATED, HttpMethod.POST, "body value", "/custom");
+		when(restTemplate.execute(eq("https://localhost/custom"), any(), any(), any())).thenReturn(results);
+
+		uut.createWithBody("domain", "body value");
 
 		verify(service).createResults(results);
 	}
@@ -217,7 +281,7 @@ public class TestGenericControllerStepDefsRequests extends GenericControllerStep
 	}
 
 	@Test
-	public void verifyUpdateSimple () throws Exception {
+	public void verifyUpdateSimpleWithIdAndTable () throws Exception {
 		GenericControllerStepDefs uut = uut ();
 		var service = createLatestServiceMock();
 
@@ -227,13 +291,44 @@ public class TestGenericControllerStepDefsRequests extends GenericControllerStep
 
 		ResponseResults results = stubRequestCall(uut, service, HttpStatus.OK, HttpMethod.PUT, "", "/1");
 
-		uut.updateSimple("domain", "1", DataTable.emptyDataTable());
+		uut.updateSimpleWithIdAndTable("domain", "1", DataTable.emptyDataTable());
 
 		verify(service).updateResults(results);
 	}
 
 	@Test
-	public void verifyUpdateSimpleEmpty () throws Exception {
+	public void verifyUpdateSimpleWithIdAndElement () throws Exception {
+		GenericControllerStepDefs uut = uut ();
+		var service = createLatestServiceMock();
+
+		when(services.getLatestService(eq("domain"))).thenReturn(service);
+		when(jsonService.get(eq("element"))).thenReturn(new JsonPrimitive("element value"));
+		when(services.getPathForService(eq("domain"), eq("/1"))).thenReturn("/the/path");
+
+		ResponseResults results = stubRequestCall(uut, service, HttpStatus.OK, HttpMethod.PUT, "element value", "/1");
+
+		uut.updateSimpleWithIdAndElement("domain", "1", "element");
+
+		verify(service).updateResults(results);
+	}
+
+	@Test
+	public void verifyUpdateSimpleWithIdAndBody () throws Exception {
+		GenericControllerStepDefs uut = uut ();
+		var service = createLatestServiceMock();
+
+		when(services.getLatestService(eq("domain"))).thenReturn(service);
+		when(services.getPathForService(eq("domain"), eq("/1"))).thenReturn("/the/path");
+
+		ResponseResults results = stubRequestCall(uut, service, HttpStatus.OK, HttpMethod.PUT, "body value", "/1");
+
+		uut.updateSimpleWithIdAndBody("domain", "1", "body value");
+
+		verify(service).updateResults(results);
+	}
+
+	@Test
+	public void verifyUpdateSimpleWithIdEmpty () throws Exception {
 		GenericControllerStepDefs uut = uut ();
 		var service = createLatestServiceMock();
 
@@ -243,13 +338,13 @@ public class TestGenericControllerStepDefsRequests extends GenericControllerStep
 
 		ResponseResults results = stubRequestCall(uut, service, HttpStatus.OK, HttpMethod.PUT, "", "/1");
 
-		uut.updateSimpleEmpty("domain", "1");
+		uut.updateSimpleWithIdEmpty("domain", "1");
 
 		verify(service).updateResults(results);
 	}
 
 	@Test
-	public void verifyUpdateCompositePrepared () throws Exception {
+	public void verifyUpdateWithCompositeIdAndTable () throws Exception {
 		GenericControllerStepDefs uut = uut ();
 		var service = createLatestServiceMock();
 
@@ -260,13 +355,63 @@ public class TestGenericControllerStepDefsRequests extends GenericControllerStep
 
 		ResponseResults results = stubRequestCall(uut, service, HttpStatus.OK, HttpMethod.PUT, "", "/a");
 
-		uut.updateCompositePrepared("domain", "name", DataTable.emptyDataTable());
+		uut.updateWithCompositeIdAndTable("domain", "name", DataTable.emptyDataTable());
 
 		verify(service).updateResults(results);
 	}
 
 	@Test
-	public void verifyUpdateLatest () throws Exception {
+	public void verifyUpdateWithCompositeIdAndElement () throws Exception {
+		GenericControllerStepDefs uut = uut ();
+		var service = createLatestServiceMock();
+
+		when(services.getLatestService(eq("domain"))).thenReturn(service);
+		when(jsonService.get(eq("element"))).thenReturn(new JsonPrimitive("element value"));
+		when(services.getPathForService(eq("domain"), eq("/1"))).thenReturn("/the/path");
+		when(jsonService.getCompositeKey(eq("name"))).thenReturn("a");
+
+		ResponseResults results = stubRequestCall(uut, service, HttpStatus.OK, HttpMethod.PUT, "element value", "/a");
+
+		uut.updateWithCompositeIdAndElement("domain", "name", "element");
+
+		verify(service).updateResults(results);
+	}
+
+	@Test
+	public void verifyUpdateWithCompositeIdAndBody () throws Exception {
+		GenericControllerStepDefs uut = uut ();
+		var service = createLatestServiceMock();
+
+		when(services.getLatestService(eq("domain"))).thenReturn(service);
+		when(services.getPathForService(eq("domain"), eq("/1"))).thenReturn("/the/path");
+		when(jsonService.getCompositeKey(eq("name"))).thenReturn("a");
+
+		ResponseResults results = stubRequestCall(uut, service, HttpStatus.OK, HttpMethod.PUT, "body value", "/a");
+
+		uut.updateWithCompositeIdAndBody("domain", "name", "body value");
+
+		verify(service).updateResults(results);
+	}
+
+	@Test
+	public void verifyUpdateWithCompositeIdEmpty () throws Exception {
+		GenericControllerStepDefs uut = uut ();
+		var service = createLatestServiceMock();
+
+		when(services.getLatestService(eq("domain"))).thenReturn(service);
+		when(jsonService.generateJsonObject(any(DataTable.class))).thenReturn(new JsonObject());
+		when(services.getPathForService(eq("domain"), eq("/1"))).thenReturn("/the/path");
+		when(jsonService.getCompositeKey(eq("name"))).thenReturn("a");
+
+		ResponseResults results = stubRequestCall(uut, service, HttpStatus.OK, HttpMethod.PUT, "", "/a");
+
+		uut.updateWithCompositeIdEmpty("domain", "name");
+
+		verify(service).updateResults(results);
+	}
+
+	@Test
+	public void verifyUpdateWithLatestAndTable () throws Exception {
 		GenericControllerStepDefs uut = uut ();
 		var service = createLatestServiceMock();
 
@@ -277,7 +422,57 @@ public class TestGenericControllerStepDefsRequests extends GenericControllerStep
 
 		ResponseResults results = stubRequestCall(uut, service, HttpStatus.OK, HttpMethod.PUT, "", "/b");
 
-		uut.updateLatest("domain", DataTable.emptyDataTable());
+		uut.updateWithLatestAndTable("domain", DataTable.emptyDataTable());
+
+		verify(service).updateResults(results);
+	}
+
+	@Test
+	public void verifyUpdateWithLatestAndElement () throws Exception {
+		GenericControllerStepDefs uut = uut ();
+		var service = createLatestServiceMock();
+
+		when(services.getLatestService(eq("domain"))).thenReturn(service);
+		when(jsonService.get(eq("element"))).thenReturn(new JsonPrimitive("element value"));
+		when(services.getPathForService(eq("domain"), eq("/1"))).thenReturn("/the/path");
+		when(service.getLatestKey()).thenReturn(new JsonPrimitive("b"));
+
+		ResponseResults results = stubRequestCall(uut, service, HttpStatus.OK, HttpMethod.PUT, "element value", "/b");
+
+		uut.updateWithLatestAndElement("domain", "element");
+
+		verify(service).updateResults(results);
+	}
+
+	@Test
+	public void verifyUpdateWithLatestAndBody () throws Exception {
+		GenericControllerStepDefs uut = uut ();
+		var service = createLatestServiceMock();
+
+		when(services.getLatestService(eq("domain"))).thenReturn(service);
+		when(services.getPathForService(eq("domain"), eq("/1"))).thenReturn("/the/path");
+		when(service.getLatestKey()).thenReturn(new JsonPrimitive("b"));
+
+		ResponseResults results = stubRequestCall(uut, service, HttpStatus.OK, HttpMethod.PUT, "body value", "/b");
+
+		uut.updateWithLatestAndBody("domain", "body value");
+
+		verify(service).updateResults(results);
+	}
+
+	@Test
+	public void verifyUpdateWithLatestEmpty () throws Exception {
+		GenericControllerStepDefs uut = uut ();
+		var service = createLatestServiceMock();
+
+		when(services.getLatestService(eq("domain"))).thenReturn(service);
+		when(jsonService.generateJsonObject(any(DataTable.class))).thenReturn(new JsonObject());
+		when(services.getPathForService(eq("domain"), eq("/1"))).thenReturn("/the/path");
+		when(service.getLatestKey()).thenReturn(new JsonPrimitive("b"));
+
+		ResponseResults results = stubRequestCall(uut, service, HttpStatus.OK, HttpMethod.PUT, "", "/b");
+
+		uut.updateWithLatestAndTable("domain", DataTable.emptyDataTable());
 
 		verify(service).updateResults(results);
 	}
