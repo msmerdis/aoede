@@ -6,8 +6,11 @@ import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.aoede.commons.cucumber.service.AbstractTestService;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.datatable.DataTableTypeRegistry;
@@ -34,6 +37,11 @@ public class BaseTestComponent {
 			)
 		);
 	}
+
+	protected AbstractTestService createLatestServiceMock() {
+		return Mockito.mock(AbstractTestService.class);
+	}
+
 }
 
 

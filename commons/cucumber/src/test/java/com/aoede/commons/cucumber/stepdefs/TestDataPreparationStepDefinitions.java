@@ -8,21 +8,21 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.aoede.GenericControllerStepDefsTestCaseSetup;
+import com.aoede.DataPreparationStepDefinitionsTestCaseSetup;
 import com.aoede.commons.cucumber.BaseStepDefinition;
 import com.aoede.commons.cucumber.service.DataTableServiceImpl;
 import com.aoede.commons.cucumber.service.JsonServiceImpl;
 
 import io.cucumber.datatable.DataTable;
 
-public class TestGenericControllerStepDefsDataPreparation extends GenericControllerStepDefsTestCaseSetup {
+public class TestDataPreparationStepDefinitions extends DataPreparationStepDefinitionsTestCaseSetup {
 
 	@Test
 	public void verifyPreparationOfCompositeId() throws Exception {
-		GenericControllerStepDefs uut = uut ();
+		var uut = uut ();
 
 		// use actual json object service for the test
-		JsonServiceImpl jsonServiceImpl = new JsonServiceImpl(null);
+		var jsonServiceImpl = new JsonServiceImpl(null);
 		setField ((BaseStepDefinition)uut, "jsonService", jsonServiceImpl);
 
 		DataTable table = buildDataTable(List.of(
@@ -38,10 +38,10 @@ public class TestGenericControllerStepDefsDataPreparation extends GenericControl
 
 	@Test
 	public void verifyPreparationOfJsonObject() throws Exception {
-		GenericControllerStepDefs uut = uut ();
+		var uut = uut ();
 
 		// use actual json object service for the test
-		JsonServiceImpl jsonServiceImpl = new JsonServiceImpl(null);
+		var jsonServiceImpl = new JsonServiceImpl(null);
 		setField ((BaseStepDefinition)uut, "jsonService", jsonServiceImpl);
 
 		DataTable table = buildDataTable(List.of(
@@ -57,10 +57,10 @@ public class TestGenericControllerStepDefsDataPreparation extends GenericControl
 
 	@Test
 	public void verifyPreparationOfJsonArray() throws Exception {
-		GenericControllerStepDefs uut = uut ();
+		var uut = uut ();
 
 		// use actual json object service for the test
-		JsonServiceImpl jsonServiceImpl = new JsonServiceImpl(null);
+		var jsonServiceImpl = new JsonServiceImpl(null);
 		setField ((BaseStepDefinition)uut, "jsonService", jsonServiceImpl);
 
 		DataTable table = buildDataTable(List.of(
@@ -77,10 +77,10 @@ public class TestGenericControllerStepDefsDataPreparation extends GenericControl
 
 	@Test
 	public void verifyPreparationOfJsonObjectArray() throws Exception {
-		GenericControllerStepDefs uut = uut ();
+		var uut = uut ();
 
 		// use actual json object service for the test
-		JsonServiceImpl jsonServiceImpl = new JsonServiceImpl(null);
+		var jsonServiceImpl = new JsonServiceImpl(null);
 		setField ((BaseStepDefinition)uut, "jsonService", jsonServiceImpl);
 
 		DataTable template = buildDataTable(List.of(
@@ -109,10 +109,10 @@ public class TestGenericControllerStepDefsDataPreparation extends GenericControl
 
 	@Test
 	public void verifyPreparationOfDataTable() throws Exception {
-		GenericControllerStepDefs uut = uut ();
+		var uut = uut ();
 
 		// use actual json object service for the test
-		DataTableServiceImpl dataTableServiceImpl = new DataTableServiceImpl ();
+		var dataTableServiceImpl = new DataTableServiceImpl ();
 		setField ((BaseStepDefinition)uut, "dataTableService", dataTableServiceImpl);
 
 		DataTable table = buildDataTable(List.of(
@@ -128,10 +128,10 @@ public class TestGenericControllerStepDefsDataPreparation extends GenericControl
 
 	@Test
 	public void verifyPreparationOfUrlTable() throws Exception {
-		GenericControllerStepDefs uut = uut ();
+		var uut = uut ();
 
 		// use actual json object service for the test
-		JsonServiceImpl jsonServiceImpl = new JsonServiceImpl(null);
+		var jsonServiceImpl = new JsonServiceImpl(null);
 		setField ((BaseStepDefinition)uut, "jsonService", jsonServiceImpl);
 
 		DataTable table = buildDataTable(List.of(
@@ -147,7 +147,7 @@ public class TestGenericControllerStepDefsDataPreparation extends GenericControl
 
 	@Test
 	public void verifyPreparationOfUrlString() throws Exception {
-		GenericControllerStepDefs uut = uut ();
+		var uut = uut ();
 
 		// execute function
 		uut.prepareUrl("/url");
