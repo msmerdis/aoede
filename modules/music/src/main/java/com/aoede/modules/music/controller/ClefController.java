@@ -34,6 +34,7 @@ public class ClefController extends AbstractDomainController<String, Clef, ClefS
 	public void delete(@PathVariable("id") final String id) throws Exception {
 		throw new BadRequestException("Clefs cannot be deleted");
 	}
+
 }
 
 

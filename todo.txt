@@ -16,3 +16,5 @@ And the response contains "nullValidationInfo" objects in "validations"
 2. verify if parent element exists - currently throws a conflict error
 
 3. terms of service
+
+4. change tracks column to json (adds double quotes)

@@ -4,6 +4,8 @@ import javax.persistence.EntityManagerFactory;
 
 import org.springframework.stereotype.Service;
 
+import com.aoede.commons.base.exceptions.GenericException;
+import com.aoede.commons.base.exceptions.NotFoundException;
 import com.aoede.commons.base.service.AbstractServiceEntityImpl;
 import com.aoede.modules.music.domain.KeySignature;
 import com.aoede.modules.music.repository.KeySignatureRepository;
@@ -26,21 +28,21 @@ public class KeySignatureServiceImpl extends AbstractServiceEntityImpl <Short, K
 	}
 
 	@Override
-	public KeySignature findByMajor (String major) {
+	public KeySignature findByMajor (String major) throws GenericException {
 		return repository.findAll()
 			.stream()
 			.filter(key -> key.getMajor().equals(major))
 			.findFirst()
-			.orElseThrow();
+			.orElseThrow(() -> new NotFoundException("Key signature not found"));
 	}
 
 	@Override
-	public KeySignature findByMinor (String minor) {
+	public KeySignature findByMinor (String minor) throws GenericException {
 		return repository.findAll()
 			.stream()
 			.filter(key -> key.getMinor().equals(minor))
 			.findFirst()
-			.orElseThrow();
+			.orElseThrow(() -> new NotFoundException("Key signature not found"));
 	}
 }
 

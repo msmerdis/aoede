@@ -16,7 +16,6 @@ import com.aoede.commons.base.exceptions.UnauthorizedException;
 import com.aoede.commons.base.service.AbstractServiceDomainImpl;
 import com.aoede.modules.music.domain.Sheet;
 import com.aoede.modules.music.entity.SheetEntity;
-import com.aoede.modules.music.entity.Sheetable;
 import com.aoede.modules.music.repository.SheetRepository;
 import com.aoede.modules.user.service.UserService;
 
@@ -55,6 +54,7 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Lo
 
 		entity.setUserId(userService.currentUserId());
 		entity.setName(domain.getName());
+		entity.setTracks(domain.getTracks());
 
 		return entity;
 	}
@@ -66,7 +66,9 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Lo
 				new UnauthorizedException("Cannot update sheets created by a different user")
 			);
 		}
+
 		entity.setName(domain.getName());
+		entity.setTracks(domain.getTracks());
 	}
 
 	@Override
@@ -78,6 +80,7 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Lo
 				new UnauthorizedException("Cannot access sheets created by a different user")
 			);
 		}
+
 		updateDomain (entity, sheet);
 
 		return sheet;
@@ -87,15 +90,12 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Lo
 	public void updateDomain(SheetEntity entity, Sheet domain) {
 		domain.setId(entity.getId());
 		domain.setName(entity.getName());
+		domain.setTracks(entity.getTracks());
 	}
 
 	@Override
 	public boolean verifyDelete(SheetEntity entity) {
 		return entity.getUserId().equals(userService.currentUserId());
-	}
-
-	public void updateSheetableEntity(Sheetable entity, Long id) {
-		entity.setSheet(repository.getById(id));
 	}
 
 	@Override

@@ -10,23 +10,12 @@ import org.springframework.stereotype.Component;
 import com.aoede.commons.base.component.BaseComponent;
 import com.aoede.commons.base.exceptions.GenericException;
 import com.aoede.commons.base.exceptions.GenericExceptionContainer;
+import com.aoede.modules.music.domain.Fraction;
 import com.aoede.modules.music.domain.Measure;
-import com.aoede.modules.music.domain.MeasureKey;
 import com.aoede.modules.music.domain.Note;
-import com.aoede.modules.music.domain.NoteKey;
-import com.aoede.modules.music.domain.Section;
-import com.aoede.modules.music.domain.SectionKey;
 import com.aoede.modules.music.domain.Sheet;
 import com.aoede.modules.music.domain.Track;
-import com.aoede.modules.music.domain.TrackKey;
-import com.aoede.modules.music.service.ClefService;
-import com.aoede.modules.music.service.KeySignatureService;
-import com.aoede.modules.music.service.MeasureService;
-import com.aoede.modules.music.service.NoteService;
-import com.aoede.modules.music.service.SectionService;
 import com.aoede.modules.music.service.SheetService;
-import com.aoede.modules.music.service.TrackService;
-import com.aoede.modules.music.transfer.Fraction;
 import com.aoede.modules.user.domain.Role;
 import com.aoede.modules.user.domain.User;
 import com.aoede.modules.user.service.RoleService;
@@ -37,13 +26,7 @@ import com.aoede.modules.user.transfer.user.UserStatus;
 public class GenerateUsersRunner extends BaseComponent implements CommandLineRunner {
 	private RoleService roleService;
 	private UserService userService;
-	private ClefService clefService;
-	private KeySignatureService keySignatureService;
 	private SheetService sheetService;
-	private TrackService trackService;
-	private SectionService sectionService;
-	private MeasureService measureService;
-	private NoteService noteService;
 
 	private int startingNote = 60;
 	private String[] notes   = {"F", "G", "A", "B", "C", "D", "E"};
@@ -51,23 +34,11 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 	public GenerateUsersRunner (
 		RoleService roleService,
 		UserService userService,
-		ClefService clefService,
-		KeySignatureService keySignatureService,
-		SheetService sheetService,
-		TrackService trackService,
-		SectionService sectionService,
-		MeasureService measureService,
-		NoteService noteService
+		SheetService sheetService
 	) {
 		this.roleService = roleService;
 		this.userService = userService;
-		this.clefService = clefService;
-		this.keySignatureService = keySignatureService;
 		this.sheetService = sheetService;
-		this.trackService = trackService;
-		this.sectionService = sectionService;
-		this.measureService = measureService;
-		this.noteService = noteService;
 	}
 
 	@Override
@@ -114,60 +85,49 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 		userService.create(makeUser("null", "test"));
 	}
 
-	private Sheet makeSheet (int startingNote, String name) {
+	private Sheet makeSheet (int startingNote, short key, String name) {
 		Sheet sheet = new Sheet();
 
 		sheet.setName(name);
+		sheet.getTracks().add(makeTrack(startingNote, (short)1, key));
 
 		return sheet;
 	}
 
-	private Track makeTrack (long id) throws GenericException {
+	private Track makeTrack (int startingNote, short order, short key) {
 		Track track = new Track();
 
-		track.setId(new TrackKey());
-		track.getId().setSheetId(id);
-		track.setClef(clefService.find("Treble"));
+		track.setClef("Treble");
+		track.setOrder(order);
+		track.setKeySignature(key);
+		track.setTempo((short)120);
+		track.setTimeSignature(new Fraction(4, 4));
+
+		track.getMeasures().add(makeMeasure((short)1, startingNote +  0, startingNote + 2, startingNote +  4, startingNote +  5));
+		track.getMeasures().add(makeMeasure((short)2, startingNote +  7, startingNote + 9, startingNote + 11, startingNote + 12));
+		track.getMeasures().add(makeMeasure((short)3, startingNote + 11, startingNote + 9, startingNote +  7, startingNote +  4));
+		track.getMeasures().add(makeMeasure((short)4, startingNote +  4, startingNote + 2, startingNote +  0, -1));
 
 		return track;
 	}
 
-	private Section makeSection (TrackKey id, String major) {
-		Section section = new Section();
-
-		section.setId(new SectionKey());
-		section.getId().setSheetId(id.getSheetId());
-		section.getId().setTrackId(id.getTrackId());
-		section.setTempo((short)120);
-		section.setTimeSignature(new Fraction(4, 4));
-		section.setKeySignature(this.keySignatureService.findByMajor(major));
-
-		return section;
-	}
-
-	private Measure makeMeasure (SectionKey id) {
+	private Measure makeMeasure (short order, int n1, int n2, int n3, int n4) {
 		Measure measure = new Measure();
 
-		measure.setId(new MeasureKey());
-		measure.getId().setSheetId(id.getSheetId());
-		measure.getId().setTrackId(id.getTrackId());
-
-		measure.getId().setSectionId(id.getSectionId());
+		measure.setOrder(order);
+		measure.getNotes().add(makeNote((short)1, n1));
+		measure.getNotes().add(makeNote((short)2, n2));
+		measure.getNotes().add(makeNote((short)3, n3));
+		measure.getNotes().add(makeNote((short)4, n4));
 
 		return measure;
 	}
 
-	private Note makeNote (MeasureKey id, int theNote) {
+	private Note makeNote (short order, int pitch) {
 		Note note = new Note();
 
-		note.setId(new NoteKey());
-		note.getId().setSheetId(id.getSheetId());
-		note.getId().setTrackId(id.getTrackId());
-
-		note.getId().setSectionId(id.getSectionId());
-		note.getId().setMeasureId(id.getMeasureId());
-
-		note.setNote(theNote);
+		note.setOrder(order);
+		note.setPitch(pitch);
 		note.setValue(new Fraction(1, 4));
 
 		return note;
@@ -189,34 +149,7 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 
 	private void generateSheet (long userId) throws GenericException, Exception {
 		String note = this.notes[this.startingNote % 7];
-		Sheet sheet = this.sheetService.create(makeSheet(this.startingNote, note + " scale"));
-
-		generateTrack(sheet.getId(), note);
-	}
-
-	private void generateTrack (long sheetId, String note) throws GenericException, Exception {
-		Track track = this.trackService.create(makeTrack(sheetId));
-
-		generateSection (track.getId(), note);
-	}
-
-	private void generateSection (TrackKey trackId, String note) throws GenericException, Exception {
-		Section section = this.sectionService.create(makeSection(trackId, note));
-
-		// generate the notes for a major scale
-		generateMeasure (section.getId(), this.startingNote +  0, this.startingNote +  2, this.startingNote +  4, this.startingNote +  5);
-		generateMeasure (section.getId(), this.startingNote +  7, this.startingNote +  9, this.startingNote + 11, this.startingNote + 12);
-		generateMeasure (section.getId(), this.startingNote + 11, this.startingNote +  9, this.startingNote +  7, this.startingNote +  5);
-		generateMeasure (section.getId(), this.startingNote +  4, this.startingNote +  2, this.startingNote +  0, -1);
-	}
-
-	private void generateMeasure (SectionKey sectionId, int note1, int note2, int note3, int note4) throws GenericException, Exception {
-		Measure measure = this.measureService.create(makeMeasure(sectionId));
-
-		this.noteService.create(makeNote(measure.getId(), note1));
-		this.noteService.create(makeNote(measure.getId(), note2));
-		this.noteService.create(makeNote(measure.getId(), note3));
-		this.noteService.create(makeNote(measure.getId(), note4));
+		this.sheetService.create(makeSheet(this.startingNote, (short)0, note + " scale"));
 	}
 
 }

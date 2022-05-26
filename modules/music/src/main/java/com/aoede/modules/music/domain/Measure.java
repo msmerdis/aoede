@@ -1,6 +1,11 @@
 package com.aoede.modules.music.domain;
 
-import com.aoede.commons.base.domain.AbstractDomain;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -11,8 +16,14 @@ import lombok.ToString;
 @Setter
 @ToString
 @EqualsAndHashCode
-public class Measure implements AbstractDomain<MeasureKey> {
-	private MeasureKey id;
+public class Measure {
+	@NotNull (message = "Measure must define a track id")
+	@Positive (message = "Measure must define a positive track id")
+	private Short order;
+
+	@Valid
+	@NotNull (message = "Measure must define notes")
+	private List<Note> notes = new LinkedList<Note>();
 }
 
 

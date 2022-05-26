@@ -1,25 +1,20 @@
 package com.aoede.modules.music.entity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 import com.aoede.commons.base.entity.AbstractEntity;
 import com.aoede.commons.base.entity.AbstractJpaEntity;
+import com.aoede.modules.music.domain.Track;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -46,9 +41,9 @@ public class SheetEntity extends AbstractJpaEntity<Long> implements AbstractEnti
 	@Column(length = 512, nullable = false)
 	private String name;
 
-	@Fetch(FetchMode.SELECT)
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "sheet")
-	private Set<TrackEntity> tracks = new HashSet<TrackEntity> ();
+	@Convert(converter = TrackListConverter.class)
+	@Column(length = 262144, nullable = false)
+	private List<Track> tracks;
 }
 
 
