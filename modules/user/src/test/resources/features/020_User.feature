@@ -182,7 +182,6 @@ Scenario: update a non existing entity
 When update "user" with id "1000"
 	| status   | string | ACTIVE     |
 	| username | string | updateName |
-	| password | string | updatePass |
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
