@@ -19,9 +19,11 @@ public interface JsonService extends TestStorageService<JsonElement> {
 
 	// json object
 
-	public JsonObject generateJsonObject(DataTable data);
+	public JsonElement generateJsonElement (String type, String value);
+	public JsonObject  generateJsonObject  (DataTable data);
 
 	public JsonElement putObject (String name, DataTable data);
+	public JsonObject  getObject (String name);
 
 	public boolean jsonObjectMatches(JsonObject object, DataTable  data);
 	public boolean jsonObjectMatches(JsonObject object, JsonObject data);
@@ -31,8 +33,9 @@ public interface JsonService extends TestStorageService<JsonElement> {
 	public JsonArray generateJsonArray(DataTable template, DataTable data);
 	public JsonArray generateJsonArray(DataTable data);
 
-	public JsonElement putArray  (String name, DataTable template, DataTable data);
-	public JsonElement putArray  (String name, DataTable data);
+	public JsonElement putArray (String name, DataTable template, DataTable data);
+	public JsonElement putArray (String name, DataTable data);
+	public JsonArray   getArray (String name);
 
 	public boolean jsonArrayMatches(JsonArray object, JsonArray data);
 

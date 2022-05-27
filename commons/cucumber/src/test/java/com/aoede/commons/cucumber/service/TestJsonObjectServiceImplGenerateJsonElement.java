@@ -6,9 +6,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import org.junit.Test;
 
 import com.aoede.JsonObjectServiceImplTestCaseSetup;
@@ -20,10 +17,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 
 	@Test
 	public void generateInt () throws Exception {
-		// execute function
-		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
-		setup.setAccessible(true);
-		JsonElement element = (JsonElement) setup.invoke(uut(), "int", "1");
+		JsonElement element = uut().generateJsonElement("int", "1");
 
 		assertTrue ("element must me primitive", element.isJsonPrimitive());
 		assertEquals ("element value is incorrect", "1", element.toString());
@@ -31,10 +25,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 
 	@Test
 	public void generateInteger () throws Exception {
-		// execute function
-		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
-		setup.setAccessible(true);
-		JsonElement element = (JsonElement) setup.invoke(uut(), "int", "-123");
+		JsonElement element = uut().generateJsonElement("int", "-123");
 
 		assertTrue ("element must me primitive", element.isJsonPrimitive());
 		assertEquals ("element value is incorrect", "-123", element.toString());
@@ -42,10 +33,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 
 	@Test
 	public void generateLong () throws Exception {
-		// execute function
-		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
-		setup.setAccessible(true);
-		JsonElement element = (JsonElement) setup.invoke(uut(), "long", "0");
+		JsonElement element = uut().generateJsonElement("long", "0");
 
 		assertTrue ("element must me primitive", element.isJsonPrimitive());
 		assertEquals ("element value is incorrect", "0", element.toString());
@@ -54,11 +42,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 	@Test
 	public void generateNumber () throws Exception {
 		String number = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
-
-		// execute function
-		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
-		setup.setAccessible(true);
-		JsonElement element = (JsonElement) setup.invoke(uut(), "number", number);
+		JsonElement element = uut().generateJsonElement("number", number);
 
 		assertTrue ("element must me primitive", element.isJsonPrimitive());
 		assertEquals ("element value is incorrect", number, element.toString());
@@ -66,10 +50,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 
 	@Test
 	public void generateString () throws Exception {
-		// execute function
-		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
-		setup.setAccessible(true);
-		JsonElement element = (JsonElement) setup.invoke(uut(), "string", "Hello world!!!");
+		JsonElement element = uut().generateJsonElement("string", "Hello world!!!");
 
 		assertTrue ("element must me primitive", element.isJsonPrimitive());
 		assertEquals ("element value is incorrect", "\"Hello world!!!\"", element.toString());
@@ -77,10 +58,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 
 	@Test
 	public void generateBool () throws Exception {
-		// execute function
-		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
-		setup.setAccessible(true);
-		JsonElement element = (JsonElement) setup.invoke(uut(), "bool", "true");
+		JsonElement element = uut().generateJsonElement("bool", "true");
 
 		assertTrue ("element must me primitive", element.isJsonPrimitive());
 		assertEquals ("element value is incorrect", "true", element.toString());
@@ -88,10 +66,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 
 	@Test
 	public void generateBoolean () throws Exception {
-		// execute function
-		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
-		setup.setAccessible(true);
-		JsonElement element = (JsonElement) setup.invoke(uut(), "boolean", "false");
+		JsonElement element = uut().generateJsonElement("boolean", "false");
 
 		assertTrue ("element must me primitive", element.isJsonPrimitive());
 		assertEquals ("element value is incorrect", "false", element.toString());
@@ -103,10 +78,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 
 		uut.put("id name", new JsonPrimitive("id value"));
 
-		// execute function
-		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
-		setup.setAccessible(true);
-		JsonElement element = (JsonElement) setup.invoke(uut, "compositeId", "id name");
+		JsonElement element = uut.generateJsonElement("compositeId", "id name");
 
 		assertTrue ("element must me primitive", element.isJsonPrimitive());
 		assertEquals ("element value is incorrect", "\"id value\"", element.toString());
@@ -114,13 +86,8 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 
 	@Test
 	public void generateCompositeIdMissingId () throws Exception {
-		// execute function
-		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
-		setup.setAccessible(true);
-
-
-		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
-			setup.invoke(uut(), "compositeId", "id name");
+		assertThrows("invocation must fail due to an assertion", AssertionError.class, () -> {
+			uut().generateJsonElement("compositeId", "id name");
 		});
 	}
 
@@ -128,11 +95,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 	public void generateKey () throws Exception {
 		// mock internal calls
 		setupKeyForService ("sevice name", new JsonPrimitive ("latest service key"));
-
-		// execute function
-		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
-		setup.setAccessible(true);
-		JsonElement element = (JsonElement) setup.invoke(uut(), "key", "sevice name");
+		JsonElement element = uut().generateJsonElement("key", "sevice name");
 
 		assertTrue ("element must me primitive", element.isJsonPrimitive());
 		assertEquals ("element value is incorrect", "\"latest service key\"", element.toString());
@@ -140,12 +103,8 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 
 	@Test
 	public void generateKeyMissingKey () throws Exception {
-		// execute function
-		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
-		setup.setAccessible(true);
-
-		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
-			setup.invoke(uut(), "key", "sevice name");
+		assertThrows("invocation must fail due to an assertion", AssertionError.class, () -> {
+			uut().generateJsonElement("key", "sevice name");
 		});
 	}
 
@@ -156,10 +115,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 
 		uut.put("json name", new JsonObject());
 
-		// execute function
-		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
-		setup.setAccessible(true);
-		JsonElement element = (JsonElement) setup.invoke(uut, "json", "json name");
+		JsonElement element = uut.generateJsonElement("json", "json name");
 
 		assertTrue ("element must me object", element.isJsonObject());
 		assertEquals ("element value is incorrect", "{}", element.toString());
@@ -167,21 +123,14 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 
 	@Test
 	public void generateJsonMissingJson () throws Exception {
-		// execute function
-		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
-		setup.setAccessible(true);
-
-		assertThrows("invocation must fail due to an assertion", InvocationTargetException.class, () -> {
-			setup.invoke(uut(), "json", "json name");
+		assertThrows("invocation must fail due to an assertion", AssertionError.class, () -> {
+			uut().generateJsonElement("json", "json name");
 		});
 	}
 
 	@Test
 	public void generateNull () throws Exception {
-		// execute function
-		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
-		setup.setAccessible(true);
-		JsonElement element = (JsonElement) setup.invoke(uut(), "null", "anything");
+		JsonElement element = uut().generateJsonElement("null", "anything");
 
 		assertTrue ("element must be null", element.isJsonNull());
 		assertEquals ("element value is incorrect", "null", element.toString());
@@ -189,10 +138,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 
 	@Test
 	public void generateRandomString () throws Exception {
-		// execute function
-		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
-		setup.setAccessible(true);
-		JsonElement element = (JsonElement) setup.invoke(uut(), "random string", "anything");
+		JsonElement element = uut().generateJsonElement("random string", "anything");
 
 		assertTrue ("element must be primitive", element.isJsonPrimitive());
 		assertEquals ("element value is incorrect", "\"anything\"", element.toString());
@@ -200,10 +146,7 @@ public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServ
 
 	@Test
 	public void generateFraction () throws Exception {
-		// execute function
-		Method setup = JsonServiceImpl.class.getDeclaredMethod("generateJsonElement", String.class, String.class);
-		setup.setAccessible(true);
-		JsonElement element = (JsonElement) setup.invoke(uut(), "fraction", " 3 / 4 ");
+		JsonElement element = uut().generateJsonElement("fraction", " 3 / 4 ");
 
 		assertTrue ("element must be object", element.isJsonObject());
 		assertEquals ("element value is incorrect", "{\"numerator\":3,\"denominator\":4}", element.toString());

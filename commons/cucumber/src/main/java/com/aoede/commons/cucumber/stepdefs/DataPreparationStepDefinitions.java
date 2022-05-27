@@ -8,6 +8,7 @@ import com.aoede.commons.cucumber.service.DataTableService;
 import com.aoede.commons.cucumber.service.JsonService;
 import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.When;
@@ -35,9 +36,20 @@ public class DataPreparationStepDefinitions extends BaseStepDefinition {
 		jsonService.putCompositeKey(name, data);
 	}
 
+	@When("prepare json {string} with {string} as {string}")
+	public void prepareJsonObject(String name, String value, String type) {
+		jsonService.put(name,
+			jsonService.generateJsonElement(type, value));
+	}
+
 	@When("prepare json {string}")
 	public void prepareJsonObject(String name, DataTable data) {
 		jsonService.putObject(name, data);
+	}
+
+	@When("prepare empty json object {string}")
+	public void prepareEmptyJsonObject(String name) {
+		jsonService.put(name, new JsonObject());
 	}
 
 	@When("prepare json array {string}")

@@ -17,13 +17,22 @@ import io.cucumber.datatable.DataTable;
 
 public class TestDataPreparationStepDefinitions extends DataPreparationStepDefinitionsTestCaseSetup {
 
+	private JsonServiceImpl jsonServiceImpl;
+
+	@Override
+	protected DataPreparationStepDefinitions uut () throws Exception {
+		var uut = super.uut();
+
+		// use actual json object service for the test
+		jsonServiceImpl = new JsonServiceImpl(null);
+		setField ((BaseStepDefinition)uut, "jsonService", jsonServiceImpl);
+
+		return uut;
+	}
+
 	@Test
 	public void verifyPreparationOfCompositeId() throws Exception {
 		var uut = uut ();
-
-		// use actual json object service for the test
-		var jsonServiceImpl = new JsonServiceImpl(null);
-		setField ((BaseStepDefinition)uut, "jsonService", jsonServiceImpl);
 
 		DataTable table = buildDataTable(List.of(
 			List.of("pid", "int", "1"),
@@ -37,12 +46,18 @@ public class TestDataPreparationStepDefinitions extends DataPreparationStepDefin
 	}
 
 	@Test
-	public void verifyPreparationOfJsonObject() throws Exception {
+	public void verifyPreparationOfSimpleJsonObject() throws Exception {
 		var uut = uut ();
 
-		// use actual json object service for the test
-		var jsonServiceImpl = new JsonServiceImpl(null);
-		setField ((BaseStepDefinition)uut, "jsonService", jsonServiceImpl);
+		// execute function
+		uut.prepareJsonObject("json", "test", "string");
+
+		assertEquals("composite key was not prepared correcty", "test", jsonServiceImpl.getCompositeKey("json"));
+	}
+
+	@Test
+	public void verifyPreparationOfJsonObject() throws Exception {
+		var uut = uut ();
 
 		DataTable table = buildDataTable(List.of(
 			List.of("pid", "int", "1"),
@@ -56,12 +71,18 @@ public class TestDataPreparationStepDefinitions extends DataPreparationStepDefin
 	}
 
 	@Test
-	public void verifyPreparationOfJsonArray() throws Exception {
+	public void verifyPreparationOfEmptyJsonObject() throws Exception {
 		var uut = uut ();
 
-		// use actual json object service for the test
-		var jsonServiceImpl = new JsonServiceImpl(null);
-		setField ((BaseStepDefinition)uut, "jsonService", jsonServiceImpl);
+		// execute function
+		uut.prepareEmptyJsonObject("json");
+
+		assertEquals("json was not prepared correcty", "{}", jsonServiceImpl.get("json").toString());
+	}
+
+	@Test
+	public void verifyPreparationOfJsonArray() throws Exception {
+		var uut = uut ();
 
 		DataTable table = buildDataTable(List.of(
 			List.of("int", "1"),
@@ -78,10 +99,6 @@ public class TestDataPreparationStepDefinitions extends DataPreparationStepDefin
 	@Test
 	public void verifyPreparationOfJsonObjectArray() throws Exception {
 		var uut = uut ();
-
-		// use actual json object service for the test
-		var jsonServiceImpl = new JsonServiceImpl(null);
-		setField ((BaseStepDefinition)uut, "jsonService", jsonServiceImpl);
 
 		DataTable template = buildDataTable(List.of(
 			List.of("name1", "name2", "name3"),
@@ -129,10 +146,6 @@ public class TestDataPreparationStepDefinitions extends DataPreparationStepDefin
 	@Test
 	public void verifyPreparationOfUrlTable() throws Exception {
 		var uut = uut ();
-
-		// use actual json object service for the test
-		var jsonServiceImpl = new JsonServiceImpl(null);
-		setField ((BaseStepDefinition)uut, "jsonService", jsonServiceImpl);
 
 		DataTable table = buildDataTable(List.of(
 			List.of("int", "1"),

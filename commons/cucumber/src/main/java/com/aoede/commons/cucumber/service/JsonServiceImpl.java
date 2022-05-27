@@ -83,6 +83,15 @@ public class JsonServiceImpl extends TestStorageServiceImpl<JsonElement> impleme
 	}
 
 	@Override
+	public JsonObject getObject(String name) {
+		JsonElement element = getElement(name);
+
+		assertTrue ("json " + name + " is not a object", element.isJsonObject());
+
+		return element.getAsJsonObject();
+	}
+
+	@Override
 	public JsonElement putArray(String name, DataTable template, DataTable data) {
 		return put(name, generateJsonArray(template, data));
 	}
@@ -90,6 +99,15 @@ public class JsonServiceImpl extends TestStorageServiceImpl<JsonElement> impleme
 	@Override
 	public JsonElement putArray(String name, DataTable data) {
 		return put(name, generateJsonArray(data));
+	}
+
+	@Override
+	public JsonArray getArray(String name) {
+		JsonElement element = getElement(name);
+
+		assertTrue ("json " + name + " is not an aray", element.isJsonArray());
+
+		return element.getAsJsonArray();
 	}
 
 	// generate a json object base on data table
@@ -292,11 +310,7 @@ public class JsonServiceImpl extends TestStorageServiceImpl<JsonElement> impleme
 		return jsonArrayContainsObject(array, obj);
 	}
 
-	/**
-	 * Help functions to generate json
-	 */
-
-	private JsonElement generateJsonElement (String type, String value) {
+	public JsonElement generateJsonElement (String type, String value) {
 
 		if (value == null) {
 			assertTrue(type + " elements can not have an empty value", type.equals("string") || type.equals("null"));
@@ -345,6 +359,10 @@ public class JsonServiceImpl extends TestStorageServiceImpl<JsonElement> impleme
 		}
 
 	}
+
+	/**
+	 * Help functions to generate json
+	 */
 
 	private String randomString (int length) {
 		return random.ints(48, 123)
@@ -408,6 +426,11 @@ public class JsonServiceImpl extends TestStorageServiceImpl<JsonElement> impleme
 		}
 
 		return url;
+	}
+
+	private JsonElement getElement (String name) {
+		assertTrue ("json " + name + " does not exist", containsKey(name));
+		return get(name);
 	}
 
 }
