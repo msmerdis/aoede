@@ -9,6 +9,7 @@ And prepare "C" scale as "C scale"
 And a "sheet" with "C scale" json element
 And the request was successful
 And the response has a status code of 201
+And set "C scale" object's "id" element to "sheet" as "key"
 And a logged in user "hackerModuleMusicTest"
 
 @TC031001

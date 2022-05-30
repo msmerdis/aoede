@@ -1,6 +1,5 @@
 package com.aoede.modules.music.domain;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -26,7 +25,7 @@ public class Sheet implements AbstractDomain<Long> {
 
 	@Valid
 	@NotNull (message = "Sheet must define tracks")
-	private List<Track> tracks = new LinkedList<Track>();
+	private List<Track> tracks;
 }
 
 

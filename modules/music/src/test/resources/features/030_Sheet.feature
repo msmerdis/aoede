@@ -88,7 +88,8 @@ And the response has a status code of 201
 And the response matches
 	|  id  | key    | sheet   |
 	| name | string | G scale |
-Given prepare "D" scale as "D scale"
+And prepare "D" scale as "D scale"
+And set "D scale" object's "id" element to "sheet" as "key"
 When update previously created "sheet" with "D scale" json element
 And the request was successful
 And the response has a status code of 204
@@ -147,3 +148,36 @@ And the response has a status code of 404
 And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
+
+@TC030009
+@Positive @Create
+Scenario: create a new Sheet without any tracks
+### create a new sheet and verify the sheet is created with the same data as provided
+### retrieve the sheet and verify the same data are returned
+
+Given prepare "C" scale as "C scale"
+And prepare empty json array "empty tracks"
+And set "C scale" object's "tracks" element to "empty tracks" as "json"
+And a "sheet" with "C scale" json element
+And the request was successful
+And the response has a status code of 201
+And the response matches
+	|  id  | key    | sheet   |
+	| name | string | C scale |
+When request previously created "sheet"
+And the request was successful
+And the response has a status code of 200
+And the response matches "C scale" json
+And the response matches
+	|  id  | key    | sheet   |
+	| name | string | C scale |
+Then request all available "sheet"
+And the request was successful
+And the response has a status code of 200
+And prepare data table "sheetObject"
+	| id  | name   |
+	| key | string |
+And the response array contains "sheetObject" objects
+	| id    | name    |
+	| sheet | C scale |
+And the response array contains latest "sheet"

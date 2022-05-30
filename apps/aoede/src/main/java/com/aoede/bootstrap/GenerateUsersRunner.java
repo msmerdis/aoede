@@ -1,5 +1,6 @@
 package com.aoede.bootstrap;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.boot.CommandLineRunner;
@@ -89,6 +90,8 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 		Sheet sheet = new Sheet();
 
 		sheet.setName(name);
+		sheet.setTracks(new LinkedList<Track>());
+
 		sheet.getTracks().add(makeTrack(startingNote, (short)1, key));
 
 		return sheet;
@@ -102,6 +105,7 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 		track.setKeySignature(key);
 		track.setTempo((short)120);
 		track.setTimeSignature(new Fraction(4, 4));
+		track.setMeasures(new LinkedList<Measure>());
 
 		track.getMeasures().add(makeMeasure((short)1, startingNote +  0, startingNote + 2, startingNote +  4, startingNote +  5));
 		track.getMeasures().add(makeMeasure((short)2, startingNote +  7, startingNote + 9, startingNote + 11, startingNote + 12));
@@ -115,6 +119,8 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 		Measure measure = new Measure();
 
 		measure.setOrder(order);
+		measure.setNotes(new LinkedList<Note>());
+
 		measure.getNotes().add(makeNote((short)1, n1));
 		measure.getNotes().add(makeNote((short)2, n2));
 		measure.getNotes().add(makeNote((short)3, n3));

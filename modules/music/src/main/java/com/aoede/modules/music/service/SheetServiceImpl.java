@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aoede.commons.base.exceptions.GenericException;
 import com.aoede.commons.base.exceptions.GenericExceptionContainer;
 import com.aoede.commons.base.exceptions.UnauthorizedException;
+import com.aoede.commons.base.exceptions.ValidationException;
 import com.aoede.commons.base.service.AbstractServiceDomainImpl;
 import com.aoede.modules.music.domain.Sheet;
 import com.aoede.modules.music.entity.SheetEntity;
@@ -52,6 +53,17 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Lo
 	public SheetEntity createEntity(Sheet domain) {
 		SheetEntity entity = new SheetEntity ();
 
+		if (domain.getId() != null) {
+			throw new GenericExceptionContainer(
+				new ValidationException(
+					"sheet",
+					"id",
+					domain.getId().toString(),
+					"Sheet cannot provide an id during creation"
+				)
+			);
+		}
+
 		entity.setUserId(userService.currentUserId());
 		entity.setName(domain.getName());
 		entity.setTracks(domain.getTracks());
@@ -61,6 +73,29 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Lo
 
 	@Override
 	public void updateEntity(Sheet domain, SheetEntity entity) {
+
+		if (domain.getId() == null) {
+			throw new GenericExceptionContainer(
+				new ValidationException(
+					"sheet",
+					"id",
+					null,
+					"Sheet's id cannot be null"
+				)
+			);
+		}
+
+		if (!domain.getId().equals(entity.getId())) {
+			throw new GenericExceptionContainer(
+				new ValidationException(
+					"sheet",
+					"id",
+					domain.getId().toString(),
+					"Sheet's id does not match updating record"
+				)
+			);
+		}
+
 		if (!entity.getUserId().equals(userService.currentUserId())) {
 			throw new GenericExceptionContainer(
 				new UnauthorizedException("Cannot update sheets created by a different user")
