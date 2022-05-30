@@ -68,7 +68,6 @@ public class MusicStepDefinitions extends BaseStepDefinition {
 		JsonObject track = new JsonObject();
 		JsonArray measures = new JsonArray();
 
-		track.add("order", new JsonPrimitive(1));
 		track.add("clef", new JsonPrimitive("Treble"));
 		track.add("tempo", new JsonPrimitive(120));
 		track.add("keySignature", new JsonPrimitive(0));
@@ -87,7 +86,6 @@ public class MusicStepDefinitions extends BaseStepDefinition {
 		JsonObject measure = new JsonObject();
 		JsonArray notes = new JsonArray();
 
-		measure.add("order", new JsonPrimitive(order));
 		measure.add("notes", notes);
 
 		notes.add(prepareScaleNote(1, n1));

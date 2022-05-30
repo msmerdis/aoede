@@ -101,7 +101,6 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 		Track track = new Track();
 
 		track.setClef("Treble");
-		track.setOrder(order);
 		track.setKeySignature(key);
 		track.setTempo((short)120);
 		track.setTimeSignature(new Fraction(4, 4));
@@ -118,7 +117,6 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 	private Measure makeMeasure (short order, int n1, int n2, int n3, int n4) {
 		Measure measure = new Measure();
 
-		measure.setOrder(order);
 		measure.setNotes(new LinkedList<Note>());
 
 		measure.getNotes().add(makeNote((short)1, n1));
