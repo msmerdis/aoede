@@ -185,7 +185,7 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 					assertFalse ("test cases cannot define more than one test case id", hasTCvalue);
 					assertTrue (
 						"test case id's must be unique, dublicate found : " + tag,
-						testCaseIdTrackerService.add(tag)
+						testCaseIdTrackerService.add(tag, scenarioName, scenarioTags.toString(), scenario.getLine())
 					);
 					hasTCvalue = true;
 				}

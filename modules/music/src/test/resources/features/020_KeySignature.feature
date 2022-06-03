@@ -53,13 +53,31 @@ Scenario: access a single Key signature by id
 ### Retrieve one of the common key signatures
 ### Verify its contents are retrieved correctly
 
-When request a "keySignature" with id "0"
+When request a "keySignature" with id "<id>"
 Then the request was successful
 And the response has a status code of 200
 And the response matches
-	|    id | integer | 0 |
-	| major | string  | C |
-	| minor | string  | a |
+	|    id | integer |    <id> |
+	| major | string  | <major> |
+	| minor | string  | <minor> |
+
+Examples:
+	| id | major | minor |
+	| -7 |   C-  |   a-  |
+	| -6 |   G-  |   e-  |
+	| -5 |   D-  |   b-  |
+	| -4 |   A-  |   f   |
+	| -3 |   E-  |   c   |
+	| -2 |   B-  |   g   |
+	| -1 |   F   |   d   |
+	|  0 |   C   |   a   |
+	|  1 |   G   |   e   |
+	|  2 |   D   |   b   |
+	|  3 |   A   |   f+  |
+	|  4 |   E   |   c+  |
+	|  5 |   B   |   g+  |
+	|  6 |   F+  |   d+  |
+	|  7 |   C+  |   a+  |
 
 @TC020004
 @Negative
@@ -135,26 +153,62 @@ And the response matches
 Scenario: access a major Key signature
 ### Retrieve a key signature using its major value
 
-When request a key signature with major "B-"
+When request a key signature with major "<major>"
 Then the request was successful
 And the response has a status code of 200
 And the response matches
-	|    id | integer | -2 |
-	| major | string  | B- |
-	| minor | string  | g  |
+	|    id | integer |    <id> |
+	| major | string  | <major> |
+	| minor | string  | <minor> |
+
+Examples:
+	| id | major | minor |
+	| -7 |   C-  |   a-  |
+	| -6 |   G-  |   e-  |
+	| -5 |   D-  |   b-  |
+	| -4 |   A-  |   f   |
+	| -3 |   E-  |   c   |
+	| -2 |   B-  |   g   |
+	| -1 |   F   |   d   |
+	|  0 |   C   |   a   |
+	|  1 |   G   |   e   |
+	|  2 |   D   |   b   |
+	|  3 |   A   |   f+  |
+	|  4 |   E   |   c+  |
+	|  5 |   B   |   g+  |
+	|  6 |   F+  |   d+  |
+	|  7 |   C+  |   a+  |
 
 @TC020009
 @Positive
 Scenario: access a minor Key signature
 ### Retrieve a key signature using its minor value
 
-When request a key signature with minor "g+"
+When request a key signature with minor "<minor>"
 Then the request was successful
 And the response has a status code of 200
 And the response matches
-	|    id | integer | 5  |
-	| major | string  | B  |
-	| minor | string  | g+ |
+	|    id | integer |    <id> |
+	| major | string  | <major> |
+	| minor | string  | <minor> |
+
+Examples:
+	| id | major | minor |
+	| -7 |   C-  |   a-  |
+	| -6 |   G-  |   e-  |
+	| -5 |   D-  |   b-  |
+	| -4 |   A-  |   f   |
+	| -3 |   E-  |   c   |
+	| -2 |   B-  |   g   |
+	| -1 |   F   |   d   |
+	|  0 |   C   |   a   |
+	|  1 |   G   |   e   |
+	|  2 |   D   |   b   |
+	|  3 |   A   |   f+  |
+	|  4 |   E   |   c+  |
+	|  5 |   B   |   g+  |
+	|  6 |   F+  |   d+  |
+	|  7 |   C+  |   a+  |
 
 @TC020010
 @Negative

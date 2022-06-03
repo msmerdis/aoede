@@ -45,18 +45,30 @@ And the response matches
 
 @TC010003
 @Positive
-Scenario: access a single Clef by id
+Scenario Outline: access a single Clef by id
 ### Retrieve one of the common clefs
 ### Verify its contents are retrieved correctly
 
-When request a "clef" with id "Treble"
+When request a "clef" with id "<name>"
 Then the request was successful
 And the response has a status code of 200
 And the response matches
-	|  id  | string  | Treble |
-	| type | string  | G      |
-	| note | integer | 64     |
-	| spos | integer | -2     |
+	|  id  | string  | <name> |
+	| type | string  | <type> |
+	| note | integer | <note> |
+	| spos | integer | <spos> |
+
+Examples:
+	| name          | type | note | spos |
+	| French Violin |  G   |  64  |  -4  |
+	| Treble        |  G   |  64  |  -2  |
+	| Soprano       |  C   |  60  |  -4  |
+	| Mezzo-soprano |  C   |  60  |  -2  |
+	| Alto          |  C   |  60  |   0  |
+	| Tenor         |  C   |  60  |   2  |
+	| Baritone      |  F   |  53  |   0  |
+	| Bass          |  F   |  53  |   2  |
+	| Subbass       |  F   |  53  |   4  |
 
 @TC010004
 @Negative

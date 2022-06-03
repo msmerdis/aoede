@@ -67,9 +67,9 @@ public class ExceptionTestController {
 		throw new BadRequestException ("testing bad request exceptions");
 	}
 
-	@GetMapping("/confict")
+	@GetMapping("/conflict")
 	@ResponseStatus(HttpStatus.OK)
-	public void confict() throws GenericException {
+	public void conflict() throws GenericException {
 		throw new ConflictException ("testing conflict exceptions");
 	}
 

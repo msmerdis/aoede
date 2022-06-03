@@ -29,8 +29,9 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		doNothing().when(services).setup();
 		when(scenario.getName()).thenReturn("Create new entity");
 		when(scenario.getSourceTagNames()).thenReturn(List.of("@TC1", "@Create", "@Positive"));
+		when(scenario.getLine()).thenReturn(1);
 
-		when(testCaseIdTrackerService.add(eq("@TC1"))).thenReturn(true);
+		when(testCaseIdTrackerService.add(eq("@TC1"),eq("create new entity"),eq("[@TC1, @Create, @Positive]"),eq(1))).thenReturn(true);
 
 		// execute function
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);
@@ -50,8 +51,9 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		doNothing().when(services).setup();
 		when(scenario.getName()).thenReturn("Update entity");
 		when(scenario.getSourceTagNames()).thenReturn(List.of("@TC1", "@Update", "@Negative"));
+		when(scenario.getLine()).thenReturn(1);
 
-		when(testCaseIdTrackerService.add(eq("@TC1"))).thenReturn(true);
+		when(testCaseIdTrackerService.add(eq("@TC1"),eq("update entity"),eq("[@TC1, @Update, @Negative]"),eq(1))).thenReturn(true);
 
 		// execute function
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);
@@ -71,8 +73,9 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		doNothing().when(services).setup();
 		when(scenario.getName()).thenReturn("Delete entity");
 		when(scenario.getSourceTagNames()).thenReturn(List.of("@TC1", "@Delete", "@Positive"));
+		when(scenario.getLine()).thenReturn(1);
 
-		when(testCaseIdTrackerService.add(eq("@TC1"))).thenReturn(true);
+		when(testCaseIdTrackerService.add(eq("@TC1"),eq("delete entity"),eq("[@TC1, @Delete, @Positive]"),eq(1))).thenReturn(true);
 
 		// execute function
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);
@@ -92,8 +95,9 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		doNothing().when(services).setup();
 		when(scenario.getName()).thenReturn("Delete entity");
 		when(scenario.getSourceTagNames()).thenReturn(List.of("@TC1", "@Delete", "@Positive"));
+		when(scenario.getLine()).thenReturn(1);
 
-		when(testCaseIdTrackerService.add(eq("@TC1"))).thenReturn(false);
+		when(testCaseIdTrackerService.add(eq("@TC1"),eq("delete entity"),eq("[@TC1, @Delete, @Positive]"),eq(1))).thenReturn(false);
 
 		// execute function
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);
@@ -114,8 +118,6 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		when(scenario.getName()).thenReturn("something something entity");
 		when(scenario.getSourceTagNames()).thenReturn(List.of("@TC1"));
 
-		when(testCaseIdTrackerService.add(eq("@TC1"))).thenReturn(true);
-
 		// execute function
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);
 		cleanup.setAccessible(true);
@@ -134,8 +136,6 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		doNothing().when(services).setup();
 		when(scenario.getName()).thenReturn("something something entity");
 		when(scenario.getSourceTagNames()).thenReturn(List.of("@TC1", "@Positive", "@Negative"));
-
-		when(testCaseIdTrackerService.add(eq("@TC1"))).thenReturn(true);
 
 		// execute function
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);
@@ -156,8 +156,6 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		when(scenario.getName()).thenReturn("something something entity");
 		when(scenario.getSourceTagNames()).thenReturn(List.of("@TC1", "@Negative", "@Create"));
 
-		when(testCaseIdTrackerService.add(eq("@TC1"))).thenReturn(true);
-
 		// execute function
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);
 		cleanup.setAccessible(true);
@@ -176,8 +174,6 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		doNothing().when(services).setup();
 		when(scenario.getName()).thenReturn("something something entity");
 		when(scenario.getSourceTagNames()).thenReturn(List.of("@TC1", "@Negative", "@Update"));
-
-		when(testCaseIdTrackerService.add(eq("@TC1"))).thenReturn(true);
 
 		// execute function
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);
@@ -198,8 +194,6 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		when(scenario.getName()).thenReturn("something something entity");
 		when(scenario.getSourceTagNames()).thenReturn(List.of("@TC1", "@Negative", "@Delete"));
 
-		when(testCaseIdTrackerService.add(eq("@TC1"))).thenReturn(true);
-
 		// execute function
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);
 		cleanup.setAccessible(true);
@@ -218,8 +212,6 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		doNothing().when(services).setup();
 		when(scenario.getName()).thenReturn("Create entity");
 		when(scenario.getSourceTagNames()).thenReturn(List.of("@TC1", "@Negative"));
-
-		when(testCaseIdTrackerService.add(eq("@TC1"))).thenReturn(true);
 
 		// execute function
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);
@@ -240,8 +232,6 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		when(scenario.getName()).thenReturn("Update entity");
 		when(scenario.getSourceTagNames()).thenReturn(List.of("@TC1", "@Negative"));
 
-		when(testCaseIdTrackerService.add(eq("@TC1"))).thenReturn(true);
-
 		// execute function
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);
 		cleanup.setAccessible(true);
@@ -260,8 +250,6 @@ public class TestBaseStepDefinitionEventPublishers extends BaseStepDefinitionTes
 		doNothing().when(services).setup();
 		when(scenario.getName()).thenReturn("Delete entity");
 		when(scenario.getSourceTagNames()).thenReturn(List.of("@TC1", "@Negative"));
-
-		when(testCaseIdTrackerService.add(eq("@TC1"))).thenReturn(true);
 
 		// execute function
 		Method cleanup = BaseStepDefinition.class.getDeclaredMethod("setup", Scenario.class);

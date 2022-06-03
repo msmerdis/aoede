@@ -17,7 +17,7 @@ Then the error response has a status code of 400 and matches
 Scenario: test confict exceptions
 ### force application to throw a conflict exception and verify the generated response
 
-When testing "confict" error
+When testing "conflict" error
 Then the error response has a status code of 409 and matches
 	| code | 409      |
 	| text | CONFLICT |

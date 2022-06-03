@@ -4,32 +4,20 @@ Feature: Verify required static data are present
 
 @TC040001
 @Positive
-Scenario: Verify C clef are present
-### verify C clef image are present
+Scenario Outline: Verify clefs are present
+### verify clef images are present
 
-When request "/static/clef/C.svg" from aoede
+When request "/static/clef/<clef>.svg" from aoede
 Then the aoede response has a status code of 200
 And the aoede response contains "svg"
+
+Examples:
+	| clef |
+	| C    |
+	| G    |
+	| F    |
 
 @TC040002
-@Positive
-Scenario: Verify G clef are present
-### verify G clef image are present
-
-When request "/static/clef/G.svg" from aoede
-Then the aoede response has a status code of 200
-And the aoede response contains "svg"
-
-@TC040003
-@Positive
-Scenario: Verify F clef are present
-### verify F clef image are present
-
-When request "/static/clef/F.svg" from aoede
-Then the aoede response has a status code of 200
-And the aoede response contains "svg"
-
-@TC040004
 @Positive
 Scenario: Verify terms of service are present
 ### verify terms of service are present
