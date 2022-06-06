@@ -42,7 +42,7 @@ public class SheetEntity extends AbstractJpaEntity<Long> implements AbstractEnti
 	private String name;
 
 	@Convert(converter = TrackListConverter.class)
-	@Column(length = 262144, nullable = false)
+	@Column(nullable = false, columnDefinition = "text")
 	private List<Track> tracks;
 }
 
