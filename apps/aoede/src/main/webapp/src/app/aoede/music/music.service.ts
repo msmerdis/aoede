@@ -21,7 +21,7 @@ export class MusicService {
 	}
 
 	public getSheet(id: number): Observable<HttpResponse<Sheet>> {
-		return this.httpClient.get<Sheet>(this.sheetUrl + id, { observe: 'response' });
+		return this.httpClient.get<Sheet>(this.sheetUrl + "/" + id, { observe: 'response' });
 	}
 
 }

@@ -30,6 +30,23 @@ export class MusicEffects {
 		@Inject(MusicConfigToken) private config : MusicConfig
 	) { }
 
+	fetchSheet$ = createEffect(
+		() => this.actions$.pipe(
+			ofType(fetchSheetRequest),
+			switchMap((details) => this.service.getSheet(details.payload).pipe(
+					map(resp => {
+						return fetchSheetSuccess({
+							success: {
+								sheet : resp.body!!
+							}
+						});
+					}),
+					catchError(err => of(fetchSheetFailure({failure: err})))
+				)
+			)
+		)
+	);
+
 	fetchSheetList$ = createEffect(
 		() => this.actions$.pipe(
 			ofType(fetchSheetListRequest),
