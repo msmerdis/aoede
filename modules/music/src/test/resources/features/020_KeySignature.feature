@@ -49,7 +49,7 @@ And the response matches
 
 @TC020003
 @Positive
-Scenario: access a single Key signature by id
+Scenario Outline: access a single Key signature by id
 ### Retrieve one of the common key signatures
 ### Verify its contents are retrieved correctly
 

@@ -27,7 +27,7 @@ import lombok.ToString;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AbstractJpaEntity<EntityKey> implements AbstractEntity<EntityKey> {
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(nullable = true)
+	@Column(nullable = false)
 	@CreatedDate
 	protected Date createdDate;
 
