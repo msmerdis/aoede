@@ -57,7 +57,7 @@ export class UserEffects {
 							}
 						});
 					}),
-					catchError(err => of(loginFailure({failure: err.body.error})))
+					catchError(err => of(loginFailure({failure: err})))
 				)
 			)
 		)

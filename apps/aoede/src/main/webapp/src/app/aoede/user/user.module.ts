@@ -4,12 +4,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { UserRoutingModule } from './user-routing.module';
 import { UserService } from './user.service';
 import { UserLoginComponent } from './component/user-login.component';
 import * as fromUserState from './store/user.reducer';
 import { UserEffects } from './store/user.effects';
+import { UserInterceptor } from './user.interceptor';
 import {
 	UserAuthGuard,
 	AnonymousUserGuard
@@ -42,7 +44,8 @@ import {
 	providers: [
 		UserService,
 		UserAuthGuard,
-		AnonymousUserGuard
+		AnonymousUserGuard,
+		{ provide: HTTP_INTERCEPTORS, useClass: UserInterceptor, multi: true }
 	]
 })
 export class UserModule {
@@ -58,3 +61,4 @@ export class UserModule {
 		}
 	}
 }
+

@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { SheetComponent } from './sheet/sheet.component';
-import { SheetCreateComponent } from './sheet/sheet-create.component';
-import { SheetResultComponent } from './sheet/sheet-result.component';
+import { SheetComponent } from './component/sheet.component';
+import { SheetCreateComponent } from './component/sheet-create.component';
+import { SheetResultComponent } from './component/sheet-result.component';
 
 const routes: Routes = [
-	{ path: '', redirectTo: 'sheet/search', pathMatch: 'full'},
+	{ path: '', redirectTo: 'sheet/result', pathMatch: 'full'},
 	{ path: 'sheet/create', component: SheetCreateComponent },
 	{ path: 'sheet/result', component: SheetResultComponent },
 	{ path: 'sheet/:id', component: SheetComponent }

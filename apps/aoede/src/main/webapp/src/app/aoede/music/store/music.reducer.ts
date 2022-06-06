@@ -16,29 +16,49 @@ import { Sheet } from '../model/sheet.model';
 
 export interface MusicState {
 	sheetList  : Sheet[] | null;
+	errorList  : string  | null;
 	sheet      : Sheet   | null;
+	error      : string  | null;
 }
 
 export const musicFeatureKey : string = 'aoedeMusicState';
 export const musicInitialState : MusicState = {
 	sheetList  : null,
-	sheet      : null
+	errorList  : null,
+	sheet      : null,
+	error      : null
 };
 
 function doFetchSheetSuccess (state : MusicState, data : {success : SheetSuccess}) : MusicState {
-	return state;
+	return {
+		...state,
+		sheet : data.success.sheet,
+		error : null
+	};
 }
 
 function doFetchSheetFailure (state : MusicState, data : {failure : SheetFailure}) : MusicState {
-	return state;
+	return {
+		...state,
+		sheet : null,
+		error : JSON.stringify(data.failure)
+	};
 }
 
 function doFetchSheetListSuccess (state : MusicState, data : {success : SheetListSuccess}) : MusicState {
-	return state;
+	return {
+		...state,
+		sheetList : data.success.sheetList,
+		errorList : null
+	};
 }
 
 function doFetchSheetListFailure (state : MusicState, data : {failure : SheetListFailure}) : MusicState {
-	return state;
+	return {
+		...state,
+		sheetList : null,
+		errorList : JSON.stringify(data.failure)
+	};
 }
 
 export const musicReducer = createReducer (

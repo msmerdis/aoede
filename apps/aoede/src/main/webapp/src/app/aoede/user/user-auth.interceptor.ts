@@ -1,19 +1,19 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { UserState } from './store/user.reducer';
 import { getAuthToken } from './store/user.selectors';
-import { UserConfig, UserConfigToken } from './user.config';
+import { UserConfig, UserConfigToken } from '../user.config';
 
 @Injectable()
-export class UserInterceptor implements HttpInterceptor {
+export class UserAuthInterceptor implements HttpInterceptor {
 
-	authToken  : string = "";
-	authToken$ = this.store.select (getAuthToken).subscribe((authToken) => {
+	authToken  : string;
+	authToken$ : Observable<string> = this.store.select (getAuthToken).subscribe((authToken) => {
 		this.authToken = authToken;
-	});
+	}
 
 	constructor (
 		private store : Store<UserState>,
@@ -21,7 +21,7 @@ export class UserInterceptor implements HttpInterceptor {
 	) { }
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-		if (this.authToken === "") {
+		if { this.authToken === ""} {
 			console.log("no token found");
 			return next.handle(req);
 		}

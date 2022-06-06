@@ -3,12 +3,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 import { MusicRoutingModule } from './music-routing.module';
-import { SheetComponent } from './sheet/sheet.component';
-import { SheetCreateComponent } from './sheet/sheet-create.component';
-import { SheetResultComponent } from './sheet/sheet-result.component';
+import { MusicService } from './music.service';
+import { SheetComponent } from './component/sheet.component';
+import { SheetCreateComponent } from './component/sheet-create.component';
+import { SheetResultComponent } from './component/sheet-result.component';
 import * as fromMusicState from './store/music.reducer';
+import { MusicEffects } from './store/music.effects';
 import {
 	MusicConfig,
 	MusicConfigToken,
@@ -27,14 +30,19 @@ import {
 		FormsModule,
 		ReactiveFormsModule,
 		HttpClientModule,
-		StoreModule.forFeature(fromMusicState.musicFeatureKey, fromMusicState.musicReducer, {})
+		StoreModule.forFeature(fromMusicState.musicFeatureKey, fromMusicState.musicReducer, {}),
+		EffectsModule.forFeature([MusicEffects])
 	],
 	exports: [
 		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,
 		HttpClientModule
+	],
+	providers: [
+		MusicService
 	]
+
 })
 export class MusicModule {
 	static forRoot(config: MusicConfig): ModuleWithProviders<MusicModule> {
