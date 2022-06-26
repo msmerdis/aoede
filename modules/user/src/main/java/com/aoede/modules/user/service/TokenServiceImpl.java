@@ -1,10 +1,10 @@
 package com.aoede.modules.user.service;
 
 import java.security.Key;
+import java.security.SecureRandom;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,7 +34,7 @@ public class TokenServiceImpl extends BaseComponent implements TokenService {
 	public TokenServiceImpl (@Value("${secret:}") String secret) {
 		// in case of an empty secret generate a random one
 		if (secret.equals("")) {
-			secret = new Random(System.currentTimeMillis())
+			secret = new SecureRandom()
 				.ints(48, 123)
 				.filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
 				.limit(64)
