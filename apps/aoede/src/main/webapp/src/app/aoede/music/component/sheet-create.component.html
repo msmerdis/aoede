@@ -1,8 +1,20 @@
 <form (ngSubmit)="onSubmit()">
 	<fieldset>
 		<legend>Create new sheet</legend>
-		<label for="title">Title</label>
-		<input id="title" type="text" [formControl]="title">
+		<label for="name">Name</label>
+		<input id="name" type="text" [formControl]="name">
+		<br />
+		<label for="clef">Clef</label>
+		<input id="clef" type="text" [formControl]="clef">
+		<br />
+		<label for="tempo">Tempo</label>
+		<input id="tempo" type="text" [formControl]="tempo">
+		<br />
+		<label for="key">Key Signature</label>
+		<input id="key" type="text" [formControl]="key">
+		<br />
+		<label for="time">Time Signature</label>
+		<input id="time" type="text" [formControl]="time">
 		<br />
 		<button type="submit">Submit</button>
 	</fieldset>

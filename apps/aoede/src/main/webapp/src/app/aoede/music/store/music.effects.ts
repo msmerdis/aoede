@@ -34,10 +34,10 @@ export class MusicEffects {
 		() => this.actions$.pipe(
 			ofType(fetchSheetRequest),
 			switchMap((details) => this.service.getSheet(details.payload).pipe(
-					map(resp => {
+					map(data => {
 						return fetchSheetSuccess({
 							success: {
-								sheet : resp.body!!
+								sheet : data!!
 							}
 						});
 					}),
@@ -51,10 +51,10 @@ export class MusicEffects {
 		() => this.actions$.pipe(
 			ofType(fetchSheetListRequest),
 			switchMap(() => this.service.getSheetList().pipe(
-					map(resp => {
+					map(data => {
 						return fetchSheetListSuccess({
 							success: {
-								sheetList : resp.body!!
+								sheetList : data!!
 							}
 						});
 					}),

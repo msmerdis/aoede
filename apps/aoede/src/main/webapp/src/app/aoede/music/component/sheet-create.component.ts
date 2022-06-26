@@ -8,7 +8,11 @@ import { FormControl } from '@angular/forms';
 })
 export class SheetCreateComponent implements OnInit {
 
-	title = new FormControl('title');
+	name  = new FormControl('name');
+	clef  = new FormControl('clef');
+	tempo = new FormControl('tempo');
+	key   = new FormControl('key');
+	time  = new FormControl('time');
 
 	constructor() { }
 

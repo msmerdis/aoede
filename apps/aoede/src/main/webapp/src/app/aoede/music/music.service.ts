@@ -16,12 +16,12 @@ export class MusicService {
 
 	private sheetUrl : string = '/api/sheet';
 
-	public getSheetList(): Observable<HttpResponse<Sheet[]>> {
-		return this.httpClient.get<Sheet[]>(this.sheetUrl, { observe: 'response' });
+	public getSheetList(): Observable<Sheet[]> {
+		return this.httpClient.get<Sheet[]>(this.sheetUrl);
 	}
 
-	public getSheet(id: number): Observable<HttpResponse<Sheet>> {
-		return this.httpClient.get<Sheet>(this.sheetUrl + "/" + id, { observe: 'response' });
+	public getSheet(id: number): Observable<Sheet> {
+		return this.httpClient.get<Sheet>(this.sheetUrl + "/" + id);
 	}
 
 }

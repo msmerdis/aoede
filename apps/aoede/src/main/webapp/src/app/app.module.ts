@@ -9,6 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
+import { StringifyPipe } from './common/stringify.pipe';
 
 import { UserModule } from './aoede/user/user.module';
 import { MusicModule } from './aoede/music/music.module';
@@ -21,7 +22,8 @@ import { ApiInterceptor } from './interceptors/api.interceptor';
 	declarations: [
 		AppComponent,
 		FooterComponent,
-		HeaderComponent
+		HeaderComponent,
+		StringifyPipe
 	],
 	imports: [
 		BrowserModule,
