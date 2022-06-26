@@ -2,9 +2,10 @@ import { Action, createReducer, on } from '@ngrx/store';
 import {
 	UserLoginSuccess,
 	UserLoginFailure,
-	loginRequest,
 	loginSuccess,
 	loginFailure,
+	keepAliveSuccess,
+	keepAliveFailure,
 	resetRequest
 } from './user.actions';
 import { User } from '../model/user.model';
@@ -50,6 +51,8 @@ export const userReducer = createReducer (
 	on(loginSuccess, doLoginSuccess),
 	on(loginFailure, doLoginFailure),
 	on(resetRequest, doResetRequest),
+	on(keepAliveSuccess, doLoginSuccess),
+	on(keepAliveFailure, doLoginFailure),
 );
 
 export function reducer(state: UserState, action: Action): UserState {

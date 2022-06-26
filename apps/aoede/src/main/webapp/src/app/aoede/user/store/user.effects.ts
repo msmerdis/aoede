@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType, concatLatestFrom } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
 import { tap, map, switchMap, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -10,11 +10,14 @@ import { LoginDetails } from '../model/login-details.model';
 import {
 	loginRequest,
 	loginSuccess,
-	loginFailure
+	loginFailure,
+	keepAliveRequest,
+	keepAliveSuccess,
+	keepAliveFailure
 } from './user.actions';
 import { UserState } from './user.reducer';
 import { UserService } from '../user.service';
-import { getUserState } from './user.selectors';
+import { getUserState, getAuthToken } from './user.selectors';
 import { UserConfig, UserConfigToken } from '../user.config';
 
 @Injectable()
@@ -58,6 +61,29 @@ export class UserEffects {
 						});
 					}),
 					catchError(err => of(loginFailure({failure: err})))
+				)
+			)
+		)
+	);
+
+	keepAlive$ = createEffect(
+		() => this.actions$.pipe(
+			ofType(keepAliveRequest),
+			concatLatestFrom(() => [
+				this.store.select(getAuthToken),
+			]),
+			switchMap(([action, token]) => this.service.keepAlive(token).pipe(
+					map(resp => {
+						this.router.navigate(['']);
+						return keepAliveSuccess({
+							success: {
+								user: resp.body!!,
+								token: resp.headers.get(this.config.authToken!!)!!,
+								time: Date.now()
+							}
+						});
+					}),
+					catchError(err => of(keepAliveFailure({failure: err})))
 				)
 			)
 		)
