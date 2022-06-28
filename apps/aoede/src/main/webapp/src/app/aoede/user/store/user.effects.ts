@@ -49,14 +49,17 @@ export class UserEffects {
 	login$ = createEffect(
 		() => this.actions$.pipe(
 			ofType(loginRequest),
-			switchMap((details) => this.service.login(details.payload).pipe(
+			concatLatestFrom(() => [
+				of(Date.now())
+			]),
+			switchMap(([details, timestamp]) => this.service.login(details.payload).pipe(
 					map(resp => {
 						this.router.navigate(['']);
 						return loginSuccess({
 							success: {
 								user: resp.body!!,
 								token: resp.headers.get(this.config.authToken!!)!!,
-								time: Date.now()
+								time: timestamp
 							}
 						});
 					}),
@@ -71,15 +74,16 @@ export class UserEffects {
 			ofType(keepAliveRequest),
 			concatLatestFrom(() => [
 				this.store.select(getAuthToken),
+				of(Date.now())
 			]),
-			switchMap(([action, token]) => this.service.keepAlive(token).pipe(
+			switchMap(([action, token, timestamp]) => this.service.keepAlive(token).pipe(
 					map(resp => {
 						this.router.navigate(['']);
 						return keepAliveSuccess({
 							success: {
 								user: resp.body!!,
 								token: resp.headers.get(this.config.authToken!!)!!,
-								time: Date.now()
+								time: timestamp
 							}
 						});
 					}),
