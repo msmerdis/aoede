@@ -3,10 +3,13 @@ import { createAction, props } from '@ngrx/store';
 import { User } from '../model/user.model';
 import { LoginDetails } from '../model/login-details.model';
 
-export interface UserLoginSuccess {
-	user  : User;
+export interface TokenRenewInfo {
 	token : string;
 	time  : number;
+}
+
+export interface UserLoginSuccess extends TokenRenewInfo {
+	user  : User;
 }
 
 export interface UserLoginFailure {
@@ -23,3 +26,5 @@ export const loginFailure = createAction('[User] Login Failure', props<{failure:
 export const keepAliveRequest = createAction('[User] KeepAlive Request');
 export const keepAliveSuccess = createAction('[User] KeepAlive Success', props<{success: UserLoginSuccess}>());
 export const keepAliveFailure = createAction('[User] KeepAlive Failure', props<{failure: UserLoginFailure}>());
+
+export const tokenRenew = createAction('[User] Token Renew', props<{payload: TokenRenewInfo}>());

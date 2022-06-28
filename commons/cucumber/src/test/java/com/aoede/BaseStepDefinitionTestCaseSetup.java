@@ -22,6 +22,7 @@ import com.aoede.commons.cucumber.ResponseResults;
 import com.aoede.commons.cucumber.service.AbstractTestService;
 import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
 import com.aoede.commons.cucumber.service.DataTableServiceImpl;
+import com.aoede.commons.cucumber.service.HeadersServiceImpl;
 import com.aoede.commons.cucumber.service.JsonServiceImpl;
 import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 
@@ -34,6 +35,7 @@ public class BaseStepDefinitionTestCaseSetup extends BaseTestComponent {
 	@MockBean protected TestCaseIdTrackerService testCaseIdTrackerService;
 	@MockBean protected JsonServiceImpl jsonService;
 	@MockBean protected DataTableServiceImpl dataTableService;
+	@MockBean protected HeadersServiceImpl headersService;
 
 	// unit under test
 	protected BaseStepDefinition uut () throws Exception {
@@ -42,7 +44,8 @@ public class BaseStepDefinitionTestCaseSetup extends BaseTestComponent {
 			this.services,
 			this.testCaseIdTrackerService,
 			this.jsonService,
-			this.dataTableService
+			this.dataTableService,
+			this.headersService
 		);
 
 		setField (uut, "restTemplate", this.restTemplate);

@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
 import com.aoede.commons.cucumber.service.DataTableService;
+import com.aoede.commons.cucumber.service.HeadersService;
 import com.aoede.commons.cucumber.service.JsonService;
 import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 
@@ -36,6 +37,7 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 	private TestCaseIdTrackerService testCaseIdTrackerService;
 	protected JsonService jsonService;
 	protected DataTableService dataTableService;
+	protected HeadersService headersService;
 	protected String globalUrl;
 
 	public BaseStepDefinition (
@@ -43,13 +45,15 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 		AbstractTestServiceDiscoveryService services,
 		TestCaseIdTrackerService testCaseIdTrackerService,
 		JsonService jsonService,
-		DataTableService dataTableService
+		DataTableService dataTableService,
+		HeadersService headersService
 	) {
 		this.serverProperties = serverProperties;
 		this.services = services;
 		this.testCaseIdTrackerService = testCaseIdTrackerService;
 		this.jsonService = jsonService;
 		this.dataTableService = dataTableService;
+		this.headersService = headersService;
 	}
 
 	@PostConstruct
@@ -147,10 +151,13 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 	}
 
 	protected HttpHeaders defaultHeaders () {
-		HttpHeaders headers = new HttpHeaders ();
+		HttpHeaders headers = new HttpHeaders();
 
+		headers.addAll(headersService);
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.set("X-Test-Case-Id", testCaseIdTrackerService.getLatestTestCaseId());
+
+		headersService.clear();
 
 		return headers;
 	}
@@ -214,6 +221,7 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 		services.clear();
 		jsonService.clear();
 		dataTableService.clear();
+		headersService.clear();
 		globalUrl = null;
 	}
 

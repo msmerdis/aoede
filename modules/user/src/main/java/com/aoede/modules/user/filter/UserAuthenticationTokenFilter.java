@@ -10,6 +10,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -57,6 +58,19 @@ public class UserAuthenticationTokenFilter extends BaseComponent implements Filt
 		User user = tokenService.decodeUser(token);
 		SecurityContextHolder.getContext().setAuthentication(
 			new UsernamePasswordAuthenticationToken(user.getId(), null, user.getRoles()));
+
+		if (request.getHeader(UserConfiguration.TOKEN_RENEW_FLAG) != null)
+			attachToken (user, response);
+	}
+
+	private void attachToken(User user, HttpServletResponse response) throws IOException, ServletException {
+		response.setHeader(UserConfiguration.TOKEN_HEADER_NAME,
+			tokenService.encodeUser(user, UserConfiguration.TOKEN_TIME_TO_LIVE));
+
+		response.addHeader(
+			HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS,
+			UserConfiguration.TOKEN_HEADER_NAME
+		);
 	}
 
 }

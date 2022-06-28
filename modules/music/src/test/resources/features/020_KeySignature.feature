@@ -150,7 +150,7 @@ And the response matches
 
 @TC020008
 @Positive
-Scenario: access a major Key signature
+Scenario Outline: access a major Key signature
 ### Retrieve a key signature using its major value
 
 When request a key signature with major "<major>"
@@ -181,7 +181,7 @@ Examples:
 
 @TC020009
 @Positive
-Scenario: access a minor Key signature
+Scenario Outline: access a minor Key signature
 ### Retrieve a key signature using its minor value
 
 When request a key signature with minor "<minor>"

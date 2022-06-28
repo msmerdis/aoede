@@ -8,6 +8,7 @@ import com.aoede.commons.cucumber.BaseStepDefinition;
 import com.aoede.commons.cucumber.ResponseResults;
 import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
 import com.aoede.commons.cucumber.service.DataTableService;
+import com.aoede.commons.cucumber.service.HeadersService;
 import com.aoede.commons.cucumber.service.JsonService;
 import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 import com.google.gson.JsonElement;
@@ -22,14 +23,16 @@ public class DeleteRequestStepDefinitions extends BaseStepDefinition {
 		AbstractTestServiceDiscoveryService services,
 		TestCaseIdTrackerService testCaseIdTrackerService,
 		JsonService jsonService,
-		DataTableService dataTableService
+		DataTableService dataTableService,
+		HeadersService headersService
 	) {
 		super (
 			serverProperties,
 			services,
 			testCaseIdTrackerService,
 			jsonService,
-			dataTableService
+			dataTableService,
+			headersService
 		);
 	}
 

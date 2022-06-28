@@ -1,11 +1,11 @@
 import { Injectable, Inject } from '@angular/core';
-import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
-import { Observable, combineLatest, map, tap, switchMap, skip, take, of } from 'rxjs';
+import { HttpEvent, HttpEventType, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse, } from '@angular/common/http';
+import { Observable, combineLatest, map, tap, switchMap, skip, take, of, filter } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { UserState } from './store/user.reducer';
 import { UserService } from './user.service';
-import { keepAliveRequest } from './store/user.actions';
+import { keepAliveRequest, tokenRenew, TokenRenewInfo } from './store/user.actions';
 import { getAuthToken, getAuthTimestamp } from './store/user.selectors';
 import { UserConfig, UserConfigToken } from './user.config';
 
@@ -19,8 +19,8 @@ export class UserInterceptor implements HttpInterceptor {
 	) { }
 
 	public shouldRefreshToken(timestamp : number, current : number) : boolean {
-		return  timestamp + this.config.tokenExpiry!!  > current &&
-				timestamp + this.config.tokenRefresh!! < current;
+		return  (timestamp + this.config.tokenExpiry!! ) > current &&
+				(timestamp + this.config.tokenRefresh!!) < current;
 	}
 
 	public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -29,6 +29,62 @@ export class UserInterceptor implements HttpInterceptor {
 			return next.handle(req);
 		}
 
+		return this.renewTokenDuringRequest (req, next);
+	}
+
+	private renewTokenDuringRequest (req: HttpRequest<any>, next: HttpHandler) : Observable<HttpEvent<any>> {
+		var now =  Date.now();
+
+		return combineLatest(
+			this.store.select(getAuthToken),
+			this.store.select(getAuthTimestamp),
+			(token, timestamp) => {
+				return {
+					token : token,
+					renew : token != "" && this.shouldRefreshToken(timestamp, now)
+				};
+			}
+		)
+		.pipe (
+			take(1),
+			switchMap ((auth) => {
+				console.log("inject auth token " + auth.token + " to " + req.url);
+				var headers = req.headers.set(this.config.authToken!!, auth.token);
+
+				if (auth.renew) {
+					console.log("request token renew");
+					headers = headers.set(this.config.renewFlag!!, "1");
+				}
+
+				var resp = next.handle(req.clone({headers: headers}));
+
+				if (auth.renew) {
+					return this.handleRenewedToken(resp, now);
+				}
+
+				return resp;
+			})
+		);
+	}
+
+	private handleRenewedToken (response : Observable<HttpEvent<any>>, now : number) : Observable<HttpEvent<any>> {
+		return response.pipe(
+			filter((httpEvent : HttpEvent<any>) => (httpEvent.type == HttpEventType.Response)),
+			take(1),
+			tap((httpEvent : HttpEvent<any>) => {
+				if (httpEvent instanceof HttpResponse) {
+					this.store.dispatch(tokenRenew ({
+						payload : {
+							token : httpEvent.headers.get(this.config.authToken!!)!!,
+							time  : now
+						}
+					}));
+				}
+			})
+		);
+	}
+
+	private refreshTokenBeforeRequest (req: HttpRequest<any>, next: HttpHandler) : Observable<HttpEvent<any>> {
 		return combineLatest(
 			this.store.select(getAuthToken),
 			this.store.select(getAuthTimestamp),
@@ -70,6 +126,5 @@ export class UserInterceptor implements HttpInterceptor {
 			})
 		);
 	}
-
 }
 

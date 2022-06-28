@@ -1,11 +1,13 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import {
+	TokenRenewInfo,
 	UserLoginSuccess,
 	UserLoginFailure,
 	loginSuccess,
 	loginFailure,
 	keepAliveSuccess,
 	keepAliveFailure,
+	tokenRenew,
 	resetRequest
 } from './user.actions';
 import { User } from '../model/user.model';
@@ -46,6 +48,15 @@ function doResetRequest () : UserState {
 	return userInitialState;
 }
 
+function doTokenRenew (state : UserState, data : {payload: TokenRenewInfo}) : UserState {
+	return {
+		...state,
+		authenticated : data.payload.token !== null,
+		authTimestamp : data.payload.time,
+		authToken     : data.payload.token
+	}
+}
+
 export const userReducer = createReducer (
 	userInitialState,
 	on(loginSuccess, doLoginSuccess),
@@ -53,6 +64,7 @@ export const userReducer = createReducer (
 	on(resetRequest, doResetRequest),
 	on(keepAliveSuccess, doLoginSuccess),
 	on(keepAliveFailure, doLoginFailure),
+	on(tokenRenew, doTokenRenew),
 );
 
 export function reducer(state: UserState, action: Action): UserState {

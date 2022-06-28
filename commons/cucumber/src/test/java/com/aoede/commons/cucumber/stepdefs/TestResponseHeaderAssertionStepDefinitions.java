@@ -12,6 +12,54 @@ import com.aoede.commons.cucumber.ResponseResults;
 
 public class TestResponseHeaderAssertionStepDefinitions extends ResponseHeaderAssertionStepDefinitionsTestCaseSetup {
 
+	private void verifyEmptyHeaderSetup (String domain, String token) {
+		var service = createLatestServiceMock();
+		var results = new ResponseResults();
+
+		results.headers = new HttpHeaders();
+		if (token != null)
+			results.headers.add("X-User-Token", token);
+
+		when(service.getLatestResults()).thenReturn(results);
+
+		if (domain != null)
+			when(services.getService(eq("domain"))).thenReturn(service);
+		else
+			when(services.getLatestService()).thenReturn(service);
+	}
+
+	@Test
+	public void verifyEmptyHeaderSuccess () throws Exception {
+		verifyEmptyHeaderSetup(null, null);
+
+		uut().verifyEmptyHeader("X-User-Token");
+	}
+
+	@Test
+	public void verifyEmptyHeaderFailure () throws Exception {
+		verifyEmptyHeaderSetup(null, "the token");
+
+		assertThrows ("token was supposed to be found", AssertionError.class, () -> {
+			uut().verifyEmptyHeader("X-User-Token");
+		});
+	}
+
+	@Test
+	public void verifyEmptyNamedHeaderSuccess () throws Exception {
+		verifyEmptyHeaderSetup("domain", null);
+
+		uut().verifyEmptyHeader("domain", "X-User-Token");
+	}
+
+	@Test
+	public void verifyEmptyNamedHeaderFailure () throws Exception {
+		verifyEmptyHeaderSetup("domain", "the token");
+
+		assertThrows ("token was supposed to be found", AssertionError.class, () -> {
+			uut().verifyEmptyHeader("domain", "X-User-Token");
+		});
+	}
+
 	private void verifyHeaderSetup (String domain, String token) {
 		var service = createLatestServiceMock();
 		var results = new ResponseResults();

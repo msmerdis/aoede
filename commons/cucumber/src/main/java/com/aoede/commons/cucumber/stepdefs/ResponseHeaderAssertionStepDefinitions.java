@@ -1,5 +1,6 @@
 package com.aoede.commons.cucumber.stepdefs;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.springframework.boot.autoconfigure.web.ServerProperties;
@@ -8,6 +9,7 @@ import com.aoede.commons.cucumber.BaseStepDefinition;
 import com.aoede.commons.cucumber.service.AbstractTestService;
 import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
 import com.aoede.commons.cucumber.service.DataTableService;
+import com.aoede.commons.cucumber.service.HeadersService;
 import com.aoede.commons.cucumber.service.JsonService;
 import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 
@@ -20,14 +22,33 @@ public class ResponseHeaderAssertionStepDefinitions extends BaseStepDefinition {
 		AbstractTestServiceDiscoveryService services,
 		TestCaseIdTrackerService testCaseIdTrackerService,
 		JsonService jsonService,
-		DataTableService dataTableService
+		DataTableService dataTableService,
+		HeadersService headersService
 	) {
 		super (
 			serverProperties,
 			services,
 			testCaseIdTrackerService,
 			jsonService,
-			dataTableService
+			dataTableService,
+			headersService
+		);
+	}
+
+	@Then("the response did not return header {string}")
+	public void verifyEmptyHeader (String header) {
+		verifyEmptyHeader (services.getLatestService(), header);
+	}
+
+	@Then("the {string} response did not return header {string}")
+	public void verifyEmptyHeader (String domain, String header) {
+		verifyEmptyHeader (services.getService(domain), header);
+	}
+
+	private void verifyEmptyHeader (AbstractTestService service, String header) {
+		assertFalse(
+			"header " + header + " found in response",
+			service.getLatestResults().headers.containsKey(header)
 		);
 	}
 
