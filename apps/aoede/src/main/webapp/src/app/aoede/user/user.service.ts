@@ -32,5 +32,10 @@ export class UserService {
 	public isUserRequest (url : string) : boolean {
 		return url == this.loginUrl;
 	}
+
+	public shouldRenewToken(timestamp : number, current : number) : boolean {
+		return  (timestamp + this.config.tokenExpiry!!) > current &&
+				(timestamp + this.config.tokenRenew!!) <= current;
+	}
 }
 

@@ -1,8 +1,8 @@
 import { Injectable, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Actions, createEffect, ofType, concatLatestFrom } from '@ngrx/effects';
-import { Observable, of } from 'rxjs';
-import { tap, map, switchMap, catchError } from 'rxjs/operators';
+import { Actions, createEffect, ofType, concatLatestFrom, Effect } from '@ngrx/effects';
+import { Observable, of, interval } from 'rxjs';
+import { tap, map, mapTo, switchMap, skip, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 import { User } from '../model/user.model';
@@ -23,8 +23,7 @@ import { UserConfig, UserConfigToken } from '../user.config';
 @Injectable()
 export class UserEffects {
 
-	private name : string  = 'aoede-user-state';
-	private load : boolean = false;
+	private cacheKey : string  = 'aoede-user-state';
 
 	constructor (
 		private store    : Store<UserState>,
@@ -33,17 +32,19 @@ export class UserEffects {
 		private router   : Router,
 		@Inject(UserConfigToken) private config : UserConfig
 	) {
-		let state = localStorage.getItem(this.name);
+		let state = localStorage.getItem(this.cacheKey);
 
-		console.log('state in local storage is : ' + JSON.stringify(state));
-		// login from cache if data are there
-		if (state !== null) {
-			this.store.dispatch (loginSuccess({
-				success: JSON.parse(state)
-			}));
-		}
+		if (state === null)
+			return;
 
-		this.load = true;
+		let userState = JSON.parse(state);
+
+		if ((userState.time + this.config.tokenExpiry!!) < Date.now())
+			return;
+
+		this.store.dispatch (loginSuccess({
+			success: userState
+		}));
 	}
 
 	login$ = createEffect(
@@ -53,19 +54,18 @@ export class UserEffects {
 				of(Date.now())
 			]),
 			switchMap(([details, timestamp]) => this.service.login(details.payload).pipe(
-					map(resp => {
-						this.router.navigate(['']);
-						return loginSuccess({
-							success: {
-								user: resp.body!!,
-								token: resp.headers.get(this.config.authToken!!)!!,
-								time: timestamp
-							}
-						});
-					}),
-					catchError(err => of(loginFailure({failure: err})))
-				)
-			)
+				map(resp => {
+					this.router.navigate(['']);
+					return loginSuccess({
+						success: {
+							user: resp.body!!,
+							token: resp.headers.get(this.config.authToken!!)!!,
+							time: timestamp
+						}
+					});
+				}),
+				catchError(err => of(loginFailure({failure: err})))
+			))
 		)
 	);
 
@@ -77,36 +77,40 @@ export class UserEffects {
 				of(Date.now())
 			]),
 			switchMap(([action, token, timestamp]) => this.service.keepAlive(token).pipe(
-					map(resp => {
-						this.router.navigate(['']);
-						return keepAliveSuccess({
-							success: {
-								user: resp.body!!,
-								token: resp.headers.get(this.config.authToken!!)!!,
-								time: timestamp
-							}
-						});
-					}),
-					catchError(err => of(keepAliveFailure({failure: err})))
-				)
-			)
+				map(resp => {
+					return keepAliveSuccess({
+						success: {
+							user: resp.body!!,
+							token: resp.headers.get(this.config.authToken!!)!!,
+							time: timestamp
+						}
+					});
+				}),
+				catchError(err => of(keepAliveFailure({failure: err})))
+			))
 		)
+	);
+
+	@Effect()
+	keepAliveDispatcher$ = interval(this.config.tokenKeepAlive).pipe(
+		mapTo(keepAliveRequest())
 	);
 
 	updateCache$ = createEffect(
 		() => this.store.select (getUserState).pipe(
+			// ignore first item from the state
+			// otherwise it will fire up first with the initial state
+			// clearing up the state
+			skip(1),
 			tap((state : UserState) => {
 				if (state.authenticated) {
-					localStorage.setItem(this.name, JSON.stringify({
+					localStorage.setItem(this.cacheKey, JSON.stringify({
 						user  : state.user,
 						token : state.authToken,
 						time  : state.authTimestamp
 					}));
-				} else if (this.load) {
-					// only remove item from local store when load is set to true
-					// otherwise it will fire up first with the initial state
-					// clearing up the state
-					localStorage.removeItem(this.name);
+				} else {
+					localStorage.removeItem(this.cacheKey);
 				}
 			})
 		),

@@ -18,11 +18,6 @@ export class UserInterceptor implements HttpInterceptor {
 		@Inject(UserConfigToken) private config : UserConfig
 	) { }
 
-	public shouldRefreshToken(timestamp : number, current : number) : boolean {
-		return  (timestamp + this.config.tokenExpiry!! ) > current &&
-				(timestamp + this.config.tokenRefresh!!) < current;
-	}
-
 	public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		if (this.userService.isUserRequest(req.url)) {
 			console.log("skip user requests");
@@ -41,7 +36,7 @@ export class UserInterceptor implements HttpInterceptor {
 			(token, timestamp) => {
 				return {
 					token : token,
-					renew : token != "" && this.shouldRefreshToken(timestamp, now)
+					renew : token != "" && this.userService.shouldRenewToken(timestamp, now)
 				};
 			}
 		)
@@ -101,7 +96,7 @@ export class UserInterceptor implements HttpInterceptor {
 			map ((auth) => {
 				return {
 					...auth,
-					refresh : auth.token != "" && this.shouldRefreshToken(auth.timestamp, auth.current)
+					refresh : auth.token != "" && this.userService.shouldRenewToken(auth.timestamp, auth.current)
 				};
 			}),
 
