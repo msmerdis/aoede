@@ -22,8 +22,7 @@ import { ApiInterceptor } from './interceptors/api.interceptor';
 	declarations: [
 		AppComponent,
 		FooterComponent,
-		HeaderComponent,
-		StringifyPipe
+		HeaderComponent
 	],
 	imports: [
 		BrowserModule,
