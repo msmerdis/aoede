@@ -108,14 +108,26 @@ export class UserEffects {
 			// otherwise it will fire up first with the initial state
 			// clearing up the state
 			skip(1),
-			map((state : StateData<UserLoginData>) : [boolean, UserLoginCacheData] => [
-				isStateAuthenticated(state),
-				{
-					user  : state.value!!.user,
-					token : state.value!!.token,
-					time  : state.utime
+			map((state : StateData<UserLoginData>) : [boolean, UserLoginCacheData] => {
+				var authenticated : boolean = isStateAuthenticated(state);
+				var data : UserLoginCacheData = {
+					user  : {
+						username : "",
+						status   : ""
+					},
+					token : "",
+					time  : 0
+				};
+
+				if (authenticated && state.value !== null) {
+					data = {
+						user  : state.value.user,
+						token : state.value.token,
+						time  : state.utime
+					}
 				}
-			]),
+				return [authenticated, data];
+			}),
 			tap(([authenticated, data]) => {
 				if (authenticated) {
 					localStorage.setItem(this.cacheKey, JSON.stringify(data));
