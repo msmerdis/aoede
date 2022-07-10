@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
+import { tap, map, switchMap } from 'rxjs/operators';
 
 import { Sheet } from '../model/sheet.model';
 import { MusicState } from '../store/music.reducer';
 import { fetchSheetRequest } from '../store/music.actions';
-import { getSheet } from '../store/music.selectors';
+import { getSheetSafe } from '../store/music.selectors';
 
 @Component({
 	selector: 'aoede-music-sheet',
@@ -15,18 +16,27 @@ import { getSheet } from '../store/music.selectors';
 })
 export class SheetComponent {
 
+	id : number = 0;
 	sheet$ : Observable<Sheet | null>;
 
 	constructor(
 		private store : Store<MusicState>,
 		private route : ActivatedRoute
 	) {
-		this.sheet$ = this.store.select (getSheet);
+		this.sheet$ = this.route.params.pipe(
+			map(params => +params['id']),
+			tap(id => this.dispatch(id)),
+			switchMap(id => this.store.select (getSheetSafe, id))
+		);
 	}
 
-	ngOnInit() {
+	private dispatch(id : number) {
+		if (this.id == id)
+			return;
+
+		this.id = id;
 		this.store.dispatch (fetchSheetRequest({
-			payload : +this.route.snapshot.paramMap.get('id')!!
+			payload : id
 		}));
 	}
 }
