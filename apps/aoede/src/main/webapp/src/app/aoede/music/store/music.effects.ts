@@ -27,7 +27,7 @@ import {
 } from '../../generic/generic-store.model';
 import { MusicState } from './music.reducer';
 import { MusicService } from '../music.service';
-import { getSheet, getSheetListUTime } from './music.selectors';
+import { getSheetValue, getSheetListUTime } from './music.selectors';
 import { MusicConfig, MusicConfigToken } from '../music.config';
 
 @Injectable()
@@ -44,12 +44,9 @@ export class MusicEffects {
 	fetchSheet$ = createEffect(
 		() => this.actions$.pipe(
 			ofType(fetchSheetRequest),
-			concatLatestFrom(() => [
-				this.store.select(getSheet),
-				of(Date.now())
-			]),
-			filter(([details, sheet, current]) => sheet.utime + this.config.cacheTime!! <= current || sheet.value == null || details.payload !== sheet.value.id),
-			switchMap(([details, sheet, current]) => this.service.getSheet(details.payload).pipe(
+			concatLatestFrom(() => this.store.select(getSheetValue)),
+			filter(([details, sheet]) => sheet === null || details.payload !== sheet.id),
+			switchMap(([details, sheet]) => this.service.getSheet(details.payload).pipe(
 					map(data => {
 						return fetchSheetSuccess(
 							getRequestSuccess(details, data)
