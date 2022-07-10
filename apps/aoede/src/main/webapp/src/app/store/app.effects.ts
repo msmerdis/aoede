@@ -3,8 +3,6 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, switchMap, mergeMap, catchError, debounceTime, tap } from 'rxjs/operators';
 
-import { loginSuccess } from '../aoede/user/store/user.actions';
-
 @Injectable()
 export class AppEffects {
 	constructor (

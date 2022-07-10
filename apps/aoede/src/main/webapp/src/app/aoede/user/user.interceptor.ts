@@ -5,9 +5,10 @@ import { Store } from '@ngrx/store';
 
 import { UserState } from './store/user.reducer';
 import { UserService } from './user.service';
-import { keepAliveRequest, tokenRenew, TokenRenewInfo } from './store/user.actions';
+import { keepAliveRequest, tokenRenew } from './store/user.actions';
 import { getAuthToken, getAuthTimestamp } from './store/user.selectors';
 import { UserConfig, UserConfigToken } from './user.config';
+import { getGenericPayload, getRequestSuccess } from '../generic/generic-store.model';
 
 @Injectable()
 export class UserInterceptor implements HttpInterceptor {
@@ -24,12 +25,10 @@ export class UserInterceptor implements HttpInterceptor {
 			return next.handle(req);
 		}
 
-		return this.renewTokenDuringRequest (req, next);
+		return this.renewTokenDuringRequest (req, next, Date.now());
 	}
 
-	private renewTokenDuringRequest (req: HttpRequest<any>, next: HttpHandler) : Observable<HttpEvent<any>> {
-		var now =  Date.now();
-
+	private renewTokenDuringRequest (req: HttpRequest<any>, next: HttpHandler, now : number) : Observable<HttpEvent<any>> {
 		return combineLatest(
 			this.store.select(getAuthToken),
 			this.store.select(getAuthTimestamp),
@@ -44,7 +43,7 @@ export class UserInterceptor implements HttpInterceptor {
 			take(1),
 			switchMap ((auth) => {
 				console.log("inject auth token " + auth.token + " to " + req.url);
-				var headers = req.headers.set(this.config.authToken!!, auth.token);
+				var headers = req.headers.set(this.config.authToken!!, auth.token!!);
 
 				if (auth.renew) {
 					console.log("request token renew");
@@ -68,26 +67,23 @@ export class UserInterceptor implements HttpInterceptor {
 			take(1),
 			tap((httpEvent : HttpEvent<any>) => {
 				if (httpEvent instanceof HttpResponse) {
-					this.store.dispatch(tokenRenew ({
-						payload : {
-							token : httpEvent.headers.get(this.config.authToken!!)!!,
-							time  : now
-						}
+					this.store.dispatch(tokenRenew({
+						utime : now,
+						token : httpEvent.headers.get(this.config.authToken!!)!!
 					}));
 				}
 			})
 		);
 	}
-
-	private refreshTokenBeforeRequest (req: HttpRequest<any>, next: HttpHandler) : Observable<HttpEvent<any>> {
+	/*
+	private refreshTokenBeforeRequest (req: HttpRequest<any>, next: HttpHandler, now : number) : Observable<HttpEvent<any>> {
 		return combineLatest(
 			this.store.select(getAuthToken),
 			this.store.select(getAuthTimestamp),
 			(token, timestamp) => {
 				return {
 					token     : token,
-					timestamp : timestamp,
-					current   : Date.now()
+					timestamp : timestamp
 				};
 			}
 		)
@@ -96,7 +92,7 @@ export class UserInterceptor implements HttpInterceptor {
 			map ((auth) => {
 				return {
 					...auth,
-					refresh : auth.token != "" && this.userService.shouldRenewToken(auth.timestamp, auth.current)
+					refresh : auth.token != "" && this.userService.shouldRenewToken(auth.timestamp, now)
 				};
 			}),
 
@@ -121,5 +117,6 @@ export class UserInterceptor implements HttpInterceptor {
 			})
 		);
 	}
+	*/
 }
 

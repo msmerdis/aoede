@@ -9,11 +9,8 @@ import {
 } from './music.actions';
 import { Sheet } from '../model/sheet.model';
 import {
-	ApiGeneric,
-	ApiRequest,
 	ApiSuccess,
-	ApiFailure,
-	ApiError
+	ApiFailure
 } from '../../generic/generic-api.model';
 import {
 	StateData,

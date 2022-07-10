@@ -3,26 +3,30 @@ import { createAction, props } from '@ngrx/store';
 import { User } from '../model/user.model';
 import { LoginDetails } from '../model/login-details.model';
 import { ApiError } from '../../generic/generic-api.model';
+import {
+	ApiGeneric,
+	ApiRequest,
+	ApiSuccess,
+	ApiFailure
+} from '../../generic/generic-api.model';
 
-export interface TokenRenewInfo {
+export interface UserLoginData {
 	token : string;
-	time  : number;
-}
-
-export interface UserLoginSuccess extends TokenRenewInfo {
 	user  : User;
 }
 
-export interface UserLoginFailure extends ApiError {
+export interface UserLoginCacheData extends UserLoginData {
+	time : number;
 }
 
 export const resetRequest = createAction('[User] Reset Request');
-export const loginRequest = createAction('[User] Login Request', props<{payload: LoginDetails}>());
-export const loginSuccess = createAction('[User] Login Success', props<{success: UserLoginSuccess}>());
-export const loginFailure = createAction('[User] Login Failure', props<{failure: UserLoginFailure}>());
+export const loginRequest = createAction('[User] Login Request', props<ApiRequest<LoginDetails>>());
+export const loginSuccess = createAction('[User] Login Success', props<ApiSuccess<UserLoginData>>());
+export const loginFailure = createAction('[User] Login Failure', props<ApiFailure>());
 
-export const keepAliveRequest = createAction('[User] KeepAlive Request');
-export const keepAliveSuccess = createAction('[User] KeepAlive Success', props<{success: UserLoginSuccess}>());
-export const keepAliveFailure = createAction('[User] KeepAlive Failure', props<{failure: UserLoginFailure}>());
+export const keepAliveRequest = createAction('[User] KeepAlive Request', props<ApiGeneric>());
+export const keepAliveSuccess = createAction('[User] KeepAlive Success', props<ApiSuccess<UserLoginData>>());
+export const keepAliveFailure = createAction('[User] KeepAlive Failure', props<ApiFailure>());
 
-export const tokenRenew = createAction('[User] Token Renew', props<{payload: TokenRenewInfo}>());
+export const cacheFetch = createAction('[User] Cache Fetch', props<{cache : UserLoginCacheData}>());
+export const tokenRenew = createAction('[User] Token Renew', props<{token : string; utime : number}>());

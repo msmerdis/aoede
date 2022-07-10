@@ -5,6 +5,8 @@ import { Store } from '@ngrx/store';
 import { UserState } from '../aoede/user/store/user.reducer';
 import { keepAliveRequest } from '../aoede/user/store/user.actions';
 import { isAuthenticated, getUsername } from '../aoede/user/store/user.selectors';
+import { getGenericPayload } from '../aoede/generic/generic-store.model';
+
 
 @Component({
 	selector: 'app-header',
@@ -14,7 +16,7 @@ import { isAuthenticated, getUsername } from '../aoede/user/store/user.selectors
 export class HeaderComponent implements OnInit {
 
 	loggedin$ : Observable<boolean>;
-	username$ : Observable<string>;
+	username$ : Observable<string | null>;
 
 	constructor(
 		private store : Store<UserState>
@@ -27,6 +29,6 @@ export class HeaderComponent implements OnInit {
 	}
 
 	public refreshToken () {
-		this.store.dispatch(keepAliveRequest());
+		this.store.dispatch(keepAliveRequest(getGenericPayload()));
 	}
 }

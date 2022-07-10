@@ -4,6 +4,8 @@ import { Store } from '@ngrx/store';
 
 import { loginRequest } from '../store/user.actions';
 import { UserState } from '../store/user.reducer';
+import { LoginDetails } from '../model/login-details.model';
+import { getRequestPayload } from '../../generic/generic-store.model';
 
 @Component({
 	selector: 'aoede-user-login',
@@ -27,11 +29,11 @@ export class UserLoginComponent implements OnInit {
 	}
 
 	onSubmit (): void {
-		this.store.dispatch (loginRequest({
-			payload: {
+		this.store.dispatch (loginRequest(
+			getRequestPayload<LoginDetails>({
 				username : this.username.value,
 				password : this.password.value
-			}
-		}));
+			})
+		));
 	}
 }

@@ -1,61 +1,86 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import {
-	TokenRenewInfo,
-	UserLoginSuccess,
-	UserLoginFailure,
+	UserLoginData,
+	UserLoginCacheData,
 	loginSuccess,
 	loginFailure,
 	keepAliveSuccess,
 	keepAliveFailure,
+	cacheFetch,
 	tokenRenew,
 	resetRequest
 } from './user.actions';
 import { User } from '../model/user.model';
 import { LoginDetails } from '../model/login-details.model';
+import {
+	ApiSuccess,
+	ApiFailure
+} from '../../generic/generic-api.model';
+import {
+	StateData,
+	initialStateData,
+	getSuccessStateData,
+	getFailureStateData,
+	getRequestSuccess
+} from '../../generic/generic-store.model';
+
 
 export interface UserState {
-	authenticated : boolean;
-	authTimestamp : number;
-	authToken     : string;
-	user          : User;
+	auth : StateData<UserLoginData>;
 }
 
 export const userFeatureKey : string = 'aoedeUserState';
 export const userInitialState : UserState = {
-	authenticated : false,
-	authTimestamp : 0,
-	authToken     : "",
-	user : {
-		username : "",
-		status   : ""
-	}
+	auth : initialStateData
 };
 
-function doLoginSuccess (state : UserState, data : {success: UserLoginSuccess}) : UserState {
+function doLoginSuccess (state : UserState, data : ApiSuccess<UserLoginData>) : UserState {
 	return {
-		authenticated : true,
-		authTimestamp : data.success.time,
-		authToken     : data.success.token,
-		user          : data.success.user
-	}
+		...state,
+		auth : getSuccessStateData (data)
+	};
 }
 
-function doLoginFailure (state : UserState, data : {failure: UserLoginFailure}) : UserState {
-	return userInitialState;
+function doLoginFailure (state : UserState, data : ApiFailure) : UserState {
+	return {
+		...state,
+		auth : getFailureStateData (data)
+	};
 }
 
 function doResetRequest () : UserState {
 	return userInitialState;
 }
 
-function doTokenRenew (state : UserState, data : {payload: TokenRenewInfo}) : UserState {
+function doCacheFetch (state : UserState, data : {cache : UserLoginCacheData}) : UserState {
 	return {
 		...state,
-		authenticated : data.payload.token !== null,
-		authTimestamp : data.payload.time,
-		authToken     : data.payload.token
-	}
+		auth : {
+			...state.auth,
+			utime : data.cache.time,
+			value : {
+				...state.auth.value!!,
+				token : data.cache.token,
+				user  : data.cache.user
+			}
+		}
+	};
 }
+
+function doTokenRenew (state : UserState, data : {token : string; utime : number}) : UserState {
+	return {
+		...state,
+		auth : {
+			...state.auth,
+			utime : data.utime,
+			value : {
+				...state.auth.value!!,
+				token : data.token
+			}
+		}
+	};
+}
+
 
 export const userReducer = createReducer (
 	userInitialState,
@@ -64,6 +89,7 @@ export const userReducer = createReducer (
 	on(resetRequest, doResetRequest),
 	on(keepAliveSuccess, doLoginSuccess),
 	on(keepAliveFailure, doLoginFailure),
+	on(cacheFetch, doCacheFetch),
 	on(tokenRenew, doTokenRenew),
 );
 

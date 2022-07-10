@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, createEffect, ofType, concatLatestFrom, Effect } from '@ngrx/effects';
 import { Observable, of, interval } from 'rxjs';
-import { tap, map, mapTo, switchMap, skip, catchError } from 'rxjs/operators';
+import { tap, map, mapTo, switchMap, skip, filter, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 import { User } from '../model/user.model';
@@ -13,11 +13,20 @@ import {
 	loginFailure,
 	keepAliveRequest,
 	keepAliveSuccess,
-	keepAliveFailure
+	keepAliveFailure,
+	cacheFetch,
+	UserLoginData,
+	UserLoginCacheData
 } from './user.actions';
+import {
+	StateData,
+	getGenericPayload,
+	getRequestSuccess,
+	getRequestFailure
+} from '../../generic/generic-store.model';
 import { UserState } from './user.reducer';
 import { UserService } from '../user.service';
-import { getUserState, getAuthToken } from './user.selectors';
+import { getAuthentication, getAuthToken, isStateAuthenticated } from './user.selectors';
 import { UserConfig, UserConfigToken } from '../user.config';
 
 @Injectable()
@@ -42,29 +51,25 @@ export class UserEffects {
 		if ((userState.time + this.config.tokenExpiry!!) < Date.now())
 			return;
 
-		this.store.dispatch (loginSuccess({
-			success: userState
-		}));
+		this.store.dispatch (cacheFetch({cache : userState}));
 	}
 
 	login$ = createEffect(
 		() => this.actions$.pipe(
 			ofType(loginRequest),
-			concatLatestFrom(() => [
-				of(Date.now())
-			]),
-			switchMap(([details, timestamp]) => this.service.login(details.payload).pipe(
+			switchMap((details) => this.service.login(details.payload).pipe(
 				map(resp => {
 					this.router.navigate(['']);
-					return loginSuccess({
-						success: {
-							user: resp.body!!,
-							token: resp.headers.get(this.config.authToken!!)!!,
-							time: timestamp
-						}
-					});
+					return loginSuccess(
+						getRequestSuccess(details, {
+							user : resp.body!!,
+							token: resp.headers.get(this.config.authToken!!)!!
+						})
+					)
 				}),
-				catchError(err => of(loginFailure({failure: err})))
+				catchError(err => of(keepAliveFailure(
+					getRequestFailure(details, err)
+				)))
 			))
 		)
 	);
@@ -72,43 +77,48 @@ export class UserEffects {
 	keepAlive$ = createEffect(
 		() => this.actions$.pipe(
 			ofType(keepAliveRequest),
-			concatLatestFrom(() => [
-				this.store.select(getAuthToken),
-				of(Date.now())
-			]),
-			switchMap(([action, token, timestamp]) => this.service.keepAlive(token).pipe(
-				map(resp => {
-					return keepAliveSuccess({
-						success: {
-							user: resp.body!!,
-							token: resp.headers.get(this.config.authToken!!)!!,
-							time: timestamp
-						}
-					});
-				}),
-				catchError(err => of(keepAliveFailure({failure: err})))
-			))
+			concatLatestFrom(() => this.store.select(getAuthToken)),
+			filter(([, token]) => token !== null),
+			switchMap(([details, token]) => {
+				return this.service.keepAlive(token!!).pipe(
+					map(resp => {
+						return keepAliveSuccess(
+							getRequestSuccess(details, {
+								user : resp.body!!,
+								token: resp.headers.get(this.config.authToken!!)!!
+							})
+						);
+					}),
+					catchError(err => of(keepAliveFailure(
+						getRequestFailure(details, err)
+					)))
+				);
+			})
 		)
 	);
 
 	@Effect()
 	keepAliveDispatcher$ = interval(this.config.tokenKeepAlive).pipe(
-		mapTo(keepAliveRequest())
+		mapTo(keepAliveRequest(getGenericPayload()))
 	);
 
 	updateCache$ = createEffect(
-		() => this.store.select (getUserState).pipe(
+		() => this.store.select (getAuthentication).pipe(
 			// ignore first item from the state
 			// otherwise it will fire up first with the initial state
 			// clearing up the state
 			skip(1),
-			tap((state : UserState) => {
-				if (state.authenticated) {
-					localStorage.setItem(this.cacheKey, JSON.stringify({
-						user  : state.user,
-						token : state.authToken,
-						time  : state.authTimestamp
-					}));
+			map((state : StateData<UserLoginData>) : [boolean, UserLoginCacheData] => [
+				isStateAuthenticated(state),
+				{
+					user  : state.value!!.user,
+					token : state.value!!.token,
+					time  : state.utime
+				}
+			]),
+			tap(([authenticated, data]) => {
+				if (authenticated) {
+					localStorage.setItem(this.cacheKey, JSON.stringify(data));
 				} else {
 					localStorage.removeItem(this.cacheKey);
 				}
