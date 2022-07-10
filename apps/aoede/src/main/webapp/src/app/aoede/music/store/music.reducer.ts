@@ -5,59 +5,59 @@ import {
 	fetchSheetFailure,
 	fetchSheetListRequest,
 	fetchSheetListSuccess,
-	fetchSheetListFailure,
-
-	SheetSuccess,
-	SheetFailure,
-	SheetListSuccess,
-	SheetListFailure
+	fetchSheetListFailure
 } from './music.actions';
 import { Sheet } from '../model/sheet.model';
+import {
+	ApiGeneric,
+	ApiRequest,
+	ApiSuccess,
+	ApiFailure,
+	ApiError
+} from '../../generic/generic-api.model';
+import {
+	StateData,
+	initialStateData,
+	getSuccessStateData,
+	getFailureStateData
+} from '../../generic/generic-store.model';
 
 export interface MusicState {
-	sheetList  : Sheet[] | null;
-	errorList  : string  | null;
-	sheet      : Sheet   | null;
-	error      : string  | null;
+	sheet     : StateData<Sheet>;
+	sheetList : StateData<Sheet[]>;
 }
 
 export const musicFeatureKey : string = 'aoedeMusicState';
 export const musicInitialState : MusicState = {
-	sheetList  : null,
-	errorList  : null,
-	sheet      : null,
-	error      : null
+	sheet     : initialStateData,
+	sheetList : initialStateData
 };
 
-function doFetchSheetSuccess (state : MusicState, data : {success : SheetSuccess}) : MusicState {
+function doFetchSheetSuccess (state : MusicState, data : ApiSuccess<Sheet>) : MusicState {
 	return {
 		...state,
-		sheet : data.success.sheet,
-		error : null
+		sheet : getSuccessStateData (data)
 	};
 }
 
-function doFetchSheetFailure (state : MusicState, data : {failure : SheetFailure}) : MusicState {
+function doFetchSheetFailure (state : MusicState, data : ApiFailure) : MusicState {
 	return {
 		...state,
-		sheet : null,
-		error : JSON.stringify(data.failure)
+		sheet : getFailureStateData (data)
 	};
 }
 
-function doFetchSheetListSuccess (state : MusicState, data : {success : SheetListSuccess}) : MusicState {
+function doFetchSheetListSuccess (state : MusicState, data : ApiSuccess<Sheet[]>) : MusicState {
 	return {
 		...state,
-		sheetList : data.success.sheetList,
-		errorList : null
+		sheetList : getSuccessStateData (data)
 	};
 }
 
-function doFetchSheetListFailure (state : MusicState, data : {failure : SheetListFailure}) : MusicState {
+function doFetchSheetListFailure (state : MusicState, data : ApiFailure) : MusicState {
 	return {
 		...state,
-		sheetList : null,
-		errorList : JSON.stringify(data.failure)
+		sheetList : getFailureStateData (data)
 	};
 }
 
@@ -72,4 +72,3 @@ export const musicReducer = createReducer (
 export function reducer(state: MusicState, action: Action): MusicState {
 	return musicReducer(state, action);
 }
-

@@ -5,7 +5,9 @@ import { Store } from '@ngrx/store';
 import { Sheet } from '../model/sheet.model';
 import { MusicState } from '../store/music.reducer';
 import { fetchSheetListRequest } from '../store/music.actions';
-import { getSheetList } from '../store/music.selectors';
+import { getSheetListValue } from '../store/music.selectors';
+import { getGenericPayload } from '../../generic/generic-store.model';
+
 
 @Component({
 	selector: 'aoede-music-sheet-result',
@@ -19,11 +21,13 @@ export class SheetResultComponent implements OnInit {
 	constructor(
 		private store : Store<MusicState>
 	) {
-		this.sheetList$ = this.store.select (getSheetList);
+		this.sheetList$ = this.store.select (getSheetListValue);
 	}
 
 	ngOnInit() {
-		this.store.dispatch (fetchSheetListRequest());
+		this.store.dispatch (
+			fetchSheetListRequest(getGenericPayload())
+		);
 	}
 
 }

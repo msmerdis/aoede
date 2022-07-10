@@ -2,6 +2,7 @@ import { createAction, props } from '@ngrx/store';
 
 import { User } from '../model/user.model';
 import { LoginDetails } from '../model/login-details.model';
+import { ApiError } from '../../generic/generic-api.model';
 
 export interface TokenRenewInfo {
 	token : string;
@@ -12,10 +13,7 @@ export interface UserLoginSuccess extends TokenRenewInfo {
 	user  : User;
 }
 
-export interface UserLoginFailure {
-	code: number;
-	text: string;
-	desc: string;
+export interface UserLoginFailure extends ApiError {
 }
 
 export const resetRequest = createAction('[User] Reset Request');

@@ -7,7 +7,8 @@ import { tap, map, switchMap } from 'rxjs/operators';
 import { Sheet } from '../model/sheet.model';
 import { MusicState } from '../store/music.reducer';
 import { fetchSheetRequest } from '../store/music.actions';
-import { getSheetSafe } from '../store/music.selectors';
+import { getSheetValueSafe } from '../store/music.selectors';
+import { getRequestPayload } from '../../generic/generic-store.model';
 
 @Component({
 	selector: 'aoede-music-sheet',
@@ -26,7 +27,7 @@ export class SheetComponent {
 		this.sheet$ = this.route.params.pipe(
 			map(params => +params['id']),
 			tap(id => this.dispatch(id)),
-			switchMap(id => this.store.select (getSheetSafe, id))
+			switchMap(id => this.store.select (getSheetValueSafe, id))
 		);
 	}
 
@@ -35,8 +36,8 @@ export class SheetComponent {
 			return;
 
 		this.id = id;
-		this.store.dispatch (fetchSheetRequest({
-			payload : id
-		}));
+		this.store.dispatch (fetchSheetRequest(
+			getRequestPayload<number>(id)
+		));
 	}
 }
