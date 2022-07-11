@@ -1,9 +1,12 @@
 import { Clef } from './clef.model';
-import { Section } from './section.model';
+import { Fraction } from './fraction.model';
+import { Measure } from './measure.model';
 
 export interface Track {
-	clef     : Clef;
-	id       : string;
-	sections : Section[];
-	sheetId  : number;
+	name?          : string;
+	clef           : Clef;
+	tempo          : number;
+	keySignature?  : number;
+	timeSignature? : Fraction;
+	measures       : Measure[];
 }

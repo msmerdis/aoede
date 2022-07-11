@@ -1,11 +1,9 @@
-<table *ngIf="(sheet$ | async) !== null">
-	<tr>
-		<td>Id</td>
-		<td>{{ (sheet$ | async)?.id }}</td>
-	</tr>
-	<tr>
-		<td>Name</td>
-		<td>{{ (sheet$ | async)?.name }}</td>
-	</tr>
-</table>
-<div *ngIf="(sheet$ | async) === null">Loading</div>
+<div *ngIf="lines <= 0">Loading</div>
+<div>Lines : {{ lines }}</div>
+<div *ngIf="lines > 0">
+	<div>
+		<button (click)="prev()">Prev</button>
+		<button (click)="next()">Next</button>
+	</div>
+	<canvas #sCanvas width="{{ width }}" height="{{ header + height * lines + footer }}"></canvas>
+</div>
