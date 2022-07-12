@@ -2,7 +2,7 @@
 Feature: Basic Key signature CRUD functionality
 ### Verify the ability to create/read/update and delete Key signatures
 
-@TC020001
+@TC011001
 @Positive
 Scenario: retrieve all available Key signatures
 ### Retrieve the list of all available key signatures
@@ -34,7 +34,7 @@ And the response array contains "keySignatureObject" objects
 	|  7 |   C+  |   a+  |
 And "keySignature" returned array of size 15
 
-@TC020002
+@TC011002
 @Negative
 Scenario: search for Key signature is not available
 ### Attempt to search for a key signature
@@ -47,7 +47,7 @@ And the response matches
 	| code | integer | 501             |
 	| text | string  | NOT_IMPLEMENTED |
 
-@TC020003
+@TC011003
 @Positive
 Scenario Outline: access a single Key signature by id
 ### Retrieve one of the common key signatures
@@ -79,7 +79,7 @@ Examples:
 	|  6 |   F+  |   d+  |
 	|  7 |   C+  |   a+  |
 
-@TC020004
+@TC011004
 @Negative
 Scenario: access a Key signature that does not exist
 ### Retrieve a key signature that does not exist
@@ -92,7 +92,7 @@ And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
 
-@TC020005
+@TC011005
 @Negative @Create
 Scenario: create a new Key signature
 ### create a new key signature is not allowed
@@ -107,7 +107,7 @@ And the response matches
 	| code | integer | 400         |
 	| text | string  | BAD_REQUEST |
 
-@TC020006
+@TC011006
 @Negative @Update
 Scenario: update a Key signature
 ### updating key signatures is not allowed
@@ -129,7 +129,7 @@ And the response matches
 	| major | string  | B  |
 	| minor | string  | g+ |
 
-@TC020007
+@TC011007
 @Negative @Delete
 Scenario: delete a Key signature
 ### deleting key signatures is not allowed
@@ -148,7 +148,7 @@ And the response matches
 	| major | string  | D- |
 	| minor | string  | b- |
 
-@TC020008
+@TC011008
 @Positive
 Scenario Outline: access a major Key signature
 ### Retrieve a key signature using its major value
@@ -179,7 +179,7 @@ Examples:
 	|  6 |   F+  |   d+  |
 	|  7 |   C+  |   a+  |
 
-@TC020009
+@TC011009
 @Positive
 Scenario Outline: access a minor Key signature
 ### Retrieve a key signature using its minor value
@@ -210,7 +210,7 @@ Examples:
 	|  6 |   F+  |   d+  |
 	|  7 |   C+  |   a+  |
 
-@TC020010
+@TC011010
 @Negative
 Scenario: access a major Key signature that does not exist
 ### Retrieve a key signature using its major value that does not exist
@@ -223,7 +223,7 @@ And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
 
-@TC020011
+@TC011011
 @Negative
 Scenario: access a minor Key signature that does not exist
 ### Retrieve a key signature using its minor value that does not exist
