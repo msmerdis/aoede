@@ -24,6 +24,7 @@ export class SheetComponent implements OnDestroy {
 	private id : number = 0;
 	private sheet$ : Subscription;
 
+	public track  : number = -1;
 	public lines  : number = 0;
 	public width  : number;
 	public height : number;
@@ -39,9 +40,8 @@ export class SheetComponent implements OnDestroy {
 		}
 	}
 
-	private modified  : boolean = false;
-	private lineBars  : Line[]    = [];
-	private trackInfo : TrackInfo = trackInfoInitializer;
+	private modified : boolean     = false;
+	public  tracks   : TrackInfo[] = [];
 
 	constructor(
 		private store  : Store<MusicState>,
@@ -59,17 +59,23 @@ export class SheetComponent implements OnDestroy {
 				return;
 
 			if (sheet === null) {
-				this.lineBars = [];
-				this.lines    = 0;
+				this.tracks = [];
+				this.lines  =  0;
+				this.track  = -1;
 				return;
 			}
 
-			this.lineBars = this.paint.splitLines(sheet.tracks[0]);
-			this.lines = this.lineBars.length;
+			sheet.tracks.forEach((currentValue, index) =>
+				this.facade.extractTrackInfo(sheet, index).subscribe(
+					(track) => this.tracks.push(track)
+				).unsubscribe()
+			);
 
-			this.facade.extractTrackInfo(sheet, 0).subscribe(
-				(trackInfo) => this.trackInfo = trackInfo
-			).unsubscribe();
+			// by default display the first track
+			if (this.tracks.length > 0) {
+				this.lines = this.tracks[0].lines.length;
+				this.track = 0;
+			}
 		});
 
 		this.width  = this.paint.lineWidth;
@@ -94,13 +100,17 @@ export class SheetComponent implements OnDestroy {
 
 	private drawCanvas () {
 		this.cdref.detectChanges();
-		if (this.context !== null) {
+		if (this.context !== null && this.track >= 0) {
 			this.context.save();
+
+			// extract the correct track to draw
+			var track = this.tracks[this.track];
+
 			this.paint.clearArea(this.context, 0, 0, this.width, this.header + this.height * this.lines + this.footer);
 
-			this.paint.drawTitle(this.context, 0, 0, this.width, this.header, this.trackInfo.title);
-			for (var i = 0; i < this.lines; i += 1) {
-				this.paint.drawLine(this.context, 0, this.header + this.height * i, this.width, this.height, this.trackInfo, this.lineBars[i]);
+			this.paint.drawTitle(this.context, 0, 0, this.width, this.header, track.title + " - " + track.name);
+			for (var i = 0; i < track.lines.length; i += 1) {
+				this.paint.drawLine(this.context, 0, this.header + this.height * i, this.width, this.height, track, track.lines[i]);
 			}
 			this.paint.drawTitle(this.context, 0, this.header + this.height * i, this.width, this.footer, "- " + this.id + " -");
 			this.context.restore();

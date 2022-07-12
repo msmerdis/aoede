@@ -11,13 +11,16 @@ import { TrackInfo, trackInfoInitializer } from './model/track-info.model';
 import { MusicState } from './store/music.reducer';
 import { getClef, getKeySignature } from './store/music.selectors';
 
+import { MusicCanvasService } from './music-canvas.service';
+
 @Injectable({
 	providedIn: 'root'
 })
 export class MusicFacadeService {
 
 	constructor(
-		private store : Store<MusicState>
+		private store : Store<MusicState>,
+		private paint : MusicCanvasService
 	) {}
 
 	public extractTrackInfo (sheet : Sheet, trackIdx : number) : Observable<TrackInfo> {
@@ -37,7 +40,8 @@ export class MusicFacadeService {
 					clef          : clef!!,
 					tempo         : track.tempo,
 					keySignature  : key!!,
-					timeSignature : track.timeSignature
+					timeSignature : track.timeSignature,
+					lines         : this.paint.splitLines(track)
 				};
 			}
 		).pipe(take(1));

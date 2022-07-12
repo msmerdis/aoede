@@ -11,11 +11,13 @@ import org.springframework.stereotype.Component;
 import com.aoede.commons.base.component.BaseComponent;
 import com.aoede.commons.base.exceptions.GenericException;
 import com.aoede.commons.base.exceptions.GenericExceptionContainer;
+import com.aoede.modules.music.domain.Clef;
 import com.aoede.modules.music.domain.Fraction;
 import com.aoede.modules.music.domain.Measure;
 import com.aoede.modules.music.domain.Note;
 import com.aoede.modules.music.domain.Sheet;
 import com.aoede.modules.music.domain.Track;
+import com.aoede.modules.music.service.ClefService;
 import com.aoede.modules.music.service.SheetService;
 import com.aoede.modules.user.domain.Role;
 import com.aoede.modules.user.domain.User;
@@ -27,6 +29,7 @@ import com.aoede.modules.user.transfer.user.UserStatus;
 public class GenerateUsersRunner extends BaseComponent implements CommandLineRunner {
 	private RoleService roleService;
 	private UserService userService;
+	private ClefService clefService;
 	private SheetService sheetService;
 
 	private int startingNote = 60;
@@ -35,10 +38,12 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 	public GenerateUsersRunner (
 		RoleService roleService,
 		UserService userService,
+		ClefService clefService,
 		SheetService sheetService
 	) {
 		this.roleService = roleService;
 		this.userService = userService;
+		this.clefService = clefService;
 		this.sheetService = sheetService;
 	}
 
@@ -86,13 +91,14 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 		userService.create(makeUser("null", "test"));
 	}
 
-	private Sheet makeSheet (int startingNote, short key, String name, String clef) {
+	private Sheet makeSheet (int startingNote, short key, String name) throws GenericException {
 		Sheet sheet = new Sheet();
 
 		sheet.setName(name);
 		sheet.setTracks(new LinkedList<Track>());
 
-		sheet.getTracks().add(makeTrack(startingNote, (short)1, key, clef));
+		for (Clef clef : clefService.findAll())
+			sheet.getTracks().add(makeTrack(startingNote, (short)1, key, clef.getId()));
 
 		return sheet;
 	}
@@ -101,6 +107,7 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 		Track track = new Track();
 
 		track.setClef(clef);
+		track.setName(clef);
 		track.setKeySignature(key);
 		track.setTempo((short)120);
 		track.setTimeSignature(new Fraction(4, 4));
@@ -144,19 +151,16 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 		);
 
 		for (int i = 0; i < count; i += 1, this.startingNote += 1) {
-			generateSheet(userId, this.startingNote, "Treble");
-			generateSheet(userId, this.startingNote, "French Violin");
-			generateSheet(userId, this.startingNote, "Alto");
-			generateSheet(userId, this.startingNote, "Tenor");
+			generateSheet(userId, this.startingNote);
 		}
 
 		// clear authentication
 		SecurityContextHolder.clearContext();
 	}
 
-	private void generateSheet (long userId, int root, String clef) throws GenericException, Exception {
+	private void generateSheet (long userId, int root) throws GenericException, Exception {
 		String note = this.notes[root % 7];
-		this.sheetService.create(makeSheet(root, (short)0, note + " scale - " + clef, clef));
+		this.sheetService.create(makeSheet(root, (short)0, note + " scale"));
 	}
 
 }
