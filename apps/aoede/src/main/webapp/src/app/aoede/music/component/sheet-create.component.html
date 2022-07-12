@@ -2,19 +2,43 @@
 	<fieldset>
 		<legend>Create new sheet</legend>
 		<label for="name">Name</label>
-		<input id="name" type="text" [formControl]="name">
+		<input id="name" type="text" [formControl]="name" placeholder="The Sheet Name" />
 		<br />
 		<label for="clef">Clef</label>
-		<input id="clef" type="text" [formControl]="clef">
+		<select id="clef" [formControl]="clef">
+			<option
+				*ngFor="let c of clefList$ | async"
+				[selected]="c.id == clef.value"
+			>{{ c.id }}</option>
+		</select>
 		<br />
 		<label for="tempo">Tempo</label>
-		<input id="tempo" type="text" [formControl]="tempo">
+		<input id="tempo" type="text" [formControl]="tempo"  placeholder="Ex. 120" />
 		<br />
 		<label for="key">Key Signature</label>
-		<input id="key" type="text" [formControl]="key">
+		<select id="key" [formControl]="key">
+			<option
+				*ngFor="let k of keysList$ | async"
+				[selected]="k.id == key.value"
+				value="{{ k.id }}"
+			>{{ minor ? k.minor : k.major }}</option>
+		</select>
+		Minor : <input type="checkbox" #showMinor value="0" (change)="minor = showMinor.checked" />
 		<br />
-		<label for="time">Time Signature</label>
-		<input id="time" type="text" [formControl]="time">
+		<label for="timeNum">Time Signature</label>
+		<select id="timeNum" [formControl]="timeNum">
+			<option
+				*ngFor="let num of [2,3,4,6,7,8,9,10,11,12,13,14,15,16]"
+				[selected]="num == timeNum.value"
+			>{{ num }}</option>
+		</select>
+		/
+		<select id="timeDen" [formControl]="timeDen">
+			<option
+				*ngFor="let num of [2,4,8,16]"
+				[selected]="num == timeDen.value"
+			>{{ num }}</option>
+		</select>
 		<br />
 		<button type="submit">Submit</button>
 	</fieldset>
