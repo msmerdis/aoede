@@ -4,11 +4,11 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Repository;
 
-import com.aoede.commons.base.repository.HashMapRepository;
+import com.aoede.commons.base.repository.MapRepository;
 import com.aoede.modules.music.domain.KeySignature;
 
 @Repository
-public class KeySignatureRepository extends HashMapRepository <Short, KeySignature> {
+public class KeySignatureRepository extends MapRepository <Short, KeySignature> {
 
 	@PostConstruct
 	public void init () {

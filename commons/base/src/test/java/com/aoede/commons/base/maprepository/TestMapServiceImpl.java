@@ -1,4 +1,4 @@
-package com.aoede.commons.base.hashmaprepository;
+package com.aoede.commons.base.maprepository;
 
 import javax.persistence.EntityManagerFactory;
 
@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import com.aoede.commons.base.service.AbstractServiceEntityImpl;
 
 @Service
-public class TestHashMapServiceImpl extends AbstractServiceEntityImpl <Integer, TestHashMapDomain, TestHashMapRepository> implements TestHashMapService {
+public class TestMapServiceImpl extends AbstractServiceEntityImpl <Integer, TestMapDomain, TestMapRepository> implements TestMapService {
 
-	public TestHashMapServiceImpl(TestHashMapRepository repository, EntityManagerFactory entityManagerFactory) {
+	public TestMapServiceImpl(TestMapRepository repository, EntityManagerFactory entityManagerFactory) {
 		super(repository, entityManagerFactory);
 	}
 
@@ -20,7 +20,7 @@ public class TestHashMapServiceImpl extends AbstractServiceEntityImpl <Integer, 
 
 	@Override
 	public String domainName() {
-		return "TestHashMapDomain";
+		return "TestMapDomain";
 	}
 
 }

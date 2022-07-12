@@ -1,14 +1,20 @@
 package com.aoede.modules.music.repository;
 
+import java.util.LinkedHashMap;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Repository;
 
-import com.aoede.commons.base.repository.HashMapRepository;
+import com.aoede.commons.base.repository.MapRepository;
 import com.aoede.modules.music.domain.Clef;
 
 @Repository
-public class ClefRepository extends HashMapRepository <String, Clef> {
+public class ClefRepository extends MapRepository <String, Clef> {
+
+	public ClefRepository () {
+		super (new LinkedHashMap <String, Clef>());
+	}
 
 	@PostConstruct
 	public void init () {

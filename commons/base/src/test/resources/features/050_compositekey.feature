@@ -1,6 +1,6 @@
 @CompositeKey
-Feature: Basic CRUD functionality for hash map repository
-### Verify the ability to create/read/update and delete entities in hash map repository
+Feature: Basic CRUD functionality for composite key repository
+### Verify the ability to create/read/update and delete entities in composite key repository
 ### CompositeKeyDomain has been created for that purpose
 
 @TC050001

@@ -21,7 +21,7 @@ public class ClefValidator extends BaseComponent implements ConstraintValidator<
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
 		try {
-			return this.clefService.exists(value);
+			return value != null && this.clefService.exists(value);
 		} catch (GenericException e) {
 			return false;
 		}

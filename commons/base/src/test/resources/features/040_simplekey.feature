@@ -1,6 +1,6 @@
 @SimpleKey
-Feature: Basic CRUD functionality for hash map repository
-### Verify the ability to create/read/update and delete entities in hash map repository
+Feature: Basic CRUD functionality for simple key repository
+### Verify the ability to create/read/update and delete entities in simple key repository
 ### SimpleKeyDomain has been created for that purpose
 
 @TC040001

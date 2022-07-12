@@ -1,4 +1,4 @@
-package com.aoede.commons.base.hashmaprepository;
+package com.aoede.commons.base.maprepository;
 
 import com.aoede.commons.base.domain.AbstractDomain;
 import com.aoede.commons.base.entity.AbstractEntity;
@@ -16,7 +16,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class TestHashMapDomain implements AbstractDomain<Integer>, AbstractEntity<Integer> {
+public class TestMapDomain implements AbstractDomain<Integer>, AbstractEntity<Integer> {
 	private Integer id;
 	private String  value;
 }

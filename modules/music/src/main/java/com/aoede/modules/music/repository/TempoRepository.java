@@ -1,14 +1,21 @@
 package com.aoede.modules.music.repository;
 
+import java.util.LinkedHashMap;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Repository;
 
-import com.aoede.commons.base.repository.HashMapRepository;
+import com.aoede.commons.base.repository.MapRepository;
+import com.aoede.modules.music.domain.Clef;
 import com.aoede.modules.music.domain.Tempo;
 
 @Repository
-public class TempoRepository extends HashMapRepository <String, Tempo> {
+public class TempoRepository extends MapRepository <String, Tempo> {
+
+	public TempoRepository () {
+		super (new LinkedHashMap <String, Tempo>());
+	}
 
 	@PostConstruct
 	public void init () {

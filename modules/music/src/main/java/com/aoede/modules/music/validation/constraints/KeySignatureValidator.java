@@ -18,7 +18,7 @@ public class KeySignatureValidator extends BaseComponent implements ConstraintVa
 	@Override
 	public boolean isValid(Short value, ConstraintValidatorContext context) {
 		try {
-			return this.keySignatureService.exists(value);
+			return value != null && this.keySignatureService.exists(value);
 		} catch (GenericException e) {
 			return false;
 		}

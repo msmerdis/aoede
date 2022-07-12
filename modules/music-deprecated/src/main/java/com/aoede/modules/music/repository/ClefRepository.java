@@ -4,11 +4,11 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Repository;
 
-import com.aoede.commons.base.repository.HashMapRepository;
+import com.aoede.commons.base.repository.MapRepository;
 import com.aoede.modules.music.domain.Clef;
 
 @Repository
-public class ClefRepository extends HashMapRepository <String, Clef> {
+public class ClefRepository extends MapRepository <String, Clef> {
 
 	@PostConstruct
 	public void init () {

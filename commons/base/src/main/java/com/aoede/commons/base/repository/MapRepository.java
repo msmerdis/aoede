@@ -2,6 +2,7 @@ package com.aoede.commons.base.repository;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -9,15 +10,23 @@ import com.aoede.commons.base.component.BaseComponent;
 import com.aoede.commons.base.entity.AbstractEntity;
 
 /**
- * HashMap repository is using a hash map to store data
+ * Map repository is using a map to store data
  *
  * Implements all methods defined in AbstractRepository
  */
-public class HashMapRepository<
+public class MapRepository<
 	EntityKey, Entity extends AbstractEntity<EntityKey>
 > extends BaseComponent implements AbstractRepository <EntityKey, Entity> {
 
-	private HashMap<EntityKey, Entity> data = new HashMap <EntityKey, Entity>();
+	private Map<EntityKey, Entity> data;
+
+	public MapRepository () {
+		this(new HashMap <EntityKey, Entity>());
+	}
+
+	public MapRepository (Map<EntityKey, Entity> data) {
+		this.data = data;
+	}
 
 	@Override
 	public List<Entity> findAll() {

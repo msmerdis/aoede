@@ -1,19 +1,19 @@
-@HashMapRepository
-Feature: Basic CRUD functionality for hash map repository
-### Verify the ability to create/read/update and delete entities in hash map repository
-### TestHashMapDomain has been created for that purpose
+@MapRepository
+Feature: Basic CRUD functionality for map repository
+### Verify the ability to create/read/update and delete entities in map repository
+### TestMapDomain has been created for that purpose
 
 @TC030001
 @Positive
 Scenario: retrieve all available entities
 
-When request all available "TestHashMapDomain"
+When request all available "TestMapDomain"
 Then the request was successful
 And the response has a status code of 200
-And prepare data table "TestHashMapDomainObjectTemplate"
+And prepare data table "TestMapDomainObjectTemplate"
 	| id      | value  |
 	| integer | string |
-And the response array contains "TestHashMapDomainObjectTemplate" objects
+And the response array contains "TestMapDomainObjectTemplate" objects
 	| id | value |
 	|  1 | one   |
 	|  2 | two   |
@@ -24,7 +24,7 @@ And the response array contains "TestHashMapDomainObjectTemplate" objects
 Scenario: access a single entity
 ### Retrieve an entity and verify its contents
 
-When request a "TestHashMapDomain" with id "1"
+When request a "TestMapDomain" with id "1"
 Then the request was successful
 And the response has a status code of 200
 And the response matches
@@ -37,7 +37,7 @@ Scenario: access an entity that does not exist
 ### Retrieve an entity that does not exist
 ### This should return with an error
 
-When request a "TestHashMapDomain" with id "1000"
+When request a "TestMapDomain" with id "1000"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
@@ -51,7 +51,7 @@ Scenario: create a new entity
 ### create a new entity and verify it is created with the same data as provided
 ### retrieve the entity and verify the same data are returned
 
-Given a "TestHashMapDomain" with
+Given a "TestMapDomain" with
 	| id    | integer |  4   |
 	| value | string  | Four |
 And the request was successful
@@ -59,22 +59,22 @@ And the response has a status code of 201
 And the response matches
 	| id    | integer |  4   |
 	| value | string  | Four |
-When request previously created "TestHashMapDomain"
+When request previously created "TestMapDomain"
 And the request was successful
 And the response has a status code of 200
 And the response matches
 	| id    | integer |  4   |
 	| value | string  | Four |
-Then request all available "TestHashMapDomain"
+Then request all available "TestMapDomain"
 And the request was successful
 And the response has a status code of 200
-And prepare data table "TestHashMapDomainObjectTemplate"
+And prepare data table "TestMapDomainObjectTemplate"
 	| id      | value  |
 	| integer | string |
-And the response array contains "TestHashMapDomainObjectTemplate" objects
+And the response array contains "TestMapDomainObjectTemplate" objects
 	| id | value |
 	|  4 | Four  |
-And the response array contains latest "TestHashMapDomain"
+And the response array contains latest "TestMapDomain"
 
 @TC030005
 @Negative @Create
@@ -82,7 +82,7 @@ Scenario: create a dublicate entity
 ### create an entity that already exists
 ### this should generate an error
 
-Given a "TestHashMapDomain" with
+Given a "TestMapDomain" with
 	| id    | integer |  1        |
 	| value | string  | dublicate |
 And the request was not successful
@@ -97,7 +97,7 @@ Scenario: update an entity
 ### create an entity and then update it
 ### verify that the entity contents have been updated
 
-Given a "TestHashMapDomain" with
+Given a "TestMapDomain" with
 	| id    | integer |  5   |
 	| value | string  | nope |
 And the request was successful
@@ -105,12 +105,12 @@ And the response has a status code of 201
 And the response matches
 	| id    | integer |  5   |
 	| value | string  | nope |
-When update previously created "TestHashMapDomain"
+When update previously created "TestMapDomain"
 	| id    | integer |  5   |
 	| value | string  | five |
 And the request was successful
 And the response has a status code of 204
-Then request all available "TestHashMapDomain"
+Then request all available "TestMapDomain"
 And the request was successful
 And the response has a status code of 200
 And the response array contains "id" with "integer" value "5"
@@ -122,7 +122,7 @@ Scenario: update a non existing entity
 ### attempt to update an entity that does not exist
 ### this should generate an error
 
-When update "TestHashMapDomain" with id "1000"
+When update "TestMapDomain" with id "1000"
 	| id    | integer |  5   |
 	| value | string  | five |
 Then the request was not successful
@@ -137,7 +137,7 @@ Scenario: delete an entity
 ### create an entity and then delete it
 ### verify that the entity is no longer accessible
 
-Given a "TestHashMapDomain" with
+Given a "TestMapDomain" with
 	| id    | integer |  6  |
 	| value | string  | six |
 And the request was successful
@@ -145,16 +145,16 @@ And the response has a status code of 201
 And the response matches
 	| id    | integer |  6  |
 	| value | string  | six |
-When delete "TestHashMapDomain" with id "6"
+When delete "TestMapDomain" with id "6"
 And the request was successful
 And the response has a status code of 204
-Then request a "TestHashMapDomain" with id "6"
+Then request a "TestMapDomain" with id "6"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
-And request all available "TestHashMapDomain"
+And request all available "TestMapDomain"
 And the request was successful
 And the response has a status code of 200
 And the response array does not contain "id" with "integer" value "6"
@@ -166,7 +166,7 @@ Scenario: delete a non existing entity
 ### attempt to delete an entity that does not exist
 ### this should generate an error
 
-When delete "TestHashMapDomain" with id "1000"
+When delete "TestMapDomain" with id "1000"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
@@ -179,7 +179,7 @@ Scenario: update an entity's id
 ### create an entity and then update it's id
 ### verify that the entity contents have been updated
 
-Given a "TestHashMapDomain" with
+Given a "TestMapDomain" with
 	| id    | integer |  777  |
 	| value | string  | seven |
 And the request was successful
@@ -187,24 +187,24 @@ And the response has a status code of 201
 And the response matches
 	| id    | integer |  777  |
 	| value | string  | seven |
-When update previously created "TestHashMapDomain"
+When update previously created "TestMapDomain"
 	| id    | integer |   7   |
 	| value | string  | seven |
 And the request was successful
 And the response has a status code of 204
-Then request all available "TestHashMapDomain"
+Then request all available "TestMapDomain"
 And the request was successful
 And the response has a status code of 200
 And the response array contains "id" with "integer" value "7"
 And the response array contains "value" with "string" value "seven"
 And the response array does not contain "id" with "integer" value "777"
-And request a "TestHashMapDomain" with id "7"
+And request a "TestMapDomain" with id "7"
 Then the request was successful
 And the response has a status code of 200
 And the response matches
 	| id    | integer |   7   |
 	| value | string  | seven |
-And request a "TestHashMapDomain" with id "777"
+And request a "TestMapDomain" with id "777"
 Then the request was not successful
 And the response has a status code of 404
 And the response matches
