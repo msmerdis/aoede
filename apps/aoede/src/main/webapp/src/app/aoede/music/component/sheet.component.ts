@@ -71,11 +71,15 @@ export class SheetComponent implements OnDestroy {
 				).unsubscribe()
 			);
 
-			// by default display the first track
-			if (this.tracks.length > 0) {
-				this.lines = this.tracks[0].lines.length;
-				this.track = 0;
+			if (this.tracks.length == 0) {
+				this.lines =  0;
+				this.track = -1;
+				return;
 			}
+
+			// by default display the first track
+			this.lines = this.tracks[0].lines.length;
+			this.track = 0;
 		});
 
 		this.width  = this.paint.lineWidth;
@@ -114,6 +118,13 @@ export class SheetComponent implements OnDestroy {
 			}
 			this.paint.drawTitle(this.context, 0, this.header + this.height * i, this.width, this.footer, "- " + this.id + " -");
 			this.context.restore();
+		}
+	}
+
+	public updateTrack (track : number) {
+		if (track < this.tracks.length) {
+			this.track = track;
+			this.drawCanvas ();
 		}
 	}
 
