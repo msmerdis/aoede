@@ -7,7 +7,7 @@ import { ApiError } from '../../generic/generic-api.model';
 import { StateData } from '../../generic/generic-store.model';
 
 export function isStateAuthenticated (state : StateData<UserLoginData>) : boolean {
-	return state.value !== null && state.error === null && state.value.token != "";
+	return state.ready && state.value !== null && state.error === null && state.value.token != "";
 }
 
 export const getUserState = createFeatureSelector<UserState>(userFeatureKey);

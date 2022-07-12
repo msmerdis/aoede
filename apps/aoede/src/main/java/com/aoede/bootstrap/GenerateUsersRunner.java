@@ -86,21 +86,21 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 		userService.create(makeUser("null", "test"));
 	}
 
-	private Sheet makeSheet (int startingNote, short key, String name) {
+	private Sheet makeSheet (int startingNote, short key, String name, String clef) {
 		Sheet sheet = new Sheet();
 
 		sheet.setName(name);
 		sheet.setTracks(new LinkedList<Track>());
 
-		sheet.getTracks().add(makeTrack(startingNote, (short)1, key));
+		sheet.getTracks().add(makeTrack(startingNote, (short)1, key, clef));
 
 		return sheet;
 	}
 
-	private Track makeTrack (int startingNote, short order, short key) {
+	private Track makeTrack (int startingNote, short order, short key, String clef) {
 		Track track = new Track();
 
-		track.setClef("Treble");
+		track.setClef(clef);
 		track.setKeySignature(key);
 		track.setTempo((short)120);
 		track.setTimeSignature(new Fraction(4, 4));
@@ -144,16 +144,19 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 		);
 
 		for (int i = 0; i < count; i += 1, this.startingNote += 1) {
-			generateSheet(userId);
+			generateSheet(userId, this.startingNote, "Treble");
+			generateSheet(userId, this.startingNote, "French Violin");
+			generateSheet(userId, this.startingNote, "Alto");
+			generateSheet(userId, this.startingNote, "Tenor");
 		}
 
 		// clear authentication
 		SecurityContextHolder.clearContext();
 	}
 
-	private void generateSheet (long userId) throws GenericException, Exception {
-		String note = this.notes[this.startingNote % 7];
-		this.sheetService.create(makeSheet(this.startingNote, (short)0, note + " scale"));
+	private void generateSheet (long userId, int root, String clef) throws GenericException, Exception {
+		String note = this.notes[root % 7];
+		this.sheetService.create(makeSheet(root, (short)0, note + " scale - " + clef, clef));
 	}
 
 }

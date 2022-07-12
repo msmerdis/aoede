@@ -6,10 +6,12 @@ import { tap, map, filter, switchMap } from 'rxjs/operators';
 
 import { Sheet } from '../model/sheet.model';
 import { Bar, Line } from '../model/line.model';
+import { TrackInfo, trackInfoInitializer } from '../model/track-info.model';
 import { MusicState } from '../store/music.reducer';
 import { fetchSheetRequest } from '../store/music.actions';
 import { getSheetValueSafe } from '../store/music.selectors';
 import { getRequestPayload } from '../../generic/generic-store.model';
+import { MusicFacadeService } from '../music-facade.service';
 import { MusicCanvasService } from '../music-canvas.service';
 
 @Component({
@@ -19,8 +21,8 @@ import { MusicCanvasService } from '../music-canvas.service';
 })
 export class SheetComponent implements OnDestroy {
 
-	public id : number = 0;
-	public sheet$ : Subscription;
+	private id : number = 0;
+	private sheet$ : Subscription;
 
 	public lines  : number = 0;
 	public width  : number;
@@ -37,15 +39,16 @@ export class SheetComponent implements OnDestroy {
 		}
 	}
 
-	private modified : boolean = false;
-	private lineBars : Line[] = [];
-	public title : string = "";
+	private modified  : boolean = false;
+	private lineBars  : Line[]    = [];
+	private trackInfo : TrackInfo = trackInfoInitializer;
 
 	constructor(
-		private store : Store<MusicState>,
-		private route : ActivatedRoute,
-		private paint : MusicCanvasService,
-		private cdref : ChangeDetectorRef
+		private store  : Store<MusicState>,
+		private route  : ActivatedRoute,
+		private facade : MusicFacadeService,
+		private paint  : MusicCanvasService,
+		private cdref  : ChangeDetectorRef
 	) {
 		this.sheet$ = this.route.params.pipe (
 			map(params => +params['id']),
@@ -61,9 +64,12 @@ export class SheetComponent implements OnDestroy {
 				return;
 			}
 
-			this.lineBars = this.paint.splitLines(sheet);
+			this.lineBars = this.paint.splitLines(sheet.tracks[0]);
 			this.lines = this.lineBars.length;
-			this.title = sheet.name;
+
+			this.facade.extractTrackInfo(sheet, 0).subscribe(
+				(trackInfo) => this.trackInfo = trackInfo
+			).unsubscribe();
 		});
 
 		this.width  = this.paint.lineWidth;
@@ -92,11 +98,11 @@ export class SheetComponent implements OnDestroy {
 			this.context.save();
 			this.paint.clearArea(this.context, 0, 0, this.width, this.header + this.height * this.lines + this.footer);
 
-			this.paint.drawText(this.context, 0, 0, this.width, this.header, this.title);
+			this.paint.drawTitle(this.context, 0, 0, this.width, this.header, this.trackInfo.title);
 			for (var i = 0; i < this.lines; i += 1) {
-				this.paint.setupLine(this.context, 0, this.header + this.height * i, this.width, this.height, i);
+				this.paint.drawLine(this.context, 0, this.header + this.height * i, this.width, this.height, this.trackInfo, this.lineBars[i]);
 			}
-			this.paint.drawText(this.context, 0, this.header + this.height * i, this.width, this.footer, "- " + this.id + " -");
+			this.paint.drawTitle(this.context, 0, this.header + this.height * i, this.width, this.footer, "- " + this.id + " -");
 			this.context.restore();
 		}
 	}

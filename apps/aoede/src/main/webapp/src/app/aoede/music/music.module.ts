@@ -7,6 +7,7 @@ import { EffectsModule } from '@ngrx/effects';
 
 import { MusicRoutingModule } from './music-routing.module';
 import { MusicService } from './music.service';
+import { MusicFacadeService } from './music-facade.service';
 import { MusicCanvasService } from './music-canvas.service';
 import { SheetComponent } from './component/sheet.component';
 import { SheetCreateComponent } from './component/sheet-create.component';
@@ -42,6 +43,7 @@ import {
 	],
 	providers: [
 		MusicService,
+		MusicFacadeService,
 		MusicCanvasService
 	]
 
