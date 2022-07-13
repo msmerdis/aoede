@@ -1,15 +1,10 @@
-<div *ngIf="track < 0">Loading</div>
-<div *ngIf="track >= 0">
-	<div>
-		<button (click)="prev()">Prev</button>
-		<button (click)="next()">Next</button>
-		<select (change)="updateTrack(+tracksSelect.value)" #tracksSelect>
-				<option
-					*ngFor="let t of tracks; let i = index;"
-					[selected]="i == track"
-					value="{{ i }}"
-				>{{ t.name }}</option>
-		</select>
-	</div>
-	<canvas #sCanvas width="{{ width }}" height="{{ header + height * lines + footer }}"></canvas>
+<div>
+	<select (change)="updateTrack(+tracksSelect.value)" #tracksSelect>
+			<option
+				*ngFor="let t of tracks; let i = index;"
+				[selected]="i == track"
+				value="{{ i }}"
+			>{{ t.name }}</option>
+	</select>
 </div>
+<canvas #sCanvas width="{{ width }}" height="{{ header + height * lines + footer }}"></canvas>

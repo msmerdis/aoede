@@ -1,0 +1,4 @@
+<div *ngIf="(sheet$ | async) === null">Loading</div>
+<div *ngIf="(sheet$ | async) !== null">
+	<aoede-music-sheet [sheet$]="sheet$"></aoede-music-sheet>
+</div>

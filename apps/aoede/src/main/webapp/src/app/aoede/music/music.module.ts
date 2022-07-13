@@ -7,11 +7,10 @@ import { EffectsModule } from '@ngrx/effects';
 
 import { MusicRoutingModule } from './music-routing.module';
 import { MusicService } from './music.service';
-import { MusicFacadeService } from './music-facade.service';
-import { MusicCanvasService } from './music-canvas.service';
-import { SheetComponent } from './component/sheet.component';
+import { SheetModifyComponent } from './component/sheet-modify.component';
 import { SheetCreateComponent } from './component/sheet-create.component';
 import { SheetResultComponent } from './component/sheet-result.component';
+import { SheetComponent } from './component/sheet.component';
 import * as fromMusicState from './store/music.reducer';
 import { MusicEffects } from './store/music.effects';
 import {
@@ -23,6 +22,7 @@ import {
 @NgModule({
 	declarations: [
 		SheetComponent,
+		SheetModifyComponent,
 		SheetCreateComponent,
 		SheetResultComponent
 	],
@@ -42,9 +42,7 @@ import {
 		HttpClientModule
 	],
 	providers: [
-		MusicService,
-		MusicFacadeService,
-		MusicCanvasService
+		MusicService
 	]
 
 })
