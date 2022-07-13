@@ -17,14 +17,14 @@
 		<br />
 		<label for="key">Key Signature</label>
 		<span>
-			<select id="key" [formControl]="key">
+			<select id="key" [formControl]="key" style="width : 64px">
 				<option
 					*ngFor="let k of keysList$ | async"
 					[selected]="k.id == key.value"
 					value="{{ k.id }}"
 				>{{ minor ? k.minor : k.major }}</option>
 			</select>
-			Minor : <input type="checkbox" #showMinor value="0" (change)="minor = showMinor.checked" style="border : 1px solid red" />
+			Minor : <input type="checkbox" #showMinor value="0" (change)="minor = showMinor.checked" />
 		</span>
 		<br />
 		<label for="timeNum">Time Signature</label>
