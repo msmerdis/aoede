@@ -7,4 +7,4 @@
 			>{{ t.name }}</option>
 	</select>
 </div>
-<canvas #sCanvas width="{{ width }}" height="{{ header + height * lines + footer }}"></canvas>
+<canvas #sCanvas width="{{ sheetWidth () }}" height="{{ sheetHeight (staves, showHeader, showFooter) }}"></canvas>

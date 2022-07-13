@@ -5,8 +5,6 @@ import { Observable } from 'rxjs';
 import { tap, map, filter, switchMap } from 'rxjs/operators';
 
 import { Sheet } from '../model/sheet.model';
-import { Bar, Line } from '../model/line.model';
-import { TrackInfo, trackInfoInitializer } from '../model/track-info.model';
 import { MusicState } from '../store/music.reducer';
 import { fetchSheetRequest } from '../store/music.actions';
 import { getSheetValueSafe } from '../store/music.selectors';

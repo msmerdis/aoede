@@ -8,7 +8,7 @@ import { Track } from '../model/track.model';
 import { Measure } from '../model/measure.model';
 import { Clef } from '../model/clef.model';
 import { KeySignature } from '../model/key-signature.model';
-import { Bar, Line } from '../model/line.model';
+import { Bar, Stave } from '../model/stave.model';
 import { TrackInfo, trackInfoInitializer } from '../model/track-info.model';
 
 import { MusicState } from '../store/music.reducer';
@@ -27,19 +27,26 @@ import { getRequestPayload } from '../../generic/generic-store.model';
 })
 export class SheetComponent implements OnInit, OnDestroy {
 
-	@Input() sheet$ : Observable<Sheet | null>;
+	@Input() sheet$     : Observable<Sheet | null>;
+	@Input() showHeader : boolean = false;
+	@Input() showFooter : boolean = false;
+
 	public modified : boolean = false;
 
 	public tracks : TrackInfo[] = [];
 	public track  : number      = -1;
-	public lines  : number = 0;
-	public width  : number;
-	public height : number;
-	public header : number;
-	public footer : number;
+	public staves  : number = 0;
 
 	private context  : CanvasRenderingContext2D | null = null;
 	private sheetSub : Subscription = Subscription.EMPTY;
+
+	private stavesMargin  : number =  11 * 5;
+	private stavesPadding : number =  11 * 5;
+	private stavesWidth   : number = 188 * 5;
+	private stavesHeight  : number =  33 * 5;
+	private headerHeight  : number =  22 * 5;
+	private footerHeight  : number =  11 * 5;
+	private noteSpacing   : number =       5;
 
 	@ViewChild('sCanvas') set content (content: ElementRef) {
 		if (content != null) {
@@ -53,10 +60,6 @@ export class SheetComponent implements OnInit, OnDestroy {
 		private cdref  : ChangeDetectorRef
 	) {
 		this.sheet$ = of(null);
-		this.width  = this.lineWidth;
-		this.height = this.lineHeight;
-		this.header = this.headerHeight;
-		this.footer = this.footerHeight;
 	}
 
 	ngOnInit () : void {
@@ -66,7 +69,7 @@ export class SheetComponent implements OnInit, OnDestroy {
 				if (sheet === null) {
 					this.tracks = [];
 					this.track  = -1;
-					this.lines  =  0;
+					this.staves  =  0;
 					return;
 				}
 
@@ -78,7 +81,7 @@ export class SheetComponent implements OnInit, OnDestroy {
 
 				if (this.tracks.length == 0) {
 					this.track = -1;
-					this.lines =  0;
+					this.staves =  0;
 					return;
 				}
 
@@ -91,21 +94,34 @@ export class SheetComponent implements OnInit, OnDestroy {
 		this.sheetSub.unsubscribe ();
 	}
 
+	public sheetHeight (staves : number, showHeader : boolean = false, showFooter : boolean = false) : number {
+		return this.stavesHeight * staves +
+			this.headerHeight * +showHeader +
+			this.footerHeight * +showFooter;
+	}
+
+	public sheetWidth () : number {
+		return this.stavesWidth + 2 * this.stavesMargin;
+	}
+
 	private drawCanvas () {
 		this.cdref.detectChanges();
 		if (this.context !== null && this.track >= 0) {
 			this.context.save();
+			this.context.clearRect(0, 0, this.sheetWidth(), this.sheetHeight(this.staves, this.showHeader, this.showFooter));
 
 			// extract the correct track to draw
 			var track = this.tracks[this.track];
 
-			this.clearArea(this.context, 0, 0, this.width, this.header + this.height * this.lines + this.footer);
+			if (this.showHeader)
+				this.drawTitle(this.context, 0, this.headerHeight, track.title + " - " + track.name);
 
-			this.drawTitle(this.context, 0, 0, this.width, this.header, track.title + " - " + track.name);
-			for (var i = 0; i < track.lines.length; i += 1) {
-				this.drawLine(this.context, 0, this.header + this.height * i, this.width, this.height, track, track.lines[i]);
+			for (var i = 0; i < track.staves.length; i += 1) {
+				this.drawStave(this.context, i, track, track.staves[i]);
 			}
-			this.drawTitle(this.context, 0, this.header + this.height * i, this.width, this.footer, "- " + this.track + " -");
+
+			if (this.showFooter)
+				this.drawTitle(this.context, this.sheetHeight(this.staves, this.showHeader, false), this.footerHeight, "- " + this.track + " -");
 			this.context.restore();
 		}
 	}
@@ -128,44 +144,26 @@ export class SheetComponent implements OnInit, OnDestroy {
 					tempo         : track.tempo,
 					keySignature  : key!!,
 					timeSignature : track.timeSignature,
-					lines         : this.splitLines(track)
+					staves         : this.splitStaves(track)
 				};
 			}
 		).pipe(take(1));
 	}
 
-	public updateTrack (track : number) {
-		if (track < this.tracks.length) {
-			this.track = track;
-			this.lines = this.tracks[this.track].lines.length;
-			this.drawCanvas ();
-		}
-	}
+	public splitStaves (track : Track) : Stave[] {
+		return this.splitBars (track).reduce ((staves : Stave[], bar : Bar) : Stave[] => {
+			var bottom = staves[staves.length - 1];
 
-	public lineMargin   : number =  11 * 5;
-	public linePadding  : number =  11 * 5;
-	public lineWidth    : number = 210 * 5;
-	public lineHeight   : number =  33 * 5;
-	public headerHeight : number =  22 * 5;
-	public footerHeight : number =  11 * 5;
-	public noteSpacing  : number =       5;
-
-	public lineOverhead : number = this.lineMargin * 2 + this.linePadding;
-
-	public splitLines (track : Track) : Line[] {
-		return this.splitBars (track).reduce ((lines : Line[], bar : Bar) : Line[] => {
-			var bottom = lines[lines.length - 1];
-
-			if (bottom.width + bar.width > this.lineWidth) {
-				bottom = this.emptyLine();
-				lines.push(bottom);
+			if (bottom.width + bar.width > this.stavesWidth) {
+				bottom = this.emptyStave();
+				staves.push(bottom);
 			}
 
 			bottom.width += bar.width;
 			bottom.bars.push (bar);
 
-			return lines;
-		}, [this.emptyLine()] as Line[]);
+			return staves;
+		}, [this.emptyStave()] as Stave[]);
 	}
 
 	private splitBars (track : Track) : Bar[] {
@@ -183,18 +181,22 @@ export class SheetComponent implements OnInit, OnDestroy {
 		return 200;
 	}
 
-	private emptyLine () : Line {
+	private emptyStave () : Stave {
 		return {
 			bars  : [],
-			width : this.lineOverhead
+			width : this.stavesPadding
 		};
 	}
 
-	public clearArea (context: CanvasRenderingContext2D, x : number, y : number, w : number, h : number) {
-		context.clearRect(x, y, w, h);
+	public updateTrack (track : number) {
+		if (track < this.tracks.length) {
+			this.track = track;
+			this.staves = this.tracks[this.track].staves.length;
+			this.drawCanvas ();
+		}
 	}
 
-	public setupLine (context: CanvasRenderingContext2D, s : number, e : number, m : number, w : number) {
+	public setupStave (context: CanvasRenderingContext2D, s : number, e : number, m : number, w : number) {
 		context.fillStyle = 'black';
 		context.fillRect(s, m - this.noteSpacing * 4, w, 1);
 		context.fillRect(s, m - this.noteSpacing * 2, w, 1);
@@ -204,22 +206,18 @@ export class SheetComponent implements OnInit, OnDestroy {
 		context.fillRect(e, m - this.noteSpacing * 4, 1, this.noteSpacing * 8 + 1);
 	}
 
-	public drawTitle (context: CanvasRenderingContext2D, x : number, y : number, w : number, h : number, text : string) {
+	public drawTitle (context: CanvasRenderingContext2D, y : number, h : number, text : string) {
 		context.font = (h/2) + 'px consolas';
 		context.textAlign = "center";
 		context.fillStyle = 'black';
-		context.fillText(text, x + w/2, y + 3*h/4 - 1);
+		context.fillText(text, this.stavesMargin + (this.stavesWidth + 1) / 2, y + 3 * h / 4 - 1);
 	}
 
-	public drawLine (context: CanvasRenderingContext2D, x : number, y : number, w : number, h : number, info : TrackInfo, line : Line) {
-		var m : number = y + h / 2;
-		var e : number = w - this.lineMargin;
-		var s : number = x + this.lineMargin;
+	public drawStave (context: CanvasRenderingContext2D, i : number, info : TrackInfo, stave : Stave) {
+		var m : number = this.sheetHeight(i, this.showHeader, false) + (this.stavesHeight + 1) / 2;
 
-		w -= this.lineMargin * 2;
-
-		this.setupLine (context, s, e, m, w);
-		this.drawClef  (context, s + this.noteSpacing * 4 + 1, m, info.clef);
+		this.setupStave (context, this.stavesMargin, this.stavesWidth + this.stavesMargin, m, this.stavesWidth);
+		this.drawClef  (context, this.stavesMargin + this.noteSpacing * 4 + 1, m, info.clef);
 	}
 
 	public drawClef (context: CanvasRenderingContext2D, x : number, y : number, clef : Clef) {
