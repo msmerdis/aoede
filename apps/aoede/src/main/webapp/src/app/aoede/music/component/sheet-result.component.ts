@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
+import { take, tap, filter } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
 import { Sheet } from '../model/sheet.model';
+import { KeySignature } from '../model/key-signature.model';
 import { MusicState } from '../store/music.reducer';
 import { fetchSheetListRequest } from '../store/music.actions';
-import { getSheetListValue } from '../store/music.selectors';
+import { getSheetListValue, getKeysValue } from '../store/music.selectors';
 import { getGenericPayload } from '../../generic/generic-store.model';
 
 
@@ -16,7 +18,10 @@ import { getGenericPayload } from '../../generic/generic-store.model';
 })
 export class SheetResultComponent implements OnInit {
 
+	loaded     : boolean = false;
 	sheetList$ : Observable<Sheet[] | null>;
+	keysList   : KeySignature[] = [];
+	keysSub    : Subscription   = Subscription.EMPTY;
 
 	constructor(
 		private store : Store<MusicState>
@@ -28,6 +33,25 @@ export class SheetResultComponent implements OnInit {
 		this.store.dispatch (
 			fetchSheetListRequest(getGenericPayload())
 		);
+
+		this.store.select(getKeysValue).pipe(
+			filter(keys => keys ? keys.length > 0 : false),
+			take(1),
+		).subscribe(keys => this.keysList = (keys || []));
+	}
+
+	ngOnDestroy() {
+		this.keysSub.unsubscribe();
+	}
+
+	translateKey (key : number) : string {
+		var k;
+
+		if (k = this.keysList.find(k => k.id == key)) {
+			return k.major + " / " + k.minor;
+		}
+
+		return "-";
 	}
 
 }
