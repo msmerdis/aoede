@@ -10,6 +10,7 @@ import {
 import { Sheet } from '../model/sheet.model';
 import { Clef } from '../model/clef.model';
 import { KeySignature } from '../model/key-signature.model';
+import { Tempo } from '../model/tempo.model';
 import { Preload } from '../model/preload.model';
 import {
 	ApiSuccess,
@@ -28,6 +29,7 @@ export interface MusicState {
 	sheetList : StateData<Sheet[]>;
 	clefList  : StateData<Clef[]>;
 	keys      : StateData<KeySignature[]>;
+	tempoList : StateData<Tempo[]>;
 }
 
 export const musicFeatureKey : string = 'aoedeMusicState';
@@ -35,7 +37,8 @@ export const musicInitialState : MusicState = {
 	sheet     : initialStateData,
 	sheetList : initialStateData,
 	clefList  : initialStateData,
-	keys      : initialStateData
+	keys      : initialStateData,
+	tempoList : initialStateData
 };
 
 function doFetchSheetSuccess (state : MusicState, data : ApiSuccess<Sheet>) : MusicState {
@@ -69,8 +72,9 @@ function doFetchSheetListFailure (state : MusicState, data : ApiFailure) : Music
 function doPreloadSuccess (state : MusicState, data : ApiSuccess<Preload>) : MusicState {
 	return {
 		...state,
-		clefList : getSuccessStateData (getRequestSuccess(data, data.success.clefList)),
-		keys     : getSuccessStateData (getRequestSuccess(data, data.success.keysList))
+		clefList  : getSuccessStateData (getRequestSuccess(data, data.success.clefList)),
+		keys      : getSuccessStateData (getRequestSuccess(data, data.success.keysList)),
+		tempoList : getSuccessStateData (getRequestSuccess(data, data.success.tempoList))
 	};
 }
 

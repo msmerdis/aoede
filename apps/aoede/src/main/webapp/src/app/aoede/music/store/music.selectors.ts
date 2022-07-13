@@ -3,6 +3,7 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { MusicState, musicFeatureKey } from './music.reducer';
 import { Sheet } from '../model/sheet.model';
 import { Clef } from '../model/clef.model';
+import { Tempo } from '../model/tempo.model';
 import { KeySignature } from '../model/key-signature.model';
 import { ApiError } from '../../generic/generic-api.model';
 import { StateData } from '../../generic/generic-store.model';
@@ -48,3 +49,15 @@ function findKey (keys : KeySignature[], key : number) : KeySignature | null {
 };
 
 export const getKeySignature = createSelector(getKeysValue, (keys : KeySignature[] | null, key : number): KeySignature | null => keys === null ? null : findKey(keys, key));
+
+export const getTempos      = createSelector(getMusicState, (state: MusicState): StateData<Tempo[]> => state.tempoList);
+export const getTemposReady = createSelector(getTempos,     (state: StateData<Tempo[]>): boolean         => state.ready);
+export const getTemposValue = createSelector(getTempos,     (state: StateData<Tempo[]>): Tempo[]  | null => state.value);
+export const getTemposError = createSelector(getTempos,     (state: StateData<Tempo[]>): ApiError | null => state.error);
+export const getTemposUTime = createSelector(getTempos,     (state: StateData<Tempo[]>): number          => state.utime);
+
+function findTempo (tempos : Tempo[], tempo : string) : Tempo | null {
+	return tempos.length > 0 ? tempos.find(t => t.id == tempo) || null : null;
+};
+
+export const getTempo = createSelector(getTemposValue, (tempos : Tempo[] | null, tempo : string): Tempo | null => tempos === null ? null : findTempo(tempos, tempo));

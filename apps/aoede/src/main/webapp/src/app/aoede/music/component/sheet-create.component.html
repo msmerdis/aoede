@@ -3,7 +3,7 @@
 		<legend>Create new sheet</legend>
 		<label for="name">Name</label>
 		<input id="name" type="text" [formControl]="name" placeholder="The Sheet Name" />
-		<br />
+
 		<label for="clef">Clef</label>
 		<select id="clef" [formControl]="clef">
 			<option
@@ -11,10 +11,21 @@
 				[selected]="c.id == clef.value"
 			>{{ c.id }}</option>
 		</select>
-		<br />
+
 		<label for="tempo">Tempo</label>
-		<input id="tempo" type="text" [formControl]="tempo"  placeholder="Ex. 120" />
-		<br />
+		<span class="short">
+			<input  *ngIf="custom == true"  id="tempo" type="text" [formControl]="tempo" placeholder="Ex. {{ tempo.value }}" />
+			<select *ngIf="custom == false" id="tempo" [formControl]="tempo">
+				<option
+					*ngFor="let t of tempoList$ | async"
+					[selected]="t.stdTempo == tempo.value"
+					value="{{ t.stdTempo }}"
+					title="{{ t.desc }}"
+				>{{ t.id }}</option>
+			</select>
+			Custom : <input type="checkbox" #customTempo value="0" (change)="custom = customTempo.checked; updateTempo();" />
+		</span>
+
 		<label for="key">Key Signature</label>
 		<span>
 			<select id="key" [formControl]="key" style="width : 64px">
@@ -26,7 +37,7 @@
 			</select>
 			Minor : <input type="checkbox" #showMinor value="0" (change)="minor = showMinor.checked" />
 		</span>
-		<br />
+
 		<label for="timeNum">Time Signature</label>
 		<span class="fraction">
 			<select id="timeNum" [formControl]="timeNum">
@@ -43,7 +54,7 @@
 				>{{ num }}</option>
 			</select>
 		</span>
-		<br />
+
 		<button type="submit">Submit</button>
 	</fieldset>
 </form>

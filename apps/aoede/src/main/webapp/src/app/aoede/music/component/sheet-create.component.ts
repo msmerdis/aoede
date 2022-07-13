@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, take, filter } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { Clef } from '../model/clef.model';
 import { KeySignature } from '../model/key-signature.model';
+import { Tempo } from '../model/tempo.model';
 
 import { MusicState } from '../store/music.reducer';
-import { getClefsValue, getKeysValue } from '../store/music.selectors';
+import { getClefsValue, getKeysValue, getTemposValue } from '../store/music.selectors';
 
 @Component({
 	selector: 'aoede-music-sheet-create',
@@ -16,22 +17,28 @@ import { getClefsValue, getKeysValue } from '../store/music.selectors';
 })
 export class SheetCreateComponent implements OnInit {
 
-	minor : boolean = false;
+	minor  : boolean = false;
+	custom : boolean = false;
+
 	name  = new FormControl();
 	clef  = new FormControl('Treble');
-	tempo = new FormControl();
+	tempo = new FormControl(120);
 	key   = new FormControl(0);
 	timeNum = new FormControl(4);
 	timeDen = new FormControl(4);
 
-	clefList$ : Observable<Clef[] | null>;
-	keysList$ : Observable<KeySignature[] | null>;
+	clefList$  : Observable<Clef[] | null>;
+	keysList$  : Observable<KeySignature[] | null>;
+	tempoList$ : Observable<Tempo[] | null>;
 
 	constructor(
 		private store : Store<MusicState>
 	) {
-		this.clefList$ = this.store.select (getClefsValue);
-		this.keysList$ = this.store.select (getKeysValue);
+		this.clefList$  = this.store.select (getClefsValue);
+		this.keysList$  = this.store.select (getKeysValue);
+		this.tempoList$ = this.store.select (getTemposValue);
+
+		this.updateTempo ();
 	}
 
 	ngOnInit(): void {
@@ -45,4 +52,27 @@ export class SheetCreateComponent implements OnInit {
 		console.log(" -> key   : " + this.key.value);
 		console.log(" -> time  : " + this.timeNum.value + "/" + this.timeDen.value);
 	}
+
+	updateTempo (): void {
+		if (this.custom)
+			return;
+
+		this.tempoList$
+			.pipe (
+				filter((t) => t !== null),
+				take(1)
+			)
+			.subscribe((tempos) => {
+				if (tempos === null)
+					return;
+
+				var t = tempos.find((tempo) => tempo.stdTempo >= this.tempo.value);
+
+				if (t === undefined)
+					return;
+
+				this.tempo.setValue (t.stdTempo);
+			});
+	}
+
 }

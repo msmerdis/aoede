@@ -9,6 +9,7 @@
 			<th>Tempo</th>
 			<th>Key</th>
 			<th>Time</th>
+			<th># Measures</th>
 		</tr>
 		<ng-container *ngFor="let sheet of sheetList$ | async; index as i">
 			<ng-container *ngFor="let track of sheet.tracks; index as j">
@@ -23,6 +24,7 @@
 					<td>{{ track.tempo }}</td>
 					<td>{{ translateKey(track.keySignature) }}</td>
 					<td>{{ track.timeSignature.numerator }} / {{ track.timeSignature.numerator }}</td>
+					<td>{{ track.measures.length }}</td>
 				</tr>
 			</ng-container>
 		</ng-container>

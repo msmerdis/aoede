@@ -17,28 +17,28 @@ And prepare data table "tempoObject"
 	| string           | string                               | number   | number   | number   |
 And the response array contains "tempoObject" objects
 	| id               | desc                                 | minTempo | stdTempo | maxTempo |
-	| Larghissimo      | very, very slow                      |   0      | 100      |  24      |
-	| Adagissimo       | very slow                            |  24      | 100      |  40      |
-	| Grave            | very slow                            |  25      | 100      |  45      |
-	| Largo            | slow and broad                       |  40      | 100      |  60      |
-	| Lento            | slow                                 |  45      | 100      |  60      |
-	| Larghetto        | rather slow and broad                |  60      | 100      |  66      |
-	| Adagio           | slow with great expression           |  66      | 100      |  76      |
-	| Adagietto        | slower than andante                  |  72      | 100      |  76      |
-	| Andante          | at a walking pace                    |  76      | 100      | 108      |
-	| Andantino        | slightly faster than andante         |  80      | 100      | 108      |
-	| Marcia moderato  | moderately, in the manner of a march |  83      | 100      |  85      |
-	| Andante moderato | between andante and moderato         |  92      | 100      | 112      |
-	| Moderato         | at a moderate speed                  | 108      | 100      | 120      |
-	| Allegretto       | moderately fast                      | 112      | 100      | 120      |
-	| Allegro moderato | close to, but not quite allegro      | 116      | 100      | 120      |
-	| Allegro          | fast, quick, and bright              | 120      | 100      | 156      |
-	| Molto Allegro    | very fast                            | 124      | 100      | 156      |
-	| Vivace           | lively and fast                      | 156      | 100      | 176      |
-	| Vivacissimo      | very fast and lively                 | 172      | 100      | 176      |
-	| Allegrissimo     | very fast                            | 172      | 100      | 176      |
-	| Presto           | very, very fast                      | 168      | 100      | 200      |
-	| Prestissimo      | even faster than presto              | 200      | 100      | 512      |
+	| Larghissimo      | very, very slow                      |   0      |  24      |  24      |
+	| Adagissimo       | very slow                            |  24      |  30      |  40      |
+	| Grave            | very slow                            |  25      |  40      |  45      |
+	| Largo            | slow and broad                       |  40      |  50      |  60      |
+	| Lento            | slow                                 |  45      |  55      |  60      |
+	| Larghetto        | rather slow and broad                |  60      |  65      |  66      |
+	| Adagio           | slow with great expression           |  66      |  70      |  76      |
+	| Adagietto        | slower than andante                  |  72      |  75      |  76      |
+	| Andante          | at a walking pace                    |  76      |  80      | 108      |
+	| Andantino        | slightly faster than andante         |  80      |  82      | 108      |
+	| Marcia moderato  | moderately, in the manner of a march |  83      |  84      |  85      |
+	| Andante moderato | between andante and moderato         |  92      | 104      | 112      |
+	| Moderato         | at a moderate speed                  | 108      | 114      | 120      |
+	| Allegretto       | moderately fast                      | 112      | 116      | 120      |
+	| Allegro moderato | close to, but not quite allegro      | 116      | 118      | 120      |
+	| Allegro          | fast, quick, and bright              | 120      | 138      | 156      |
+	| Molto Allegro    | very fast                            | 124      | 140      | 156      |
+	| Vivace           | lively and fast                      | 156      | 166      | 176      |
+	| Vivacissimo      | very fast and lively                 | 172      | 174      | 176      |
+	| Allegrissimo     | very fast                            | 172      | 174      | 176      |
+	| Presto           | very, very fast                      | 168      | 184      | 200      |
+	| Prestissimo      | even faster than presto              | 200      | 200      | 512      |
 And "tempo" returned array of size 22
 
 @TC012002
@@ -72,28 +72,28 @@ And the response matches
 
 Examples:
 	| id               | desc                                 | minTempo | stdTempo | maxTempo |
-	| Larghissimo      | very, very slow                      |   0      | 100      |  24      |
-	| Adagissimo       | very slow                            |  24      | 100      |  40      |
-	| Grave            | very slow                            |  25      | 100      |  45      |
-	| Largo            | slow and broad                       |  40      | 100      |  60      |
-	| Lento            | slow                                 |  45      | 100      |  60      |
-	| Larghetto        | rather slow and broad                |  60      | 100      |  66      |
-	| Adagio           | slow with great expression           |  66      | 100      |  76      |
-	| Adagietto        | slower than andante                  |  72      | 100      |  76      |
-	| Andante          | at a walking pace                    |  76      | 100      | 108      |
-	| Andantino        | slightly faster than andante         |  80      | 100      | 108      |
-	| Marcia moderato  | moderately, in the manner of a march |  83      | 100      |  85      |
-	| Andante moderato | between andante and moderato         |  92      | 100      | 112      |
-	| Moderato         | at a moderate speed                  | 108      | 100      | 120      |
-	| Allegretto       | moderately fast                      | 112      | 100      | 120      |
-	| Allegro moderato | close to, but not quite allegro      | 116      | 100      | 120      |
-	| Allegro          | fast, quick, and bright              | 120      | 100      | 156      |
-	| Molto Allegro    | very fast                            | 124      | 100      | 156      |
-	| Vivace           | lively and fast                      | 156      | 100      | 176      |
-	| Vivacissimo      | very fast and lively                 | 172      | 100      | 176      |
-	| Allegrissimo     | very fast                            | 172      | 100      | 176      |
-	| Presto           | very, very fast                      | 168      | 100      | 200      |
-	| Prestissimo      | even faster than presto              | 200      | 100      | 512      |
+	| Larghissimo      | very, very slow                      |   0      |  24      |  24      |
+	| Adagissimo       | very slow                            |  24      |  30      |  40      |
+	| Grave            | very slow                            |  25      |  40      |  45      |
+	| Largo            | slow and broad                       |  40      |  50      |  60      |
+	| Lento            | slow                                 |  45      |  55      |  60      |
+	| Larghetto        | rather slow and broad                |  60      |  65      |  66      |
+	| Adagio           | slow with great expression           |  66      |  70      |  76      |
+	| Adagietto        | slower than andante                  |  72      |  75      |  76      |
+	| Andante          | at a walking pace                    |  76      |  80      | 108      |
+	| Andantino        | slightly faster than andante         |  80      |  82      | 108      |
+	| Marcia moderato  | moderately, in the manner of a march |  83      |  84      |  85      |
+	| Andante moderato | between andante and moderato         |  92      | 104      | 112      |
+	| Moderato         | at a moderate speed                  | 108      | 114      | 120      |
+	| Allegretto       | moderately fast                      | 112      | 116      | 120      |
+	| Allegro moderato | close to, but not quite allegro      | 116      | 118      | 120      |
+	| Allegro          | fast, quick, and bright              | 120      | 138      | 156      |
+	| Molto Allegro    | very fast                            | 124      | 140      | 156      |
+	| Vivace           | lively and fast                      | 156      | 166      | 176      |
+	| Vivacissimo      | very fast and lively                 | 172      | 174      | 176      |
+	| Allegrissimo     | very fast                            | 172      | 174      | 176      |
+	| Presto           | very, very fast                      | 168      | 184      | 200      |
+	| Prestissimo      | even faster than presto              | 200      | 200      | 512      |
 
 @TC012004
 @Negative
@@ -117,7 +117,7 @@ Given a "tempo" with
 	|       id | string  | yes |
 	|     desc | string  | yes |
 	| minTempo | integer |  0  |
-	| stdTempo | integer | 100 |
+	| stdTempo | integer | 256 |
 	| maxTempo | integer | 512 |
 And the request was not successful
 And the response has a status code of 400
@@ -148,7 +148,7 @@ And the response matches
 	|       id | string  |   Grave   |
 	|     desc | string  | very slow |
 	| minTempo | integer |     25    |
-	| stdTempo | integer |    100    |
+	| stdTempo | integer |     40    |
 	| maxTempo | integer |     45    |
 
 @TC012007
@@ -169,5 +169,5 @@ And the response matches
 	|       id | string  |   Grave   |
 	|     desc | string  | very slow |
 	| minTempo | integer |     25    |
-	| stdTempo | integer |    100    |
+	| stdTempo | integer |     40    |
 	| maxTempo | integer |     45    |
