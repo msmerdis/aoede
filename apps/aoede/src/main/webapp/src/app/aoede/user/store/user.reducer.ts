@@ -57,6 +57,7 @@ function doCacheFetch (state : UserState, data : {cache : UserLoginCacheData}) :
 		...state,
 		auth : {
 			...state.auth,
+			ready : true,
 			utime : data.cache.time,
 			value : {
 				...state.auth.value!!,
