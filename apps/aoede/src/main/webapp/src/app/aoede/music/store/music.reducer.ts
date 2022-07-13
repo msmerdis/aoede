@@ -4,14 +4,13 @@ import {
 	fetchSheetFailure,
 	fetchSheetListSuccess,
 	fetchSheetListFailure,
-	fetchClefsSuccess,
-	fetchClefsFailure,
-	fetchKeysSuccess,
-	fetchKeysFailure
+	preloadSuccess,
+	preloadFailure
 } from './music.actions';
 import { Sheet } from '../model/sheet.model';
 import { Clef } from '../model/clef.model';
 import { KeySignature } from '../model/key-signature.model';
+import { Preload } from '../model/preload.model';
 import {
 	ApiSuccess,
 	ApiFailure
@@ -20,7 +19,8 @@ import {
 	StateData,
 	initialStateData,
 	getSuccessStateData,
-	getFailureStateData
+	getFailureStateData,
+	getRequestSuccess
 } from '../../generic/generic-store.model';
 
 export interface MusicState {
@@ -66,31 +66,19 @@ function doFetchSheetListFailure (state : MusicState, data : ApiFailure) : Music
 	};
 }
 
-function doFetchClefsSuccess (state : MusicState, data : ApiSuccess<Clef[]>) : MusicState {
+function doPreloadSuccess (state : MusicState, data : ApiSuccess<Preload>) : MusicState {
 	return {
 		...state,
-		clefList : getSuccessStateData (data)
+		clefList : getSuccessStateData (getRequestSuccess(data, data.success.clefList)),
+		keys     : getSuccessStateData (getRequestSuccess(data, data.success.keysList))
 	};
 }
 
-function doFetchClefsFailure (state : MusicState, data : ApiFailure) : MusicState {
+function doPreloadFailure (state : MusicState, data : ApiFailure) : MusicState {
 	return {
 		...state,
-		clefList : getFailureStateData (data)
-	};
-}
-
-function doFetchKeysSuccess (state : MusicState, data : ApiSuccess<KeySignature[]>) : MusicState {
-	return {
-		...state,
-		keys : getSuccessStateData (data)
-	};
-}
-
-function doFetchKeysFailure (state : MusicState, data : ApiFailure) : MusicState {
-	return {
-		...state,
-		keys : getFailureStateData (data)
+		clefList : getFailureStateData (data),
+		keys     : getFailureStateData (data)
 	};
 }
 
@@ -100,10 +88,8 @@ export const musicReducer = createReducer (
 	on(fetchSheetFailure, doFetchSheetFailure),
 	on(fetchSheetListSuccess, doFetchSheetListSuccess),
 	on(fetchSheetListFailure, doFetchSheetListFailure),
-	on(fetchClefsSuccess, doFetchClefsSuccess),
-	on(fetchClefsFailure, doFetchClefsFailure),
-	on(fetchKeysSuccess, doFetchKeysSuccess),
-	on(fetchKeysFailure, doFetchKeysFailure),
+	on(preloadSuccess, doPreloadSuccess),
+	on(preloadFailure, doPreloadFailure),
 );
 
 export function reducer(state: MusicState, action: Action): MusicState {

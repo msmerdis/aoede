@@ -43,7 +43,7 @@ export class UserInterceptor implements HttpInterceptor {
 			take(1),
 			switchMap ((auth) => {
 				console.log("inject auth token " + auth.token + " to " + req.url);
-				var headers = req.headers.set(this.config.authToken!!, auth.token!!);
+				var headers = req.headers.set(this.config.authToken!!, auth.token || "");
 
 				if (auth.renew) {
 					console.log("request token renew");

@@ -14,12 +14,9 @@ import {
 	fetchSheetListRequest,
 	fetchSheetListSuccess,
 	fetchSheetListFailure,
-	fetchClefsPreload,
-	fetchClefsSuccess,
-	fetchClefsFailure,
-	fetchKeysPreload,
-	fetchKeysSuccess,
-	fetchKeysFailure
+	preloadRequest,
+	preloadSuccess,
+	preloadFailure
 } from './music.actions';
 import {
 	getGenericPayload,
@@ -87,47 +84,23 @@ export class MusicEffects implements OnInitEffects {
 		)
 	);
 
-	triggerClefsPreload$ = createEffect(
+	triggerPreload$ = createEffect(
 		() => this.actions$.pipe(
-			ofType(musicEffectsInit, fetchClefsFailure),
-			switchMap((details) => of(fetchClefsPreload (getGenericPayload())))
+			ofType(musicEffectsInit, preloadFailure),
+			switchMap((details) => of(preloadRequest (getGenericPayload())))
 		)
 	);
 
-	fetchClefs$ = createEffect(
+	preload$ = createEffect(
 		() => this.actions$.pipe(
-			ofType(fetchClefsPreload),
-			switchMap((details) => this.service.getClefList().pipe(
+			ofType(preloadRequest),
+			switchMap((details) => this.service.getPreload().pipe(
 					map(data => {
-						return fetchClefsSuccess(
+						return preloadSuccess(
 							getRequestSuccess(details, data)
 						);
 					}),
-					catchError(err => of(fetchClefsFailure(
-						getRequestFailure(details, err)
-					)).pipe(delay(this.config.retryTime!!)))
-				)
-			)
-		)
-	);
-
-	triggerKeysPreload$ = createEffect(
-		() => this.actions$.pipe(
-			ofType(fetchClefsSuccess, fetchKeysFailure),
-			switchMap((details) => of(fetchKeysPreload (getGenericPayload())))
-		)
-	);
-
-	fetchKeys$ = createEffect(
-		() => this.actions$.pipe(
-			ofType(fetchKeysPreload),
-			switchMap((details) => this.service.getKeysList().pipe(
-					map(data => {
-						return fetchKeysSuccess(
-							getRequestSuccess(details, data)
-						);
-					}),
-					catchError(err => of(fetchKeysFailure(
+					catchError(err => of(preloadFailure(
 						getRequestFailure(details, err)
 					)).pipe(delay(this.config.retryTime!!)))
 				)

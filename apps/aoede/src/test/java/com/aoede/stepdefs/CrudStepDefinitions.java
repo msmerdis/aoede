@@ -56,6 +56,13 @@ public class CrudStepDefinitions extends BaseStepDefinition {
 		latestResults = executeGet (path, defaultHeaders());
 	}
 
+	@When("request {string} from aoede as {string}")
+	public void getRequest(String path, String json) {
+		getRequest (path);
+
+		jsonService.put(json, JsonParser.parseString(latestResults.body));
+	}
+
 	@When("request {string} from aoede as plain text")
 	public void getPlainTextRequest(String path) {
 		HttpHeaders headers = defaultHeaders ();

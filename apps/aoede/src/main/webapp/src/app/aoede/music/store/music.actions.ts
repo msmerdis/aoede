@@ -1,8 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 
 import { Sheet } from '../model/sheet.model';
-import { Clef } from '../model/clef.model';
-import { KeySignature } from '../model/key-signature.model';
+import { Preload } from '../model/preload.model';
 import {
 	ApiGeneric,
 	ApiRequest,
@@ -20,10 +19,6 @@ export const fetchSheetListRequest = createAction('[Music] Fetch Sheet List Requ
 export const fetchSheetListSuccess = createAction('[Music] Fetch Sheet List Success', props<ApiSuccess<Sheet[]>>());
 export const fetchSheetListFailure = createAction('[Music] Fetch Sheet List Failure', props<ApiFailure>());
 
-export const fetchClefsPreload = createAction('[Music] Fetch Clefs Preload', props<ApiGeneric>());
-export const fetchClefsSuccess = createAction('[Music] Fetch Clefs Success', props<ApiSuccess<Clef[]>>());
-export const fetchClefsFailure = createAction('[Music] Fetch Clefs Failure', props<ApiFailure>());
-
-export const fetchKeysPreload = createAction('[Music] Fetch Keys Preload', props<ApiGeneric>());
-export const fetchKeysSuccess = createAction('[Music] Fetch Keys Success', props<ApiSuccess<KeySignature[]>>());
-export const fetchKeysFailure = createAction('[Music] Fetch Keys Failure', props<ApiFailure>());
+export const preloadRequest = createAction('[Music] Preload Request', props<ApiGeneric>());
+export const preloadSuccess = createAction('[Music] Preload Success', props<ApiSuccess<Preload>>());
+export const preloadFailure = createAction('[Music] Preload Failure', props<ApiFailure>());
