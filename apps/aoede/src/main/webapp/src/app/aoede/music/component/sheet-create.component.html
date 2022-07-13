@@ -16,29 +16,33 @@
 		<input id="tempo" type="text" [formControl]="tempo"  placeholder="Ex. 120" />
 		<br />
 		<label for="key">Key Signature</label>
-		<select id="key" [formControl]="key">
-			<option
-				*ngFor="let k of keysList$ | async"
-				[selected]="k.id == key.value"
-				value="{{ k.id }}"
-			>{{ minor ? k.minor : k.major }}</option>
-		</select>
-		Minor : <input type="checkbox" #showMinor value="0" (change)="minor = showMinor.checked" />
+		<span>
+			<select id="key" [formControl]="key">
+				<option
+					*ngFor="let k of keysList$ | async"
+					[selected]="k.id == key.value"
+					value="{{ k.id }}"
+				>{{ minor ? k.minor : k.major }}</option>
+			</select>
+			Minor : <input type="checkbox" #showMinor value="0" (change)="minor = showMinor.checked" style="border : 1px solid red" />
+		</span>
 		<br />
 		<label for="timeNum">Time Signature</label>
-		<select id="timeNum" [formControl]="timeNum">
-			<option
-				*ngFor="let num of [2,3,4,6,7,8,9,10,11,12,13,14,15,16]"
-				[selected]="num == timeNum.value"
-			>{{ num }}</option>
-		</select>
-		/
-		<select id="timeDen" [formControl]="timeDen">
-			<option
-				*ngFor="let num of [2,4,8,16]"
-				[selected]="num == timeDen.value"
-			>{{ num }}</option>
-		</select>
+		<span class="fraction">
+			<select id="timeNum" [formControl]="timeNum">
+				<option
+					*ngFor="let num of [2,3,4,6,7,8,9,10,11,12,13,14,15,16]"
+					[selected]="num == timeNum.value"
+				>{{ num }}</option>
+			</select>
+			/
+			<select id="timeDen" [formControl]="timeDen">
+				<option
+					*ngFor="let num of [2,4,8,16]"
+					[selected]="num == timeDen.value"
+				>{{ num }}</option>
+			</select>
+		</span>
 		<br />
 		<button type="submit">Submit</button>
 	</fieldset>

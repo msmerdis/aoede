@@ -55,7 +55,7 @@ export class MusicEffects implements OnInitEffects {
 						);
 					}),
 					catchError(err => of(fetchSheetFailure(
-						getRequestFailure(details, err)
+						getRequestFailure(details, err.error)
 					)))
 				)
 			)
@@ -77,7 +77,7 @@ export class MusicEffects implements OnInitEffects {
 						);
 					}),
 					catchError(err => of(fetchSheetFailure(
-						getRequestFailure(details, err)
+						getRequestFailure(details, err.error)
 					)))
 				)
 			)
@@ -101,7 +101,7 @@ export class MusicEffects implements OnInitEffects {
 						);
 					}),
 					catchError(err => of(preloadFailure(
-						getRequestFailure(details, err)
+						getRequestFailure(details, err.error)
 					)).pipe(delay(this.config.retryTime!!)))
 				)
 			)

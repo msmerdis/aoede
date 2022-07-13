@@ -1,9 +1,21 @@
 * {
 	width: auto;
-	margin: 0;
-	border: 0;
-	padding: 0;
+	border:0px;
+	margin:0px;
+	padding:0px;
+	outline:0px;
+	border-spacing:0px;
 	text-align: center;
+}
+
+body {
+	padding:1px;
+}
+hr {
+	height:1px;
+}
+input, fieldset, hr, select, textarea {
+	border:1px solid;
 }
 
 body * {
@@ -26,3 +38,4 @@ body * {
 	background-color: $warning-bg-colour;
 	color: $warning-fg-colour;
 }
+

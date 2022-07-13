@@ -68,7 +68,7 @@ export class UserEffects {
 					)
 				}),
 				catchError(err => of(keepAliveFailure(
-					getRequestFailure(details, err)
+					getRequestFailure(details, err.error)
 				)))
 			))
 		)
@@ -90,7 +90,7 @@ export class UserEffects {
 						);
 					}),
 					catchError(err => of(keepAliveFailure(
-						getRequestFailure(details, err)
+						getRequestFailure(details, err.error)
 					)))
 				);
 			})

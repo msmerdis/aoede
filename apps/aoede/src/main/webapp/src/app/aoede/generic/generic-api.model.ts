@@ -1,7 +1,22 @@
+export interface ApiErrorInfo {
+	type : string;
+	text : string;
+};
+
+export interface ApiValidation {
+	name  : string;
+	field : string;
+	value : string;
+	error : string;
+};
+
 export interface ApiError {
 	code : number;
 	text : string;
 	desc : string;
+
+	info?        : ApiErrorInfo[];
+	validations? : ApiValidation[]
 };
 
 export interface ApiGeneric {

@@ -1,8 +1,95 @@
 fieldset {
-	width: 360px;
-	border: 1px dotted black;
-	margin: 20px auto 40px auto;
+	margin  : 16px auto 32px;
+	padding : 16px;
+	width   : 482px;
+	border  : 2px dotted;
 }
-label, input {
-	border: 1px dotted green;
+fieldset {
+	label {
+		display        : inline-block;
+		width          : 160px;
+		margin-bottom  : 4px;
+		vertical-align : top;
+	}
+	input, textarea, select, span {
+		display       : inline-block;
+		width         : 320px;
+		margin-bottom : 4px;
+	}
+	div.error {
+		margin-bottom : 4px;
+	}
+	span.checks span, span.choices span {
+		display     : inline-block;
+		width       : 300px;
+		margin-left : 2px;
+	}
+	input[type=checkbox] {
+		width        : 16px;
+		margin-right : 0px;
+	}
+	span.checks input[type=radio], span.checks input[type=checkbox] {
+		width        : 16px;
+		margin-right : 0px;
+	}
+	span {
+		text-align: left;
+	}
+	span.time select,
+	span.date select,
+	span.date input {
+		display : inline-block;
+		width   : 100px;
+		margin  : 0px 6px 0px 0px;
+	}
+	span.fraction select {
+		display : inline-block;
+		width   : 64px;
+		margin  : 0px 6px 0px 0px;
+	}
+	input[type=hidden] {
+		display : none;
+	}
+	textarea {
+		height : 100px;
+	}
+	input[type=button], input[type=submit], input[type=reset] {
+		width         : auto;
+		margin-bottom : 0px;
+		margin-right  : 2px;
+	}
+	*:focus {
+		border-style : dotted;
+	}
+	pre {
+		font-style    : italic;
+		font-size     : 11px;
+		display       : inline-block;
+		width         : 320px;
+		margin-bottom : 4px;
+		margin-left   : 160px;
+		white-space   : pre-wrap;      /* css-3 */
+		white-space   : -moz-pre-wrap; /* Mozilla, since 1999 */
+		white-space   : -pre-wrap;     /* Opera 4-6 */
+		white-space   : -o-pre-wrap;   /* Opera 7 */
+		word-wrap     : break-word;    /* Internet Explorer 5.5+ */
+	}
+	pre span {
+		text-align:right;
+		margin:0px;
+	}
+	a {
+		display:block;
+		padding:4px;
+		text-align:center;
+		border-width:2px 0 2px 0;
+		border-style:solid;
+		margin-bottom:4px;
+	}
+	a.hide {
+		display:none;
+	}
+	hr {
+		margin-bottom:8px;
+	}
 }

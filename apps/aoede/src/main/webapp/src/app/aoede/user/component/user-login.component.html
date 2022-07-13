@@ -1,14 +1,15 @@
 <form (ngSubmit)="onSubmit()">
 	<fieldset>
 		<legend>User Login</legend>
+
 		<label for="username">Username</label>
 		<input id="username" type="text" placeholder="Username" [formControl]="username" />
-		<div>{{ usernameError }}</div>
-		<br />
+		<div *ngIf="usernameError != ''" class="error">{{ usernameError }}</div>
+
 		<label for="password">Password</label>
 		<input id="password" type="password" placeholder="Password" [formControl]="password" />
-		<div>{{ passwordError }}</div>
-		<br />
+		<div *ngIf="passwordError != ''" class="error">{{ passwordError }}</div>
+
 		<button type="submit">Login</button>
 	</fieldset>
 </form>
