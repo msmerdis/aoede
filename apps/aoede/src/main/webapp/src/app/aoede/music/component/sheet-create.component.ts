@@ -8,7 +8,7 @@ import { KeySignature } from '../model/key-signature.model';
 import { Tempo } from '../model/tempo.model';
 
 import { MusicState } from '../store/music.reducer';
-import { getClefsValue, getKeysValue, getTemposValue } from '../store/music.selectors';
+import { getClefs, getKeys, getTempos } from '../store/music.selectors';
 
 @Component({
 	selector: 'aoede-music-sheet-create',
@@ -34,9 +34,9 @@ export class SheetCreateComponent implements OnInit {
 	constructor(
 		private store : Store<MusicState>
 	) {
-		this.clefList$  = this.store.select (getClefsValue);
-		this.keysList$  = this.store.select (getKeysValue);
-		this.tempoList$ = this.store.select (getTemposValue);
+		this.clefList$  = this.store.select (getClefs);
+		this.keysList$  = this.store.select (getKeys);
+		this.tempoList$ = this.store.select (getTempos);
 
 		this.updateTempo ();
 	}

@@ -27,18 +27,14 @@ import {
 export interface MusicState {
 	sheet     : StateData<Sheet>;
 	sheetList : StateData<Sheet[]>;
-	clefList  : StateData<Clef[]>;
-	keys      : StateData<KeySignature[]>;
-	tempoList : StateData<Tempo[]>;
+	preload   : StateData<Preload>;
 }
 
 export const musicFeatureKey : string = 'aoedeMusicState';
 export const musicInitialState : MusicState = {
 	sheet     : initialStateData,
 	sheetList : initialStateData,
-	clefList  : initialStateData,
-	keys      : initialStateData,
-	tempoList : initialStateData
+	preload   : initialStateData,
 };
 
 function doFetchSheetSuccess (state : MusicState, data : ApiSuccess<Sheet>) : MusicState {
@@ -72,17 +68,14 @@ function doFetchSheetListFailure (state : MusicState, data : ApiFailure) : Music
 function doPreloadSuccess (state : MusicState, data : ApiSuccess<Preload>) : MusicState {
 	return {
 		...state,
-		clefList  : getSuccessStateData (getRequestSuccess(data, data.success.clefList)),
-		keys      : getSuccessStateData (getRequestSuccess(data, data.success.keysList)),
-		tempoList : getSuccessStateData (getRequestSuccess(data, data.success.tempoList))
+		preload : getSuccessStateData (data)
 	};
 }
 
 function doPreloadFailure (state : MusicState, data : ApiFailure) : MusicState {
 	return {
 		...state,
-		clefList : getFailureStateData (data),
-		keys     : getFailureStateData (data)
+		preload : getFailureStateData (data)
 	};
 }
 

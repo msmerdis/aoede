@@ -16,7 +16,7 @@ import { MusicState } from '../store/music.reducer';
 import { fetchSheetRequest } from '../store/music.actions';
 import {
 	getClef,
-	getKeySignature,
+	getKey,
 	getSheetValueSafe
 } from '../store/music.selectors';
 import { getRequestPayload } from '../../generic/generic-store.model';
@@ -140,7 +140,7 @@ export class SheetComponent implements OnInit, OnDestroy {
 
 		return combineLatest(
 			this.store.select(getClef, track.clef),
-			this.store.select(getKeySignature, track.keySignature),
+			this.store.select(getKey, track.keySignature),
 			(clef : Clef | null, key : KeySignature | null) => {
 				return {
 					title         : sheet.name,

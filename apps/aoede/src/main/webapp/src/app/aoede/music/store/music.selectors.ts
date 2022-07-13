@@ -2,6 +2,7 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { MusicState, musicFeatureKey } from './music.reducer';
 import { Sheet } from '../model/sheet.model';
+import { Preload } from '../model/preload.model';
 import { Clef } from '../model/clef.model';
 import { Tempo } from '../model/tempo.model';
 import { KeySignature } from '../model/key-signature.model';
@@ -26,38 +27,29 @@ export const getSheetListValue = createSelector(getSheetList,  (state: StateData
 export const getSheetListError = createSelector(getSheetList,  (state: StateData<Sheet[]>): ApiError | null => state.error);
 export const getSheetListUTime = createSelector(getSheetList,  (state: StateData<Sheet[]>): number          => state.utime);
 
-export const getClefs      = createSelector(getMusicState, (state: MusicState): StateData<Clef[]> => state.clefList);
-export const getClefsReady = createSelector(getClefs,      (state: StateData<Clef[]>): boolean         => state.ready);
-export const getClefsValue = createSelector(getClefs,      (state: StateData<Clef[]>): Clef[]   | null => state.value);
-export const getClefsError = createSelector(getClefs,      (state: StateData<Clef[]>): ApiError | null => state.error);
-export const getClefsUTime = createSelector(getClefs,      (state: StateData<Clef[]>): number          => state.utime);
+export const getPreloadData  = createSelector(getMusicState,  (state: MusicState): StateData<Preload> => state.preload);
+export const getPreloadReady = createSelector(getPreloadData, (state: StateData<Preload>): boolean         => state.ready);
+export const getPreloadValue = createSelector(getPreloadData, (state: StateData<Preload>): Preload  | null => state.value);
+export const getPreloadError = createSelector(getPreloadData, (state: StateData<Preload>): ApiError | null => state.error);
+export const getPreloadUTime = createSelector(getPreloadData, (state: StateData<Preload>): number          => state.utime);
 
 function findClef (clefs : Clef[], clef : string) : Clef | null {
 	return clefs.length > 0 ? clefs.find(c => c.id == clef) || null : null;
 };
 
-export const getClef = createSelector(getClefsValue, (clefs : Clef[] | null, clef : string): Clef | null => clefs === null ? null : findClef(clefs, clef));
-
-export const getKeys      = createSelector(getMusicState, (state: MusicState): StateData<KeySignature[]> => state.keys);
-export const getKeysReady = createSelector(getKeys,       (state: StateData<KeySignature[]>): boolean               => state.ready);
-export const getKeysValue = createSelector(getKeys,       (state: StateData<KeySignature[]>): KeySignature[] | null => state.value);
-export const getKeysError = createSelector(getKeys,       (state: StateData<KeySignature[]>): ApiError       | null => state.error);
-export const getKeysUTime = createSelector(getKeys,       (state: StateData<KeySignature[]>): number                => state.utime);
+export const getClefs = createSelector(getPreloadValue, (data  : Preload | null               ): Clef[] | null => data  === null ? null : data.clefList);
+export const getClef  = createSelector(getClefs,        (clefs : Clef[]  | null, clef : string): Clef   | null => clefs === null ? null : findClef(clefs, clef));
 
 function findKey (keys : KeySignature[], key : number) : KeySignature | null {
 	return keys.length > 0 ? keys.find(k => k.id == key) || null : null;
 };
 
-export const getKeySignature = createSelector(getKeysValue, (keys : KeySignature[] | null, key : number): KeySignature | null => keys === null ? null : findKey(keys, key));
-
-export const getTempos      = createSelector(getMusicState, (state: MusicState): StateData<Tempo[]> => state.tempoList);
-export const getTemposReady = createSelector(getTempos,     (state: StateData<Tempo[]>): boolean         => state.ready);
-export const getTemposValue = createSelector(getTempos,     (state: StateData<Tempo[]>): Tempo[]  | null => state.value);
-export const getTemposError = createSelector(getTempos,     (state: StateData<Tempo[]>): ApiError | null => state.error);
-export const getTemposUTime = createSelector(getTempos,     (state: StateData<Tempo[]>): number          => state.utime);
+export const getKeys = createSelector(getPreloadValue, (data : Preload        | null              ): KeySignature[] | null => data === null ? null : data.keysList);
+export const getKey  = createSelector(getKeys,         (keys : KeySignature[] | null, key : number): KeySignature   | null => keys === null ? null : findKey(keys, key));
 
 function findTempo (tempos : Tempo[], tempo : string) : Tempo | null {
 	return tempos.length > 0 ? tempos.find(t => t.id == tempo) || null : null;
 };
 
-export const getTempo = createSelector(getTemposValue, (tempos : Tempo[] | null, tempo : string): Tempo | null => tempos === null ? null : findTempo(tempos, tempo));
+export const getTempos = createSelector(getPreloadValue, (data   : Preload | null                ): Tempo[] | null => data   === null ? null : data.tempoList);
+export const getTempo  = createSelector(getTempos,       (tempos : Tempo[] | null, tempo : string): Tempo   | null => tempos === null ? null : findTempo(tempos, tempo));

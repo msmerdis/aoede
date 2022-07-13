@@ -7,7 +7,7 @@ import { Sheet } from '../model/sheet.model';
 import { KeySignature } from '../model/key-signature.model';
 import { MusicState } from '../store/music.reducer';
 import { fetchSheetListRequest } from '../store/music.actions';
-import { getSheetListValue, getKeysValue } from '../store/music.selectors';
+import { getSheetListValue, getKeys } from '../store/music.selectors';
 import { getGenericPayload } from '../../generic/generic-store.model';
 
 
@@ -34,7 +34,7 @@ export class SheetResultComponent implements OnInit {
 			fetchSheetListRequest(getGenericPayload())
 		);
 
-		this.store.select(getKeysValue).pipe(
+		this.store.select(getKeys).pipe(
 			filter(keys => keys ? keys.length > 0 : false),
 			take(1),
 		).subscribe(keys => this.keysList = (keys || []));
