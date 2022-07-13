@@ -1,8 +1,9 @@
+import { Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { tap, map, filter, switchMap } from 'rxjs/operators';
+import { take, tap, map, filter, switchMap } from 'rxjs/operators';
 
 import { Sheet } from '../model/sheet.model';
 import { MusicState } from '../store/music.reducer';
@@ -19,16 +20,24 @@ export class SheetModifyComponent {
 
 	private id    : number = 0;
 	public sheet$ : Observable<Sheet | null>;
+	public track  : number = 0;
+
+	private modified : boolean = false;
 
 	constructor(
 		private store  : Store<MusicState>,
+		private loc    : Location,
+		private router : Router,
 		private route  : ActivatedRoute
 	) {
 		this.sheet$ = this.route.params.pipe (
+			take(1),
 			map(params => +params['sheet']),
 			tap(id => this.dispatch(id)),
 			switchMap(id => this.store.select (getSheetValueSafe, id))
-		)
+		);
+
+		this.track = +this.route.snapshot.params['track']-1 || 0;
 	}
 
 	private dispatch(id : number) {
@@ -39,6 +48,19 @@ export class SheetModifyComponent {
 		this.store.dispatch (fetchSheetRequest(
 			getRequestPayload<number>(id)
 		));
+	}
+
+	public updateTrack (track : number) : void {
+		const url = this
+			.router
+			.createUrlTree(['../', track + 1], {relativeTo: this.route})
+			.toString();
+
+		this.loc.go(url);
+	}
+
+	public updateModified (modified : boolean) : void {
+		this.modified = modified;
 	}
 
 }

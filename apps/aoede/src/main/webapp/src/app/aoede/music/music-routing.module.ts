@@ -9,7 +9,8 @@ const routes: Routes = [
 	{ path: '', redirectTo: 'sheet/result', pathMatch: 'full'},
 	{ path: 'sheet/create', component: SheetCreateComponent },
 	{ path: 'sheet/result', component: SheetResultComponent },
-	{ path: 'sheet/:sheet', component: SheetModifyComponent }
+	{ path: 'sheet/:sheet', component: SheetModifyComponent },
+	{ path: 'sheet/:sheet/track/:track', component: SheetModifyComponent }
 ];
 
 @NgModule({

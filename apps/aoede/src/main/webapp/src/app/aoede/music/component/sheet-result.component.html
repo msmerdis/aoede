@@ -1,9 +1,34 @@
-<table *ngIf="(sheetList$ | async)?.length!! > 0">
-	<tr *ngFor="let sheet of sheetList$ | async; index as i" [routerLink]="['../', sheet.id]">
-		<td>{{ i + 1 }}</td>
-		<td>{{ sheet.id }}</td>
-		<td>{{ sheet.name }}</td>
-	</tr>
-</table>
-<div *ngIf="(sheetList$ | async) === null">Loading</div>
-<div *ngIf="(sheetList$ | async)?.length!! == 0">Nothing to see here</div>
+<div class="box">
+	<table *ngIf="(sheetList$ | async) !== null">
+		<tr>
+			<th>#</th>
+			<th>Id</th>
+			<th>Name</th>
+			<th>Track</th>
+			<th>Clef</th>
+			<th>Tempo</th>
+			<th>Key</th>
+			<th>Time</th>
+		</tr>
+		<ng-container *ngFor="let sheet of sheetList$ | async; index as i">
+			<ng-container *ngFor="let track of sheet.tracks; index as j">
+				<tr [routerLink]="['../', sheet.id, 'track', j + 1]">
+					<ng-container *ngIf="j == 0">
+						<td [attr.rowspan]="sheet.tracks.length">{{ i + 1 }}</td>
+						<td [attr.rowspan]="sheet.tracks.length">{{ sheet.id }}</td>
+						<td [attr.rowspan]="sheet.tracks.length">{{ sheet.name }}</td>
+					</ng-container>
+					<td>{{ track.name || j + 1 }}</td>
+					<td>{{ track.clef }}</td>
+					<td>{{ track.tempo }}</td>
+					<td>{{ track.keySignature }}</td>
+					<td>{{ track.timeSignature.numerator }} / {{ track.timeSignature.numerator }}</td>
+				</tr>
+			</ng-container>
+		</ng-container>
+		<tr *ngIf="(sheetList$ | async)?.length!! == 0">
+			<td colspan="3" style="text-align: center">Nothing to see here</td>
+		</tr>
+	</table>
+	<div *ngIf="(sheetList$ | async) === null">Loading</div>
+</div>

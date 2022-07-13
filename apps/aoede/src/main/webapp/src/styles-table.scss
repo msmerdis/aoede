@@ -1,0 +1,31 @@
+div.table {
+	margin:0px 32px 0px 32px;
+}
+table {
+	width:100%;
+	margin:auto;
+	padding:0px;
+	border-spacing:0px;
+}
+table tr {
+	margin:0px;
+	padding:0px;
+	border-spacing:0px;
+}
+td, th {
+	text-align:center;
+	margin:0px;
+	padding:0px;
+	border-spacing:0px;
+	border-bottom:1px solid;
+}
+tr:hover td {
+	border-bottom:1px dotted;
+}
+div.actions {
+	margin-top:8px;
+	margin-bottom:8px;
+}
+div.actions * {
+	margin-left:8px;
+}

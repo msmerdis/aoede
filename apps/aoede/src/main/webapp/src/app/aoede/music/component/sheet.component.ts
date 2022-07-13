@@ -1,5 +1,6 @@
-import { Component, ViewChild, ElementRef, ChangeDetectorRef, Input, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
+import { Component, ViewChild, ElementRef, ChangeDetectorRef, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription, Observable, of, combineLatest, throwError } from 'rxjs';
 import { tap, map, take, filter, switchMap } from 'rxjs/operators';
 
@@ -30,12 +31,16 @@ export class SheetComponent implements OnInit, OnDestroy {
 	@Input() sheet$     : Observable<Sheet | null>;
 	@Input() showHeader : boolean = false;
 	@Input() showFooter : boolean = false;
+	@Input() firstTrack : number  = 0;
+
+	@Output() modifiedEvent = new EventEmitter<boolean>();
+	@Output() trackEvent    = new EventEmitter<number> ();
 
 	public modified : boolean = false;
 
 	public tracks : TrackInfo[] = [];
 	public track  : number      = -1;
-	public staves  : number = 0;
+	public staves : number      =  0;
 
 	private context  : CanvasRenderingContext2D | null = null;
 	private sheetSub : Subscription = Subscription.EMPTY;
@@ -51,13 +56,13 @@ export class SheetComponent implements OnInit, OnDestroy {
 	@ViewChild('sCanvas') set content (content: ElementRef) {
 		if (content != null) {
 			this.context = content.nativeElement.getContext('2d');
-			this.drawCanvas ();
 		}
 	}
 
 	constructor(
-		private store  : Store<MusicState>,
-		private cdref  : ChangeDetectorRef
+		private store : Store<MusicState>,
+		private route : ActivatedRoute,
+		private cdref : ChangeDetectorRef
 	) {
 		this.sheet$ = of(null);
 	}
@@ -69,7 +74,7 @@ export class SheetComponent implements OnInit, OnDestroy {
 				if (sheet === null) {
 					this.tracks = [];
 					this.track  = -1;
-					this.staves  =  0;
+					this.staves =  0;
 					return;
 				}
 
@@ -80,13 +85,13 @@ export class SheetComponent implements OnInit, OnDestroy {
 				);
 
 				if (this.tracks.length == 0) {
-					this.track = -1;
+					this.track  = -1;
 					this.staves =  0;
 					return;
 				}
 
-				// by default display the first track
-				this.updateTrack(0);
+				// display the first track
+				this.updateTrack(this.firstTrack < this.tracks.length ? this.firstTrack : 0);
 			});
 	}
 
@@ -191,6 +196,7 @@ export class SheetComponent implements OnInit, OnDestroy {
 	public updateTrack (track : number) {
 		if (track < this.tracks.length) {
 			this.track = track;
+			this.trackEvent.emit(track);
 			this.staves = this.tracks[this.track].staves.length;
 			this.drawCanvas ();
 		}
