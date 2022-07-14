@@ -6,47 +6,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aoede.commons.base.exceptions.GenericException;
-import com.aoede.modules.music.service.ClefService;
-import com.aoede.modules.music.service.KeySignatureService;
-import com.aoede.modules.music.service.OctaveService;
-import com.aoede.modules.music.service.TempoService;
+import com.aoede.commons.base.component.BaseComponent;
+import com.aoede.service.AoedeService;
 import com.aoede.transfer.AoedePreload;
 
 @RestController
 @RequestMapping ("/api/aoede")
-public class AoedeController {
+public class AoedeController extends BaseComponent {
 
-	private ClefService         clefService;
-	private TempoService        tempoService;
-	private KeySignatureService keySignatureService;
-	private OctaveService       octaveService;
+	private AoedeService aoedeService;
 
 	public AoedeController (
-		ClefService         clefService,
-		TempoService        tempoService,
-		KeySignatureService keySignatureService,
-		OctaveService       octaveService
+		AoedeService aoedeService
 	) {
-		this.clefService         = clefService;
-		this.tempoService        = tempoService;
-		this.keySignatureService = keySignatureService;
-		this.octaveService       = octaveService;
+		this.aoedeService = aoedeService;
 	}
 
 	@GetMapping("/preload")
 	@ResponseStatus(HttpStatus.OK)
 	public AoedePreload preload() throws Exception {
-		return buildPreloadData ();
-	}
+		AoedePreload data = aoedeService.buildPreloadData ();
 
-	private AoedePreload buildPreloadData () throws GenericException {
-		return new AoedePreload (
-			clefService.findAll(),
-			tempoService.findAll(),
-			keySignatureService.findAll(),
-			octaveService.findAll()
-		);
+		if (!aoedeService.buildPreloadDate().equals(data.getCreated())) {
+			aoedeService.clearPreloadData();
+			data = aoedeService.buildPreloadData ();
+		}
+
+		return data;
 	}
 
 }
