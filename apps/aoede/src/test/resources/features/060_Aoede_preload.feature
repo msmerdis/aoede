@@ -1,12 +1,17 @@
-@Aoede @Regression
-Feature: Aoede functionality
-### Aoede specific api
+@Aoede @Preload @Regression
+Feature: Aoede preload functionality
+### Aoede preload specific api
+
+Background: Request preload data
+
+Given request "/api/aoede/preload" from aoede as "preload"
+Then the aoede response has a status code of 200
 
 @TC060001
 @Positive
-Scenario: request all information required to initialize the front end
+Scenario: verify clef in preload info
 
-Given prepare data table "clefObject"
+When prepare data table "clefObject"
 	| id            | type   | note    | spos    |
 	| string        | string | integer | integer |
 And prepare json array "clefs" of "clefObject"
@@ -20,7 +25,13 @@ And prepare json array "clefs" of "clefObject"
 	| Baritone      |  F     |  53     |   0     |
 	| Bass          |  F     |  53     |   2     |
 	| Subbass       |  F     |  53     |   4     |
-And prepare data table "keySignatureObject"
+Then "preload" json object's "clefList" element matches "clefs" as "json"
+
+@TC060002
+@Positive
+Scenario: verify keys in preload info
+
+When prepare data table "keySignatureObject"
 	| id      | major  | minor  |
 	| integer | string | string |
 And prepare json array "keys" of "keySignatureObject"
@@ -40,7 +51,13 @@ And prepare json array "keys" of "keySignatureObject"
 	|  5      |   B    |   g+   |
 	|  6      |   F+   |   d+   |
 	|  7      |   C+   |   a+   |
-And prepare data table "tempoObject"
+Then "preload" json object's "keysList" element matches "keys" as "json"
+
+@TC060003
+@Positive
+Scenario: verify tempos in preload info
+
+When prepare data table "tempoObject"
 	| id               | desc                                 | minTempo | stdTempo | maxTempo |
 	| string           | string                               | number   | number   | number   |
 And prepare json array "tempo" of "tempoObject"
@@ -67,7 +84,13 @@ And prepare json array "tempo" of "tempoObject"
 	| Allegrissimo     | very fast                            | 172      | 174      | 176      |
 	| Presto           | very, very fast                      | 168      | 184      | 200      |
 	| Prestissimo      | even faster than presto              | 200      | 200      | 512      |
-And prepare data table "octaveObject"
+And "preload" json object's "tempoList" element matches "tempo" as "json"
+
+@TC060004
+@Positive
+Scenario: verify tempos in preload info
+
+When prepare data table "octaveObject"
 	|   id   | name         | pitch  |
 	| number | string       | number |
 And prepare json array "octave" of "octaveObject"
@@ -83,9 +106,4 @@ And prepare json array "octave" of "octaveObject"
 	|    7   |   four-lined |   96  |
 	|    8   |   five-lined |  108  |
 	|    9   |    six-lined |  120  |
-When request "/api/aoede/preload" from aoede as "preload"
-Then the aoede response has a status code of 200
-And "preload" json object's "clefList" element matches "clefs" as "json"
-And "preload" json object's "keysList" element matches "keys" as "json"
-And "preload" json object's "tempoList" element matches "tempo" as "json"
-And "preload" json object's "octaveList" element matches "octave" as "json"
+Then "preload" json object's "octaveList" element matches "octave" as "json"

@@ -2,8 +2,6 @@
 Feature: Basic Sheet CRUD functionality
 ### Verify the ability to create/read/update and delete Sheets
 
-Background: Log user in
-
 Background: Setup validation info table
 
 Given prepare data table "validationInfo"
