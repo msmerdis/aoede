@@ -58,7 +58,7 @@
 	</Appenders>
 
 	<Loggers>
-		<AsyncLogger name="com.aoede" level="warn" additivity="false">
+		<AsyncLogger name="com.aoede" level="trace" additivity="false">
 			<AppenderRef ref="ConsoleAppender"/>
 			<AppenderRef ref="DefaultAppender"/>
 		</AsyncLogger>

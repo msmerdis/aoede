@@ -67,9 +67,25 @@ And prepare json array "tempo" of "tempoObject"
 	| Allegrissimo     | very fast                            | 172      | 174      | 176      |
 	| Presto           | very, very fast                      | 168      | 184      | 200      |
 	| Prestissimo      | even faster than presto              | 200      | 200      | 512      |
+And prepare data table "octaveObject"
+	|   id   | name         | pitch  |
+	| number | string       | number |
+And prepare json array "octave" of "octaveObject"
+	|   id   |         name | pitch |
+	|   -1   | subsubcontra |    0  |
+	|    0   |   sub-contra |   12  |
+	|    1   |       contra |   24  |
+	|    2   |        great |   36  |
+	|    3   |        small |   48  |
+	|    4   |    one-lined |   60  |
+	|    5   |    two-lined |   72  |
+	|    6   |  three-lined |   84  |
+	|    7   |   four-lined |   96  |
+	|    8   |   five-lined |  108  |
+	|    9   |    six-lined |  120  |
 When request "/api/aoede/preload" from aoede as "preload"
 Then the aoede response has a status code of 200
 And "preload" json object's "clefList" element matches "clefs" as "json"
 And "preload" json object's "keysList" element matches "keys" as "json"
 And "preload" json object's "tempoList" element matches "tempo" as "json"
-
+And "preload" json object's "octaveList" element matches "octave" as "json"
