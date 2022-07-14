@@ -36,8 +36,6 @@ public class AoedeServiceImpl extends BaseComponent implements AoedeService {
 
 	@Cacheable(value = "aoede", key = "#root.methodName")
 	public AoedePreload buildPreloadData () throws GenericException {
-		logger.error(" ----------------------");
-		logger.error(" -> buildPreloadData <-");
 		return new AoedePreload (
 			clefService.findAll(),
 			tempoService.findAll(),
