@@ -75,7 +75,7 @@ export class UserInterceptor implements HttpInterceptor {
 			})
 		);
 	}
-	/*
+
 	private refreshTokenBeforeRequest (req: HttpRequest<any>, next: HttpHandler, now : number) : Observable<HttpEvent<any>> {
 		return combineLatest(
 			this.store.select(getAuthToken),
@@ -88,6 +88,8 @@ export class UserInterceptor implements HttpInterceptor {
 			}
 		)
 		.pipe (
+			take(1),
+
 			// check if an update on the authentication data should occure
 			map ((auth) => {
 				return {
@@ -97,11 +99,12 @@ export class UserInterceptor implements HttpInterceptor {
 			}),
 
 			// in case data need to be updated, dispatch the action
-			tap ((auth) => auth.refresh && this.store.dispatch(keepAliveRequest())),
+			tap ((auth) => auth.refresh && this.store.dispatch(keepAliveRequest(getGenericPayload()))),
 
 			// select the correct token to use
 			switchMap((auth) => {
 				if (auth.refresh) {
+					console.log("waiting for auth token");
 					return this.store.select(getAuthToken).pipe(skip(1));
 				}
 				return of (auth.token);
@@ -111,12 +114,12 @@ export class UserInterceptor implements HttpInterceptor {
 			switchMap ((token) => {
 				console.log("inject auth token " + token + " to " + req.url);
 				const apiReq = req.clone({
-					headers: req.headers.set(this.config.authToken!!, token)
+					headers: req.headers.set(this.config.authToken!!, token || "")
 				});
 				return next.handle(apiReq);
 			})
 		);
 	}
-	*/
+
 }
 
