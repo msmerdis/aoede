@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.aoede.JsonObjectServiceImplTestCaseSetup;
+import com.aoede.JsonServiceImplTestCaseSetup;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
@@ -17,7 +17,7 @@ import com.google.gson.JsonPrimitive;
 
 import io.cucumber.datatable.DataTable;
 
-public class TestJsonObjectServiceImplGenerateJson extends JsonObjectServiceImplTestCaseSetup {
+public class TestJsonServiceImplGenerateJson extends JsonServiceImplTestCaseSetup {
 
 	@Test
 	public void verifyGenerateSimpleJson () throws Exception {

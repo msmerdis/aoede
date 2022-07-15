@@ -5,13 +5,13 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.aoede.JsonObjectServiceImplTestCaseSetup;
+import com.aoede.JsonServiceImplTestCaseSetup;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-public class TestJsonObjectServiceImplJsonArrayMatches extends JsonObjectServiceImplTestCaseSetup {
+public class TestJsonServiceImplJsonArrayMatches extends JsonServiceImplTestCaseSetup {
 
 	@Test
 	public void verifyJsonArrayMatchPrimitive () throws Exception {

@@ -6,9 +6,9 @@ import java.lang.reflect.Method;
 
 import org.junit.Test;
 
-import com.aoede.JsonObjectServiceImplTestCaseSetup;
+import com.aoede.JsonServiceImplTestCaseSetup;
 
-public class TestJsonObjectServiceImplRandom extends JsonObjectServiceImplTestCaseSetup {
+public class TestJsonServiceImplRandom extends JsonServiceImplTestCaseSetup {
 
 	@Test
 	public void generateRandomString4 () throws Exception {

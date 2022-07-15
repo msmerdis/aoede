@@ -7,11 +7,11 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.aoede.JsonObjectServiceImplTestCaseSetup;
+import com.aoede.JsonServiceImplTestCaseSetup;
 
 import io.cucumber.datatable.DataTable;
 
-public class TestJsonObjectServiceImplUrl extends JsonObjectServiceImplTestCaseSetup {
+public class TestJsonServiceImplUrl extends JsonServiceImplTestCaseSetup {
 
 	@Test
 	public void verifyGenerateUrlSuccess () throws Exception {

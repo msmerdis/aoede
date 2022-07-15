@@ -9,10 +9,10 @@ import java.lang.reflect.Method;
 
 import org.junit.Test;
 
-import com.aoede.JsonObjectServiceImplTestCaseSetup;
+import com.aoede.JsonServiceImplTestCaseSetup;
 import com.google.gson.JsonElement;
 
-public class TestJsonObjectServiceImplGenerateJsonNullElement extends JsonObjectServiceImplTestCaseSetup {
+public class TestJsonServiceImplGenerateJsonNullElement extends JsonServiceImplTestCaseSetup {
 
 	@Test
 	public void generateInt () throws Exception {

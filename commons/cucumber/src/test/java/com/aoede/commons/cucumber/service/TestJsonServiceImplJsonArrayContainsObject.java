@@ -5,12 +5,12 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.aoede.JsonObjectServiceImplTestCaseSetup;
+import com.aoede.JsonServiceImplTestCaseSetup;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-public class TestJsonObjectServiceImplJsonArrayContainsObject extends JsonObjectServiceImplTestCaseSetup {
+public class TestJsonServiceImplJsonArrayContainsObject extends JsonServiceImplTestCaseSetup {
 
 	@Test
 	public void verifyJsonArrayContainsObjectWithId () throws Exception {

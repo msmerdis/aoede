@@ -12,7 +12,7 @@ import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
 import com.aoede.commons.cucumber.service.JsonServiceImpl;
 
 @RunWith(SpringRunner.class)
-public class JsonObjectServiceImplTestCaseSetup extends BaseTestComponent {
+public class JsonServiceImplTestCaseSetup extends BaseTestComponent {
 
 	protected Random random = new Random(0);
 

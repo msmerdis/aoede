@@ -374,6 +374,26 @@ public class TestAbstractTestServiceImpl extends AbstractTestServiceImplTestCase
 		}
 	}
 
+	@Test
+	public void verifyClear() throws Exception {
+		AbstractTestServiceImpl uut = uut ();
+
+		// setup data
+		setField (uut, "success", true);
+		setField (uut, "latestKey", new JsonPrimitive("key"));
+		setField (uut, "latestObj", new JsonObject());
+		setField (uut, "latestArr", new JsonArray());
+		setField (uut, "latestResults", new ResponseResults());
+
+		uut.clear();
+
+		assertEquals ("success field was not cleared correctly", false, getField(uut, "success"));
+		assertEquals ("latestKey field was not cleared correctly", null, getField(uut, "latestKey"));
+		assertEquals ("latestObj field was not cleared correctly", null, getField(uut, "latestObj"));
+		assertEquals ("latestArr field was not cleared correctly", null, getField(uut, "latestArr"));
+		assertEquals ("latestResults field was not cleared correctly", null, getField(uut, "latestResults"));
+	}
+
 	// help functions
 
 	private ResponseResults setupVerifyResults(AbstractTestServiceImpl uut, HttpStatus status, String body) throws Exception {

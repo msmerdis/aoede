@@ -9,10 +9,10 @@ import java.math.BigInteger;
 
 import org.junit.Test;
 
-import com.aoede.JsonObjectServiceImplTestCaseSetup;
+import com.aoede.JsonServiceImplTestCaseSetup;
 import com.google.gson.JsonObject;
 
-public class TestJsonObjectServiceImplBuildFraction extends JsonObjectServiceImplTestCaseSetup {
+public class TestJsonServiceImplBuildFraction extends JsonServiceImplTestCaseSetup {
 
 	@Test
 	public void buildFraction () throws Exception {

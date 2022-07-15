@@ -210,7 +210,7 @@ public class TestUpdateRequestStepDefinitions extends UpdateRequestStepDefinitio
 
 		ResponseResults results = stubRequestCall(uut, service, HttpStatus.OK, HttpMethod.PUT, "", "/b");
 
-		uut.updateWithLatestAndTable("domain", DataTable.emptyDataTable());
+		uut.updateWithLatestEmpty("domain");
 
 		verify(service).updateResults(results);
 	}

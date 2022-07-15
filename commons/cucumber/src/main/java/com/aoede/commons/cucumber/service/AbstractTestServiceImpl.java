@@ -84,6 +84,7 @@ public abstract class AbstractTestServiceImpl extends BaseTestComponent implemen
 
 	@Override
 	public void clear () {
+		success = false;
 		latestKey = null;
 		latestObj = null;
 		latestArr = null;

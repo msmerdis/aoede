@@ -8,12 +8,12 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 
-import com.aoede.JsonObjectServiceImplTestCaseSetup;
+import com.aoede.JsonServiceImplTestCaseSetup;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-public class TestJsonObjectServiceImplGenerateJsonElement extends JsonObjectServiceImplTestCaseSetup {
+public class TestJsonServiceImplGenerateJsonElement extends JsonServiceImplTestCaseSetup {
 
 	@Test
 	public void generateInt () throws Exception {
