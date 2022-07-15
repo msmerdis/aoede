@@ -16,11 +16,14 @@
 	<inceptionYear>2022</inceptionYear>
 
 	<build>
+
 		<plugins>
 			<plugin>
 				<artifactId>maven-remote-resources-plugin</artifactId>
+				<version>1.7.0</version>
 				<executions>
 					<execution>
+						<?m2e execute?>
 						<goals>
 							<goal>bundle</goal>
 						</goals>

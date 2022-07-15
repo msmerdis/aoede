@@ -54,6 +54,7 @@
 		<!-- Plugin versions -->
 		<disruptor-maven-plugin.version>3.4.4</disruptor-maven-plugin.version>
 		<frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
+		<remote-resources-plugin.version>1.7.0</remote-resources-plugin.version>
 
 		<!-- System versions -->
 		<nodejs.version>v16.14.0</nodejs.version>
@@ -272,7 +273,41 @@
 
 				</plugin>
 
+				<!--
+					This plugin's configuration is used to store Eclipse
+					m2e settings only. It has no influence on the Maven build itself.
+				-->
+				<!--
+				<plugin>
+
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<artifactId>maven-remote-resources-plugin</artifactId>
+										<versionRange>[1.7.0)</versionRange>
+										<goals>
+											<goal>bundle</goal>
+											<goal>process</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+
+				</plugin>
+				-->
+
 			</plugins>
+
 		</pluginManagement>
 
 		<!-- Plugins and corresponding configuration used by all modules -->
@@ -338,6 +373,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-remote-resources-plugin</artifactId>
+				<version>${remote-resources-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>load-resources</id>

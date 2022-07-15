@@ -94,16 +94,16 @@ When prepare data table "octaveObject"
 	|   id   | name         | pitch  |
 	| number | string       | number |
 And prepare json array "octave" of "octaveObject"
-	|   id   |         name | pitch |
-	|   -1   | subsubcontra |    0  |
-	|    0   |   sub-contra |   12  |
-	|    1   |       contra |   24  |
-	|    2   |        great |   36  |
-	|    3   |        small |   48  |
-	|    4   |    one-lined |   60  |
-	|    5   |    two-lined |   72  |
-	|    6   |  three-lined |   84  |
-	|    7   |   four-lined |   96  |
-	|    8   |   five-lined |  108  |
-	|    9   |    six-lined |  120  |
+	|   id   |         name | pitch  |
+	|   -1   | subsubcontra |    0   |
+	|    0   |   sub-contra |   12   |
+	|    1   |       contra |   24   |
+	|    2   |        great |   36   |
+	|    3   |        small |   48   |
+	|    4   |    one-lined |   60   |
+	|    5   |    two-lined |   72   |
+	|    6   |  three-lined |   84   |
+	|    7   |   four-lined |   96   |
+	|    8   |   five-lined |  108   |
+	|    9   |    six-lined |  120   |
 Then "preload" json object's "octaveList" element matches "octave" as "json"
