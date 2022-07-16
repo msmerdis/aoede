@@ -39,6 +39,7 @@
 
 	<!-- Dependencies -->
 	<dependencies>
+
 		<!-- You can easily generate your own configuration metadata file from items annotated with
 		@ConfigurationProperties by using the spring-boot-configuration-processor jar. The jar includes a Java
 		annotation processor which is invoked as your project is compiled. -->
@@ -117,7 +118,14 @@
 	</dependencies>
 
 	<build>
+
 		<plugins>
+
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${spring-boot.version}</version>
+			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

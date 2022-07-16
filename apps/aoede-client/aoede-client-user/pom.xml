@@ -10,7 +10,7 @@
 		<groupId>com.aoede.parents</groupId>
 		<artifactId>parent-angular</artifactId>
 		<version>0-SNAPSHOT</version>
-		<relativePath>../../parents/parent-angular/pom.xml</relativePath>
+		<relativePath>../../../parents/parent-angular/pom.xml</relativePath>
 	</parent>
 
 	<groupId>com.aoede.apps</groupId>
