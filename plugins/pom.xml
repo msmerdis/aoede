@@ -8,9 +8,15 @@
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>pom</packaging>
 
+	<parent>
+		<groupId>com.aoede.parents</groupId>
+		<artifactId>parent-plugin</artifactId>
+		<version>0-SNAPSHOT</version>
+		<relativePath>../parents/parent-plugin/pom.xml</relativePath>
+	</parent>
+
 	<groupId>com.aoede</groupId>
 	<artifactId>plugins-parent</artifactId>
-	<version>0-SNAPSHOT</version>
 
 	<!-- Meta-data -->
 	<name>[${project.artifactId}]</name>
@@ -21,56 +27,5 @@
 	<modules>
 		<module>source-validation</module>
 	</modules>
-
-	<!-- Properties/Variables -->
-	<properties>
-		<!-- Desired Maven version -->
-		<maven.version>3.6</maven.version>
-		<!-- Build JDK -->
-		<java.version>11</java.version>
-
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-
-		<!-- Maven source encoding -->
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-		<!-- Library versions-->
-		<mvn-api.version>3.8.4</mvn-api.version>
-		<mvn-annotations.version>3.6.4</mvn-annotations.version>
-		<mvn-project.version>2.2.1</mvn-project.version>
-		<junit.version>5.7.2</junit.version>
-	</properties>
-
-	<dependencies>
-
-		<dependency>
-			<groupId>org.apache.maven</groupId>
-			<artifactId>maven-plugin-api</artifactId>
-			<version>${mvn-api.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.maven.plugin-tools</groupId>
-			<artifactId>maven-plugin-annotations</artifactId>
-			<version>${mvn-annotations.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.maven</groupId>
-			<artifactId>maven-project</artifactId>
-			<version>${mvn-project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.junit.vintage</groupId>
-			<artifactId>junit-vintage-engine</artifactId>
-			<version>5.7.2</version>
-			<scope>test</scope>
-		</dependency>
-
-	</dependencies>
 
 </project>

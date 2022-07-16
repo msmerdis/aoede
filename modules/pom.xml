@@ -9,11 +9,13 @@
 	<packaging>pom</packaging>
 
 	<parent>
-		<groupId>com.aoede</groupId>
-		<artifactId>parent</artifactId>
+		<groupId>com.aoede.parents</groupId>
+		<artifactId>parent-java</artifactId>
 		<version>0-SNAPSHOT</version>
+		<relativePath>../parents/parent-java/pom.xml</relativePath>
 	</parent>
 
+	<groupId>com.aoede</groupId>
 	<artifactId>modules-parent</artifactId>
 
 	<!-- Meta-data -->
@@ -27,8 +29,22 @@
 		<module>music</module>
 	</modules>
 
-	<!-- Dependencies -->
 	<dependencies>
+
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>com.aoede.commons</groupId>

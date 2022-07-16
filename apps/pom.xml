@@ -9,11 +9,13 @@
 	<packaging>pom</packaging>
 
 	<parent>
-		<groupId>com.aoede</groupId>
-		<artifactId>parent</artifactId>
+		<groupId>com.aoede.parents</groupId>
+		<artifactId>parent-java</artifactId>
 		<version>0-SNAPSHOT</version>
+		<relativePath>../parents/parent-java/pom.xml</relativePath>
 	</parent>
 
+	<groupId>com.aoede</groupId>
 	<artifactId>apps-parent</artifactId>
 
 	<!-- Meta-data -->
@@ -23,7 +25,8 @@
 
 	<!-- Modules -->
 	<modules>
-		<module>aoede</module>
+		<module>aoede-client</module>
+		<module>aoede-server</module>
 	</modules>
 
 	<!-- Dependencies -->
@@ -61,7 +64,7 @@
 				<artifactId>maven-remote-resources-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>load-resources</id>
+						<id>load-cucumber-resources</id>
 						<phase>initialize</phase>
 						<goals>
 							<goal>process</goal>

@@ -1,0 +1,39 @@
+* {
+	width: auto;
+	border:0px;
+	margin:0px;
+	padding:0px;
+	outline:0px;
+	border-spacing:0px;
+	text-align: center;
+}
+
+body {
+	padding:1px;
+}
+hr {
+	height:1px;
+}
+input, fieldset, hr, select, textarea {
+	border:1px solid;
+}
+body * {
+	background-color: $global-bg-colour;
+	color: $global-fg-colour;
+}
+
+.header, .header *,
+.footer, .footer * {
+	background-color: $header-bg-colour;
+	color: $header-fg-colour;
+}
+
+.error, .error * {
+	background-color: $error-bg-colour;
+	color: $error-fg-colour;
+}
+
+.warning, .warning * {
+	background-color: $warning-bg-colour;
+	color: $warning-fg-colour;
+}

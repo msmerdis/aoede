@@ -6,9 +6,13 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.aoede.commons</groupId>
-	<artifactId>common-cucumber-resources</artifactId>
-	<version>0-SNAPSHOT</version>
+	<parent>
+		<groupId>com.aoede.resources</groupId>
+		<artifactId>resources-parent</artifactId>
+		<version>0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>resource-cucumber</artifactId>
 
 	<!-- Meta-data -->
 	<name>[${project.artifactId}]</name>
@@ -20,7 +24,6 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-remote-resources-plugin</artifactId>
-				<version>1.7.0</version>
 				<executions>
 					<execution>
 						<?m2e execute?>
@@ -38,6 +41,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+
 	</build>
 
 </project>
