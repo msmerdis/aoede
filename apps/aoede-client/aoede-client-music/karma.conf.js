@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, '../../coverage/aoede-music'),
+      dir: require('path').join(__dirname, '../../coverage/aoede-client-music'),
       subdir: '.',
       reporters: [
         { type: 'html' },

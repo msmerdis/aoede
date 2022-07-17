@@ -4,20 +4,20 @@ This library was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Code scaffolding
 
-Run `ng generate component component-name --project aoede-base` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project aoede-base`.
-> Note: Don't forget to add `--project aoede-base` or else it will be added to the default project in your `angular.json` file. 
+Run `ng generate component component-name --project aoede-client-generic` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project aoede-client-generic`.
+> Note: Don't forget to add `--project aoede-client-generic` or else it will be added to the default project in your `angular.json` file. 
 
 ## Build
 
-Run `ng build aoede-base` to build the project. The build artifacts will be stored in the `dist/` directory.
+Run `ng build aoede-client-generic` to build the project. The build artifacts will be stored in the `dist/` directory.
 
 ## Publishing
 
-After building your library with `ng build aoede-base`, go to the dist folder `cd dist/aoede-base` and run `npm publish`.
+After building your library with `ng build aoede-client-generic`, go to the dist folder `cd dist/aoede-client-generic` and run `npm publish`.
 
 ## Running unit tests
 
-Run `ng test aoede-base` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `ng test aoede-client-generic` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
 ## Further help
 

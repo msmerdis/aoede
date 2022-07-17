@@ -1,5 +1,5 @@
 /*
- * Public API Surface of aoede-music
+ * Public API Surface of aoede-generic-music
  */
 
 export * from './lib/music.module';

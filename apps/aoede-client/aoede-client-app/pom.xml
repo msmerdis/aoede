@@ -13,11 +13,11 @@
 	</parent>
 
 	<groupId>com.aoede.apps</groupId>
-	<artifactId>aoede-client-generic</artifactId>
+	<artifactId>aoede-client-app</artifactId>
 
 	<!-- Meta-data -->
 	<name>[${project.artifactId}]</name>
-	<description>Aoede Generic Client Library</description>
+	<description>Aoede Client Application</description>
 
 	<build>
 		<plugins>
@@ -46,7 +46,7 @@
 							<goal>npm</goal>
 						</goals>
 						<configuration>
-							<arguments>run build aoede-client-generic</arguments>
+							<arguments>run build aoede-client-app</arguments>
 						</configuration>
 					</execution>
 

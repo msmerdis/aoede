@@ -2,18 +2,18 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "aoede-base": [
-        "dist/aoede-base"
+      "aoede-client-generic": [
+        "aoede-client-generic/target/classes"
       ],
-      "aoede-music": [
-        "dist/aoede-music"
+      "aoede-client-music": [
+        "aoede-client-music/target/classes"
       ],
-      "aoede-user": [
-        "dist/aoede-user"
+      "aoede-client-user": [
+        "aoede-client-user/target/classes"
       ]
     },
     "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
+    "outDir": "./target/dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,

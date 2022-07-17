@@ -1,5 +1,5 @@
 {
-  "name": "aoede-client-generic",
+  "name": "aoede-client-app",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^14.0.0",

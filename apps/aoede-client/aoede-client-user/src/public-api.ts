@@ -1,5 +1,5 @@
 /*
- * Public API Surface of aoede-user
+ * Public API Surface of aoede-client-user
  */
 
 export * from './lib/user.config';

@@ -1,5 +1,5 @@
 /*
- * Public API Surface of aoede-base
+ * Public API Surface of aoede-client-generic
  */
 
 export * from './lib/generic-api.model';

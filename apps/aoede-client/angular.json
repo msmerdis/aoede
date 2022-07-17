@@ -41,7 +41,7 @@
         }
       }
     },
-    "aoede-client": {
+    "aoede-client-app": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -49,24 +49,24 @@
         }
       },
       "root": "",
-      "sourceRoot": "src",
+      "sourceRoot": "aoede-client-app/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/aoede-client",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.app.json",
+            "outputPath": "aoede-client-app/target/classes",
+            "index": "aoede-client-app/src/index.html",
+            "main": "aoede-client-app/src/main.ts",
+            "polyfills": "aoede-client-app/src/polyfills.ts",
+            "tsConfig": "aoede-client-app/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "aoede-client-app/src/favicon.ico",
+              "aoede-client-app/src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "aoede-client-app/src/styles.scss"
             ],
             "scripts": []
           },
@@ -86,8 +86,8 @@
               ],
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "replace": "aoede-client-app/src/environments/environment.ts",
+                  "with": "aoede-client-app/src/environments/environment.prod.ts"
                 }
               ],
               "outputHashing": "all"
@@ -124,17 +124,17 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
+            "main": "aoede-client-app/src/test.ts",
+            "polyfills": "aoede-client-app/src/polyfills.ts",
+            "tsConfig": "aoede-client-app/tsconfig.spec.json",
+            "karmaConfig": "aoede-client-app/karma.conf.js",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "aoede-client-app/src/favicon.ico",
+              "aoede-client-app/src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "aoede-client-app/src/styles.scss"
             ],
             "scripts": []
           }

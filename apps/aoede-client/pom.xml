@@ -25,8 +25,10 @@
 	<!-- Modules -->
 	<modules>
 		<module>aoede-client-generic</module>
+		<!--
 		<module>aoede-client-user</module>
 		<module>aoede-client-music</module>
+		-->
 	</modules>
 
 	<build>
@@ -58,19 +60,28 @@
 						</configuration>
 					</execution>
 
-					<!--
-					<execution>
-							<id>npm run build</id>
-							<goals>
-									<goal>npm</goal>
-							</goals>
-							<configuration>
-									<arguments>run build</arguments>
-							</configuration>
-					</execution>
-					-->
-
 				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-remote-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<?m2e execute?>
+						<goals>
+							<goal>bundle</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<resourcesDirectory>${project.build.directory}/classes</resourcesDirectory>
+					<includes>
+						<include>**/*.json</include>
+						<include>**/*.map</include>
+						<include>**/*.mjs</include>
+						<include>**/*.ts</include>
+					</includes>
+				</configuration>
 			</plugin>
 
 		</plugins>
