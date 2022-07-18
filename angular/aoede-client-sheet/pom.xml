@@ -36,6 +36,7 @@
 				<executions>
 
 					<execution>
+						<?m2e execute?>
 						<id>load-angular-dependencies</id>
 						<phase>initialize</phase>
 						<goals>

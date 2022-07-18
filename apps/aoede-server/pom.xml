@@ -224,6 +224,7 @@
 				<executions>
 
 					<execution>
+						<?m2e execute?>
 						<id>load-aoede-client</id>
 						<phase>initialize</phase>
 						<goals>
