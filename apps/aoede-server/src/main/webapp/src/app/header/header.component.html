@@ -1,9 +1,0 @@
-<ul class='header'>
-	<li>[logo] Aoede</li>
-	<li *ngIf="(loggedin$ | async)"><a [routerLink]="['/music/sheet/create']">Create New Sheet</a></li>
-	<li *ngIf="(loggedin$ | async)"><a [routerLink]="['/music/sheet/result']">My Music Sheets</a></li>
-	<li *ngIf="(loggedin$ | async)">hello, {{ username$ | async }}</li>
-	<li *ngIf="(loggedin$ | async)" (click)="refreshToken()">Refresh Token</li>
-	<li *ngIf="(loggedin$ | async)"><a [routerLink]="['/user/logout']">Logout</a></li>
-	<li *ngIf="!(loggedin$ | async)"><a [routerLink]="['/user/login']">Login</a></li>
-</ul>

@@ -25,6 +25,7 @@
 		<module>plugins</module>
 		<module>commons</module>
 		<module>modules</module>
+		<module>angular</module>
 		<module>apps</module>
 	</modules>
 

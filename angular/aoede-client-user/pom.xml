@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.aoede</groupId>
+		<artifactId>angular-parent</artifactId>
+		<version>0-SNAPSHOT</version>
+	</parent>
+
+	<groupId>com.aoede.angular</groupId>
+	<artifactId>aoede-client-user</artifactId>
+
+	<!-- Meta-data -->
+	<name>[${project.artifactId}]</name>
+	<description>Aoede User Client Library</description>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-remote-resources-plugin</artifactId>
+				<executions>
+
+					<execution>
+						<id>load-angular-dependencies</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<configuration>
+							<resourceBundles>
+								<resourceBundle>com.aoede.angular:aoede-client-generic:${project.version}</resourceBundle>
+							</resourceBundles>
+							<attachToMain>false</attachToMain>
+							<attachToTest>false</attachToTest>
+							<outputDirectory>${project.build.directory}/dependencies/angular-dependencies</outputDirectory>
+						</configuration>
+					</execution>
+
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+
+</project>

@@ -21,7 +21,106 @@
 	<description>Parent pom for angular modules</description>
 	<inceptionYear>2022</inceptionYear>
 
+	<properties>
+		<angular.output>${basedir}/dist</angular.output>
+	</properties>
+
 	<build>
+
+		<pluginManagement>
+			<plugins>
+
+				<plugin>
+					<groupId>com.github.eirslett</groupId>
+					<artifactId>frontend-maven-plugin</artifactId>
+					<configuration>
+						<workingDirectory>.</workingDirectory>
+					</configuration>
+					<executions>
+
+						<execution>
+							<id>install node and npm</id>
+							<goals>
+								<goal>install-node-and-npm</goal>
+							</goals>
+							<configuration>
+								<nodeVersion>${nodejs.version}</nodeVersion>
+								<npmVersion>${npm.version}</npmVersion>
+							</configuration>
+						</execution>
+
+						<execution>
+							<id>npm install</id>
+							<goals>
+								<goal>npm</goal>
+							</goals>
+							<configuration>
+								<arguments>install</arguments>
+							</configuration>
+						</execution>
+
+						<execution>
+							<id>npm run build</id>
+							<goals>
+								<goal>npm</goal>
+							</goals>
+							<configuration>
+								<arguments>run build</arguments>
+							</configuration>
+						</execution>
+
+					</executions>
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-resources-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>copy-angular-resources</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.outputDirectory}</outputDirectory>
+								<resources>
+									<resource>
+										<directory>${angular.output}</directory>
+										<filtering>true</filtering>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-remote-resources-plugin</artifactId>
+					<executions>
+						<execution>
+							<?m2e execute?>
+							<goals>
+								<goal>bundle</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<resourcesDirectory>${angular.output}</resourcesDirectory>
+						<includes>
+							<include>**/*.html</include>
+							<include>**/*.json</include>
+							<include>**/*.js</include>
+							<include>**/*.ts</include>
+							<include>**/*.map</include>
+							<include>**/*.mjs</include>
+							<include>**/*.css</include>
+							<include>**/*.ico</include>
+						</includes>
+					</configuration>
+				</plugin>
+
+			</plugins>
+		</pluginManagement>
 
 		<plugins>
 
@@ -58,26 +157,11 @@
 							<directory>.angular</directory>
 							<followSymlinks>false</followSymlinks>
 						</fileset>
+						<fileset>
+							<directory>dist</directory>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
 					</filesets>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<artifactId>maven-remote-resources-plugin</artifactId>
-				<executions>
-					<execution>
-						<?m2e execute?>
-						<goals>
-							<goal>bundle</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<includes>
-						<include>**/*.json</include>
-						<include>**/*.js</include>
-						<include>**/*.ts</include>
-					</includes>
 				</configuration>
 			</plugin>
 

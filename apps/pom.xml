@@ -25,7 +25,6 @@
 
 	<!-- Modules -->
 	<modules>
-		<module>aoede-client</module>
 		<module>aoede-server</module>
 	</modules>
 
@@ -71,6 +70,7 @@
 						</goals>
 						<configuration>
 							<attachToMain>true</attachToMain>
+							<attachToTest>true</attachToTest>
 						</configuration>
 					</execution>
 				</executions>

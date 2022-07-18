@@ -220,42 +220,23 @@
 			</plugin>
 
 			<plugin>
-				<groupId>com.github.eirslett</groupId>
-				<artifactId>frontend-maven-plugin</artifactId>
-				<configuration>
-					<workingDirectory>src/main/webapp</workingDirectory>
-				</configuration>
+				<artifactId>maven-remote-resources-plugin</artifactId>
 				<executions>
 
 					<execution>
-						<id>install node and npm</id>
+						<id>load-aoede-client</id>
+						<phase>initialize</phase>
 						<goals>
-							<goal>install-node-and-npm</goal>
+							<goal>process</goal>
 						</goals>
 						<configuration>
-							<nodeVersion>${nodejs.version}</nodeVersion>
-							<npmVersion>${npm.version}</npmVersion>
+							<resourceBundles>
+								<resourceBundle>com.aoede.angular:aoede-client:${project.version}</resourceBundle>
+							</resourceBundles>
+							<attachToMain>true</attachToMain>
+							<attachToTest>true</attachToTest>
+							<outputDirectory>${project.build.directory}/dependencies/aoede-client</outputDirectory>
 						</configuration>
-					</execution>
-
-					<execution>
-						<id>npm install</id>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<configuration>
-							<arguments>install</arguments>
-						</configuration>
-					</execution>
-
-					<execution>
-							<id>npm run build</id>
-							<goals>
-									<goal>npm</goal>
-							</goals>
-							<configuration>
-									<arguments>run build</arguments>
-							</configuration>
 					</execution>
 
 				</executions>
