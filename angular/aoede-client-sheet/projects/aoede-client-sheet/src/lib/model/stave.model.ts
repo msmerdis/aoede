@@ -1,21 +1,40 @@
 import { Measure, measureInitializer } from './measure.model';
+import { Note } from './note.model';
 
-export interface Bar {
-	measure : Measure;
-	width   : number;
+interface StaveExtention {
+	offset : number;
+	width  : number;
 };
 
-export const barInitializer : Bar = {
-	measure : measureInitializer,
-	width   : 0
+const staveExtentionInitializer : StaveExtention = {
+	offset : 0,
+	width  : 0
 };
 
-export interface Stave {
-	bars  : Bar[];
+export interface Beat {
+	notes : Note[];
 	width : number;
 };
 
+export const beatInitializer : Beat = {
+	...staveExtentionInitializer,
+	notes : []
+};
+
+export interface Bar extends StaveExtention {
+	measure : Measure;
+};
+
+export const barInitializer : Bar = {
+	...staveExtentionInitializer,
+	measure : measureInitializer
+};
+
+export interface Stave extends StaveExtention {
+	bars : Bar[];
+};
+
 export const staveInitializer : Stave = {
-	bars  : [],
-	width : 0
+	...staveExtentionInitializer,
+	bars : []
 };

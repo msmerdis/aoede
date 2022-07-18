@@ -143,7 +143,8 @@ export class SheetComponent implements OnInit, OnDestroy {
 		return track.measures.reduce ((bars : Bar[], measure : Measure) : Bar[] => {
 			bars.push ({
 				measure : measure,
-				width   : this.barWidth(measure)
+				width   : this.barWidth(measure),
+				offset  : 0
 			});
 
 			return bars;
@@ -156,8 +157,9 @@ export class SheetComponent implements OnInit, OnDestroy {
 
 	private emptyStave () : Stave {
 		return {
-			bars  : [],
-			width : this.stavesPadding
+			bars   : [],
+			width  : this.stavesPadding,
+			offset : 0
 		};
 	}
 
