@@ -7,10 +7,12 @@ import {
 	preloadSuccess,
 	preloadFailure
 } from './music.actions';
-import { Sheet } from '../model/sheet.model';
-import { Clef } from '../model/clef.model';
-import { KeySignature } from '../model/key-signature.model';
-import { Tempo } from '../model/tempo.model';
+import {
+	Sheet,
+	Clef,
+	KeySignature,
+	Tempo,
+} from 'aoede-client-sheet';
 import { Preload } from '../model/preload.model';
 import {
 	ApiSuccess,

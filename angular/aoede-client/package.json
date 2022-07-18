@@ -21,6 +21,7 @@
     "@ngrx/effects": "^14.0.0",
     "@ngrx/store": "^14.0.0",
     "aoede-client-generic": "file:target/dependencies/angular-dependencies/aoede-client-generic",
+    "aoede-client-sheet": "file:target/dependencies/angular-dependencies/aoede-client-sheet",
     "aoede-client-music": "file:target/dependencies/angular-dependencies/aoede-client-music",
     "aoede-client-user": "file:target/dependencies/angular-dependencies/aoede-client-user",
     "rxjs": "~7.5.0",

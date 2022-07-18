@@ -9,3 +9,8 @@
 		(modifiedEvent)="updateModified($event)"
 	></aoede-music-sheet>
 </div>
+<div *ngIf="(sheet$ | async) !== null">
+	<aoede-sheet
+		[sheet]="sheet"
+	></aoede-sheet>
+</div>

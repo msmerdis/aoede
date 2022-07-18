@@ -18,6 +18,7 @@ import {
 	MusicConfigToken,
 	DefaultMusicConfig
 } from './music.config';
+import { SheetModule } from 'aoede-client-sheet';
 
 @NgModule({
 	declarations: [
@@ -31,7 +32,8 @@ import {
 		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,
-		HttpClientModule,
+		HttpClientModule,		
+		SheetModule.forRoot({}),
 		StoreModule.forFeature(fromMusicState.musicFeatureKey, fromMusicState.musicReducer, {}),
 		EffectsModule.forFeature([MusicEffects])
 	],
@@ -39,7 +41,8 @@ import {
 		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,
-		HttpClientModule
+		HttpClientModule,
+		SheetModule
 	],
 	providers: [
 		MusicService

@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 
-import { Sheet } from '../model/sheet.model';
+import { Sheet } from 'aoede-client-sheet';
 import { Preload } from '../model/preload.model';
 import {
 	ApiGeneric,

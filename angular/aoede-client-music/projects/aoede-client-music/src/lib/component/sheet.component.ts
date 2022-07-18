@@ -4,13 +4,17 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription, Observable, of, combineLatest, throwError } from 'rxjs';
 import { tap, map, take, filter, switchMap } from 'rxjs/operators';
 
-import { Sheet } from '../model/sheet.model';
-import { Track } from '../model/track.model';
-import { Measure } from '../model/measure.model';
-import { Clef } from '../model/clef.model';
-import { KeySignature } from '../model/key-signature.model';
-import { Bar, Stave } from '../model/stave.model';
-import { TrackInfo, trackInfoInitializer } from '../model/track-info.model';
+import {
+	Sheet,
+	Track,
+	Measure,
+	Clef,
+	KeySignature,
+	Bar,
+	Stave,
+	TrackInfo,
+	trackInfoInitializer,
+} from 'aoede-client-sheet';
 
 import { MusicState } from '../store/music.reducer';
 import { fetchSheetRequest } from '../store/music.actions';
@@ -175,7 +179,8 @@ export class SheetComponent implements OnInit, OnDestroy {
 		return track.measures.reduce ((bars : Bar[], measure : Measure) : Bar[] => {
 			bars.push ({
 				measure : measure,
-				width   : this.barWidth(measure)
+				width   : this.barWidth(measure),
+				offset  : 0
 			});
 
 			return bars;
@@ -188,8 +193,9 @@ export class SheetComponent implements OnInit, OnDestroy {
 
 	private emptyStave () : Stave {
 		return {
-			bars  : [],
-			width : this.stavesPadding
+			bars   : [],
+			width  : this.stavesPadding,
+			offset : 0
 		};
 	}
 

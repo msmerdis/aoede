@@ -5,7 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { take, tap, map, filter, switchMap } from 'rxjs/operators';
 
-import { Sheet } from '../model/sheet.model';
+import { Sheet, sheetInitializer } from 'aoede-client-sheet';
 import { MusicState } from '../store/music.reducer';
 import { fetchSheetRequest } from '../store/music.actions';
 import { getSheetValueSafe } from '../store/music.selectors';
@@ -20,6 +20,7 @@ export class SheetModifyComponent {
 
 	private id    : number = 0;
 	public sheet$ : Observable<Sheet | null>;
+	public sheet  : Sheet  = sheetInitializer;
 	public track  : number = 0;
 
 	private modified : boolean = false;
@@ -35,7 +36,9 @@ export class SheetModifyComponent {
 			map(params => +params['sheet']),
 			tap(id => this.dispatch(id)),
 			switchMap(id => this.store.select (getSheetValueSafe, id))
-		);
+		).pipe (tap(
+			(sheet) => this.sheet = sheet || sheetInitializer
+		));
 
 		this.track = +this.route.snapshot.params['track']-1 || 0;
 	}

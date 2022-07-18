@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 
-import { Sheet } from './model/sheet.model';
+import { Sheet } from 'aoede-client-sheet';
 import { Preload } from './model/preload.model';
 
 @Injectable({

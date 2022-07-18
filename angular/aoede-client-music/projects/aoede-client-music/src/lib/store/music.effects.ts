@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { tap, map, filter, switchMap, catchError, delay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
-import { Sheet } from '../model/sheet.model';
+import { Sheet } from 'aoede-client-sheet';
 import {
 	musicEffectsInit,
 	fetchSheetRequest,

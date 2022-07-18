@@ -13,7 +13,7 @@ import { Bar, Stave } from '../model/stave.model';
 import { TrackInfo, trackInfoInitializer } from '../model/track-info.model';
 
 @Component({
-	selector: 'aoede-music-sheet',
+	selector: 'aoede-sheet',
 	templateUrl: './sheet.component.html',
 	styleUrls: ['./sheet.component.scss']
 })

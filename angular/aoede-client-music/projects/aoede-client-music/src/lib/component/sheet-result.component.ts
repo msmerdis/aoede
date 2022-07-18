@@ -3,8 +3,10 @@ import { Observable, Subscription } from 'rxjs';
 import { take, tap, filter } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
-import { Sheet } from '../model/sheet.model';
-import { KeySignature } from '../model/key-signature.model';
+import {
+	Sheet,
+	KeySignature
+} from 'aoede-client-sheet';
 import { MusicState } from '../store/music.reducer';
 import { fetchSheetListRequest } from '../store/music.actions';
 import { getSheetListValue, getKeys } from '../store/music.selectors';

@@ -1,13 +1,17 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { MusicState, musicFeatureKey } from './music.reducer';
-import { Sheet } from '../model/sheet.model';
+import {
+	Sheet,
+	Clef,
+	Tempo,
+	KeySignature
+} from 'aoede-client-sheet';
+import {
+	ApiError,
+	StateData
+} from 'aoede-client-generic';
 import { Preload } from '../model/preload.model';
-import { Clef } from '../model/clef.model';
-import { Tempo } from '../model/tempo.model';
-import { KeySignature } from '../model/key-signature.model';
-import { ApiError } from 'aoede-client-generic';
-import { StateData } from 'aoede-client-generic';
 
 export const getMusicState = createFeatureSelector<MusicState>(musicFeatureKey);
 

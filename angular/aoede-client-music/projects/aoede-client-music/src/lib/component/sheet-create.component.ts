@@ -3,9 +3,11 @@ import { FormControl } from '@angular/forms';
 import { Observable, take, filter } from 'rxjs';
 import { Store } from '@ngrx/store';
 
-import { Clef } from '../model/clef.model';
-import { KeySignature } from '../model/key-signature.model';
-import { Tempo } from '../model/tempo.model';
+import {
+	Clef,
+	KeySignature,
+	Tempo
+} from 'aoede-client-sheet';
 
 import { MusicState } from '../store/music.reducer';
 import { getClefs, getKeys, getTempos } from '../store/music.selectors';

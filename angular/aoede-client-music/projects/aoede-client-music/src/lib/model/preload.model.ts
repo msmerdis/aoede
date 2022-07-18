@@ -1,6 +1,8 @@
-import { Clef } from './clef.model';
-import { KeySignature } from './key-signature.model';
-import { Tempo } from './tempo.model';
+import {
+	Clef,
+	KeySignature,
+	Tempo
+} from 'aoede-client-sheet';
 
 export interface Preload {
 	clefList  : Clef[];
