@@ -5,10 +5,21 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { take, tap, map, filter, switchMap } from 'rxjs/operators';
 
-import { Sheet, sheetInitializer } from 'aoede-client-sheet';
+import {
+	Sheet,
+	sheetInitializer,
+	Clef,
+	KeySignature,
+	SheetConfiguration,
+	sheetConfigurationInitializer
+} from 'aoede-client-sheet';
 import { MusicState } from '../store/music.reducer';
 import { fetchSheetRequest } from '../store/music.actions';
-import { getSheetValueSafe } from '../store/music.selectors';
+import {
+	getClefs,
+	getKeys,
+	getSheetValueSafe
+} from '../store/music.selectors';
 import { getRequestPayload } from 'aoede-client-generic';
 
 @Component({
@@ -22,6 +33,12 @@ export class SheetModifyComponent {
 	public sheet$ : Observable<Sheet | null>;
 	public sheet  : Sheet  = sheetInitializer;
 	public track  : number = 0;
+
+	public sheetConfig : SheetConfiguration = {
+		...sheetConfigurationInitializer,
+		showHeader : true,
+		showFooter : true
+	};
 
 	private modified : boolean = false;
 
@@ -40,7 +57,24 @@ export class SheetModifyComponent {
 			(sheet) => this.sheet = sheet || sheetInitializer
 		));
 
+		this.store.select(getClefs).pipe (
+			filter((clefs) => clefs !== null),
+			take (1),
+			tap ((clefs) => clefs && clefs.forEach(
+				(clef) => this.sheetConfig.clefArray[clef.id] = clef)
+			)
+		).subscribe();
+
+		this.store.select(getKeys).pipe (
+			filter((keys) => keys !== null),
+			take (1),
+			tap ((keys) => keys && keys.forEach(
+				(key) => this.sheetConfig.keysArray[key.id] = key)
+			)
+		).subscribe();
+
 		this.track = +this.route.snapshot.params['track']-1 || 0;
+		this.sheetConfig.firstTrack = this.track;
 	}
 
 	private dispatch(id : number) {
@@ -59,6 +93,10 @@ export class SheetModifyComponent {
 			.createUrlTree(['../', track + 1], {relativeTo: this.route})
 			.toString();
 
+		this.sheetConfig = {
+			...this.sheetConfig,
+			firstTrack : track
+		}
 		this.loc.go(url);
 	}
 

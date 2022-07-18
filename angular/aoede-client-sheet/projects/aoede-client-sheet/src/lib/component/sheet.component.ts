@@ -1,5 +1,4 @@
-import { Component, ViewChild, ElementRef, ChangeDetectorRef, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, ViewChild, ElementRef, Input, Output, EventEmitter, OnInit, OnDestroy, OnChanges } from '@angular/core';
 import { Subscription, Observable, of, combineLatest, throwError } from 'rxjs';
 import { tap, map, take, filter, switchMap } from 'rxjs/operators';
 
@@ -17,13 +16,10 @@ import { TrackInfo, trackInfoInitializer } from '../model/track-info.model';
 	templateUrl: './sheet.component.html',
 	styleUrls: ['./sheet.component.scss']
 })
-export class SheetComponent implements OnInit, OnDestroy {
+export class SheetComponent implements OnInit, OnChanges, OnDestroy {
 
 	@Input() sheet  : Sheet              = sheetInitializer;
 	@Input() config : SheetConfiguration = sheetConfigurationInitializer;
-
-	@Output() modifiedEvent = new EventEmitter<boolean>();
-	@Output() trackEvent    = new EventEmitter<number> ();
 
 	public modified : boolean = false;
 
@@ -44,15 +40,20 @@ export class SheetComponent implements OnInit, OnDestroy {
 	@ViewChild('sCanvas') set content (content: ElementRef) {
 		if (content != null) {
 			this.context = content.nativeElement.getContext('2d');
+			this.drawCanvas();
 		}
 	}
 
 	constructor(
-		private route : ActivatedRoute,
-		private cdref : ChangeDetectorRef
 	) {}
 
 	ngOnInit () : void {
+	}
+
+	ngOnDestroy (): void {
+	}
+
+	ngOnChanges (): void {
 		if (this.sheet === null) {
 			this.tracks = [];
 			this.track  = -1;
@@ -76,9 +77,6 @@ export class SheetComponent implements OnInit, OnDestroy {
 		this.updateTrack(this.config.firstTrack < this.tracks.length ? this.config.firstTrack : 0);
 	}
 
-	ngOnDestroy (): void {
-	}
-
 	public sheetHeight (staves : number, showHeader : boolean = false, showFooter : boolean = false) : number {
 		return this.stavesHeight * staves +
 			this.headerHeight * +showHeader +
@@ -90,7 +88,6 @@ export class SheetComponent implements OnInit, OnDestroy {
 	}
 
 	private drawCanvas () {
-		this.cdref.detectChanges();
 		if (this.context !== null && this.track >= 0) {
 			this.context.save();
 			this.context.clearRect(0, 0, this.sheetWidth(), this.sheetHeight(this.staves, this.config.showHeader, this.config.showFooter));
@@ -166,7 +163,6 @@ export class SheetComponent implements OnInit, OnDestroy {
 	public updateTrack (track : number) {
 		if (track < this.tracks.length) {
 			this.track = track;
-			this.trackEvent.emit(track);
 			this.staves = this.tracks[this.track].staves.length;
 			this.drawCanvas ();
 		}
@@ -193,7 +189,8 @@ export class SheetComponent implements OnInit, OnDestroy {
 		var m : number = this.sheetHeight(i, this.config.showHeader, false) + (this.stavesHeight + 1) / 2;
 
 		this.setupStave (context, this.stavesMargin, this.stavesWidth + this.stavesMargin, m, this.stavesWidth);
-		this.drawClef  (context, this.stavesMargin + this.noteSpacing * 4 + 1, m, info.clef);
+		if (info.clef)
+			this.drawClef  (context, this.stavesMargin + this.noteSpacing * 4 + 1, m, info.clef);
 	}
 
 	public drawClef (context: CanvasRenderingContext2D, x : number, y : number, clef : Clef) {

@@ -44,6 +44,7 @@
 						</goals>
 						<configuration>
 							<resourceBundles>
+								<resourceBundle>com.aoede.angular:aoede-client-sheet:${project.version}</resourceBundle>
 								<resourceBundle>com.aoede.angular:aoede-client-generic:${project.version}</resourceBundle>
 							</resourceBundles>
 							<attachToMain>false</attachToMain>
