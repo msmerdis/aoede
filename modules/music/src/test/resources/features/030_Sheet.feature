@@ -181,3 +181,42 @@ And the response array contains "sheetObject" objects
 	| id    | name    |
 	| sheet | C scale |
 And the response array contains latest "sheet"
+
+@TC030010
+@Positive @Create
+Scenario: create a new Sheet overriting its signature at third measure
+### create a new sheet and verify the sheet is created with the same data as provided
+### retrieve the sheet and verify the same data are returned
+
+Given prepare "B" scale as "B scale"
+And store "tracks" element from "B scale" object as "track array"
+And store element 0 from "track array" array as "track"
+And store "measures" element from "track" object as "measure array"
+And store element 2 from "measure array" array as "measure"
+And set "measure" object's "clef" element to "Bass" as "string"
+And set "measure" object's "tempo" element to "160" as "number"
+And set "measure" object's "keySignature" element to "7" as "number"
+And set "measure" object's "timeSignature" element to "8/8" as "fraction"
+And a "sheet" with "B scale" json element
+And the request was successful
+And the response has a status code of 201
+And the response matches
+	|  id  | key    | sheet   |
+	| name | string | B scale |
+When request previously created "sheet"
+And the request was successful
+And the response has a status code of 200
+And the response matches "B scale" json
+And the response matches
+	|  id  | key    | sheet   |
+	| name | string | B scale |
+Then request all available "sheet"
+And the request was successful
+And the response has a status code of 200
+And prepare data table "sheetObject"
+	| id  | name   |
+	| key | string |
+And the response array contains "sheetObject" objects
+	| id    | name    |
+	| sheet | B scale |
+And the response array contains latest "sheet"
