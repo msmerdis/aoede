@@ -32,7 +32,7 @@ import { SheetModule } from 'aoede-client-sheet';
 		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,
-		HttpClientModule,		
+		HttpClientModule,
 		SheetModule.forRoot({}),
 		StoreModule.forFeature(fromMusicState.musicFeatureKey, fromMusicState.musicReducer, {}),
 		EffectsModule.forFeature([MusicEffects])

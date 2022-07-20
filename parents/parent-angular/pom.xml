@@ -135,6 +135,12 @@
 						</goals>
 						<configuration>
 							<includePom>true</includePom>
+							<sourceFolders>
+								<sourceFolder>projects</sourceFolder>
+								<sourceFolder>angular.json</sourceFolder>
+								<sourceFolder>package.json</sourceFolder>
+								<sourceFolder>tsconfig.json</sourceFolder>
+							</sourceFolders>
 						</configuration>
 					</execution>
 				</executions>
