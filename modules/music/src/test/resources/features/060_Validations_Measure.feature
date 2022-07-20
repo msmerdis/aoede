@@ -34,23 +34,6 @@ And the response contains "nullValidationInfo" objects in "validations"
 	| sheet | tracks[0].measures[2].notes |       | Measure must define notes |
 
 @TC060002
-Scenario: create a Measure with invalid clef value
-### create a new sheet defining the measure's clef field with an invalid value
-### operation should fail and a validation error should be returned
-
-And set "measure" object's "clef" element to "invalid" as "string"
-When a "sheet" with "C scale" json element
-Then the request was not successful
-And the response has a status code of 400
-And the response matches
-	| code | integer | 400               |
-	| text | string  | BAD_REQUEST       |
-	| desc | string  | Validation errors |
-And the response contains "validationInfo" objects in "validations"
-	| name  | field                      | value   | error                           |
-	| sheet | tracks[0].measures[2].clef | invalid | Measure defined an invalid clef |
-
-@TC060003
 Scenario Outline: create a Measure with invalid tempo value
 ### create a new sheet defining the measure's tempo field with an invalid value
 ### operation should fail and a validation error should be returned
@@ -72,7 +55,7 @@ Examples:
 	| 31    | minimum allowed tempo is 32  |
 	| 513   | maximum allowed tempo is 512 |
 
-@TC060004
+@TC060003
 Scenario Outline: create a Measure with invalid key signature value
 ### create a new sheet defining the measure's keySignature field with an invalid value
 ### operation should fail and a validation error should be returned
@@ -94,7 +77,7 @@ Examples:
 	| 8     |
 	| -8    |
 
-@TC060005
+@TC060004
 Scenario: create a Measure with invalid time signature value
 ### create a new sheet defining the measure's time signature field with an invalid value
 ### operation should fail and a validation error should be returned
