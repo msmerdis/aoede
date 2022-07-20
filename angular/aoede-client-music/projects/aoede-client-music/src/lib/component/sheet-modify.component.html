@@ -12,6 +12,10 @@
 <div *ngIf="(sheet$ | async) !== null">
 	<aoede-sheet
 		[sheet]="sheet"
-		[config]="sheetConfig"
+		[sheetConfig]="sheetConfig1"
+	></aoede-sheet>
+	<aoede-sheet
+		[sheet]="sheet"
+		[sheetConfig]="sheetConfig2"
 	></aoede-sheet>
 </div>

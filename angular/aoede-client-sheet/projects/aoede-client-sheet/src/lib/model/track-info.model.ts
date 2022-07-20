@@ -13,12 +13,14 @@ export interface TrackInfo {
 	staves        : Stave[];
 };
 
-export const trackInfoInitializer : TrackInfo = {
-	title         : "",
-	name          : "",
-	clef          : clefInitializer,
-	tempo         : 0,
-	keySignature  : keySignatureInitializer,
-	timeSignature : fractionInitializer,
-	staves        : []
+export function trackInfoInitializer () : TrackInfo {
+	return {
+		title         : "",
+		name          : "",
+		clef          : clefInitializer(),
+		tempo         : 0,
+		keySignature  : keySignatureInitializer(),
+		timeSignature : fractionInitializer(),
+		staves        : []
+	};
 };

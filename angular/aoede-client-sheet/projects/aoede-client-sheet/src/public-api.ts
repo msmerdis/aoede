@@ -13,7 +13,7 @@ export * from './lib/model/fraction.model';
 export * from './lib/model/stave.model';
 export * from './lib/model/clef.model';
 export * from './lib/model/key-signature.model';
-export * from './lib/sheet.service';
+export * from './lib/service/sheet.service';
 export * from './lib/component/sheet.component';
 export * from './lib/sheet.config';
 export * from './lib/sheet.module';

@@ -7,11 +7,13 @@ export interface Tempo {
 	maxTempo : number;
 };
 
-export const tempoInitializer : Tempo = {
-	id   : "",
-	desc : "",
-
-	minTempo : 0,
-	stdTempo : 0,
-	maxTempo : 0
+export function tempoInitializer () : Tempo {
+	return {
+		id   : "",
+		desc : "",
+	
+		minTempo : 0,
+		stdTempo : 0,
+		maxTempo : 0
+	};
 };

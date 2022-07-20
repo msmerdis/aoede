@@ -6,8 +6,10 @@ export interface Sheet {
 	tracks : Track[];
 };
 
-export const sheetInitializer : Sheet = {
-	id     : 0,
-	name   : "",
-	tracks : []
+export function sheetInitializer () : Sheet {
+	return {
+		id     : 0,
+		name   : "",
+		tracks : []
+	};
 };

@@ -31,11 +31,17 @@ export class SheetModifyComponent {
 
 	private id    : number = 0;
 	public sheet$ : Observable<Sheet | null>;
-	public sheet  : Sheet  = sheetInitializer;
+	public sheet  : Sheet  = sheetInitializer();
 	public track  : number = 0;
 
-	public sheetConfig : SheetConfiguration = {
-		...sheetConfigurationInitializer,
+	public sheetConfig1 : SheetConfiguration = {
+		...sheetConfigurationInitializer(),
+		showHeader : true,
+		showFooter : true
+	};
+
+	public sheetConfig2 : SheetConfiguration = {
+		...sheetConfigurationInitializer(),
 		showHeader : true,
 		showFooter : true
 	};
@@ -54,14 +60,17 @@ export class SheetModifyComponent {
 			tap(id => this.dispatch(id)),
 			switchMap(id => this.store.select (getSheetValueSafe, id))
 		).pipe (tap(
-			(sheet) => this.sheet = sheet || sheetInitializer
+			(sheet) => this.sheet = sheet || sheetInitializer()
 		));
 
 		this.store.select(getClefs).pipe (
 			filter((clefs) => clefs !== null),
 			take (1),
 			tap ((clefs) => clefs && clefs.forEach(
-				(clef) => this.sheetConfig.clefArray[clef.id] = clef)
+				(clef) => {
+					this.sheetConfig1.clefArray[clef.id] = clef;
+					this.sheetConfig2.clefArray[clef.id] = clef;
+				})
 			)
 		).subscribe();
 
@@ -69,12 +78,16 @@ export class SheetModifyComponent {
 			filter((keys) => keys !== null),
 			take (1),
 			tap ((keys) => keys && keys.forEach(
-				(key) => this.sheetConfig.keysArray[key.id] = key)
+				(key) => {
+					this.sheetConfig1.keysArray[key.id] = key;
+					this.sheetConfig2.keysArray[key.id] = key;
+				})
 			)
 		).subscribe();
 
 		this.track = +this.route.snapshot.params['track']-1 || 0;
-		this.sheetConfig.firstTrack = this.track;
+		this.sheetConfig1.showTracks = [this.track];
+		this.sheetConfig2.showTracks = [this.track];
 	}
 
 	private dispatch(id : number) {
@@ -93,9 +106,13 @@ export class SheetModifyComponent {
 			.createUrlTree(['../', track + 1], {relativeTo: this.route})
 			.toString();
 
-		this.sheetConfig = {
-			...this.sheetConfig,
-			firstTrack : track
+		this.sheetConfig1 = {
+			...this.sheetConfig1,
+			showTracks : [track]
+		}
+		this.sheetConfig2 = {
+			...this.sheetConfig2,
+			showTracks : [0, track]
 		}
 		this.loc.go(url);
 	}

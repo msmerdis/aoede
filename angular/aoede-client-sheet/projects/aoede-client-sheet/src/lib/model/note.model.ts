@@ -6,8 +6,10 @@ export interface Note {
 	value : Fraction;
 };
 
-export const noteInitializer : Note = {
-	order : -1,
-	pitch : -1,
-	value : fractionInitializer
+export function noteInitializer () : Note {
+	return {
+		order : -1,
+		pitch : -1,
+		value : fractionInitializer()
+	};
 };

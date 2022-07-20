@@ -6,13 +6,15 @@ export interface SheetConfiguration {
 	keysArray  : {[index : number] : KeySignature};
 	showHeader : boolean;
 	showFooter : boolean;
-	firstTrack : number;
+	showTracks : number[];
 };
 
-export const sheetConfigurationInitializer : SheetConfiguration = {
-	clefArray  : {},
-	keysArray  : {},
-	showHeader : false,
-	showFooter : false,
-	firstTrack : 0
+export function sheetConfigurationInitializer () : SheetConfiguration {
+	return {
+		clefArray  : {},
+		keysArray  : {},
+		showHeader : false,
+		showFooter : false,
+		showTracks : [0]
+	};
 };

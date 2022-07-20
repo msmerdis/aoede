@@ -1,9 +1,16 @@
+import { Fraction, fractionInitializer } from './fraction.model';
 import { Note } from './note.model';
 
 export interface Measure {
-	notes : Note[];
+	clef?          : string;
+	tempo?         : number;
+	keySignature?  : number;
+	timeSignature? : Fraction;
+	notes          : Note[];
 };
 
-export const measureInitializer : Measure = {
-	notes : []
+export function measureInitializer () : Measure {
+	return {
+		notes : []
+	};
 };

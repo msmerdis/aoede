@@ -3,7 +3,9 @@ export interface Fraction {
 	denominator : number;
 };
 
-export const fractionInitializer : Fraction = {
-	numerator   : 0,
-	denominator : 0
+export function fractionInitializer () : Fraction {
+	return {
+		numerator   : 0,
+		denominator : 0
+	};
 };

@@ -10,8 +10,10 @@ export interface Preload {
 	tempoList : any[];
 };
 
-export const preloadInitializer : Preload = {
-	clefList  : [],
-	keysList  : [],
-	tempoList : []
+export function preloadInitializer () : Preload {
+	return {
+		clefList  : [],
+		keysList  : [],
+		tempoList : []
+	};
 };

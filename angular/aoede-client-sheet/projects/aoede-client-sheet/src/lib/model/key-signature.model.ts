@@ -4,10 +4,12 @@ export interface KeySignature {
 	minor : string;
 };
 
-export const keySignatureInitializer : KeySignature = {
-	id    : 0,
-	major : "C",
-	minor : "a"
+export function keySignatureInitializer () : KeySignature {
+	return {
+		id    : 0,
+		major : "C",
+		minor : "a"
+	};
 };
 
 export interface KeySignatureArray {

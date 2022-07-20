@@ -10,10 +10,12 @@ export interface Track {
 	measures      : Measure[];
 };
 
-export const trackInitializer : Track = {
-	clef          : "",
-	tempo         : 0,
-	keySignature  : 0,
-	timeSignature : fractionInitializer,
-	measures      : []
+export function trackInitializer () : Track {
+	return {
+		clef          : "",
+		tempo         : 0,
+		keySignature  : 0,
+		timeSignature : fractionInitializer(),
+		measures      : []
+	};
 };

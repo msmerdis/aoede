@@ -12,6 +12,7 @@ import {
 	KeySignature,
 	Bar,
 	Stave,
+	staveExtentionInitializer,
 	TrackInfo,
 	trackInfoInitializer,
 } from 'aoede-client-sheet';
@@ -178,9 +179,9 @@ export class SheetComponent implements OnInit, OnDestroy {
 	private splitBars (track : Track) : Bar[] {
 		return track.measures.reduce ((bars : Bar[], measure : Measure) : Bar[] => {
 			bars.push ({
+				...staveExtentionInitializer,
 				measure : measure,
-				width   : this.barWidth(measure),
-				offset  : 0
+				width   : this.barWidth(measure)
 			});
 
 			return bars;
@@ -193,9 +194,9 @@ export class SheetComponent implements OnInit, OnDestroy {
 
 	private emptyStave () : Stave {
 		return {
+			...staveExtentionInitializer,
 			bars   : [],
-			width  : this.stavesPadding,
-			offset : 0
+			width  : this.stavesPadding
 		};
 	}
 

@@ -5,11 +5,13 @@ export interface Clef {
 	type : string;
 };
 
-export const clefInitializer : Clef = {
-	id   : "",
-	note : 0,
-	spos : 0,
-	type : ""
+export function clefInitializer () : Clef {
+	return {
+		id   : "",
+		note : 0,
+		spos : 0,
+		type : ""
+	};
 };
 
 export interface ClefArray {
