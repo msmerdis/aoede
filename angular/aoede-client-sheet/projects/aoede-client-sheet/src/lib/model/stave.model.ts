@@ -2,6 +2,7 @@ import { Sheet, sheetInitializer } from './sheet.model';
 import { Measure, measureInitializer } from './measure.model';
 import { Note, noteInitializer } from './note.model';
 import { Clef, clefInitializer } from './clef.model';
+import { Fraction, fractionInitializer } from './fraction.model';
 
 export interface StaveExtention {
 	width  : number;
@@ -67,6 +68,17 @@ export interface MappedBarAdjustment extends StaveExtention {
 	tracks : number[];
 };
 
+export interface MappedFraction extends StaveExtention {
+	fraction : Fraction;
+};
+
+export function mappedFractionInitializer () : MappedFraction {
+	return {
+		...staveExtentionInitializer,
+		fraction : fractionInitializer()
+	};
+};
+
 export interface MappedClef extends StaveExtention {
 	clef : Clef;
 };
@@ -79,9 +91,10 @@ export function mappedClefInitializer () : MappedClef {
 };
 
 export interface MappedStave extends StaveExtention {
-	bars   : MappedBar  [];
-	tracks : number     [];
-	clefs  : MappedClef [];
+	bars   : MappedBar      [];
+	tracks : number         [];
+	clefs  : MappedClef     [];
+	times  : MappedFraction [];
 	offset : number;
 };
 
@@ -91,6 +104,7 @@ export function mappedStaveInitializer () : MappedStave {
 		bars   : [],
 		tracks : [],
 		clefs  : [],
+		times  : [],
 		offset : 0
 	};
 };

@@ -136,6 +136,7 @@
 						<configuration>
 							<includePom>true</includePom>
 							<sourceFolders>
+								<sourceFolder>src</sourceFolder>
 								<sourceFolder>projects</sourceFolder>
 								<sourceFolder>angular.json</sourceFolder>
 								<sourceFolder>package.json</sourceFolder>

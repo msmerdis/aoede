@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { ArrayCanvasService } from './canvas.service';
 import { BarService } from './bar.service';
 import { ClefService } from './clef.service';
+import { FractionService } from './fraction.service';
 import { SheetConfiguration } from '../model/sheet-configuration.model';
 import { StaveConfiguration } from '../model/stave-configuration.model';
 
@@ -20,8 +21,9 @@ import {
 export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 
 	constructor(
-		private barService  : BarService,
-		private clefService : ClefService
+		private barService      : BarService,
+		private clefService     : ClefService,
+		private fractionService : FractionService
 	) { }
 
 	public map  (source : Track[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration): MappedStave[] {
@@ -53,12 +55,16 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 	}
 
 	private emptyStave (source : Track[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration) : MappedStave {
-		let clefs  = sheetConfig.showTracks.map(
+		let clefs = sheetConfig.showTracks.map(
 			track => this.clefService.map(sheetConfig.clefArray[source[track].clef], staveConfig, sheetConfig)
 		);
+		let times = sheetConfig.showTracks.map(
+			track => this.fractionService.map(source[track].timeSignature, staveConfig, sheetConfig)
+		);
 
-		let offset = staveConfig.stavesSpacing * 2
-			+ clefs.reduce((total, clef) => clef.width > total ? clef.width : total, 0);
+		let offset = staveConfig.stavesSpacing * 3
+			+ clefs.reduce((total, clef) => clef.width > total ? clef.width : total, 0)
+			+ times.reduce((total, time) => time.width > total ? time.width : total, 0);
 
 		return {
 			...mappedStaveInitializer(),
@@ -66,7 +72,8 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 			offset : offset,
 			width  : offset,
 			footer : staveConfig.noteSpacing * 12 + staveConfig.lineHeight * 6,
-			clefs  : clefs
+			clefs  : clefs,
+			times  : times
 		};
 	}
 
@@ -75,7 +82,12 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 
 		stave.tracks.forEach((track, i) => {
 			this.setupStave(track, staveConfig, context, x, y);
-			this.clefService.draw(stave.clefs[i], staveConfig, context, x + staveConfig.stavesSpacing, y + track);
+
+			let clefx = x + staveConfig.stavesSpacing;
+			this.clefService.draw(stave.clefs[i], staveConfig, context, clefx, y + track);
+
+			let timex = clefx + staveConfig.stavesSpacing + stave.clefs[i].width;
+			this.fractionService.draw(stave.times[i], staveConfig, context, timex, y + track);
 		});
 
 		this.finishStave(stave, staveConfig, context, x, y);
