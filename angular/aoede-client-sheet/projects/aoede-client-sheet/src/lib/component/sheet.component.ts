@@ -43,11 +43,13 @@ export class SheetComponent implements OnInit, OnChanges, OnDestroy {
 
 	ngOnChanges (): void {
 		this.mappedSheet = this.sheetService.map(this.sheet, this.staveConfig, this.sheetConfig);
+		this.drawCanvas();
 	}
 
 	private drawCanvas () {
 		if (this.context !== null && this.mappedSheet.mapped) {
 			this.context.save();
+			this.context.clearRect(0, 0, this.mappedSheet.width, this.mappedSheet.footer);
 			this.sheetService.draw (
 				this.mappedSheet,
 				this.staveConfig,

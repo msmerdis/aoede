@@ -1,6 +1,7 @@
 import { Sheet, sheetInitializer } from './sheet.model';
 import { Measure, measureInitializer } from './measure.model';
 import { Note, noteInitializer } from './note.model';
+import { Clef, clefInitializer } from './clef.model';
 
 export interface StaveExtention {
 	width  : number;
@@ -106,14 +107,33 @@ export function mappedBarInitializer () : MappedBar {
 	};
 };
 
+export interface MappedBarAdjustment extends StaveExtention {
+	tracks : number[];
+};
+
+export interface MappedClef extends StaveExtention {
+	clef : Clef;
+};
+
+export function mappedClefInitializer () : MappedClef {
+	return {
+		...staveExtentionInitializer,
+		clef : clefInitializer()
+	};
+};
+
 export interface MappedStave extends StaveExtention {
-	bars   : MappedBar [];
+	bars   : MappedBar  [];
+	tracks : number     [];
+	clefs  : MappedClef [];
 };
 
 export function mappedStaveInitializer () : MappedStave {
 	return {
 		...staveExtentionInitializer,
-		bars   : []
+		bars   : [],
+		tracks : [],
+		clefs  : []
 	};
 };
 

@@ -36,7 +36,7 @@ export class SheetService implements SingleCanvasService<Sheet, MappedSheet> {
 	public draw (sheet : MappedSheet, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number = 0, y : number = 0) : void {
 		console.log("draw : " + JSON.stringify(sheet));
 		if (sheet.mapped) {
-			var offset = sheet.header;
+			let offset = sheet.header;
 			let previousStype = context.fillStyle;
 			context.fillStyle = 'black';
 

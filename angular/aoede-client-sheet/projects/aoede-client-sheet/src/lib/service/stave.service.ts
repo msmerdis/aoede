@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { ArrayCanvasService } from './canvas.service';
 import { BarService } from './bar.service';
+import { ClefService } from './clef.service';
 import { SheetConfiguration } from '../model/sheet-configuration.model';
 import { StaveConfiguration } from '../model/stave-configuration.model';
 
@@ -19,40 +20,58 @@ import {
 export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 
 	constructor(
-		private barService : BarService
+		private barService  : BarService,
+		private clefService : ClefService
 	) { }
 
 	public map  (source : Track[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration): MappedStave[] {
-		return this.barService
+		let staves = this.barService
 			.map (source, staveConfig, sheetConfig)
 			.reduce ((staves : MappedStave[], bar : MappedBar) : MappedStave[] => {
-				var bottom = staves[staves.length - 1];
+				let bottom = staves[staves.length - 1];
 
 				if (bottom.width + bar.width > staveConfig.stavesWidth) {
-					bottom = this.emptyStave(staveConfig);
+					bottom = this.emptyStave(source, staveConfig, sheetConfig);
 					staves.push(bottom);
 				}
 
 				bottom.bars.push (bar);
-				var extention = this.barService.normalize(bottom.bars);
-				bottom.width  = extention.width;
-				bottom.header = extention.header;
-				bottom.footer = extention.footer;
+				bottom.width += bar.width;
 
 				return staves;
-			}, [this.emptyStave(staveConfig)] as MappedStave[]);
+			}, [this.emptyStave(source, staveConfig, sheetConfig)] as MappedStave[]);
+
+		staves.forEach ((stave) => {
+			let adjusted = this.barService.normalize(stave.bars);
+			stave.width  = adjusted.width;
+			stave.header = adjusted.header;
+			stave.footer = adjusted.footer;
+			stave.tracks = adjusted.tracks;
+		});
+
+		return staves;
 	}
 
-	private emptyStave (staveConfig : StaveConfiguration) : MappedStave {
+	private emptyStave (source : Track[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration) : MappedStave {
+		let clefs = sheetConfig.showTracks.map(track => this.clefService.map(sheetConfig.clefArray[source[track].clef], staveConfig, sheetConfig));
+
 		return {
 			...mappedStaveInitializer(),
 			header : 0,
-			footer : staveConfig.noteSpacing * 12 + staveConfig.lineHeight * 6
+			width  : staveConfig.noteSpacing * 8 + clefs.reduce((total, clef) => clef.width > total ? clef.width : total, 0),
+			footer : staveConfig.noteSpacing * 12 + staveConfig.lineHeight * 6,
+			clefs  : clefs
 		};
 	}
 
 	public draw (stave : MappedStave, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
-		this.barService.draw(stave.bars, staveConfig, context, x + staveConfig.stavesMargin, y);
+		x += staveConfig.stavesMargin;
+
+		this.barService.draw (stave.bars, staveConfig, context, x, y);
+
+		stave.clefs.forEach((clef, i) =>
+			this.clefService.draw(clef, staveConfig, context, x + staveConfig.noteSpacing * 4, y + stave.tracks[i])
+		);
 	}
 
 }

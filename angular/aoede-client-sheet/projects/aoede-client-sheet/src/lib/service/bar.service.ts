@@ -11,6 +11,7 @@ import {
 	staveExtentionInitializer,
 	MappedStave,
 	MappedBar,
+	MappedBarAdjustment,
 	mappedBarInitializer
 } from '../model/stave.model';
 
@@ -59,19 +60,30 @@ export class BarService implements SingleCanvasService<Track[], MappedBar[]> {
 			.reduce ((max, cur) => max > cur ? max : cur, 0);
 	}
 
-	public normalize (bars : MappedBar[]) : StaveExtention {
-		let ext = staveExtentionInitializer as StaveExtention;
+	public normalize (bars : MappedBar[]) : MappedBarAdjustment {
+		let ext = {...staveExtentionInitializer, tracks : []} as MappedBarAdjustment;
 
-		ext = bars.reduce ((e : StaveExtention, bar : MappedBar) => {
+		ext = bars.reduce ((e : MappedBarAdjustment, bar : MappedBar) => {
 			return {
 				...e,
 				header : Math.max(e.header, bar.header),
 				footer : Math.max(e.footer, bar.footer),
-				width  : e.width + bar.width
+				width  : e.width + bar.width,
+				tracks : this.updateTrackCenters(e.tracks, bar)
 			}
 		}, ext);
 
 		return ext;
+	}
+
+	private updateTrackCenters (cur : number[], bar : MappedBar) : number[] {
+		let offset : number = 0;
+		return bar.measures.map((measure, i) => {
+			let rtn = Math.max(measure.header + offset, cur[i] || 0);
+			offset  = measure.footer + rtn;
+
+			return rtn;
+		});
 	}
 
 	public draw (target : MappedBar[], staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {

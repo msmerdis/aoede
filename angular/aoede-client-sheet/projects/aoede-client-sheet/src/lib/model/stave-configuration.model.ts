@@ -2,8 +2,8 @@ import { Clef  } from '../model/clef.model';
 import { KeySignature } from '../model/key-signature.model';
 
 export interface StaveConfiguration {
+	scale         : number;
 	stavesMargin  : number;
-	stavesPadding : number;
 	stavesWidth   : number;
 	/*
 	stavesHeight  : number;
@@ -14,17 +14,17 @@ export interface StaveConfiguration {
 	noteSpacing   : number;
 };
 
-export function staveConfigurationInitializer () : StaveConfiguration {
+export function staveConfigurationInitializer (scale : number = 3) : StaveConfiguration {
 	return {
-		stavesMargin  :  11 * 5,
-		stavesPadding :  11 * 5,
-		stavesWidth   : 188 * 5,
+		scale         : scale,
+		stavesMargin  :  11 * 5 * scale,
+		stavesWidth   : 188 * 5 * scale,
 		/*
 		stavesHeight  :  33 * 5,
 		headerHeight  :  22 * 5,
 		footerHeight  :  11 * 5,
 		*/
-		lineHeight    :       1,
-		noteSpacing   :       5
+		lineHeight    :       1 * scale,
+		noteSpacing   :       5 * scale
 	};
 };
