@@ -87,26 +87,19 @@ export class BarService implements SingleCanvasService<Track[], MappedBar[]> {
 	}
 
 	public draw (target : MappedBar[], staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
-		let bar = target[0];
-		let top = 0;
-		let lst = 0;
-
-		bar.measures.forEach((measure) => {
-			[-4, -2, 0, 2, 4].forEach(i => {
-				let yline = staveConfig.noteSpacing * i + measure.offset + y;
-				context.fillRect(
-					x,
-					yline,
-					staveConfig.stavesWidth,
-					staveConfig.lineHeight
-				);
-
-				if (top == 0) top = yline;
-				if (i  ==  4) lst = yline + 1;
-			});
+		target.forEach ((bar : MappedBar) => {
+			this.drawBar (bar, staveConfig, context, x, y);
+			x += bar.width;
 		});
+		// TODO remove
+		// end of all bars ruler
+		context.fillRect(x, y, staveConfig.lineHeight, target[0].footer);
+	}
 
-		context.fillRect(x + staveConfig.stavesWidth - staveConfig.lineHeight, top, staveConfig.lineHeight, lst - top);
+	public drawBar (target : MappedBar, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
+		// TODO remove
+		// start of bar ruler
+		context.fillRect(x, y, staveConfig.lineHeight, target.footer);
 	}
 
 }

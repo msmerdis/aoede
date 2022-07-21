@@ -5,6 +5,7 @@ export interface StaveConfiguration {
 	scale         : number;
 	stavesMargin  : number;
 	stavesWidth   : number;
+	stavesSpacing : number;
 	/*
 	stavesHeight  : number;
 	headerHeight  : number;
@@ -19,6 +20,7 @@ export function staveConfigurationInitializer (scale : number = 3) : StaveConfig
 		scale         : scale,
 		stavesMargin  :  11 * 5 * scale,
 		stavesWidth   : 188 * 5 * scale,
+		stavesSpacing :   2 * 5 * scale,
 		/*
 		stavesHeight  :  33 * 5,
 		headerHeight  :  22 * 5,

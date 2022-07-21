@@ -43,7 +43,7 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 
 		staves.forEach ((stave) => {
 			let adjusted = this.barService.normalize(stave.bars);
-			stave.width  = adjusted.width;
+			stave.width  = adjusted.width + stave.offset;
 			stave.header = adjusted.header;
 			stave.footer = adjusted.footer;
 			stave.tracks = adjusted.tracks;
@@ -53,12 +53,18 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 	}
 
 	private emptyStave (source : Track[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration) : MappedStave {
-		let clefs = sheetConfig.showTracks.map(track => this.clefService.map(sheetConfig.clefArray[source[track].clef], staveConfig, sheetConfig));
+		let clefs  = sheetConfig.showTracks.map(
+			track => this.clefService.map(sheetConfig.clefArray[source[track].clef], staveConfig, sheetConfig)
+		);
+
+		let offset = staveConfig.stavesSpacing * 2
+			+ clefs.reduce((total, clef) => clef.width > total ? clef.width : total, 0);
 
 		return {
 			...mappedStaveInitializer(),
 			header : 0,
-			width  : staveConfig.noteSpacing * 8 + clefs.reduce((total, clef) => clef.width > total ? clef.width : total, 0),
+			offset : offset,
+			width  : offset,
 			footer : staveConfig.noteSpacing * 12 + staveConfig.lineHeight * 6,
 			clefs  : clefs
 		};
@@ -67,11 +73,34 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 	public draw (stave : MappedStave, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
 		x += staveConfig.stavesMargin;
 
-		this.barService.draw (stave.bars, staveConfig, context, x, y);
+		stave.tracks.forEach((track, i) => {
+			this.setupStave(track, staveConfig, context, x, y);
+			this.clefService.draw(stave.clefs[i], staveConfig, context, x + staveConfig.stavesSpacing, y + track);
+		});
 
-		stave.clefs.forEach((clef, i) =>
-			this.clefService.draw(clef, staveConfig, context, x + staveConfig.noteSpacing * 4, y + stave.tracks[i])
-		);
+		this.finishStave(stave, staveConfig, context, x, y);
+
+		this.barService.draw (stave.bars, staveConfig, context, x + stave.offset, y);
+	}
+
+	private setupStave (track : number, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
+		[-4, -2, 0, 2, 4].forEach(i => {
+			let yline = staveConfig.noteSpacing * i + track + y;
+			context.fillRect(
+				x,
+				yline,
+				staveConfig.stavesWidth,
+				staveConfig.lineHeight
+			);
+		});
+	}
+
+	private finishStave (stave : MappedStave, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
+		let len = stave.tracks.length - 1;
+		let top = stave.tracks[ 0 ] - 4 * staveConfig.noteSpacing;
+		let end = stave.tracks[len] + 4 * staveConfig.noteSpacing;
+
+		context.fillRect(x + staveConfig.stavesWidth - staveConfig.lineHeight, y + top, staveConfig.lineHeight, end - top);
 	}
 
 }

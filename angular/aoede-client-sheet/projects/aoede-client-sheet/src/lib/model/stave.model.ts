@@ -82,6 +82,7 @@ export interface MappedStave extends StaveExtention {
 	bars   : MappedBar  [];
 	tracks : number     [];
 	clefs  : MappedClef [];
+	offset : number;
 };
 
 export function mappedStaveInitializer () : MappedStave {
@@ -89,7 +90,8 @@ export function mappedStaveInitializer () : MappedStave {
 		...staveExtentionInitializer,
 		bars   : [],
 		tracks : [],
-		clefs  : []
+		clefs  : [],
+		offset : 0
 	};
 };
 

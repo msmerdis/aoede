@@ -18,7 +18,7 @@ export class MeasureService implements SingleCanvasService<Measure, MappedMeasur
 	public map  (source : Measure, staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration): MappedMeasure {
 		var mappedMeasure = mappedMeasureInitializer();
 
-		mappedMeasure.width  = staveConfig.scale * 400;
+		mappedMeasure.width  = staveConfig.scale * 250;
 		mappedMeasure.header = staveConfig.noteSpacing * 12 + staveConfig.lineHeight * 6;
 		mappedMeasure.footer = staveConfig.noteSpacing * 12 + staveConfig.lineHeight * 6;
 
