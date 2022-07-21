@@ -44,9 +44,9 @@ export class ClefService implements SingleCanvasService<Clef, MappedClef> {
 				return {
 					...staveExtentionInitializer,
 					clef   : source,
-					width  : staveConfig.noteSpacing *  6,
-					header : staveConfig.noteSpacing * 10 + staveConfig.noteSpacing * source.spos,
-					footer : staveConfig.noteSpacing *  6 - staveConfig.noteSpacing * source.spos
+					width  : staveConfig.noteSpacing * 6,
+					header : staveConfig.noteSpacing * 4 + staveConfig.noteSpacing * source.spos,
+					footer : staveConfig.noteSpacing * 4 - staveConfig.noteSpacing * source.spos
 				};
 		}
 	}
@@ -293,10 +293,12 @@ export class ClefService implements SingleCanvasService<Clef, MappedClef> {
 	}
 
 	private drawClefX (clef : MappedClef, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number = 0, y : number = 0) : void {
-		let previousStype = context.fillStyle;
-		context.fillStyle = 'yellow';
-		this.drawClefC(clef, staveConfig, context, x, y);
-		context.fillStyle = previousStype;
+		context.save();
+		context.translate(x, y);
+		context.scale(staveConfig.scale * 5.5, staveConfig.scale * 5.5);
+		context.textBaseline = 'hanging';
+		context.fillText('?', 0, 0);
+		context.restore();
 	}
 
 }
