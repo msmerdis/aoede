@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 
 import { SingleCanvasService } from './canvas.service';
-import { SheetConfiguration } from '../model/sheet-configuration.model';
-import { StaveConfiguration } from '../model/stave-configuration.model';
+import { SheetConfiguration, sheetConfigurationInitializer } from '../model/sheet-configuration.model';
+import { StaveConfiguration, staveConfigurationInitializer } from '../model/stave-configuration.model';
 
-import { Clef } from '../model/clef.model';
+import { Clef, clefInitializer } from '../model/clef.model';
 import { MappedClef, staveExtentionInitializer } from '../model/stave.model';
 
 @Injectable({
@@ -14,7 +14,7 @@ export class ClefService implements SingleCanvasService<Clef, MappedClef> {
 
 	constructor() { }
 
-	public map  (source : Clef, staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration): MappedClef {
+	public map (source : Clef, staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration): MappedClef {
 		switch (source.type) {
 			case "G":
 				return {

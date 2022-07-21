@@ -5,12 +5,12 @@ export interface Clef {
 	type : string;
 };
 
-export function clefInitializer () : Clef {
+export function clefInitializer (type : string = "") : Clef {
 	return {
 		id   : "",
 		note : 0,
 		spos : 0,
-		type : ""
+		type : type
 	};
 };
 

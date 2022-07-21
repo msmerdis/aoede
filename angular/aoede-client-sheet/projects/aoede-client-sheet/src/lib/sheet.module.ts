@@ -5,6 +5,7 @@ import {
 	DefaultSheetConfig
 } from './sheet.config';
 import { SheetComponent } from './component/sheet.component';
+import { ClefComponent } from './component/clef.component';
 
 import { MeasureService } from './service/measure.service';
 import { StaveService } from './service/stave.service';
@@ -19,11 +20,13 @@ import { KeySignatureService } from './service/key-signature.service';
 
 @NgModule({
 	declarations: [
-		SheetComponent
+		SheetComponent,
+		ClefComponent
 	],
 	imports: [],
 	exports: [
-		SheetComponent
+		SheetComponent,
+		ClefComponent
 	],
 	providers: []
 
