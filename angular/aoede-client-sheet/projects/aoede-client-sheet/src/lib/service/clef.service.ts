@@ -25,6 +25,13 @@ export class ClefService implements SingleCanvasService<Clef, MappedClef> {
 					footer : staveConfig.noteSpacing *  6 - staveConfig.noteSpacing * source.spos
 				};
 			case "C":
+				return {
+					...staveExtentionInitializer,
+					clef   : source,
+					width  : staveConfig.noteSpacing * 6,
+					header : staveConfig.noteSpacing * 4 + staveConfig.noteSpacing * source.spos,
+					footer : staveConfig.noteSpacing * 4 - staveConfig.noteSpacing * source.spos
+				};
 			case "F":
 				return {
 					...staveExtentionInitializer,
@@ -45,14 +52,6 @@ export class ClefService implements SingleCanvasService<Clef, MappedClef> {
 	}
 
 	public draw (clef : MappedClef, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number = 0, y : number = 0) : void {
-		let previousStype = context.fillStyle;
-
-		context.fillStyle = 'blue';
-		context.fillRect(x, y - clef.header, clef.width, clef.header);
-		context.fillStyle = 'red';
-		context.fillRect(x, y              , clef.width, clef.footer);
-		context.fillStyle = previousStype;
-
 		switch (clef.clef.type) {
 			case "G": this.drawClefG(clef, staveConfig, context, x, y - clef.header); break;
 			case "C": this.drawClefC(clef, staveConfig, context, x, y - clef.header); break;
@@ -129,10 +128,81 @@ export class ClefService implements SingleCanvasService<Clef, MappedClef> {
 	}
 
 	private drawClefC (clef : MappedClef, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number = 0, y : number = 0) : void {
-		let previousStype = context.fillStyle;
-		context.fillStyle = 'yellow';
-		this.drawClefG(clef, staveConfig, context, x, y);
-		context.fillStyle = previousStype;
+		context.save();
+		context.strokeStyle="rgba(0,0,0,0)";
+		context.miterLimit=4;
+		context.font="15px ''";
+		context.font="   15px ''";
+		context.translate(x, y);
+		context.scale(staveConfig.scale * 1.6, staveConfig.scale * 1.6);
+		context.save();
+		context.font="   15px ''";
+		context.save();
+		context.fillStyle="rgba(0, 0, 0, 1)";
+		context.font="   15px ''";
+		context.transform(1,0,0,1.030698,-309.364,-543.8647);
+		context.save();
+		context.fillStyle="rgba(0, 0, 0, 1)";
+		context.font="   15px ''";
+		context.beginPath();
+		context.moveTo(325.90302,546.76398);
+		context.bezierCurveTo(325.77565,548.73599,324.67385,550.74769,322.76364,551.48291);
+		context.bezierCurveTo(321.1258,552.0885,319.0617,552.18049,317.638,551.0277);
+		context.bezierCurveTo(316.57277,550.23951,316.16568,548.44596,317.27983,547.51996);
+		context.bezierCurveTo(318.34407,546.51189,320.39149,547.42114,320.26891,548.90426);
+		context.bezierCurveTo(320.68605,549.92222,318.52287,550.54748,319.66017,551.2611);
+		context.bezierCurveTo(320.96855,551.60188,322.30255,550.53315,322.63842,549.29104);
+		context.bezierCurveTo(323.1266,547.50862,323.10071,545.58499,322.67301,543.79274);
+		context.bezierCurveTo(322.44295,542.90899,321.89729,541.53645,320.73027,541.89426);
+		context.bezierCurveTo(319.20285,542.2489,318.34585,543.75774,317.865,545.13);
+		context.bezierCurveTo(317.58677,543.18531,316.36388,541.50362,314.958,540.192);
+		context.bezierCurveTo(314.958,544.09834,314.95801,548.00467,314.95801,551.91101);
+		context.lineTo(314.08301,551.91554);
+		context.bezierCurveTo(314.08301,543.88753,314.08301,535.6966,314.08301,527.66859);
+		context.lineTo(314.95801,527.66785);
+		context.bezierCurveTo(314.95801,531.51886,314.95801,535.529,314.95801,539.38);
+		context.bezierCurveTo(316.35227,538.08767,317.58034,536.43374,317.844,534.505);
+		context.bezierCurveTo(318.34775,535.94355,319.32246,537.53197,320.97,537.755);
+		context.bezierCurveTo(322.1809,537.82161,322.52686,536.34503,322.76844,535.42539);
+		context.bezierCurveTo(323.08591,533.68738,323.12057,531.8389,322.56968,530.14452);
+		context.bezierCurveTo(322.17561,528.95315,320.88042,527.97772,319.60389,528.29761);
+		context.bezierCurveTo(318.57267,529.04912,320.60708,529.59275,320.26318,530.5613);
+		context.bezierCurveTo(320.48284,531.95228,318.76106,533.04005,317.57439,532.3192);
+		context.bezierCurveTo(316.28904,531.61505,316.38273,529.72095,317.37337,528.80541);
+		context.bezierCurveTo(318.04771,528.10885,319.33076,527.65914,320.27066,527.66651);
+		context.bezierCurveTo(321.22932,527.67403,321.7886,527.74487,322.64672,528.04424);
+		context.bezierCurveTo(324.56799,528.72938,325.72882,530.70423,325.88682,532.67197);
+		context.bezierCurveTo(326.17716,534.90335,324.92877,537.33821,322.82569,538.21926);
+		context.bezierCurveTo(321.45806,538.74967,319.87609,538.29068,318.827,537.317);
+		context.bezierCurveTo(318.65552,538.29407,318.22016,539.2263,317.68074,539.9006);
+		context.bezierCurveTo(318.11632,540.61049,318.58743,541.75295,318.82791,542.14434);
+		context.bezierCurveTo(320.14125,540.94807,322.46143,540.80379,323.82848,541.98977);
+		context.bezierCurveTo(325.22049,543.13189,326.08868,544.95009,325.90302,546.76398);
+		context.closePath();
+		context.fill();
+		context.stroke();
+		context.restore();
+		context.restore();
+		context.save();
+		context.fillStyle="rgba(0, 0, 0, 1)";
+		context.font="   15px ''";
+		context.transform(1,0,0,1.030928,-309.364,-543.9805);
+		context.save();
+		context.fillStyle="rgba(0, 0, 0, 1)";
+		context.font="   15px ''";
+		context.beginPath();
+		context.moveTo(312.208,551.911);
+		context.lineTo(309.364,551.911);
+		context.lineTo(309.364,527.661);
+		context.lineTo(312.208,527.661);
+		context.lineTo(312.208,551.911);
+		context.closePath();
+		context.fill();
+		context.stroke();
+		context.restore();
+		context.restore();
+		context.restore();
+		context.restore();
 	}
 
 	private drawClefF (clef : MappedClef, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number = 0, y : number = 0) : void {
