@@ -13,5 +13,4 @@ export * from './lib/store/music.selectors';
 export * from './lib/component/sheet-create.component';
 export * from './lib/component/sheet-modify.component';
 export * from './lib/component/sheet-result.component';
-export * from './lib/component/sheet.component';
 export * from './lib/model/preload.model';

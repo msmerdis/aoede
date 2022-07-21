@@ -15,50 +15,6 @@ export const staveExtentionInitializer : StaveExtention = {
 	footer : 0
 };
 
-/////////////////////////////////////////////////
-// Old
-/////////////////////////////////////////////////
-
-export interface Stack extends StaveExtention {
-	notes : Note[];
-};
-
-export const stackInitializer : Stack = {
-	...staveExtentionInitializer,
-	notes : []
-};
-
-export interface Beat extends StaveExtention {
-	notes : Stack[];
-};
-
-export const beatInitializer : Beat = {
-	...staveExtentionInitializer,
-	notes : []
-};
-
-export interface Bar extends StaveExtention {
-	measure : Measure;
-};
-
-export const barInitializer : Bar = {
-	...staveExtentionInitializer,
-	measure : measureInitializer()
-};
-
-export interface Stave extends StaveExtention {
-	bars : Bar[];
-};
-
-export const staveInitializer : Stave = {
-	...staveExtentionInitializer,
-	bars : []
-};
-
-/////////////////////////////////////////////////
-// New
-/////////////////////////////////////////////////
-
 export interface MappedNote extends StaveExtention {
 	note : Note;
 };

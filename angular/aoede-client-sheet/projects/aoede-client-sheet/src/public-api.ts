@@ -7,7 +7,6 @@ export * from './lib/model/sheet-configuration.model';
 export * from './lib/model/note.model';
 export * from './lib/model/track.model';
 export * from './lib/model/measure.model';
-export * from './lib/model/track-info.model';
 export * from './lib/model/tempo.model';
 export * from './lib/model/fraction.model';
 export * from './lib/model/stave.model';

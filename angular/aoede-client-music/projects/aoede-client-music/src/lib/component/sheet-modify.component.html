@@ -1,15 +1,12 @@
 <div *ngIf="(sheet$ | async) === null">Loading</div>
 <div *ngIf="(sheet$ | async) !== null">
-	<aoede-music-sheet
-		[sheet$]="sheet$"
-		[showHeader]=true
-		[showFooter]=false
-		[firstTrack]="track"
-		(trackEvent)="updateTrack($event)"
-		(modifiedEvent)="updateModified($event)"
-	></aoede-music-sheet>
-</div>
-<div *ngIf="(sheet$ | async) !== null">
+	<select (change)="updateTrack(+tracksSelect.value)" #tracksSelect>
+			<option
+				*ngFor="let t of sheet.tracks; let i = index;"
+				[selected]="i == track"
+				value="{{ i }}"
+			>{{ t.name }}</option>
+	</select>
 	<aoede-sheet
 		[sheet]="sheet"
 		[sheetConfig]="sheetConfig1"

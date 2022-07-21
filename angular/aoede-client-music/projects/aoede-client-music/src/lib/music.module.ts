@@ -10,7 +10,6 @@ import { MusicService } from './music.service';
 import { SheetModifyComponent } from './component/sheet-modify.component';
 import { SheetCreateComponent } from './component/sheet-create.component';
 import { SheetResultComponent } from './component/sheet-result.component';
-import { SheetComponent } from './component/sheet.component';
 import * as fromMusicState from './store/music.reducer';
 import { MusicEffects } from './store/music.effects';
 import {
@@ -22,7 +21,6 @@ import { SheetModule } from 'aoede-client-sheet';
 
 @NgModule({
 	declarations: [
-		SheetComponent,
 		SheetModifyComponent,
 		SheetCreateComponent,
 		SheetResultComponent

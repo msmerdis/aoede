@@ -87,7 +87,7 @@ export class SheetModifyComponent {
 
 		this.track = +this.route.snapshot.params['track']-1 || 0;
 		this.sheetConfig1.showTracks = [this.track];
-		this.sheetConfig2.showTracks = [this.track];
+		this.sheetConfig2.showTracks = [0, this.track];
 	}
 
 	private dispatch(id : number) {
@@ -115,10 +115,6 @@ export class SheetModifyComponent {
 			showTracks : [0, track]
 		}
 		this.loc.go(url);
-	}
-
-	public updateModified (modified : boolean) : void {
-		this.modified = modified;
 	}
 
 }
