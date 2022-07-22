@@ -2,7 +2,7 @@ import { Sheet, sheetInitializer } from './sheet.model';
 import { Measure, measureInitializer } from './measure.model';
 import { Note, noteInitializer } from './note.model';
 import { Clef, clefInitializer } from './clef.model';
-import { Fraction, fractionInitializer } from './fraction.model';
+import { TimeSignature, timeSignatureInitializer } from './time-signature.model';
 import { KeySignature, keySignatureInitializer } from './key-signature.model';
 
 export interface StaveExtention {
@@ -91,23 +91,23 @@ export function mappedKeySignatureInitializer () : MappedKeySignature {
 	};
 };
 
-export interface MappedFraction extends StaveExtention {
-	fraction : Fraction;
+export interface MappedTimeSignature extends StaveExtention {
+	time : TimeSignature;
 };
 
-export function mappedFractionInitializer () : MappedFraction {
+export function mappedTimeSignatureInitializer () : MappedTimeSignature {
 	return {
 		...staveExtentionInitializer,
-		fraction : fractionInitializer()
+		time : timeSignatureInitializer()
 	};
 };
 
 export interface MappedStave extends StaveExtention {
-	bars      : MappedBar          [];
-	tracks    : number             [];
-	clefs     : MappedClef         [];
-	times     : MappedFraction     [];
-	keys      : MappedKeySignature [];
+	bars      : MappedBar           [];
+	tracks    : number              [];
+	clefs     : MappedClef          [];
+	times     : MappedTimeSignature [];
+	keys      : MappedKeySignature  [];
 	keysWidth : number;
 	offset    : number;
 };

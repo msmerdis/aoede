@@ -14,8 +14,8 @@
 
 		<label for="tempo">Tempo</label>
 		<span class="short">
-			<input  *ngIf="custom == true"  id="tempo" type="text" [formControl]="tempo" placeholder="Ex. {{ tempo.value }}" />
-			<select *ngIf="custom == false" id="tempo" [formControl]="tempo">
+			<input  *ngIf="customTempo == true"  id="tempo" type="text" [formControl]="tempo" placeholder="Ex. {{ tempo.value }}" />
+			<select *ngIf="customTempo == false" id="tempo" [formControl]="tempo">
 				<option
 					*ngFor="let t of tempoList$ | async"
 					[selected]="t.stdTempo == tempo.value"
@@ -23,8 +23,43 @@
 					title="{{ t.desc }}"
 				>{{ t.id }}</option>
 			</select>
-			Custom : <input type="checkbox" #customTempo value="0" (change)="custom = customTempo.checked; updateTempo();" />
+			Custom : <input type="checkbox" #customTempoBox value="0" (change)="customTempo = customTempoBox.checked; updateTempo();" />
 		</span>
+
+		<label for="timeNum">Time Signature</label>
+		<span class="short">
+			<ng-container *ngIf="customTime == true">
+				<select id="timeNum" [formControl]="timeNum" style="width : 64px">
+					<option
+						*ngFor="let num of [2,3,4,6,7,8,9,10,11,12,13,14,15,16]"
+						[selected]="num == timeNum.value"
+					>{{ num }}</option>
+				</select>
+				<span style="width : 16px; text-align: center">/</span>
+				<select id="timeDen" [formControl]="timeDen" style="width : 64px">
+					<option
+						*ngFor="let num of [2,4,8,16]"
+						[selected]="num == timeDen.value"
+					>{{ num }}</option>
+				</select>
+			</ng-container>
+			<select *ngIf="customTime == false" #timesOptions (change)="updateTime(+timesOptions.value)" >
+				<option
+					*ngFor="let t of timesList$ | async; index as i"
+					[selected]="t.numerator == timeNum.value && t.denominator == timeDen.value"
+					value="{{ i }}"
+					title="Beats: {{ convertBeats(t.beats || [], t.numerator) }}"
+				>{{ t.numerator }} / {{ t.denominator }}</option>
+			</select>
+			Custom : <input type="checkbox" #customTimeBox value="0" (change)="customTime = customTimeBox.checked" />
+		</span>
+
+		<ng-container *ngIf="customTime == true">
+			<label for="beats">Beats</label>
+			<span id="beats">
+				<input *ngFor="let b of generateBeats(timeNum.value || 0)" type="checkbox" value="{{ b }}" #beat />
+			</span>
+		</ng-container>
 
 		<label for="key">Key Signature</label>
 		<span>
@@ -36,23 +71,6 @@
 				>{{ minor ? k.minor : k.major }}</option>
 			</select>
 			Minor : <input type="checkbox" #showMinor value="0" (change)="minor = showMinor.checked" />
-		</span>
-
-		<label for="timeNum">Time Signature</label>
-		<span class="fraction">
-			<select id="timeNum" [formControl]="timeNum">
-				<option
-					*ngFor="let num of [2,3,4,6,7,8,9,10,11,12,13,14,15,16]"
-					[selected]="num == timeNum.value"
-				>{{ num }}</option>
-			</select>
-			/
-			<select id="timeDen" [formControl]="timeDen">
-				<option
-					*ngFor="let num of [2,4,8,16]"
-					[selected]="num == timeDen.value"
-				>{{ num }}</option>
-			</select>
 		</span>
 
 		<button type="submit">Submit</button>

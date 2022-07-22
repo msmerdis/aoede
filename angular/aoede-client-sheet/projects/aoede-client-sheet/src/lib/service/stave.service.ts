@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { ArrayCanvasService } from './canvas.service';
 import { BarService } from './bar.service';
 import { ClefService } from './clef.service';
-import { FractionService } from './fraction.service';
 import { KeySignatureService } from './key-signature.service';
+import { TimeSignatureService } from './time-signature.service';
 import { SheetConfiguration } from '../model/sheet-configuration.model';
 import { StaveConfiguration } from '../model/stave-configuration.model';
 
@@ -16,7 +16,7 @@ import {
 	mappedBarInitializer,
 	MappedClef,
 	MappedKeySignature,
-	MappedFraction
+	MappedTimeSignature
 } from '../model/stave.model';
 
 @Injectable({
@@ -27,8 +27,8 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 	constructor(
 		private barService : BarService,
 		private clefService : ClefService,
-		private fractionService : FractionService,
-		private keySignatureService : KeySignatureService
+		private keySignatureService : KeySignatureService,
+		private timeSignatureService : TimeSignatureService
 	) { }
 
 	public map  (source : Track[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration): MappedStave[] {
@@ -83,12 +83,12 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 
 		/* append time signature */
 
-		let times = [] as MappedFraction[];
+		let times = [] as MappedTimeSignature[];
 
 		if (first) {
 			// only show time signature on first stave
 			times = sheetConfig.showTracks.map(
-				track => this.fractionService.map(source[track].timeSignature, staveConfig, sheetConfig)
+				track => this.timeSignatureService.map(source[track].timeSignature, staveConfig, sheetConfig)
 			);
 
 			offset += (staveConfig.stavesSpacing + times.reduce((total, time) => time.width > total ? time.width : total, 0));
@@ -124,7 +124,7 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 
 			if (stave.times.length > 0) {
 				let timex = keysx + staveConfig.stavesSpacing + stave.keys[i].width;
-				this.fractionService.draw(stave.times[i], staveConfig, context, timex, y + track);
+				this.timeSignatureService.draw(stave.times[i], staveConfig, context, timex, y + track);
 			}
 		});
 

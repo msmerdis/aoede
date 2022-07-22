@@ -1,11 +1,11 @@
-import { Fraction, fractionInitializer } from './fraction.model';
+import { TimeSignature } from './time-signature.model';
 import { Note } from './note.model';
 
 export interface Measure {
 	clef?          : string;
 	tempo?         : number;
 	keySignature?  : number;
-	timeSignature? : Fraction;
+	timeSignature? : TimeSignature;
 	notes          : Note[];
 };
 

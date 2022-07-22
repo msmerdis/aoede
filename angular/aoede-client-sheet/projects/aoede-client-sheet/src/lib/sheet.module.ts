@@ -13,7 +13,7 @@ import { ClefService } from './service/clef.service';
 import { BeatService } from './service/beat.service';
 import { SheetService } from './service/sheet.service';
 import { NoteService } from './service/note.service';
-import { FractionService } from './service/fraction.service';
+import { TimeSignatureService } from './service/time-signature.service';
 import { TempoService } from './service/tempo.service';
 import { KeySignatureService } from './service/key-signature.service';
 

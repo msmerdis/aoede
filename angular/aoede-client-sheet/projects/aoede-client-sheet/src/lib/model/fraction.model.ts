@@ -3,9 +3,9 @@ export interface Fraction {
 	denominator : number;
 };
 
-export function fractionInitializer () : Fraction {
+export function fractionInitializer (num : number = 0, den : number = 0) : Fraction {
 	return {
-		numerator   : 0,
-		denominator : 0
+		numerator   : num,
+		denominator : den
 	};
 };

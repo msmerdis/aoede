@@ -5,7 +5,9 @@ import {
 	Sheet,
 	Clef,
 	Tempo,
-	KeySignature
+	Fraction,
+	KeySignature,
+	TimeSignature
 } from 'aoede-client-sheet';
 import {
 	ApiError,
@@ -57,3 +59,18 @@ function findTempo (tempos : Tempo[], tempo : string) : Tempo | null {
 
 export const getTempos = createSelector(getPreloadValue, (data   : Preload | null                ): Tempo[] | null => data   === null ? null : data.tempoList);
 export const getTempo  = createSelector(getTempos,       (tempos : Tempo[] | null, tempo : string): Tempo   | null => tempos === null ? null : findTempo(tempos, tempo));
+
+function findTime (times : TimeSignature[], num : number, den : number) : TimeSignature | null {
+	return times.length > 0 ? times.find(t => t.numerator == num && t.denominator == den) || null : null;
+};
+
+function selectorTimes (data : Preload | null): TimeSignature[] | null {
+	return data  === null ? null : data.timeList;
+};
+
+function selectorTime(times  : TimeSignature[] | null, fraction : Fraction): TimeSignature   | null {
+	return times === null ? null : findTime(times, fraction.numerator, fraction.denominator);
+};
+
+export const getTimes = createSelector(getPreloadValue, selectorTimes);
+export const getTime  = createSelector(getTimes,        selectorTime);

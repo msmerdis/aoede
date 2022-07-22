@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, ElementRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable, take, filter } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -6,11 +6,12 @@ import { Store } from '@ngrx/store';
 import {
 	Clef,
 	KeySignature,
+	TimeSignature,
 	Tempo
 } from 'aoede-client-sheet';
 
 import { MusicState } from '../store/music.reducer';
-import { getClefs, getKeys, getTempos } from '../store/music.selectors';
+import { getClefs, getKeys, getTempos, getTimes } from '../store/music.selectors';
 
 @Component({
 	selector: 'aoede-music-sheet-create',
@@ -19,8 +20,9 @@ import { getClefs, getKeys, getTempos } from '../store/music.selectors';
 })
 export class SheetCreateComponent implements OnInit {
 
-	minor  : boolean = false;
-	custom : boolean = false;
+	minor       : boolean = false;
+	customTempo : boolean = false;
+	customTime  : boolean = false;
 
 	name  = new FormControl();
 	clef  = new FormControl('Treble');
@@ -29,8 +31,11 @@ export class SheetCreateComponent implements OnInit {
 	timeNum = new FormControl(4);
 	timeDen = new FormControl(4);
 
+	@ViewChildren('beat') beats : ElementRef[] = [];
+
 	clefList$  : Observable<Clef[] | null>;
 	keysList$  : Observable<KeySignature[] | null>;
+	timesList$ : Observable<TimeSignature[] | null>;
 	tempoList$ : Observable<Tempo[] | null>;
 
 	constructor(
@@ -38,6 +43,7 @@ export class SheetCreateComponent implements OnInit {
 	) {
 		this.clefList$  = this.store.select (getClefs);
 		this.keysList$  = this.store.select (getKeys);
+		this.timesList$ = this.store.select (getTimes);
 		this.tempoList$ = this.store.select (getTempos);
 
 		this.updateTempo ();
@@ -53,10 +59,33 @@ export class SheetCreateComponent implements OnInit {
 		console.log(" -> tempo : " + this.tempo.value);
 		console.log(" -> key   : " + this.key.value);
 		console.log(" -> time  : " + this.timeNum.value + "/" + this.timeDen.value);
+		console.log(" -> beats : " + this.extractBeats());
+	}
+
+	generateBeats (num : number) : number[] {
+		return [...Array(+num).keys()];
+	}
+
+	extractBeats () : number[] | null {
+		return this.beats
+			.map    (beat => beat.nativeElement)
+			.filter (beat => beat.checked)
+			.map    (beat => beat.value);
+	}
+
+	convertBeats (beats : number[], length : number) : string {
+		let rtn : string = " ";
+
+		for (let i = 0; i < length; i += 1) {
+			rtn += beats.includes(i) ? (i+1) : "-";
+			rtn += " ";
+		}
+
+		return rtn;
 	}
 
 	updateTempo (): void {
-		if (this.custom)
+		if (this.customTempo)
 			return;
 
 		this.tempoList$
@@ -77,4 +106,14 @@ export class SheetCreateComponent implements OnInit {
 			});
 	}
 
+	updateTime (index : number) : void {
+		this.timesList$.pipe (take(1)).subscribe(
+			(times) => {
+				if (times) {
+					this.timeNum.setValue(times[index].numerator);
+					this.timeDen.setValue(times[index].denominator);
+				}
+			}
+		);
+	}
 }

@@ -1,4 +1,4 @@
-import { Fraction, fractionInitializer } from './fraction.model';
+import { TimeSignature, timeSignatureInitializer } from './time-signature.model';
 import { Measure } from './measure.model';
 
 export interface Track {
@@ -6,7 +6,7 @@ export interface Track {
 	clef          : string;
 	tempo         : number;
 	keySignature  : number;
-	timeSignature : Fraction;
+	timeSignature : TimeSignature;
 	measures      : Measure[];
 };
 
@@ -15,7 +15,7 @@ export function trackInitializer () : Track {
 		clef          : "",
 		tempo         : 0,
 		keySignature  : 0,
-		timeSignature : fractionInitializer(),
+		timeSignature : timeSignatureInitializer(),
 		measures      : []
 	};
 };
