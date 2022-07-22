@@ -57,7 +57,13 @@
 		<ng-container *ngIf="customTime == true">
 			<label for="beats">Beats</label>
 			<span id="beats">
-				<input *ngFor="let b of generateBeats(timeNum.value || 0)" type="checkbox" value="{{ b }}" #beat />
+				<input *ngFor="let b of generateBeats(timeNum.value || 0)"
+					type="checkbox"
+					value="{{ b }}"
+					[disabled]="b == 0"
+					[checked]="b == 0"
+					#beat
+				/>
 			</span>
 		</ng-container>
 
