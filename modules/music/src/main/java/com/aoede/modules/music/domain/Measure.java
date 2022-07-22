@@ -30,7 +30,7 @@ public class Measure {
 	private Short keySignature = null;
 
 	@Valid
-	private Fraction timeSignature = null;
+	private TimeSignature timeSignature = null;
 
 	@Valid
 	@NotNull (message = "Measure must define notes")

@@ -88,7 +88,7 @@ public class TestJsonServiceImplBuildFraction extends JsonServiceImplTestCaseSet
 	}
 
 	@Test
-	public void buildFractionFromStringNoDenomerator () throws Exception {
+	public void buildFractionFromStringNoDenominator () throws Exception {
 		// execute function
 		Method buildFraction = JsonServiceImpl.class.getDeclaredMethod("buildFraction", String.class);
 		buildFraction.setAccessible(true);

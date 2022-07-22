@@ -93,3 +93,35 @@ And the response matches
 And the response contains "validationInfo" objects in "validations"
 	| name  | field                                         | value | error                              |
 	| sheet | tracks[0].measures[2].timeSignature.numerator |  -1   | numerator must be a positive value |
+
+@TC060005
+Scenario Outline: create a Measure with invalid beats in time signature
+### create a new sheet defining the measure's time signature field with an invalid value
+### operation should fail and a validation error should be returned
+
+And prepare json array "beats"
+	| integer | <beat1> |
+	| integer | <beat2> |
+	| integer | <beat3> |
+And prepare json "time"
+	| numerator   | integer | <num> |
+	| denominator | integer | <den> |
+	| beats       | json    | beats |
+And set "measure" object's "timeSignature" element to "time" as "json"
+When a "sheet" with "C scale" json element
+Then the request was not successful
+And the response has a status code of 400
+And the response matches
+	| code | integer | 400               |
+	| text | string  | BAD_REQUEST       |
+	| desc | string  | Validation errors |
+And the response contains "validationInfo" objects in "validations"
+	| name  | field                               |  value  | error                                |
+	| sheet | tracks[0].measures[2].timeSignature | <value> | Time signature defined invalid beats |
+
+Examples:
+	| beat1 | beat2 | beat3 | num | den | value                                                                       |
+	|   0   |   2   |   7   |  7  |  8  | TimeSignature(super=Fraction(numerator=7, denominator=8), beats=[0, 2, 7])  |
+	|   0   |   2   |   8   |  3  |  8  | TimeSignature(super=Fraction(numerator=3, denominator=8), beats=[0, 2, 8])  |
+	|   0   |   2   |   2   |  9  |  4  | TimeSignature(super=Fraction(numerator=9, denominator=4), beats=[0, 2, 2])  |
+	|  -1   |   2   |   6   |  9  |  8  | TimeSignature(super=Fraction(numerator=9, denominator=8), beats=[-1, 2, 6]) |

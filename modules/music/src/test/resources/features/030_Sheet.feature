@@ -219,3 +219,88 @@ And the response array contains "sheetObject" objects
 	| id    | name    |
 	| sheet | B scale |
 And the response array contains latest "sheet"
+
+@TC030011
+@Positive @Create
+Scenario: create a new Sheet with custom track time signature beats
+### create a new sheet and verify the sheet is created with the same data as provided
+### retrieve the sheet and verify the same data are returned
+
+Given prepare "F" scale as "F scale"
+And store "tracks" element from "F scale" object as "track array"
+And store element 0 from "track array" array as "track"
+And store "timeSignature" element from "track" object as "time"
+And set "time" object's "numerator" element to "7" as "number"
+And set "time" object's "denominator" element to "8" as "number"
+And prepare json array "beats"
+	| integer | 1 |
+	| integer | 3 |
+	| integer | 6 |
+And set "time" object's "beats" element to "beats" as "json"
+And a "sheet" with "F scale" json element
+And the request was successful
+And the response has a status code of 201
+And the response matches
+	|  id  | key    | sheet   |
+	| name | string | F scale |
+When request previously created "sheet"
+And the request was successful
+And the response has a status code of 200
+And the response matches "F scale" json
+And the response matches
+	|  id  | key    | sheet   |
+	| name | string | F scale |
+Then request all available "sheet"
+And the request was successful
+And the response has a status code of 200
+And prepare data table "sheetObject"
+	| id  | name   |
+	| key | string |
+And the response array contains "sheetObject" objects
+	| id    | name    |
+	| sheet | F scale |
+And the response array contains latest "sheet"
+
+@TC030012
+@Positive @Create
+Scenario: create a new Sheet with custom measure time signature beats
+### create a new sheet and verify the sheet is created with the same data as provided
+### retrieve the sheet and verify the same data are returned
+
+Given prepare "F" scale as "F scale"
+And store "tracks" element from "F scale" object as "track array"
+And store element 0 from "track array" array as "track"
+And store "measures" element from "track" object as "measure array"
+And store element 2 from "measure array" array as "measure"
+And prepare json array "beats"
+	| integer | 1 |
+	| integer | 3 |
+	| integer | 6 |
+And prepare json "time"
+	| numerator   | integer | 7     |
+	| denominator | integer | 8     |
+	| beats       | json    | beats |
+And set "measure" object's "timeSignature" element to "time" as "json"
+And a "sheet" with "F scale" json element
+And the request was successful
+And the response has a status code of 201
+And the response matches
+	|  id  | key    | sheet   |
+	| name | string | F scale |
+When request previously created "sheet"
+And the request was successful
+And the response has a status code of 200
+And the response matches "F scale" json
+And the response matches
+	|  id  | key    | sheet   |
+	| name | string | F scale |
+Then request all available "sheet"
+And the request was successful
+And the response has a status code of 200
+And prepare data table "sheetObject"
+	| id  | name   |
+	| key | string |
+And the response array contains "sheetObject" objects
+	| id    | name    |
+	| sheet | F scale |
+And the response array contains latest "sheet"

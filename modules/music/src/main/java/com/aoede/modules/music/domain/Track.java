@@ -36,7 +36,7 @@ public class Track {
 
 	@Valid
 	@NotNull (message = "Track must define a time signature")
-	private Fraction timeSignature;
+	private TimeSignature timeSignature;
 
 	@Valid
 	@NotNull (message = "Track must define measures")
