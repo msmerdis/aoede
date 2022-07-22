@@ -151,16 +151,18 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 		);
 
 		for (int i = 0; i < count; i += 1, this.startingNote += 1) {
-			generateSheet(userId, this.startingNote);
+			generateSheet(userId, (short)-1, this.startingNote);
+			generateSheet(userId, (short) 0, this.startingNote);
+			generateSheet(userId, (short) 1, this.startingNote);
 		}
 
 		// clear authentication
 		SecurityContextHolder.clearContext();
 	}
 
-	private void generateSheet (long userId, int root) throws GenericException, Exception {
+	private void generateSheet (long userId, short key, int root) throws GenericException, Exception {
 		String note = this.notes[root % 7];
-		this.sheetService.create(makeSheet(root, (short)0, note + " scale"));
+		this.sheetService.create(makeSheet(root, key, note + " scale"));
 	}
 
 }

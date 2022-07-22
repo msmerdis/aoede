@@ -8,11 +8,8 @@ export class ApiInterceptor implements HttpInterceptor {
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		if (location.origin !== 'http://localhost:4200') {
-			console.log('not intercepting');
 			return next.handle(req);
 		}
-
-		console.log('intercepting: ' + req.url);
 
 		const apiReq = req.clone({
 			url: `${this.baseUrl}${req.url}`,

@@ -21,7 +21,6 @@ export class UserInterceptor implements HttpInterceptor {
 
 	public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		if (this.userService.isUserRequest(req.url)) {
-			console.log("skip user requests");
 			return next.handle(req);
 		}
 
@@ -42,11 +41,9 @@ export class UserInterceptor implements HttpInterceptor {
 		.pipe (
 			take(1),
 			switchMap ((auth) => {
-				console.log("inject auth token " + auth.token + " to " + req.url);
 				var headers = req.headers.set(this.config.authToken!!, auth.token || "");
 
 				if (auth.renew) {
-					console.log("request token renew");
 					headers = headers.set(this.config.renewFlag!!, "1");
 				}
 
@@ -104,7 +101,6 @@ export class UserInterceptor implements HttpInterceptor {
 			// select the correct token to use
 			switchMap((auth) => {
 				if (auth.refresh) {
-					console.log("waiting for auth token");
 					return this.store.select(getAuthToken).pipe(skip(1));
 				}
 				return of (auth.token);
@@ -112,7 +108,6 @@ export class UserInterceptor implements HttpInterceptor {
 			take(1),
 
 			switchMap ((token) => {
-				console.log("inject auth token " + token + " to " + req.url);
 				const apiReq = req.clone({
 					headers: req.headers.set(this.config.authToken!!, token || "")
 				});

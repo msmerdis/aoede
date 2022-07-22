@@ -22,10 +22,8 @@ export class UserAuthInterceptor implements HttpInterceptor {
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		if { this.authToken === ""} {
-			console.log("no token found");
 			return next.handle(req);
 		}
-		console.log("inject auth token " + this.authToken);
 		const apiReq = req.clone({
 			headers: req.headers.set(this.config.authToken!!, this.authToken)
 		});

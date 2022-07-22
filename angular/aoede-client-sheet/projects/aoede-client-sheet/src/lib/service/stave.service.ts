@@ -4,6 +4,7 @@ import { ArrayCanvasService } from './canvas.service';
 import { BarService } from './bar.service';
 import { ClefService } from './clef.service';
 import { FractionService } from './fraction.service';
+import { KeySignatureService } from './key-signature.service';
 import { SheetConfiguration } from '../model/sheet-configuration.model';
 import { StaveConfiguration } from '../model/stave-configuration.model';
 
@@ -12,7 +13,10 @@ import {
 	MappedStave,
 	mappedStaveInitializer,
 	MappedBar,
-	mappedBarInitializer
+	mappedBarInitializer,
+	MappedClef,
+	MappedKeySignature,
+	MappedFraction
 } from '../model/stave.model';
 
 @Injectable({
@@ -21,9 +25,10 @@ import {
 export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 
 	constructor(
-		private barService      : BarService,
-		private clefService     : ClefService,
-		private fractionService : FractionService
+		private barService : BarService,
+		private clefService : ClefService,
+		private fractionService : FractionService,
+		private keySignatureService : KeySignatureService
 	) { }
 
 	public map  (source : Track[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration): MappedStave[] {
@@ -41,7 +46,7 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 				bottom.width += bar.width;
 
 				return staves;
-			}, [this.emptyStave(source, staveConfig, sheetConfig)] as MappedStave[]);
+			}, [this.emptyStave(source, staveConfig, sheetConfig, true)] as MappedStave[]);
 
 		staves.forEach ((stave) => {
 			let adjusted = this.barService.normalize(stave.bars);
@@ -54,26 +59,51 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 		return staves;
 	}
 
-	private emptyStave (source : Track[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration) : MappedStave {
+	private emptyStave (source : Track[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, first : boolean = false) : MappedStave {
+		/* append clefs */
+
 		let clefs = sheetConfig.showTracks.map(
 			track => this.clefService.map(sheetConfig.clefArray[source[track].clef], staveConfig, sheetConfig)
 		);
-		let times = sheetConfig.showTracks.map(
-			track => this.fractionService.map(source[track].timeSignature, staveConfig, sheetConfig)
+
+		let offset = staveConfig.stavesSpacing * 2 + clefs.reduce((total, clef) => clef.width > total ? clef.width : total, 0)
+
+		/* append key signature */
+
+		let keys  = sheetConfig.showTracks.map(
+			track => this.keySignatureService.map(sheetConfig.keysArray[source[track].keySignature], staveConfig, sheetConfig)
 		);
 
-		let offset = staveConfig.stavesSpacing * 3
-			+ clefs.reduce((total, clef) => clef.width > total ? clef.width : total, 0)
-			+ times.reduce((total, time) => time.width > total ? time.width : total, 0);
+		let keysWidth = keys.reduce((total, key) => key.width > total ? key.width : total, 0);
+
+		if (keysWidth > 0) {
+			offset += (staveConfig.stavesSpacing + keysWidth);
+		}
+
+
+		/* append time signature */
+
+		let times = [] as MappedFraction[];
+
+		if (first) {
+			// only show time signature on first stave
+			times = sheetConfig.showTracks.map(
+				track => this.fractionService.map(source[track].timeSignature, staveConfig, sheetConfig)
+			);
+
+			offset += (staveConfig.stavesSpacing + times.reduce((total, time) => time.width > total ? time.width : total, 0));
+		}
 
 		return {
 			...mappedStaveInitializer(),
-			header : 0,
-			offset : offset,
-			width  : offset,
-			footer : staveConfig.noteSpacing * 12 + staveConfig.lineHeight * 6,
-			clefs  : clefs,
-			times  : times
+			header    : 0,
+			offset    : offset,
+			width     : offset,
+			footer    : staveConfig.noteSpacing * 12 + staveConfig.lineHeight * 6,
+			clefs     : clefs,
+			times     : times,
+			keys      : keys,
+			keysWidth : keysWidth
 		};
 	}
 
@@ -86,8 +116,16 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 			let clefx = x + staveConfig.stavesSpacing;
 			this.clefService.draw(stave.clefs[i], staveConfig, context, clefx, y + track);
 
-			let timex = clefx + staveConfig.stavesSpacing + stave.clefs[i].width;
-			this.fractionService.draw(stave.times[i], staveConfig, context, timex, y + track);
+			let keysx = clefx;
+			if (stave.keysWidth > 0) {
+				keysx += (staveConfig.stavesSpacing + stave.clefs[i].width);
+				this.keySignatureService.draw(stave.keys[i], staveConfig, context, keysx, y + track);
+			}
+
+			if (stave.times.length > 0) {
+				let timex = keysx + staveConfig.stavesSpacing + stave.keys[i].width;
+				this.fractionService.draw(stave.times[i], staveConfig, context, timex, y + track);
+			}
 		});
 
 		this.finishStave(stave, staveConfig, context, x, y);

@@ -44,7 +44,6 @@ export class ClefComponent implements OnInit, OnChanges {
 	}
 
 	private drawCanvas () {
-		console.log("attempt to draw");
 		if (this.context !== null) {
 			this.context.save();
 			this.context.clearRect(
@@ -52,7 +51,6 @@ export class ClefComponent implements OnInit, OnChanges {
 				this.mappedClef.width,
 				this.mappedClef.header + this.mappedClef.footer
 			);
-			console.log("todraw");
 			this.clefService.draw (
 				this.mappedClef,
 				this.staveConfig,
@@ -60,7 +58,6 @@ export class ClefComponent implements OnInit, OnChanges {
 				0,
 				this.mappedClef.header
 			);
-			console.log("drawn");
 			this.context.restore();
 		}
 	}

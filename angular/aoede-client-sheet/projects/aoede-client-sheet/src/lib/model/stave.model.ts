@@ -3,6 +3,7 @@ import { Measure, measureInitializer } from './measure.model';
 import { Note, noteInitializer } from './note.model';
 import { Clef, clefInitializer } from './clef.model';
 import { Fraction, fractionInitializer } from './fraction.model';
+import { KeySignature, keySignatureInitializer } from './key-signature.model';
 
 export interface StaveExtention {
 	width  : number;
@@ -68,17 +69,6 @@ export interface MappedBarAdjustment extends StaveExtention {
 	tracks : number[];
 };
 
-export interface MappedFraction extends StaveExtention {
-	fraction : Fraction;
-};
-
-export function mappedFractionInitializer () : MappedFraction {
-	return {
-		...staveExtentionInitializer,
-		fraction : fractionInitializer()
-	};
-};
-
 export interface MappedClef extends StaveExtention {
 	clef : Clef;
 };
@@ -90,22 +80,48 @@ export function mappedClefInitializer () : MappedClef {
 	};
 };
 
+export interface MappedKeySignature extends StaveExtention {
+	keySignature : KeySignature;
+};
+
+export function mappedKeySignatureInitializer () : MappedKeySignature {
+	return {
+		...staveExtentionInitializer,
+		keySignature : keySignatureInitializer()
+	};
+};
+
+export interface MappedFraction extends StaveExtention {
+	fraction : Fraction;
+};
+
+export function mappedFractionInitializer () : MappedFraction {
+	return {
+		...staveExtentionInitializer,
+		fraction : fractionInitializer()
+	};
+};
+
 export interface MappedStave extends StaveExtention {
-	bars   : MappedBar      [];
-	tracks : number         [];
-	clefs  : MappedClef     [];
-	times  : MappedFraction [];
-	offset : number;
+	bars      : MappedBar          [];
+	tracks    : number             [];
+	clefs     : MappedClef         [];
+	times     : MappedFraction     [];
+	keys      : MappedKeySignature [];
+	keysWidth : number;
+	offset    : number;
 };
 
 export function mappedStaveInitializer () : MappedStave {
 	return {
 		...staveExtentionInitializer,
-		bars   : [],
-		tracks : [],
-		clefs  : [],
-		times  : [],
-		offset : 0
+		bars      : [],
+		tracks    : [],
+		clefs     : [],
+		times     : [],
+		keys      : [],
+		keysWidth : 0,
+		offset    : 0
 	};
 };
 
