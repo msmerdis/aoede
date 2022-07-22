@@ -107,3 +107,50 @@ And prepare json array "octave" of "octaveObject"
 	|    8   |   five-lined |  108   |
 	|    9   |    six-lined |  120   |
 Then "preload" json object's "octaveList" element matches "octave" as "json"
+
+@TC060005
+@Positive
+Scenario: verify time signatures in preload info
+
+When prepare data table "timeSignatureObject"
+	| numerator | denominator | beats     |
+	| integer   | integer     | json      |
+And prepare json array "beats01"
+	| integer | 0 |
+	| integer | 1 |
+And prepare json array "beats012"
+	| integer | 0 |
+	| integer | 1 |
+	| integer | 2 |
+And prepare json array "beats02"
+	| integer | 0 |
+	| integer | 2 |
+And prepare json array "beats03"
+	| integer | 0 |
+	| integer | 3 |
+And prepare json array "beats036"
+	| integer | 0 |
+	| integer | 3 |
+	| integer | 6 |
+And prepare json array "beats0369"
+	| integer | 0 |
+	| integer | 3 |
+	| integer | 6 |
+	| integer | 9 |
+And prepare json array "timeSignatures" of "timeSignatureObject"
+	| numerator | denominator | beats     |
+	|     2     |      4      | beats01   |
+	|     2     |      2      | beats01   |
+	|     3     |      8      | beats012  |
+	|     3     |      4      | beats012  |
+	|     3     |      2      | beats012  |
+	|     4     |      8      | beats02   |
+	|     4     |      4      | beats02   |
+	|     4     |      2      | beats02   |
+	|     6     |      8      | beats03   |
+	|     6     |      4      | beats03   |
+	|     9     |      8      | beats036  |
+	|     9     |      4      | beats036  |
+	|    12     |      8      | beats0369 |
+	|    12     |      4      | beats0369 |
+Then "preload" json object's "timeList" element matches "timeSignatures" as "json"

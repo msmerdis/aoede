@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import com.aoede.commons.base.exceptions.GenericExceptionContainer;
 import com.aoede.commons.base.transfer.CompositeKey;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class CompositeKeyDecoderFactory implements ConverterFactory<String, CompositeKey> {
 	private ObjectMapper mapper = new ObjectMapper();
 

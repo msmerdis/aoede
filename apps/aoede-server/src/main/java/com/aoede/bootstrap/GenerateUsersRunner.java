@@ -16,6 +16,7 @@ import com.aoede.modules.music.domain.Fraction;
 import com.aoede.modules.music.domain.Measure;
 import com.aoede.modules.music.domain.Note;
 import com.aoede.modules.music.domain.Sheet;
+import com.aoede.modules.music.domain.TimeSignature;
 import com.aoede.modules.music.domain.Track;
 import com.aoede.modules.music.service.ClefService;
 import com.aoede.modules.music.service.SheetService;
@@ -110,7 +111,7 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 		track.setName(clef);
 		track.setKeySignature(key);
 		track.setTempo((short)120);
-		track.setTimeSignature(new Fraction(4, 4));
+		track.setTimeSignature(new TimeSignature(4, 4));
 		track.setMeasures(new LinkedList<Measure>());
 
 		track.getMeasures().add(makeMeasure((short)1, startingNote +  0, startingNote + 2, startingNote +  4, startingNote +  5));

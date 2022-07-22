@@ -8,6 +8,7 @@ import com.aoede.modules.music.domain.Clef;
 import com.aoede.modules.music.domain.KeySignature;
 import com.aoede.modules.music.domain.Octave;
 import com.aoede.modules.music.domain.Tempo;
+import com.aoede.modules.music.domain.TimeSignature;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -26,10 +27,11 @@ import lombok.ToString;
 public class AoedePreload implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private List<Clef>         clefList;
-	private List<Tempo>        tempoList;
-	private List<KeySignature> keysList;
-	private List<Octave>       octaveList;
+	private List<Clef>          clefList;
+	private List<Tempo>         tempoList;
+	private List<KeySignature>  keysList;
+	private List<Octave>        octaveList;
+	private List<TimeSignature> timeList;
 
 	@JsonIgnore
 	private LocalDate created;

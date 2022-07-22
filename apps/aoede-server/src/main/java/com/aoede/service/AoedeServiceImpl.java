@@ -12,26 +12,30 @@ import com.aoede.modules.music.service.ClefService;
 import com.aoede.modules.music.service.KeySignatureService;
 import com.aoede.modules.music.service.OctaveService;
 import com.aoede.modules.music.service.TempoService;
+import com.aoede.modules.music.service.TimeSignatureService;
 import com.aoede.transfer.AoedePreload;
 
 @Service
 public class AoedeServiceImpl extends BaseComponent implements AoedeService {
 
-	private ClefService         clefService;
-	private TempoService        tempoService;
-	private KeySignatureService keySignatureService;
-	private OctaveService       octaveService;
+	private ClefService          clefService;
+	private TempoService         tempoService;
+	private KeySignatureService  keySignatureService;
+	private OctaveService        octaveService;
+	private TimeSignatureService timeSignatureService;
 
 	public AoedeServiceImpl (
-		ClefService         clefService,
-		TempoService        tempoService,
-		KeySignatureService keySignatureService,
-		OctaveService       octaveService
+		ClefService          clefService,
+		TempoService         tempoService,
+		KeySignatureService  keySignatureService,
+		OctaveService        octaveService,
+		TimeSignatureService timeSignatureService
 	) {
-		this.clefService         = clefService;
-		this.tempoService        = tempoService;
-		this.keySignatureService = keySignatureService;
-		this.octaveService       = octaveService;
+		this.clefService          = clefService;
+		this.tempoService         = tempoService;
+		this.keySignatureService  = keySignatureService;
+		this.octaveService        = octaveService;
+		this.timeSignatureService = timeSignatureService;
 	}
 
 	@Cacheable(value = "aoede", key = "#root.methodName")
@@ -41,6 +45,7 @@ public class AoedeServiceImpl extends BaseComponent implements AoedeService {
 			tempoService.findAll(),
 			keySignatureService.findAll(),
 			octaveService.findAll(),
+			timeSignatureService.findAll(),
 			this.buildPreloadDate()
 		);
 	}
