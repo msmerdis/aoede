@@ -10,7 +10,7 @@ import com.aoede.commons.cucumber.BaseStepDefinition;
 import com.aoede.commons.cucumber.service.AbstractTestService;
 import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
 import com.aoede.commons.cucumber.service.DataTableService;
-import com.aoede.commons.cucumber.service.HeadersService;
+import com.aoede.commons.cucumber.service.HttpService;
 import com.aoede.commons.cucumber.service.JsonService;
 import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 import com.google.gson.JsonArray;
@@ -28,7 +28,7 @@ public class ResponseJsonObjectAssertionStepDefinitions extends BaseStepDefiniti
 		TestCaseIdTrackerService testCaseIdTrackerService,
 		JsonService jsonService,
 		DataTableService dataTableService,
-		HeadersService headersService
+		HttpService httpService
 	) {
 		super (
 			serverProperties,
@@ -36,7 +36,7 @@ public class ResponseJsonObjectAssertionStepDefinitions extends BaseStepDefiniti
 			testCaseIdTrackerService,
 			jsonService,
 			dataTableService,
-			headersService
+			httpService
 		);
 	}
 

@@ -155,7 +155,7 @@ public class TestDataPreparationStepDefinitions extends DataPreparationStepDefin
 		// execute function
 		uut.prepareUrl(table);
 
-		assertEquals("composite key was not prepared correcty", "/1/1", getField ((BaseStepDefinition)uut, "globalUrl"));
+		assertEquals("composite key was not prepared correcty", "/1/1", httpService.getUrl());
 	}
 
 	@Test
@@ -165,7 +165,7 @@ public class TestDataPreparationStepDefinitions extends DataPreparationStepDefin
 		// execute function
 		uut.prepareUrl("/url");
 
-		assertEquals("composite key was not prepared correcty", "/url", getField ((BaseStepDefinition)uut, "globalUrl"));
+		assertEquals("composite key was not prepared correcty", "/url", httpService.getUrl());
 	}
 
 }

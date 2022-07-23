@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.web.ServerProperties;
 import com.aoede.commons.cucumber.BaseStepDefinition;
 import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
 import com.aoede.commons.cucumber.service.DataTableService;
-import com.aoede.commons.cucumber.service.HeadersService;
+import com.aoede.commons.cucumber.service.HttpService;
 import com.aoede.commons.cucumber.service.JsonService;
 import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 import com.google.gson.JsonArray;
@@ -22,7 +22,7 @@ public class DataPreparationStepDefinitions extends BaseStepDefinition {
 		TestCaseIdTrackerService testCaseIdTrackerService,
 		JsonService jsonService,
 		DataTableService dataTableService,
-		HeadersService headersService
+		HttpService httpService
 	) {
 		super (
 			serverProperties,
@@ -30,7 +30,7 @@ public class DataPreparationStepDefinitions extends BaseStepDefinition {
 			testCaseIdTrackerService,
 			jsonService,
 			dataTableService,
-			headersService
+			httpService
 		);
 	}
 
@@ -77,23 +77,24 @@ public class DataPreparationStepDefinitions extends BaseStepDefinition {
 
 	@When("prepare url {string}")
 	public void prepareUrl(String url) {
-		globalUrl = url;
+		httpService.setUrl(url);
 	}
 
 	@When("prepare url")
 	public void prepareUrl(DataTable data) {
-		globalUrl = jsonService.generateUrl(data);
+		prepareUrl(jsonService.generateUrl(data));
 	}
 
 	@When("set header {string} to {string} as {string}")
 	public void setHeader(String name, String value, String type) {
-		headersService.set(name, jsonService.generateJsonElement(type, value).toString());
+		httpService.getHeaders().set(name, jsonService.generateJsonElement(type, value).toString());
 	}
 
 	@When("add header {string} to {string} as {string}")
 	public void addHeader(String name, String value, String type) {
-		headersService.add(name, jsonService.generateJsonElement(type, value).toString());
+		httpService.getHeaders().add(name, jsonService.generateJsonElement(type, value).toString());
 	}
+
 }
 
 

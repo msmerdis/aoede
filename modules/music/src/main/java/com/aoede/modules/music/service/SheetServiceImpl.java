@@ -15,20 +15,32 @@ import com.aoede.commons.base.exceptions.GenericExceptionContainer;
 import com.aoede.commons.base.exceptions.UnauthorizedException;
 import com.aoede.commons.base.exceptions.ValidationException;
 import com.aoede.commons.base.service.AbstractServiceDomainImpl;
+import com.aoede.modules.music.domain.Fraction;
+import com.aoede.modules.music.domain.Measure;
+import com.aoede.modules.music.domain.Note;
 import com.aoede.modules.music.domain.Sheet;
+import com.aoede.modules.music.domain.Track;
 import com.aoede.modules.music.entity.SheetEntity;
 import com.aoede.modules.music.repository.SheetRepository;
+import com.aoede.modules.music.transfer.GenerateSheet;
 import com.aoede.modules.user.service.UserService;
 
 @Service
 public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Long, SheetEntity, SheetRepository> implements SheetService {
 
+	private ClefService clefService;
 	private UserService userService;
 
-	public SheetServiceImpl(SheetRepository repository, EntityManagerFactory entityManagerFactory, UserService userService) {
+	public SheetServiceImpl(
+		ClefService clefService,
+		UserService userService,
+		SheetRepository repository,
+		EntityManagerFactory entityManagerFactory
+	) {
 		super(repository, entityManagerFactory);
 
-		this.userService  = userService;
+		this.clefService = clefService;
+		this.userService = userService;
 	}
 
 	@Override
@@ -136,6 +148,36 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Lo
 	@Override
 	public Long createEntityKey(Long key) {
 		return key;
+	}
+
+	@Override
+	public Sheet generate(GenerateSheet data) throws GenericException {
+		Sheet sheet = new Sheet();
+		Track track = new Track();
+
+		Measure measure = new Measure();
+
+		Note note = new Note();
+
+		sheet.setName(data.getName());
+		sheet.setTracks(List.of(track));
+
+		track.setClef(data.getClef());
+		track.setKeySignature(data.getKeySignature());
+		track.setTimeSignature(data.getTimeSignature());
+		track.setTempo(data.getTempo());
+		track.setMeasures(List.of(measure));
+
+		measure.setNotes(List.of(note));
+
+		note.setOrder((short)1);
+		note.setPitch(clefService.find(data.getClef()).getNote());
+		note.setValue(new Fraction(
+			data.getTimeSignature().getNumerator(),
+			data.getTimeSignature().getDenominator()
+		));
+
+		return sheet;
 	}
 
 }

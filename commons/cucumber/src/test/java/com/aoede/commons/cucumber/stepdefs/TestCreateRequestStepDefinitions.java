@@ -10,7 +10,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
 import com.aoede.CreateRequestStepDefinitionsTestCaseSetup;
-import com.aoede.commons.cucumber.BaseStepDefinition;
 import com.aoede.commons.cucumber.ResponseResults;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -42,7 +41,7 @@ public class TestCreateRequestStepDefinitions extends CreateRequestStepDefinitio
 		when(services.getLatestService(eq("domain"))).thenReturn(service);
 		when(jsonService.generateJsonObject(any(DataTable.class))).thenReturn(new JsonObject());
 
-		setField ((BaseStepDefinition)uut, "globalUrl", "/custom");
+		httpService.setUrl("/custom");
 
 		ResponseResults results = stubRequestCall(uut, service, HttpStatus.CREATED, HttpMethod.POST, "", "/custom");
 		when(restTemplate.execute(eq("https://localhost/custom"), any(), any(), any())).thenReturn(results);
@@ -75,7 +74,7 @@ public class TestCreateRequestStepDefinitions extends CreateRequestStepDefinitio
 		when(services.getLatestService(eq("domain"))).thenReturn(service);
 		when(jsonService.get(eq("json"))).thenReturn(new JsonPrimitive("element value"));
 
-		setField ((BaseStepDefinition)uut, "globalUrl", "/custom");
+		httpService.setUrl("/custom");
 
 		ResponseResults results = stubRequestCall(uut, service, HttpStatus.CREATED, HttpMethod.POST, "element value", "/custom");
 		when(restTemplate.execute(eq("https://localhost/custom"), any(), any(), any())).thenReturn(results);
@@ -106,7 +105,7 @@ public class TestCreateRequestStepDefinitions extends CreateRequestStepDefinitio
 
 		when(services.getLatestService(eq("domain"))).thenReturn(service);
 
-		setField ((BaseStepDefinition)uut, "globalUrl", "/custom");
+		httpService.setUrl("/custom");
 
 		ResponseResults results = stubRequestCall(uut, service, HttpStatus.CREATED, HttpMethod.POST, "body value", "/custom");
 		when(restTemplate.execute(eq("https://localhost/custom"), any(), any(), any())).thenReturn(results);

@@ -9,7 +9,7 @@ import com.aoede.commons.cucumber.BaseStepDefinition;
 import com.aoede.commons.cucumber.ResponseResults;
 import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
 import com.aoede.commons.cucumber.service.DataTableService;
-import com.aoede.commons.cucumber.service.HeadersService;
+import com.aoede.commons.cucumber.service.HttpService;
 import com.aoede.commons.cucumber.service.JsonService;
 import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 import com.google.gson.JsonElement;
@@ -25,7 +25,7 @@ public class AccessRequestStepDefinitions extends BaseStepDefinition {
 		TestCaseIdTrackerService testCaseIdTrackerService,
 		JsonService jsonService,
 		DataTableService dataTableService,
-		HeadersService headersService
+		HttpService httpService
 	) {
 		super (
 			serverProperties,
@@ -33,7 +33,7 @@ public class AccessRequestStepDefinitions extends BaseStepDefinition {
 			testCaseIdTrackerService,
 			jsonService,
 			dataTableService,
-			headersService
+			httpService
 		);
 	}
 

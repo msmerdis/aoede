@@ -20,7 +20,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
 import com.aoede.commons.cucumber.service.DataTableService;
-import com.aoede.commons.cucumber.service.HeadersService;
+import com.aoede.commons.cucumber.service.HttpService;
 import com.aoede.commons.cucumber.service.JsonService;
 import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 
@@ -37,8 +37,7 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 	private TestCaseIdTrackerService testCaseIdTrackerService;
 	protected JsonService jsonService;
 	protected DataTableService dataTableService;
-	protected HeadersService headersService;
-	protected String globalUrl;
+	protected HttpService httpService;
 
 	public BaseStepDefinition (
 		ServerProperties serverProperties,
@@ -46,14 +45,14 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 		TestCaseIdTrackerService testCaseIdTrackerService,
 		JsonService jsonService,
 		DataTableService dataTableService,
-		HeadersService headersService
+		HttpService httpService
 	) {
 		this.serverProperties = serverProperties;
 		this.services = services;
 		this.testCaseIdTrackerService = testCaseIdTrackerService;
 		this.jsonService = jsonService;
 		this.dataTableService = dataTableService;
-		this.headersService = headersService;
+		this.httpService = httpService;
 	}
 
 	@PostConstruct
@@ -62,7 +61,6 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 
 		restTemplate.setErrorHandler(new ResponseResultsErrorHandler());
 		restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-		globalUrl = null;
 	}
 
 	private class ResponseResultsErrorHandler implements ResponseErrorHandler {
@@ -80,13 +78,14 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 
 	private ResponseResults execute (String url, HttpMethod method, HttpHeaders headers, String body) {
 		RequestParametersCallback parameters = new RequestParametersCallback(headers, body);
+		String globalUrl = httpService.getUrl();
 
 		if (globalUrl != null) {
 			logger.info ("override default url " + url + " with " + globalUrl);
 			url = globalUrl;
 
 			// enforce one use only
-			globalUrl = null;
+			httpService.setUrl(null);
 		}
 
 		logger.info ("--------------------------------------------------------------------------------------------------------------------------");
@@ -153,11 +152,11 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 	protected HttpHeaders defaultHeaders () {
 		HttpHeaders headers = new HttpHeaders();
 
-		headers.addAll(headersService);
+		headers.addAll(httpService.getHeaders());
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.set("X-Test-Case-Id", testCaseIdTrackerService.getLatestTestCaseId());
 
-		headersService.clear();
+		httpService.getHeaders().clear();
 
 		return headers;
 	}
@@ -221,8 +220,7 @@ public class BaseStepDefinition extends BaseTestComponent implements EventListen
 		services.clear();
 		jsonService.clear();
 		dataTableService.clear();
-		headersService.clear();
-		globalUrl = null;
+		httpService.clear();
 	}
 
 	protected String getLatestTestCaseId() {

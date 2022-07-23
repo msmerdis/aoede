@@ -16,7 +16,7 @@ public class ResponseStatusAssertionStepDefinitionsTestCaseSetup extends BaseSte
 			this.testCaseIdTrackerService,
 			this.jsonService,
 			this.dataTableService,
-			this.headersService
+			this.httpService
 		);
 
 		super.setField (uut, "restTemplate", this.restTemplate);

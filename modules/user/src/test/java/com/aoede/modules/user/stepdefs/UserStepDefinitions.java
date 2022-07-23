@@ -11,7 +11,7 @@ import com.aoede.commons.cucumber.ResponseResults;
 import com.aoede.commons.cucumber.service.AbstractTestService;
 import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
 import com.aoede.commons.cucumber.service.DataTableService;
-import com.aoede.commons.cucumber.service.HeadersService;
+import com.aoede.commons.cucumber.service.HttpService;
 import com.aoede.commons.cucumber.service.JsonService;
 import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 import com.aoede.modules.user.service.LoginTestService;
@@ -34,7 +34,7 @@ public class UserStepDefinitions extends BaseStepDefinition {
 		JsonService jsonService,
 		DataTableService dataTableService,
 		LoginTestService loginTestService,
-		HeadersService headersService
+		HttpService httpService
 	) {
 		super (
 			serverProperties,
@@ -42,7 +42,7 @@ public class UserStepDefinitions extends BaseStepDefinition {
 			testCaseIdTrackerService,
 			jsonService,
 			dataTableService,
-			headersService
+			httpService
 		);
 
 		this.loginTestService = loginTestService;

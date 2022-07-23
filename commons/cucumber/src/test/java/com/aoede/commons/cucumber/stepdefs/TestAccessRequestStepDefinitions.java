@@ -54,7 +54,7 @@ public class TestAccessRequestStepDefinitions extends AccessRequestStepDefinitio
 
 		when(services.getLatestService(eq("domain"))).thenReturn(service);
 
-		setField ((BaseStepDefinition)uut, "globalUrl", "/custom");
+		httpService.setUrl("/custom");
 
 		ResponseResults results = stubRequestCall(uut, service, HttpStatus.OK, HttpMethod.GET, "body", "/custom");
 		when(restTemplate.execute(eq("https://localhost/custom"), any(), any(), any())).thenReturn(results);

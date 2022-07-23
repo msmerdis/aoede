@@ -16,7 +16,7 @@ public class ResponseJsonArrayAssertionStepDefinitionsTestCaseSetup extends Base
 			this.testCaseIdTrackerService,
 			this.jsonService,
 			this.dataTableService,
-			this.headersService
+			this.httpService
 		);
 
 		super.setField (uut, "restTemplate", this.restTemplate);

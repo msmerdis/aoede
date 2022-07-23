@@ -21,9 +21,10 @@ import com.aoede.commons.cucumber.BaseTestComponent;
 import com.aoede.commons.cucumber.ResponseResults;
 import com.aoede.commons.cucumber.service.AbstractTestService;
 import com.aoede.commons.cucumber.service.AbstractTestServiceDiscoveryService;
-import com.aoede.commons.cucumber.service.DataTableServiceImpl;
-import com.aoede.commons.cucumber.service.HeadersServiceImpl;
-import com.aoede.commons.cucumber.service.JsonServiceImpl;
+import com.aoede.commons.cucumber.service.DataTableService;
+import com.aoede.commons.cucumber.service.HttpService;
+import com.aoede.commons.cucumber.service.HttpServiceImpl;
+import com.aoede.commons.cucumber.service.JsonService;
 import com.aoede.commons.cucumber.service.TestCaseIdTrackerService;
 
 @RunWith(SpringRunner.class)
@@ -33,9 +34,10 @@ public class BaseStepDefinitionTestCaseSetup extends BaseTestComponent {
 	@MockBean protected ServerProperties serverProperties;
 	@MockBean protected AbstractTestServiceDiscoveryService services;
 	@MockBean protected TestCaseIdTrackerService testCaseIdTrackerService;
-	@MockBean protected JsonServiceImpl jsonService;
-	@MockBean protected DataTableServiceImpl dataTableService;
-	@MockBean protected HeadersServiceImpl headersService;
+	@MockBean protected JsonService jsonService;
+	@MockBean protected DataTableService dataTableService;
+
+	protected HttpService httpService = new HttpServiceImpl();
 
 	// unit under test
 	protected BaseStepDefinition uut () throws Exception {
@@ -45,7 +47,7 @@ public class BaseStepDefinitionTestCaseSetup extends BaseTestComponent {
 			this.testCaseIdTrackerService,
 			this.jsonService,
 			this.dataTableService,
-			this.headersService
+			this.httpService
 		);
 
 		setField (uut, "restTemplate", this.restTemplate);

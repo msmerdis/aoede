@@ -304,3 +304,55 @@ And the response array contains "sheetObject" objects
 	| id    | name    |
 	| sheet | F scale |
 And the response array contains latest "sheet"
+
+@TC030013
+@Positive @Generate
+Scenario Outline: generate sheet
+### Generate a new sheet
+### Verify that the sheet was created successfully
+
+Given a logged in user "generateModuleMusicTest"
+And prepare url "/api/sheet/generate"
+And a "sheet" with
+	| name          | string   | <name>  |
+	| clef          | string   | <clef>  |
+	| tempo         | integer  | <tempo> |
+	| keySignature  | integer  | <key>   |
+	| timeSignature | fraction | <time>  |
+And the request was successful
+And prepare data table "noteObject"
+	| order   | pitch   | value    |
+	| integer | integer | fraction |
+And prepare json array "notes" of "noteObject"
+	| order   |  pitch  | value    |
+	| 1       | <pitch> | <time>   |
+And prepare data table "measureObject"
+	| notes |
+	| json  |
+And prepare json array "measures" of "measureObject"
+	| notes |
+	| notes |
+And prepare data table "trackObject"
+	| name  | clef   | tempo   | keySignature | timeSignature | measures |
+	| null  | string | integer | integer      | fraction      | json     |
+And prepare json array "tracks" of "trackObject"
+	| name  |  clef  |  tempo  | keySignature | timeSignature | measures |
+	|       | <clef> | <tempo> | <key>        | <time>        | measures |
+And the response matches
+	|  id    | key    | sheet  |
+	| name   | string | <name> |
+	| tracks | json   | tracks |
+When request all available "sheet"
+And the request was successful
+And the response array contains latest "sheet"
+Then request previously created "sheet"
+And the request was successful
+And the response matches
+	|  id    | key    | sheet  |
+	| name   | string | <name> |
+	| tracks | json   | tracks |
+
+Examples:
+	| name         | clef   | tempo | key | time | pitch |
+	| TC020001 one | Treble |  120  |  0  |  3/4 |   64  |
+	| TC020001 two | Bass   |  160  |  1  |  4/4 |   53  |
