@@ -5,6 +5,7 @@ import { Observable, throwError } from 'rxjs';
 
 import { Sheet } from 'aoede-client-sheet';
 import { Preload } from './model/preload.model';
+import { GenerateSheet } from './model/generate-sheet.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -15,8 +16,9 @@ export class MusicService {
 		private httpClient: HttpClient
 	) {}
 
-	private sheetUrl   : string = '/api/sheet';
-	private preloadUrl : string = '/api/aoede/preload';
+	private sheetUrl    : string = '/api/sheet';
+	private generateUrl : string = '/api/sheet/generate';
+	private preloadUrl  : string = '/api/aoede/preload';
 
 	public getSheetList(): Observable<Sheet[]> {
 		return this.httpClient.get<Sheet[]>(this.sheetUrl);
@@ -28,6 +30,10 @@ export class MusicService {
 
 	public getPreload(): Observable<Preload> {
 		return this.httpClient.get<Preload>(this.preloadUrl);
+	}
+
+	public generateSheet (data : GenerateSheet): Observable<Sheet> {
+		return this.httpClient.post<Sheet>(this.generateUrl, data);
 	}
 
 }

@@ -16,7 +16,10 @@ import {
 	fetchSheetListFailure,
 	preloadRequest,
 	preloadSuccess,
-	preloadFailure
+	preloadFailure,
+	generateSheetRequest,
+	generateSheetSuccess,
+	generateSheetFailure
 } from './music.actions';
 import {
 	getGenericPayload,
@@ -49,16 +52,33 @@ export class MusicEffects implements OnInitEffects {
 			concatLatestFrom(() => this.store.select(getSheetValue)),
 			filter(([details, sheet]) => sheet === null || details.payload !== sheet.id),
 			switchMap(([details, sheet]) => this.service.getSheet(details.payload).pipe(
-					map(data => {
-						return fetchSheetSuccess(
-							getRequestSuccess(details, data)
-						);
-					}),
-					catchError(err => of(fetchSheetFailure(
-						getRequestFailure(details, err.error)
-					)))
-				)
-			)
+				map(data => {
+					return fetchSheetSuccess(
+						getRequestSuccess(details, data)
+					);
+				}),
+				catchError(err => of(fetchSheetFailure(
+					getRequestFailure(details, err.error)
+				)))
+			))
+		)
+	);
+
+	generateSheet$ = createEffect(
+		() => this.actions$.pipe(
+			ofType(generateSheetRequest),
+			switchMap((details) => this.service.generateSheet(details.payload).pipe(
+				map(data => {
+					// TODO: should be done without the music part as this is configured outside this module
+					this.router.navigate(['music', 'sheet', data.id]);
+					return generateSheetSuccess(
+						getRequestSuccess(details, data)
+					);
+				}),
+				catchError(err => of(generateSheetFailure(
+					getRequestFailure(details, err.error)
+				)))
+			))
 		)
 	);
 
@@ -71,16 +91,15 @@ export class MusicEffects implements OnInitEffects {
 			]),
 			filter(([details, utime, current]) => utime + this.config.cacheTime!! <= current),
 			switchMap(([details, utime, current]) => this.service.getSheetList().pipe(
-					map(data => {
-						return fetchSheetListSuccess(
-							getRequestSuccess(details, data)
-						);
-					}),
-					catchError(err => of(fetchSheetFailure(
-						getRequestFailure(details, err.error)
-					)))
-				)
-			)
+				map(data => {
+					return fetchSheetListSuccess(
+						getRequestSuccess(details, data)
+					);
+				}),
+				catchError(err => of(fetchSheetFailure(
+					getRequestFailure(details, err.error)
+				)))
+			))
 		)
 	);
 

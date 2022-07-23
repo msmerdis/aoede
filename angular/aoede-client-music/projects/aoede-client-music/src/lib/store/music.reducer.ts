@@ -5,7 +5,9 @@ import {
 	fetchSheetListSuccess,
 	fetchSheetListFailure,
 	preloadSuccess,
-	preloadFailure
+	preloadFailure,
+	generateSheetSuccess,
+	generateSheetFailure
 } from './music.actions';
 import {
 	Sheet,
@@ -23,7 +25,8 @@ import {
 	initialStateData,
 	getSuccessStateData,
 	getFailureStateData,
-	getRequestSuccess
+	getRequestSuccess,
+	appendStateData
 } from 'aoede-client-generic';
 
 export interface MusicState {
@@ -81,6 +84,21 @@ function doPreloadFailure (state : MusicState, data : ApiFailure) : MusicState {
 	};
 }
 
+function doGenerateSheetSuccess (state : MusicState, data : ApiSuccess<Sheet>) : MusicState {
+	return {
+		...state,
+		sheetList : appendStateData(state.sheetList, data),
+		sheet     : getSuccessStateData (data)
+	};
+}
+
+function doGenerateSheetFailure (state : MusicState, data : ApiFailure) : MusicState {
+	return {
+		...state,
+		sheet : getFailureStateData (data)
+	};
+}
+
 export const musicReducer = createReducer (
 	musicInitialState,
 	on(fetchSheetSuccess, doFetchSheetSuccess),
@@ -89,6 +107,8 @@ export const musicReducer = createReducer (
 	on(fetchSheetListFailure, doFetchSheetListFailure),
 	on(preloadSuccess, doPreloadSuccess),
 	on(preloadFailure, doPreloadFailure),
+	on(generateSheetSuccess, doGenerateSheetSuccess),
+	on(generateSheetFailure, doGenerateSheetFailure),
 );
 
 export function reducer(state: MusicState, action: Action): MusicState {

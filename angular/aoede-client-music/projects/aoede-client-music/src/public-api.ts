@@ -14,3 +14,4 @@ export * from './lib/component/sheet-create.component';
 export * from './lib/component/sheet-modify.component';
 export * from './lib/component/sheet-result.component';
 export * from './lib/model/preload.model';
+export * from './lib/model/generate-sheet.model';

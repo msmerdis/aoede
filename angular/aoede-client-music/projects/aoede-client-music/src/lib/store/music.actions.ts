@@ -2,6 +2,7 @@ import { createAction, props } from '@ngrx/store';
 
 import { Sheet } from 'aoede-client-sheet';
 import { Preload } from '../model/preload.model';
+import { GenerateSheet } from '../model/generate-sheet.model';
 import {
 	ApiGeneric,
 	ApiRequest,
@@ -22,3 +23,7 @@ export const fetchSheetListFailure = createAction('[Music] Fetch Sheet List Fail
 export const preloadRequest = createAction('[Music] Preload Request', props<ApiGeneric>());
 export const preloadSuccess = createAction('[Music] Preload Success', props<ApiSuccess<Preload>>());
 export const preloadFailure = createAction('[Music] Preload Failure', props<ApiFailure>());
+
+export const generateSheetRequest = createAction('[Music] Generate Sheet Request', props<ApiRequest<GenerateSheet>>());
+export const generateSheetSuccess = createAction('[Music] Generate Sheet Success', props<ApiSuccess<Sheet>>());
+export const generateSheetFailure = createAction('[Music] Generate Sheet Failure', props<ApiFailure>());

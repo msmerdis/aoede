@@ -9,7 +9,10 @@ import {
 	TimeSignature,
 	Tempo
 } from 'aoede-client-sheet';
+import { getRequestPayload } from 'aoede-client-generic';
+import { GenerateSheet } from '../model/generate-sheet.model';
 
+import { generateSheetRequest } from '../store/music.actions';
 import { MusicState } from '../store/music.reducer';
 import { getClefs, getKeys, getTempos, getTimes } from '../store/music.selectors';
 
@@ -53,24 +56,35 @@ export class SheetCreateComponent implements OnInit {
 	}
 
 	onSubmit (): void {
-		console.log("create sheet");
-		console.log(" -> name  : " + this.name.value);
-		console.log(" -> clef  : " + this.clef.value);
-		console.log(" -> tempo : " + this.tempo.value);
-		console.log(" -> key   : " + this.key.value);
-		console.log(" -> time  : " + this.timeNum.value + "/" + this.timeDen.value);
-		console.log(" -> beats : " + this.extractBeats());
+		this.store.dispatch (generateSheetRequest(
+			getRequestPayload<GenerateSheet>({
+				name          : this.name.value  || "",
+				clef          : this.clef.value  || "",
+				tempo         : this.tempo.value || 0,
+				keySignature  : this.key.value   || 0,
+				timeSignature : this.timeSignature ()
+			})
+		));
 	}
 
 	generateBeats (num : number) : number[] {
 		return [...Array(+num).keys()];
 	}
 
-	extractBeats () : number[] | null {
-		return this.beats
-			.map    (beat => beat.nativeElement)
-			.filter (beat => beat.checked)
-			.map    (beat => beat.value);
+	timeSignature () : TimeSignature {
+		let time = {
+			numerator   : this.timeNum.value,
+			denominator : this.timeDen.value
+		} as TimeSignature;
+
+		if (this.beats && this.beats.length > 0) {
+			time.beats = this.beats
+				.map    (beat => beat.nativeElement)
+				.filter (beat => beat.checked)
+				.map    (beat => beat.value);
+		}
+
+		return time;
 	}
 
 	convertBeats (beats : number[], length : number) : string {

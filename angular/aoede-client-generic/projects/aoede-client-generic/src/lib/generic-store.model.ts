@@ -20,6 +20,13 @@ export const initialStateData : StateData<any> = {
 	utime : 0
 };
 
+export function appendStateData<DataType> (state : StateData<DataType[]>, data: ApiSuccess<DataType>): StateData<DataType[]> {
+	return {
+		...state,
+		value : state.value == null ? [data.success] : [...state.value, data.success]
+	};
+};
+
 export function getSuccessStateData<DataType> (data: ApiSuccess<DataType>): StateData<DataType> {
 	return {
 		ready : true,
