@@ -60,7 +60,7 @@ export class BarService implements SingleCanvasService<Track[], MappedBar[]> {
 			.reduce ((max, cur) => max > cur ? max : cur, 0);
 	}
 
-	public normalize (bars : MappedBar[]) : MappedBarAdjustment {
+	public normalize (bars : MappedBar[], excess : number) : MappedBarAdjustment {
 		let ext = {...staveExtentionInitializer, tracks : []} as MappedBarAdjustment;
 
 		ext = bars.reduce ((e : MappedBarAdjustment, bar : MappedBar) => {

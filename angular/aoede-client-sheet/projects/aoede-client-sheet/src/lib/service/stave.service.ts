@@ -49,7 +49,7 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 			}, [this.emptyStave(source, staveConfig, sheetConfig, true)] as MappedStave[]);
 
 		staves.forEach ((stave) => {
-			let adjusted = this.barService.normalize(stave.bars);
+			let adjusted = this.barService.normalize(stave.bars, staveConfig.stavesWidth - stave.width);
 			stave.width  = adjusted.width + stave.offset;
 			stave.header = adjusted.header;
 			stave.footer = adjusted.footer;

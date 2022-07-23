@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Actions, createEffect, ofType, concatLatestFrom, Effect } from '@ngrx/effects';
+import { Actions, createEffect, ofType, concatLatestFrom } from '@ngrx/effects';
 import { Observable, of, interval } from 'rxjs';
 import { tap, map, mapTo, switchMap, skip, filter, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -97,9 +97,10 @@ export class UserEffects {
 		)
 	);
 
-	@Effect()
-	keepAliveDispatcher$ = interval(this.config.tokenKeepAlive).pipe(
-		mapTo(keepAliveRequest(getGenericPayload()))
+	keepAliveDispatcher$ = createEffect(
+		() => interval(this.config.tokenKeepAlive).pipe(
+			mapTo(keepAliveRequest(getGenericPayload()))
+		)
 	);
 
 	updateCache$ = createEffect(

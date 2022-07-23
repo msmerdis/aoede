@@ -17,7 +17,7 @@ export class AppEffects {
 	logActions$ = createEffect(
 		() => this.actions$.pipe(
 			tap((action : any) => {
-				console.log('got action: ' + JSON.stringify(action.type))
+				console.log('got action: ' + this.timestamp() + ' ' + JSON.stringify(action.type));
 
 				if ('failure' in action) {
 					this.processFailure (action.failure);
@@ -34,6 +34,11 @@ export class AppEffects {
 		),
 		{ dispatch: false }
 	);
+
+	private timestamp () : string {
+		let now = new Date();
+		return now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+	}
 
 	private processFailure (failure : any) {
 		if (
