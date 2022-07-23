@@ -37,7 +37,12 @@ export class AppEffects {
 
 	private timestamp () : string {
 		let now = new Date();
-		return now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+
+		let hh = now.getHours  ().toString().padStart(2, '0');
+		let mm = now.getMinutes().toString().padStart(2, '0');
+		let ss = now.getSeconds().toString().padStart(2, '0');
+
+		return hh + ':' + mm + ':' + ss;
 	}
 
 	private processFailure (failure : any) {
