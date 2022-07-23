@@ -7,7 +7,8 @@ import {
 	preloadSuccess,
 	preloadFailure,
 	generateSheetSuccess,
-	generateSheetFailure
+	generateSheetFailure,
+	resetMusicModule
 } from './music.actions';
 import {
 	Sheet,
@@ -99,6 +100,14 @@ function doGenerateSheetFailure (state : MusicState, data : ApiFailure) : MusicS
 	};
 }
 
+function doResetMusicModule (state : MusicState) : MusicState {
+	return {
+		...state,
+		sheetList : initialStateData,
+		sheet     : initialStateData
+	}
+}
+
 export const musicReducer = createReducer (
 	musicInitialState,
 	on(fetchSheetSuccess, doFetchSheetSuccess),
@@ -109,6 +118,7 @@ export const musicReducer = createReducer (
 	on(preloadFailure, doPreloadFailure),
 	on(generateSheetSuccess, doGenerateSheetSuccess),
 	on(generateSheetFailure, doGenerateSheetFailure),
+	on(resetMusicModule, doResetMusicModule),
 );
 
 export function reducer(state: MusicState, action: Action): MusicState {

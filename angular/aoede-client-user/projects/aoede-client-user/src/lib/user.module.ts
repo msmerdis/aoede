@@ -8,6 +8,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { UserRoutingModule } from './user-routing.module';
 import { UserService } from './user.service';
+import { UserControlService } from './user-control.service';
 import { UserLoginComponent } from './component/user-login.component';
 import * as fromUserState from './store/user.reducer';
 import { UserEffects } from './store/user.effects';
@@ -43,6 +44,7 @@ import {
 	],
 	providers: [
 		UserService,
+		UserControlService,
 		UserAuthGuard,
 		AnonymousUserGuard,
 		{ provide: HTTP_INTERCEPTORS, useClass: UserInterceptor, multi: true }

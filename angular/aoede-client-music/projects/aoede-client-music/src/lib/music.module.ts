@@ -7,6 +7,7 @@ import { EffectsModule } from '@ngrx/effects';
 
 import { MusicRoutingModule } from './music-routing.module';
 import { MusicService } from './music.service';
+import { MusicControlService } from './music-control.service';
 import { SheetModifyComponent } from './component/sheet-modify.component';
 import { SheetCreateComponent } from './component/sheet-create.component';
 import { SheetResultComponent } from './component/sheet-result.component';
@@ -43,7 +44,8 @@ import { SheetModule } from 'aoede-client-sheet';
 		SheetModule
 	],
 	providers: [
-		MusicService
+		MusicService,
+		MusicControlService
 	]
 
 })

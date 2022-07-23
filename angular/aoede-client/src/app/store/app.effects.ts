@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { map, switchMap, mergeMap, catchError, debounceTime, tap } from 'rxjs/operators';
+import { map, switchMap, mergeMap, catchError, debounceTime, tap, filter } from 'rxjs/operators';
+
+import { UserControlService } from 'aoede-client-user';
+import { MusicControlService } from 'aoede-client-music';
 
 @Injectable()
 export class AppEffects {
 	constructor (
-		private actions$ : Actions
+		private actions$     : Actions,
+		private userControl  : UserControlService,
+		private musicControl : MusicControlService
 	) { }
 
 	logActions$ = createEffect(
@@ -18,6 +23,14 @@ export class AppEffects {
 					this.processFailure (action.failure);
 				}
 			})
+		),
+		{ dispatch: false }
+	);
+
+	authenticationListener$ = createEffect(
+		() => this.userControl.authenticated().pipe(
+			filter(auth => auth === false),
+			tap(auth => this.musicControl.reset())
 		),
 		{ dispatch: false }
 	);

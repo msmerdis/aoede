@@ -27,3 +27,5 @@ export const preloadFailure = createAction('[Music] Preload Failure', props<ApiF
 export const generateSheetRequest = createAction('[Music] Generate Sheet Request', props<ApiRequest<GenerateSheet>>());
 export const generateSheetSuccess = createAction('[Music] Generate Sheet Success', props<ApiSuccess<Sheet>>());
 export const generateSheetFailure = createAction('[Music] Generate Sheet Failure', props<ApiFailure>());
+
+export const resetMusicModule = createAction('[Music] Reset Music Module');
