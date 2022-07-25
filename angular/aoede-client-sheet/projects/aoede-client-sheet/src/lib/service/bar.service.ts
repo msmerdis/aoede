@@ -29,7 +29,7 @@ export class BarService implements SingleCanvasService<Track[], MappedBar[]> {
 		let mappedBars = [] as MappedBar[];
 
 		for (let i = 0; i < measures; i += 1) {
-			let mappedBar = mappedBarInitializer();
+			let mappedBar = mappedBarInitializer(staveConfig.lineHeight);
 
 			sheetConfig.showTracks
 				.filter(n => n < source.length)
@@ -45,7 +45,8 @@ export class BarService implements SingleCanvasService<Track[], MappedBar[]> {
 					// adjust offset to the top of the bar
 					mappedMeasure.offset = mappedMeasure.header + mappedBar.footer;
 
-					mappedBar.width  = Math.max(mappedBar.width, mappedMeasure.width);
+					// one additional staveConfig.lineHeight to account for the end of the bar
+					mappedBar.width  = Math.max(mappedBar.width, mappedMeasure.width + mappedBar.separator);
 					mappedBar.footer = mappedMeasure.offset + mappedMeasure.footer;
 					mappedBar.measures.push(mappedMeasure);
 				});
@@ -64,8 +65,20 @@ export class BarService implements SingleCanvasService<Track[], MappedBar[]> {
 
 	public normalize (bars : MappedBar[], excess : number) : MappedBarAdjustment {
 		let ext = {...staveExtentionInitializer, tracks : []} as MappedBarAdjustment;
+		let num = bars.length;
+		let len = Math.floor(excess / num);
 
-		ext = bars.reduce ((e : MappedBarAdjustment, bar : MappedBar) => {
+		ext = bars.reduce ((e : MappedBarAdjustment, bar : MappedBar, i : number) => {
+			// last bar will contain the round up
+			if (i + 1 == num) {
+				len += (excess - len * num);
+			}
+
+			bar.width += len;
+			bar.measures.forEach(
+				m => this.measureService.normalize(m, bar.width - bar.separator)
+			);
+
 			return {
 				...e,
 				header : Math.max(e.header, bar.header),
@@ -93,15 +106,14 @@ export class BarService implements SingleCanvasService<Track[], MappedBar[]> {
 			this.drawBar (bar, staveConfig, context, x, y);
 			x += bar.width;
 		});
-		// TODO remove
-		// end of all bars ruler
-		context.fillRect(x, y, staveConfig.lineHeight, target[0].footer);
 	}
 
 	public drawBar (target : MappedBar, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
-		// TODO remove
-		// start of bar ruler
-		context.fillRect(x, y, staveConfig.lineHeight, target.footer);
+		let end    = target.measures.length - 1;
+		let header = target.measures[ 0 ].header - staveConfig.stavesHalfHeight;
+		let footer = target.measures[end].footer - staveConfig.stavesHalfHeight;
+
+		context.fillRect(x + target.width, y + header, target.separator, target.footer - header - footer);
 	}
 
 }

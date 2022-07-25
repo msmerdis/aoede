@@ -55,13 +55,15 @@ export function mappedMeasureInitializer () : MappedMeasure {
 };
 
 export interface MappedBar extends StaveExtention {
-	measures : MappedMeasure[];
+	measures  : MappedMeasure[];
+	separator : number;
 };
 
-export function mappedBarInitializer () : MappedBar {
+export function mappedBarInitializer (separator : number = 0) : MappedBar {
 	return {
 		...staveExtentionInitializer,
-		measures : []
+		measures  : [],
+		separator : separator
 	};
 };
 

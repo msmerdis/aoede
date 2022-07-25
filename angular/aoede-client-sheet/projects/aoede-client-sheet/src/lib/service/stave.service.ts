@@ -31,7 +31,7 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 			.reduce ((staves : MappedStave[], bar : MappedBar) : MappedStave[] => {
 				let bottom = staves[staves.length - 1];
 
-				if (bottom.width + bar.width > staveConfig.stavesWidth) {
+				if (bottom.width + bar.width >= staveConfig.stavesWidth) {
 					bottom = this.emptyStave(source, staveConfig, sheetConfig);
 					staves.push(bottom);
 				}
@@ -43,7 +43,7 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 			}, [this.emptyStave(source, staveConfig, sheetConfig, true)] as MappedStave[]);
 
 		staves.forEach ((stave) => {
-			let adjusted = this.barService.normalize(stave.bars, staveConfig.stavesWidth - stave.width);
+			let adjusted = this.barService.normalize(stave.bars, staveConfig.stavesWidth - stave.width - staveConfig.lineHeight);
 			stave.width  = adjusted.width + stave.offset;
 			stave.header = adjusted.header;
 			stave.footer = adjusted.footer;
@@ -83,7 +83,7 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 			}
 		});
 
-		this.finishStave(stave, staveConfig, context, x, y);
+		//this.finishStave(stave, staveConfig, context, x, y);
 
 		this.barService.draw (stave.bars, staveConfig, context, x + stave.offset, y);
 	}
