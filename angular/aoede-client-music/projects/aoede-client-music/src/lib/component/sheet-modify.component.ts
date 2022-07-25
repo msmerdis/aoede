@@ -11,7 +11,9 @@ import {
 	Clef,
 	KeySignature,
 	SheetConfiguration,
-	sheetConfigurationInitializer
+	sheetConfigurationInitializer,
+	StaveConfiguration,
+	staveConfigurationInitializer
 } from 'aoede-client-sheet';
 import { MusicState } from '../store/music.reducer';
 import { fetchSheetRequest } from '../store/music.actions';
@@ -45,6 +47,8 @@ export class SheetModifyComponent {
 		showHeader : true,
 		showFooter : true
 	};
+
+	public staveConfig : StaveConfiguration = staveConfigurationInitializer();
 
 	private modified : boolean = false;
 
@@ -117,4 +121,19 @@ export class SheetModifyComponent {
 		this.loc.go(url);
 	}
 
+	public updateScale (scale : number) : void {
+		this.staveConfig = staveConfigurationInitializer(scale);
+	}
+
+	public updateNormalize (check : boolean) : void {
+
+		this.sheetConfig1 = {
+			...this.sheetConfig1,
+			normalize : check
+		}
+		this.sheetConfig2 = {
+			...this.sheetConfig2,
+			normalize : check
+		}
+	}
 }

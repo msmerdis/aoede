@@ -7,12 +7,23 @@
 				value="{{ i }}"
 			>{{ t.name }}</option>
 	</select>
+	Normalize : <input type="checkbox" #normalizeBox checked="checked" (change)="updateNormalize(normalizeBox.checked);" />
+	Scale :
+	<select (change)="updateScale(+scaleSelect.value)" #scaleSelect>
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="5">5</option>
+	</select>
+
 	<aoede-sheet
 		[sheet]="sheet"
 		[sheetConfig]="sheetConfig1"
+		[staveConfig]="staveConfig"
 	></aoede-sheet>
 	<aoede-sheet
 		[sheet]="sheet"
 		[sheetConfig]="sheetConfig2"
+		[staveConfig]="staveConfig"
 	></aoede-sheet>
 </div>

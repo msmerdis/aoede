@@ -4,6 +4,7 @@
 
 export * from './lib/model/sheet.model';
 export * from './lib/model/sheet-configuration.model';
+export * from './lib/model/stave-configuration.model';
 export * from './lib/model/note.model';
 export * from './lib/model/track.model';
 export * from './lib/model/measure.model';
