@@ -28,7 +28,7 @@ export class StaveSignatureService implements ArrayCanvasService<StaveSignature,
 	) {}
 
 	public map (source : StaveSignature[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, showTime : boolean = false) : MappedStaveSignature[] {
-		return source.map(
+		return sheetConfig.showTracks.map(trackId => source[trackId]).map(
 			(track) => {
 				let stave = mappedStaveSignatureInitializer();
 
@@ -37,7 +37,7 @@ export class StaveSignatureService implements ArrayCanvasService<StaveSignature,
 					stave.header = stave.clef.header;
 					stave.footer = stave.clef.footer;
 
-					stave.timeOffset = stave.keyOffset = stave.clef.width + staveConfig.stavesSpacing;
+					stave.timeOffset = stave.keyOffset = stave.clef.width;
 				}
 
 				if (track.keySignature) {
@@ -47,18 +47,20 @@ export class StaveSignatureService implements ArrayCanvasService<StaveSignature,
 						stave.header = Math.max(stave.header, stave.clef.header);
 						stave.footer = Math.max(stave.header, stave.clef.footer);
 
-						stave.timeOffset += stave.key.width + staveConfig.stavesSpacing;
+						stave.timeOffset += staveConfig.stavesSpacing + stave.key.width;
+						stave.keyOffset  += staveConfig.stavesSpacing;
 					}
 				}
 
 				if (track.timeSignature && showTime) {
-					stave.time       = this.timeSignatureService.map(track.timeSignature, staveConfig, sheetConfig);
-					stave.timeOffset = stave.keyOffset + staveConfig.stavesSpacing + stave.key.width;
-					stave.header     = Math.max(stave.header, stave.time.header);
-					stave.footer     = Math.max(stave.header, stave.time.footer);
-					stave.width      = stave.timeOffset + staveConfig.stavesSpacing + stave.time.width;
+					stave.time   = this.timeSignatureService.map(track.timeSignature, staveConfig, sheetConfig);
+					stave.header = Math.max(stave.header, stave.time.header);
+					stave.footer = Math.max(stave.header, stave.time.footer);
+					stave.width  = stave.timeOffset + staveConfig.stavesSpacing + stave.time.width;
+
+					stave.timeOffset += staveConfig.stavesSpacing;
 				} else {
-					stave.width      = stave.keyOffset;
+					stave.width  = stave.timeOffset;
 				}
 
 				return stave;

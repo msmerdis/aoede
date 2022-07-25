@@ -124,25 +124,19 @@ export function mappedStaveSignatureInitializer () : MappedStaveSignature {
 };
 
 export interface MappedStave extends StaveExtention {
-	bars      : MappedBar           [];
-	tracks    : number              [];
-	clefs     : MappedClef          [];
-	times     : MappedTimeSignature [];
-	keys      : MappedKeySignature  [];
-	keysWidth : number;
-	offset    : number;
+	bars       : MappedBar            [];
+	tracks     : number               [];
+	signatures : MappedStaveSignature [];
+	offset     : number;
 };
 
 export function mappedStaveInitializer () : MappedStave {
 	return {
 		...staveExtentionInitializer,
-		bars      : [],
-		tracks    : [],
-		clefs     : [],
-		times     : [],
-		keys      : [],
-		keysWidth : 0,
-		offset    : 0
+		bars       : [],
+		tracks     : [],
+		signatures : [],
+		offset     : 0
 	};
 };
 
