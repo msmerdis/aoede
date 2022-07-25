@@ -12,7 +12,8 @@ import {
 	MappedStave,
 	MappedBar,
 	MappedBarAdjustment,
-	mappedBarInitializer
+	mappedBarInitializer,
+	MappedMeasure
 } from '../model/stave.model';
 
 @Injectable({
@@ -112,8 +113,15 @@ export class BarService implements SingleCanvasService<Track[], MappedBar[]> {
 		let end    = target.measures.length - 1;
 		let header = target.measures[ 0 ].header - staveConfig.stavesHalfHeight;
 		let footer = target.measures[end].footer - staveConfig.stavesHalfHeight;
+		let offset = y;
 
-		context.fillRect(x + target.width, y + header, target.separator, target.footer - header - footer);
+		target.measures.forEach ((measure : MappedMeasure) => {
+			offset += measure.header;
+			this.measureService.draw(measure, staveConfig, context, x, offset);
+			offset += measure.footer;
+		});
+
+		context.fillRect(x + target.width - target.separator, y + header, target.separator, target.footer - header - footer);
 	}
 
 }

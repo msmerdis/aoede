@@ -31,7 +31,9 @@ export class MeasureService implements SingleCanvasService<Measure, MappedMeasur
 		measure.width = width;
 	}
 
-	public draw (target : MappedMeasure, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D) : void {
+	public draw (target : MappedMeasure, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
+		//context.fillRect(x, y - staveConfig.stavesHalfHeight, staveConfig.lineHeight * 3, staveConfig.stavesFullHeight);
+		//context.fillRect(x + staveConfig.lineHeight * 5, y - staveConfig.stavesHalfHeight, staveConfig.lineHeight, staveConfig.stavesFullHeight);
 	}
 
 }
