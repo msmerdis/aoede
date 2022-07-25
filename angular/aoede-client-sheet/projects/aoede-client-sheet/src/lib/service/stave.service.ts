@@ -98,7 +98,7 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 			header    : 0,
 			offset    : offset,
 			width     : offset,
-			footer    : staveConfig.noteSpacing * 12 + staveConfig.lineHeight * 6,
+			footer    : staveConfig.stavesLineHeight * 6,
 			clefs     : clefs,
 			times     : times,
 			keys      : keys,
@@ -133,8 +133,8 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 	}
 
 	private setupStave (staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
-		[-4, -2, 0, 2, 4].forEach(i => {
-			let yline = staveConfig.noteSpacing * i + y;
+		[-2, -1, 0, 1, 2].forEach(i => {
+			let yline = staveConfig.stavesLineHeight * i + y;
 			context.fillRect(
 				x,
 				yline,
@@ -146,8 +146,8 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 
 	private finishStave (stave : MappedStave, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
 		let len = stave.tracks.length - 1;
-		let top = stave.tracks[ 0 ] - 4 * staveConfig.noteSpacing;
-		let end = stave.tracks[len] + 4 * staveConfig.noteSpacing;
+		let top = stave.tracks[ 0 ] - 2 * staveConfig.stavesLineHeight;
+		let end = stave.tracks[len] + 2 * staveConfig.stavesLineHeight;
 
 		context.fillRect(x + staveConfig.stavesWidth - staveConfig.lineHeight, y + top, staveConfig.lineHeight, end - top);
 	}

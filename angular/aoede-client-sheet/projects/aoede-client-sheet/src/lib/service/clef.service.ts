@@ -15,38 +15,40 @@ export class ClefService implements SingleCanvasService<Clef, MappedClef> {
 	constructor() { }
 
 	public map (source : Clef, staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration): MappedClef {
+		let offset = staveConfig.stavesLineHeight * Math.floor(source.spos/2);
+
 		switch (source.type) {
 			case "G":
 				return {
 					...staveExtentionInitializer,
 					clef   : source,
-					width  : staveConfig.noteSpacing *  6,
-					header : staveConfig.noteSpacing * 10 + staveConfig.noteSpacing * source.spos,
-					footer : staveConfig.noteSpacing *  6 - staveConfig.noteSpacing * source.spos
+					width  : staveConfig.stavesLineHeight * 3,
+					header : staveConfig.stavesLineHeight * 5 + offset,
+					footer : staveConfig.stavesLineHeight * 3 - offset
 				};
 			case "C":
 				return {
 					...staveExtentionInitializer,
 					clef   : source,
-					width  : staveConfig.noteSpacing * 6,
-					header : staveConfig.noteSpacing * 4 + staveConfig.noteSpacing * source.spos,
-					footer : staveConfig.noteSpacing * 4 - staveConfig.noteSpacing * source.spos
+					width  : staveConfig.stavesLineHeight * 3,
+					header : staveConfig.stavesLineHeight * 2 + offset,
+					footer : staveConfig.stavesLineHeight * 2 - offset
 				};
 			case "F":
 				return {
 					...staveExtentionInitializer,
 					clef   : source,
-					width  : staveConfig.noteSpacing * 6,
-					header : staveConfig.noteSpacing * 2 + staveConfig.noteSpacing * source.spos,
-					footer : staveConfig.noteSpacing * 5 - staveConfig.noteSpacing * source.spos
+					width  : staveConfig.stavesLineHeight * 3,
+					header : staveConfig.stavesLineHeight * 1 + offset,
+					footer : staveConfig.stavesLineHeight * 3 - offset - staveConfig.noteSpacing
 				};
 			default :
 				return {
 					...staveExtentionInitializer,
 					clef   : source,
-					width  : staveConfig.noteSpacing * 6,
-					header : staveConfig.noteSpacing * 4 + staveConfig.noteSpacing * source.spos,
-					footer : staveConfig.noteSpacing * 4 - staveConfig.noteSpacing * source.spos
+					width  : staveConfig.stavesLineHeight * 3,
+					header : staveConfig.stavesLineHeight * 2 + offset,
+					footer : staveConfig.stavesLineHeight * 2 - offset
 				};
 		}
 	}
@@ -67,7 +69,7 @@ export class ClefService implements SingleCanvasService<Clef, MappedClef> {
 		context.font="15px ''";
 		context.font="   15px ''";
 		context.translate(x, y);
-		context.scale(0.9877518767285658 * staveConfig.scale * 2, 0.9877518767285658 * staveConfig.scale * 2);
+		context.scale(0.9877518767285658 * staveConfig.scale * 2.2, 0.9877518767285658 * staveConfig.scale * 2.2);
 		context.save();
 		context.font="   15px ''";
 		context.beginPath();
@@ -134,7 +136,7 @@ export class ClefService implements SingleCanvasService<Clef, MappedClef> {
 		context.font="15px ''";
 		context.font="   15px ''";
 		context.translate(x, y);
-		context.scale(staveConfig.scale * 1.6, staveConfig.scale * 1.6);
+		context.scale(staveConfig.scale * 1.8, staveConfig.scale * 1.8);
 		context.save();
 		context.font="   15px ''";
 		context.save();
@@ -214,7 +216,7 @@ export class ClefService implements SingleCanvasService<Clef, MappedClef> {
 		context.save();
 		context.font="   15px ''";
 		context.translate(x, y);
-		context.scale(staveConfig.scale * 1.7, staveConfig.scale * 1.7);
+		context.scale(staveConfig.scale * 1.9, staveConfig.scale * 1.9);
 		context.save();
 		context.fillStyle="rgba(0, 0, 0, 1)";
 		context.font="   15px ''";

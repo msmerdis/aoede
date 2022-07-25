@@ -45,6 +45,10 @@ export class SheetService implements SingleCanvasService<Sheet, MappedSheet> {
 			});
 
 			context.fillStyle = previousStype;
+
+			for (let i = 0; i < sheet.width - 1 && i < (sheet.header + sheet.footer - 1); i += staveConfig.scale) {
+				context.fillRect(i, i, staveConfig.scale, staveConfig.scale);
+			}
 		}
 	}
 
