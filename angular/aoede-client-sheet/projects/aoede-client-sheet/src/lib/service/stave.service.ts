@@ -25,7 +25,7 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 		private staveSignatureService : StaveSignatureService
 	) { }
 
-	public map  (source : Track[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration): MappedStave[] {
+	public map (source : Track[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration): MappedStave[] {
 		let staves = this.barService
 			.map (source, staveConfig, sheetConfig)
 			.reduce ((staves : MappedStave[], bar : MappedBar) : MappedStave[] => {

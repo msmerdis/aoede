@@ -40,4 +40,8 @@ export class BeatService implements MultiCanvasService<Measure, MappedBeat> {
 		});
 	}
 
+	public normalize (target : MappedBeat, excess : number) : void {
+		target.separator += Math.floor((excess + target.notes.length - 2) / (target.notes.length - 1));
+	}
+
 }

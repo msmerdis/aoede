@@ -42,7 +42,10 @@ export class MeasureService implements SingleCanvasService<Measure, MappedMeasur
 	}
 
 	public normalize (measure : MappedMeasure, width : number) : void {
-		measure.separator += Math.floor((width - measure.width) / (measure.beats.length + 1));
+		let excess = Math.floor((width - measure.width + 2 * measure.beats.length) / (2 * measure.beats.length + 1));
+
+		measure.beats.forEach(beat => this.beatService.normalize(beat, excess));
+		measure.separator += excess;
 		measure.width      = width;
 	}
 
