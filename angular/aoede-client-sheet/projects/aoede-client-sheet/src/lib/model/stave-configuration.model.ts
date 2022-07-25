@@ -1,6 +1,3 @@
-import { Clef  } from '../model/clef.model';
-import { KeySignature } from '../model/key-signature.model';
-
 export interface StaveConfiguration {
 	scale            : number;
 	stavesMargin     : number;

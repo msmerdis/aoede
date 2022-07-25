@@ -13,6 +13,7 @@ export * from './lib/model/stave.model';
 export * from './lib/model/clef.model';
 export * from './lib/model/key-signature.model';
 export * from './lib/model/time-signature.model';
+export * from './lib/model/stave-signature.model';
 export * from './lib/service/sheet.service';
 export * from './lib/component/sheet.component';
 export * from './lib/component/clef.component';

@@ -5,7 +5,8 @@ import { Store } from '@ngrx/store';
 
 import {
 	Sheet,
-	KeySignature
+	KeySignature,
+	TimeSignature
 } from 'aoede-client-sheet';
 import { MusicState } from '../store/music.reducer';
 import { fetchSheetListRequest } from '../store/music.actions';
@@ -24,6 +25,7 @@ export class SheetResultComponent implements OnInit {
 	sheetList$ : Observable<Sheet[] | null>;
 	keysList   : KeySignature[] = [];
 	keysSub    : Subscription   = Subscription.EMPTY;
+	unknown    : string = "-";
 
 	constructor(
 		private store : Store<MusicState>
@@ -46,14 +48,24 @@ export class SheetResultComponent implements OnInit {
 		this.keysSub.unsubscribe();
 	}
 
-	translateKey (key : number) : string {
+	translateKey (key : number | undefined) : string {
 		var k;
 
-		if (k = this.keysList.find(k => k.id == key)) {
-			return k.major + " / " + k.minor;
+		if (key !== undefined) {
+			if (k = this.keysList.find(k => k.id == key)) {
+				return k.major + " / " + k.minor;
+			}
 		}
 
-		return "-";
+		return this.unknown;
+	}
+
+	translateTime (time : TimeSignature | undefined) : string {
+		if (time !== undefined) {
+			return time.numerator + " / " + time.denominator;
+		}
+
+		return this.unknown;
 	}
 
 }

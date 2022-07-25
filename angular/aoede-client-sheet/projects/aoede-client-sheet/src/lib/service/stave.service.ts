@@ -63,7 +63,7 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 		/* append clefs */
 
 		let clefs = sheetConfig.showTracks.map(
-			track => this.clefService.map(sheetConfig.clefArray[source[track].clef], staveConfig, sheetConfig)
+			track => this.clefService.map(sheetConfig.clefArray[source[track].clef!!], staveConfig, sheetConfig)
 		);
 
 		let offset = staveConfig.stavesSpacing * 2 + clefs.reduce((total, clef) => clef.width > total ? clef.width : total, 0)
@@ -71,7 +71,7 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 		/* append key signature */
 
 		let keys  = sheetConfig.showTracks.map(
-			track => this.keySignatureService.map(sheetConfig.keysArray[source[track].keySignature], staveConfig, sheetConfig)
+			track => this.keySignatureService.map(sheetConfig.keysArray[source[track].keySignature!!], staveConfig, sheetConfig)
 		);
 
 		let keysWidth = keys.reduce((total, key) => key.width > total ? key.width : total, 0);
@@ -80,7 +80,6 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 			offset += (staveConfig.stavesSpacing + keysWidth);
 		}
 
-
 		/* append time signature */
 
 		let times = [] as MappedTimeSignature[];
@@ -88,7 +87,7 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 		if (first) {
 			// only show time signature on first stave
 			times = sheetConfig.showTracks.map(
-				track => this.timeSignatureService.map(source[track].timeSignature, staveConfig, sheetConfig)
+				track => this.timeSignatureService.map(source[track].timeSignature!!, staveConfig, sheetConfig)
 			);
 
 			offset += (staveConfig.stavesSpacing + times.reduce((total, time) => time.width > total ? time.width : total, 0));
@@ -111,7 +110,7 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 		x += staveConfig.stavesMargin;
 
 		stave.tracks.forEach((track, i) => {
-			this.setupStave(track, staveConfig, context, x, y);
+			this.setupStave(staveConfig, context, x, y + track);
 
 			let clefx = x + staveConfig.stavesSpacing;
 			this.clefService.draw(stave.clefs[i], staveConfig, context, clefx, y + track);
@@ -133,9 +132,9 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 		this.barService.draw (stave.bars, staveConfig, context, x + stave.offset, y);
 	}
 
-	private setupStave (track : number, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
+	private setupStave (staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
 		[-4, -2, 0, 2, 4].forEach(i => {
-			let yline = staveConfig.noteSpacing * i + track + y;
+			let yline = staveConfig.noteSpacing * i + y;
 			context.fillRect(
 				x,
 				yline,

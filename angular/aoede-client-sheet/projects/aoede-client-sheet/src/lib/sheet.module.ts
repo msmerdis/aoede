@@ -9,6 +9,7 @@ import { ClefComponent } from './component/clef.component';
 
 import { MeasureService } from './service/measure.service';
 import { StaveService } from './service/stave.service';
+import { StaveSignatureService } from './service/stave-signature.service';
 import { ClefService } from './service/clef.service';
 import { BeatService } from './service/beat.service';
 import { SheetService } from './service/sheet.service';

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { SingleCanvasService } from './canvas.service';
-import { NoteService } from './note.service';
+import { BeatService } from './beat.service';
 import { SheetConfiguration } from '../model/sheet-configuration.model';
 import { StaveConfiguration } from '../model/stave-configuration.model';
 
@@ -13,9 +13,11 @@ import { MappedMeasure, mappedMeasureInitializer } from '../model/stave.model';
 })
 export class MeasureService implements SingleCanvasService<Measure, MappedMeasure> {
 
-	constructor() { }
+	constructor(
+		private beatService : BeatService
+	) { }
 
-	public map  (source : Measure, staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration): MappedMeasure {
+	public map  (source : Measure, staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, beats : number[] = [0], pitch : number = 0): MappedMeasure {
 		var mappedMeasure = mappedMeasureInitializer();
 
 		mappedMeasure.width  = staveConfig.scale * 250;

@@ -102,6 +102,27 @@ export function mappedTimeSignatureInitializer () : MappedTimeSignature {
 	};
 };
 
+export interface MappedStaveSignature extends StaveExtention {
+	clef       : MappedClef;
+	clefOffset : number;
+	time       : MappedTimeSignature;
+	timeOffset : number;
+	key        : MappedKeySignature;
+	keyOffset  : number;
+};
+
+export function mappedStaveSignatureInitializer () : MappedStaveSignature {
+	return {
+		...staveExtentionInitializer,
+	clef       : mappedClefInitializer(),
+	clefOffset : 0,
+	time       : mappedTimeSignatureInitializer(),
+	timeOffset : 0,
+	key        : mappedKeySignatureInitializer(),
+	keyOffset  : 0
+	};
+};
+
 export interface MappedStave extends StaveExtention {
 	bars      : MappedBar           [];
 	tracks    : number              [];

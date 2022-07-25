@@ -1,16 +1,13 @@
-import { TimeSignature } from './time-signature.model';
+import { StaveSignature, staveSignatureInitializer } from './stave-signature.model';
 import { Note } from './note.model';
 
-export interface Measure {
-	clef?          : string;
-	tempo?         : number;
-	keySignature?  : number;
-	timeSignature? : TimeSignature;
-	notes          : Note[];
+export interface Measure extends StaveSignature {
+	notes : Note[];
 };
 
 export function measureInitializer () : Measure {
 	return {
+		...staveSignatureInitializer(),
 		notes : []
 	};
 };

@@ -19,11 +19,11 @@
 						<td [attr.rowspan]="sheet.tracks.length">{{ sheet.id }}</td>
 						<td [attr.rowspan]="sheet.tracks.length">{{ sheet.name }}</td>
 					</ng-container>
-					<td>{{ track.name || j + 1 }}</td>
-					<td>{{ track.clef }}</td>
-					<td>{{ track.tempo }}</td>
-					<td>{{ translateKey(track.keySignature) }}</td>
-					<td>{{ track.timeSignature.numerator }} / {{ track.timeSignature.denominator }}</td>
+					<td>{{ track.name  || j + 1 }}</td>
+					<td>{{ track.clef  || unknown }}</td>
+					<td>{{ track.tempo || unknown }}</td>
+					<td>{{ translateKey (track.keySignature) }}</td>
+					<td>{{ translateTime(track.timeSignature) }}</td>
 					<td>{{ track.measures.length }}</td>
 				</tr>
 			</ng-container>
