@@ -10,6 +10,11 @@ for d in *; do
 		rm -rf $dist
 	fi
 
+	cache="$d/.angular"
+	if [ -d $cache ]; then
+		rm -rf $cache
+	fi
+
 	for f in *; do
 		if [ -d $d ] && [ -d $f ]; then
 			node="$d/node_modules/$f"
