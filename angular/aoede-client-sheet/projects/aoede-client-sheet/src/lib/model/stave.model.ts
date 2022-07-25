@@ -29,28 +29,30 @@ export function mappedNoteInitializer () : MappedNote {
 };
 
 export interface MappedBeat extends StaveExtention {
-	notes : MappedNote[]
+	notes     : MappedNote[],
+	separator : number
 };
 
 export function mappedBeatInitializer () : MappedBeat {
 	return {
 		...staveExtentionInitializer,
-		notes : []
+		notes     : [],
+		separator : 0
 	};
 };
 
 export interface MappedMeasure extends StaveExtention {
-	measure : Measure;
-	beats   : MappedBeat[];
-	offset  : number;
+	measure   : Measure;
+	beats     : MappedBeat[];
+	separator : number;
 };
 
 export function mappedMeasureInitializer () : MappedMeasure {
 	return {
 		...staveExtentionInitializer,
-		measure : measureInitializer(),
-		beats   : [],
-		offset  : 0
+		measure   : measureInitializer(),
+		beats     : [],
+		separator : 0
 	};
 };
 

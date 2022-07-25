@@ -6,6 +6,7 @@ import { SheetConfiguration } from '../model/sheet-configuration.model';
 import { StaveConfiguration } from '../model/stave-configuration.model';
 
 import { Measure } from '../model/measure.model';
+import { Clef, clefInitializer } from '../model/clef.model';
 import { MappedMeasure, mappedMeasureInitializer } from '../model/stave.model';
 
 @Injectable({
@@ -17,23 +18,40 @@ export class MeasureService implements SingleCanvasService<Measure, MappedMeasur
 		private beatService : BeatService
 	) { }
 
-	public map  (source : Measure, staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, beats : number[] = [0], pitch : number = 0): MappedMeasure {
-		var mappedMeasure = mappedMeasureInitializer();
+	public map  (source : Measure, staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, beats : number[] = [0], clef : Clef = clefInitializer()): MappedMeasure {
+		let mappedMeasure = mappedMeasureInitializer();
 
-		mappedMeasure.width  = staveConfig.scale * 250;
+		// set minimum sizes
 		mappedMeasure.header = staveConfig.noteSpacing * 12 + staveConfig.lineHeight * 6;
 		mappedMeasure.footer = staveConfig.noteSpacing * 12 + staveConfig.lineHeight * 6;
+
+		// append beats
+		mappedMeasure.separator = staveConfig.stavesLineHeight;
+		mappedMeasure.beats     = this.beatService.map (source, staveConfig, sheetConfig, beats, clef);
+		mappedMeasure.beats.forEach (beat => {
+			mappedMeasure.width += beat.width + mappedMeasure.separator;
+			mappedMeasure.header = Math.max(mappedMeasure.header, beat.header);
+			mappedMeasure.footer = Math.max(mappedMeasure.footer, beat.footer);
+		});
+
+		if (mappedMeasure.width > 0) {
+			mappedMeasure.width += mappedMeasure.separator;
+		}
 
 		return mappedMeasure;
 	}
 
 	public normalize (measure : MappedMeasure, width : number) : void {
-		measure.width = width;
+		measure.separator += Math.floor((width - measure.width) / (measure.beats.length + 1));
+		measure.width      = width;
 	}
 
 	public draw (target : MappedMeasure, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
-		//context.fillRect(x, y - staveConfig.stavesHalfHeight, staveConfig.lineHeight * 3, staveConfig.stavesFullHeight);
-		//context.fillRect(x + staveConfig.lineHeight * 5, y - staveConfig.stavesHalfHeight, staveConfig.lineHeight, staveConfig.stavesFullHeight);
+		target.beats.forEach(beat => {
+			x += target.separator;
+			this.beatService.draw(beat, staveConfig, context, x, y);
+			x += beat.width;
+		});
 	}
 
 }

@@ -8,3 +8,4 @@ export interface CanvasService<Source, Target, Mapped> {
 
 export interface SingleCanvasService<Source, Target> extends CanvasService<Source, Target, Target> {};
 export interface ArrayCanvasService<Source, Target> extends CanvasService<Source[], Target[], Target> {};
+export interface MultiCanvasService<Source, Target> extends CanvasService<Source  , Target[], Target> {};

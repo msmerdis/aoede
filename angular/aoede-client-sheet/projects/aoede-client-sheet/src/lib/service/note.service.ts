@@ -20,9 +20,9 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 			(note) => {
 				return {
 					...staveExtentionInitializer,
-					header : staveConfig.stavesHalfHeight + (note.pitch - clef.note) * staveConfig.stavesHalfHeight,
-					footer : staveConfig.stavesHalfHeight + (note.pitch - clef.note) * staveConfig.stavesHalfHeight,
-					width  : staveConfig.stavesFullHeight,
+					header : staveConfig.noteSpacing,// + (note.pitch - clef.note) * staveConfig.stavesHalfHeight,
+					footer : staveConfig.noteSpacing,// + (note.pitch - clef.note) * staveConfig.stavesHalfHeight,
+					width  : staveConfig.noteSpacing * 2,
 					note   : note
 				};
 			}

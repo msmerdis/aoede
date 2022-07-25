@@ -6,6 +6,7 @@ import { SheetConfiguration } from '../model/sheet-configuration.model';
 import { StaveConfiguration } from '../model/stave-configuration.model';
 
 import { Track } from '../model/track.model';
+import { Clef, clefInitializer } from '../model/clef.model';
 import {
 	StaveExtention,
 	staveExtentionInitializer,
@@ -25,7 +26,7 @@ export class BarService implements SingleCanvasService<Track[], MappedBar[]> {
 		private measureService : MeasureService
 	) { }
 
-	public map (source : Track[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, beats : number[][] = [], pitch : number[] = []) : MappedBar[] {
+	public map (source : Track[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, beats : number[][] = [], clefs : Clef[] = []) : MappedBar[] {
 		let measures   = this.calcMeasures (source);
 		let mappedBars = [] as MappedBar[];
 
@@ -40,15 +41,12 @@ export class BarService implements SingleCanvasService<Track[], MappedBar[]> {
 						staveConfig,
 						sheetConfig,
 						beats[j] || [0],
-						pitch[j] || 0
+						clefs[j] || clefInitializer()
 					);
-
-					// adjust offset to the top of the bar
-					mappedMeasure.offset = mappedMeasure.header + mappedBar.footer;
 
 					// one additional staveConfig.lineHeight to account for the end of the bar
 					mappedBar.width  = Math.max(mappedBar.width, mappedMeasure.width + mappedBar.separator);
-					mappedBar.footer = mappedMeasure.offset + mappedMeasure.footer;
+					mappedBar.footer = mappedBar.footer + mappedMeasure.header + mappedMeasure.footer;
 					mappedBar.measures.push(mappedMeasure);
 				});
 
