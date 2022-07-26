@@ -6,7 +6,7 @@ import { SheetConfiguration } from '../model/sheet-configuration.model';
 import { StaveConfiguration } from '../model/stave-configuration.model';
 
 import { Measure } from '../model/measure.model';
-import { Clef, clefInitializer } from '../model/clef.model';
+import { StaveMapState, staveMapStateInitializer } from '../model/stave-map-state.model';
 import { MappedMeasure, mappedMeasureInitializer } from '../model/stave.model';
 
 @Injectable({
@@ -18,7 +18,7 @@ export class MeasureService implements SingleCanvasService<Measure, MappedMeasur
 		private beatService : BeatService
 	) { }
 
-	public map  (source : Measure, staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, beats : number[] = [0], clef : Clef = clefInitializer()): MappedMeasure {
+	public map  (source : Measure, staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, staveState : StaveMapState = staveMapStateInitializer()): MappedMeasure {
 		let mappedMeasure = mappedMeasureInitializer();
 
 		// set minimum sizes
@@ -27,7 +27,7 @@ export class MeasureService implements SingleCanvasService<Measure, MappedMeasur
 
 		// append beats
 		mappedMeasure.separator = staveConfig.stavesLineHeight;
-		mappedMeasure.beats     = this.beatService.map (source, staveConfig, sheetConfig, beats, clef);
+		mappedMeasure.beats     = this.beatService.map (source, staveConfig, sheetConfig, staveState.beats);
 		mappedMeasure.beats.forEach (beat => {
 			mappedMeasure.width += beat.width + mappedMeasure.separator;
 			mappedMeasure.header = Math.max(mappedMeasure.header, beat.header);

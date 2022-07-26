@@ -6,7 +6,7 @@ import { SheetConfiguration } from '../model/sheet-configuration.model';
 import { StaveConfiguration } from '../model/stave-configuration.model';
 
 import { Track } from '../model/track.model';
-import { Clef, clefInitializer } from '../model/clef.model';
+import { StaveMapState, staveMapStateInitializer } from '../model/stave-map-state.model';
 import {
 	StaveExtention,
 	staveExtentionInitializer,
@@ -26,7 +26,7 @@ export class BarService implements SingleCanvasService<Track[], MappedBar[]> {
 		private measureService : MeasureService
 	) { }
 
-	public map (source : Track[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, beats : number[][] = [], clefs : Clef[] = []) : MappedBar[] {
+	public map (source : Track[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, staveStates : StaveMapState[] = []) : MappedBar[] {
 		let measures   = this.calcMeasures (source);
 		let mappedBars = [] as MappedBar[];
 
@@ -40,8 +40,7 @@ export class BarService implements SingleCanvasService<Track[], MappedBar[]> {
 						source[j].measures[i],
 						staveConfig,
 						sheetConfig,
-						beats[j] || [0],
-						clefs[j] || clefInitializer()
+						staveStates[j] || {beats:[0]}
 					);
 
 					// one additional staveConfig.lineHeight to account for the end of the bar

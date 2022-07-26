@@ -6,6 +6,7 @@ import { StaveSignatureService } from './stave-signature.service';
 import { SheetConfiguration } from '../model/sheet-configuration.model';
 import { StaveConfiguration } from '../model/stave-configuration.model';
 
+import { StaveMapState, staveMapStateInitializer } from '../model/stave-map-state.model';
 import { Track } from '../model/track.model';
 import {
 	MappedStave,
@@ -26,21 +27,23 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 	) { }
 
 	public map (source : Track[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration): MappedStave[] {
+		let states : StaveMapState[] = source.map(track => staveMapStateInitializer(track, sheetConfig.timesList));
 		let staves = this.barService
-			.map (source, staveConfig, sheetConfig)
+			.map (source, staveConfig, sheetConfig, states)
 			.reduce ((staves : MappedStave[], bar : MappedBar) : MappedStave[] => {
-				let bottom = staves[staves.length - 1];
+				let bottom   = staves[staves.length - 1];
 
 				if (bottom.width + bar.width >= staveConfig.stavesWidth) {
-					bottom = this.emptyStave(source, staveConfig, sheetConfig);
+					bottom = this.emptyStave(states, staveConfig, sheetConfig);
 					staves.push(bottom);
+					//this.barService.mapSignature(bar, staveConfig, sheetConfig, states, true);
 				}
 
 				bottom.bars.push (bar);
 				bottom.width += bar.width;
 
 				return staves;
-			}, [this.emptyStave(source, staveConfig, sheetConfig, true)] as MappedStave[]);
+			}, [this.emptyStave(states, staveConfig, sheetConfig, true)] as MappedStave[]);
 
 		staves.forEach ((stave) => {
 			let excess   = sheetConfig.normalize ? (staveConfig.stavesWidth - stave.width) : 0;
@@ -54,7 +57,7 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 		return staves;
 	}
 
-	private emptyStave (source : Track[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, first : boolean = false) : MappedStave {
+	private emptyStave (source : StaveMapState[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, first : boolean = false) : MappedStave {
 		let signatures = this.staveSignatureService.map(source, staveConfig, sheetConfig, first);
 		let offset     = 0;
 
