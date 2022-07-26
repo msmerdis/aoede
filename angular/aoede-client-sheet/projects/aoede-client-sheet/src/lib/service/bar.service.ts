@@ -43,12 +43,10 @@ export class BarService implements SingleCanvasService<Track[], MappedBar[]> {
 						staveStates[j] || {beats:[0]}
 					);
 
-					// one additional staveConfig.lineHeight to account for the end of the bar
-					mappedBar.width  = Math.max(mappedBar.width, mappedMeasure.width + mappedBar.separator);
-					mappedBar.footer = mappedBar.footer + mappedMeasure.header + mappedMeasure.footer;
 					mappedBar.measures.push(mappedMeasure);
 				});
 
+			this.resize(mappedBar);
 			mappedBars.push (mappedBar);
 		}
 
@@ -61,10 +59,27 @@ export class BarService implements SingleCanvasService<Track[], MappedBar[]> {
 			.reduce ((max, cur) => max > cur ? max : cur, 0);
 	}
 
+	public updateSignatures (bar : MappedBar, staveConfig : StaveConfiguration, showTime : boolean) : void {
+		bar.measures.forEach(measure => {
+			this.measureService.updateSignature(measure, staveConfig, showTime);
+		});
+
+		this.resize(bar);
+	}
+
+	private resize (bar : MappedBar) : void {
+		bar.footer = 0;
+		bar.measures.forEach(measure => {
+			// one additional staveConfig.lineHeight to account for the end of the bar
+			bar.width  = Math.max(bar.width, measure.width + bar.separator);
+			bar.footer = bar.footer + measure.header + measure.footer;
+		});
+	}
+
 	public normalize (bars : MappedBar[], excess : number) : MappedBarAdjustment {
 		let ext = {...staveExtentionInitializer, tracks : []} as MappedBarAdjustment;
 		let num = bars.length;
-		let len = Math.floor(excess / num);
+		let len = Math.floor((excess + num - 1) / num);
 
 		ext = bars.reduce ((e : MappedBarAdjustment, bar : MappedBar, i : number) => {
 			// last bar will contain the round up

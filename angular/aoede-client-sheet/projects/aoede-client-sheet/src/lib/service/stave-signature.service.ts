@@ -1,25 +1,24 @@
 import { Injectable } from '@angular/core';
 
-import { ArrayCanvasService } from './canvas.service';
+import { SingleCanvasService } from './canvas.service';
 import { ClefService } from './clef.service';
 import { KeySignatureService } from './key-signature.service';
 import { TimeSignatureService } from './time-signature.service';
 import { SheetConfiguration } from '../model/sheet-configuration.model';
 import { StaveConfiguration } from '../model/stave-configuration.model';
 
+import { timeSignatureBeats } from '../model/time-signature.model';
 import { StaveSignature } from '../model/stave-signature.model';
+import { StaveMapState, staveMapStateInitializer } from '../model/stave-map-state.model';
 import {
 	MappedStaveSignature,
-	mappedStaveSignatureInitializer,
-	MappedClef,
-	MappedKeySignature,
-	MappedTimeSignature
+	mappedStaveSignatureInitializer
 } from '../model/stave.model';
 
 @Injectable({
 	providedIn: 'root'
 })
-export class StaveSignatureService implements ArrayCanvasService<StaveSignature, MappedStaveSignature> {
+export class StaveSignatureService implements SingleCanvasService<StaveSignature, MappedStaveSignature> {
 
 	constructor(
 		private clefService : ClefService,
@@ -27,59 +26,88 @@ export class StaveSignatureService implements ArrayCanvasService<StaveSignature,
 		private timeSignatureService : TimeSignatureService
 	) {}
 
-	public map (source : StaveSignature[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, showTime : boolean = false) : MappedStaveSignature[] {
-		return sheetConfig.showTracks.map(trackId => source[trackId]).map(
-			(track) => {
-				let stave = mappedStaveSignatureInitializer();
-
-				if (track.clef) {
-					stave.clef   = this.clefService.map(sheetConfig.clefArray[track.clef], staveConfig, sheetConfig);
-					stave.header = stave.clef.header;
-					stave.footer = stave.clef.footer;
-
-					stave.timeOffset = stave.keyOffset = stave.clef.width;
-				}
-
-				if (track.keySignature) {
-					stave.key = this.keySignatureService.map(sheetConfig.keysArray[track.keySignature], staveConfig, sheetConfig);
-
-					if (stave.key.width > 0) {
-						stave.header = Math.max(stave.header, stave.clef.header);
-						stave.footer = Math.max(stave.header, stave.clef.footer);
-
-						stave.timeOffset += staveConfig.stavesSpacing + stave.key.width;
-						stave.keyOffset  += staveConfig.stavesSpacing;
-					}
-				}
-
-				if (track.timeSignature && showTime) {
-					stave.time   = this.timeSignatureService.map(track.timeSignature, staveConfig, sheetConfig);
-					stave.header = Math.max(stave.header, stave.time.header);
-					stave.footer = Math.max(stave.header, stave.time.footer);
-					stave.width  = stave.timeOffset + staveConfig.stavesSpacing + stave.time.width;
-
-					stave.timeOffset += staveConfig.stavesSpacing;
-				} else {
-					stave.width  = stave.timeOffset;
-				}
-
-				return stave;
-			}
+	public initialize (source : StaveSignature, staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration) : StaveMapState {
+		let stave = staveMapStateInitializer(
+			source,
+			sheetConfig.timesList
 		);
+
+		this.updateState(source, staveConfig, sheetConfig, stave);
+
+		return stave;
+	}
+
+	public map (source : StaveSignature, staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, staveState : StaveMapState = staveMapStateInitializer()) : MappedStaveSignature {
+		let stave = mappedStaveSignatureInitializer();
+
+		let showKey  = source.keySignature  !== undefined && (staveState.keySignature  === undefined || staveState.keySignature === source.keySignature);
+		let showTime = source.timeSignature !== undefined && (staveState.timeSignature === undefined || (
+			staveState.timeSignature.numerator   === source.timeSignature.numerator &&
+			staveState.timeSignature.denominator === source.timeSignature.denominator
+		));
+
+		this.updateState(source, staveConfig, sheetConfig, staveState);
+
+		stave.key  = staveState.mappedKey;
+		stave.time = staveState.mappedTime;
+
+		stave.separator = staveConfig.noteSpacing;
+
+		this.updateSignature(stave, showKey, showTime);
+
+		return stave;
+	}
+
+	private updateState (source : StaveSignature, staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, staveState : StaveMapState) : void {
+		if (source.clef !== undefined) {
+			staveState.clef       = source.clef;
+			staveState.mappedClef = this.clefService.map(sheetConfig.clefArray[source.clef], staveConfig, sheetConfig);
+		}
+
+		if (source.keySignature !== undefined) {
+			staveState.keySignature = source.keySignature;
+			staveState.mappedKey = this.keySignatureService.map(sheetConfig.keysArray[source.keySignature], staveConfig, sheetConfig);
+		}
+
+		if (source.timeSignature !== undefined) {
+			staveState.timeSignature = source.timeSignature;
+			staveState.mappedTime = this.timeSignatureService.map(source.timeSignature, staveConfig, sheetConfig);
+			staveState.beats = timeSignatureBeats(source.timeSignature, sheetConfig.timesList);
+		}
+	}
+
+	public updateSignature (signature : MappedStaveSignature, showKey : boolean, showTime : boolean) {
+		if (signature.showKey == false && showKey == true) {
+			if (signature.width > 0) {
+				signature.width += signature.separator;
+			}
+			signature.width += signature.key.width;
+			signature.header = Math.max(signature.header, signature.key.header);
+			signature.footer = Math.max(signature.footer, signature.key.footer);
+
+			signature.showKey = true;
+		}
+
+		if (signature.showTime == false && showTime == true) {
+			if (signature.width > 0) {
+				signature.width += signature.separator;
+			}
+			signature.width += signature.time.width;
+			signature.header = Math.max(signature.header, signature.time.header);
+			signature.footer = Math.max(signature.footer, signature.time.footer);
+
+			signature.showTime = true;
+		}
 	}
 
 	public draw (target : MappedStaveSignature, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
-
-		if (target.clef.width > 0) {
-			this.clefService.draw(target.clef, staveConfig, context, x + target.clefOffset, y);
+		if (target.showKey) {
+			this.keySignatureService.draw(target.key, staveConfig, context, x, y);
+			x += (target.key.width + target.separator);
 		}
 
-		if (target.key.width > 0) {
-			this.keySignatureService.draw(target.key, staveConfig, context, x + target.keyOffset, y);
-		}
-
-		if (target.time.width > 0) {
-			this.timeSignatureService.draw(target.time, staveConfig, context, x + target.timeOffset, y);
+		if (target.showTime) {
+			this.timeSignatureService.draw(target.time, staveConfig, context, x, y);
 		}
 
 	}

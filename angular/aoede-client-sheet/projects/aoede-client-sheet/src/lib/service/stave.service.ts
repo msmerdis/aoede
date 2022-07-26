@@ -2,18 +2,17 @@ import { Injectable } from '@angular/core';
 
 import { ArrayCanvasService } from './canvas.service';
 import { BarService } from './bar.service';
+import { ClefService } from './clef.service';
 import { StaveSignatureService } from './stave-signature.service';
 import { SheetConfiguration } from '../model/sheet-configuration.model';
 import { StaveConfiguration } from '../model/stave-configuration.model';
 
-import { StaveMapState, staveMapStateInitializer } from '../model/stave-map-state.model';
+import { StaveMapState } from '../model/stave-map-state.model';
 import { Track } from '../model/track.model';
 import {
 	MappedStave,
 	mappedStaveInitializer,
-	MappedStaveSignature,
-	MappedBar,
-	mappedBarInitializer
+	MappedBar
 } from '../model/stave.model';
 
 @Injectable({
@@ -23,27 +22,33 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 
 	constructor(
 		private barService : BarService,
+		private clefService : ClefService,
 		private staveSignatureService : StaveSignatureService
 	) { }
 
 	public map (source : Track[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration): MappedStave[] {
-		let states : StaveMapState[] = source.map(track => staveMapStateInitializer(track, sheetConfig.timesList));
+		let states : StaveMapState[] = source.map(track =>
+			this.staveSignatureService.initialize(track, staveConfig, sheetConfig)
+		);
 		let staves = this.barService
 			.map (source, staveConfig, sheetConfig, states)
 			.reduce ((staves : MappedStave[], bar : MappedBar) : MappedStave[] => {
-				let bottom   = staves[staves.length - 1];
+				let bottom = staves[staves.length - 1];
 
 				if (bottom.width + bar.width >= staveConfig.stavesWidth) {
 					bottom = this.emptyStave(states, staveConfig, sheetConfig);
 					staves.push(bottom);
-					//this.barService.mapSignature(bar, staveConfig, sheetConfig, states, true);
+				}
+
+				if (bottom.bars.length == 0) {
+					this.barService.updateSignatures(bar, staveConfig, staves.length == 1);
 				}
 
 				bottom.bars.push (bar);
 				bottom.width += bar.width;
 
 				return staves;
-			}, [this.emptyStave(states, staveConfig, sheetConfig, true)] as MappedStave[]);
+			}, [this.emptyStave(states, staveConfig, sheetConfig)] as MappedStave[]);
 
 		staves.forEach ((stave) => {
 			let excess   = sheetConfig.normalize ? (staveConfig.stavesWidth - stave.width) : 0;
@@ -57,21 +62,20 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 		return staves;
 	}
 
-	private emptyStave (source : StaveMapState[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, first : boolean = false) : MappedStave {
-		let signatures = this.staveSignatureService.map(source, staveConfig, sheetConfig, first);
-		let offset     = 0;
+	private emptyStave (source : StaveMapState[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration) : MappedStave {
+		let clefs = sheetConfig.showTracks.map(track => source[track].mappedClef);
+		let width = clefs.reduce((max, clef) => clef.width > max ? clef.width : max, 0);
 
-		if (signatures.length > 0) {
-			offset = staveConfig.stavesSpacing * 2
-				+ signatures.reduce((max, sig) => sig.width > max ? sig.width : max, 0);
+		if (width > 0) {
+			width += staveConfig.stavesSpacing;
 		}
 
 		return {
 			...mappedStaveInitializer(),
 			header     : 0,
-			signatures : signatures,
-			offset     : offset,
-			width      : offset,
+			clefs      : clefs,
+			offset     : width,
+			width      : width,
 			footer     : staveConfig.stavesLineHeight * 6
 		};
 	}
@@ -83,11 +87,9 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 			this.setupStave(staveConfig, context, x, y + track);
 
 			if (stave.offset > 0) {
-				this.staveSignatureService.draw(stave.signatures[i], staveConfig, context, x + staveConfig.stavesSpacing, y + track);
+				this.clefService.draw(stave.clefs[i], staveConfig, context, x + staveConfig.stavesSpacing, y + track);
 			}
 		});
-
-		//this.finishStave(stave, staveConfig, context, x, y);
 
 		this.barService.draw (stave.bars, staveConfig, context, x + stave.offset, y);
 	}
@@ -102,14 +104,6 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 				staveConfig.lineHeight
 			);
 		});
-	}
-
-	private finishStave (stave : MappedStave, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
-		let len = stave.tracks.length - 1;
-		let top = stave.tracks[ 0 ] - 2 * staveConfig.stavesLineHeight;
-		let end = stave.tracks[len] + 2 * staveConfig.stavesLineHeight;
-
-		context.fillRect(x + staveConfig.stavesWidth - staveConfig.lineHeight, y + top, staveConfig.lineHeight, end - top);
 	}
 
 }

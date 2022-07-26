@@ -17,62 +17,6 @@ export const staveExtentionInitializer : StaveExtention = {
 	footer : 0
 };
 
-export interface MappedNote extends StaveExtention {
-	note : Note;
-};
-
-export function mappedNoteInitializer () : MappedNote {
-	return {
-		...staveExtentionInitializer,
-		note : noteInitializer()
-	};
-};
-
-export interface MappedBeat extends StaveExtention {
-	notes     : MappedNote[],
-	separator : number
-};
-
-export function mappedBeatInitializer () : MappedBeat {
-	return {
-		...staveExtentionInitializer,
-		notes     : [],
-		separator : 0
-	};
-};
-
-export interface MappedMeasure extends StaveExtention {
-	measure   : Measure;
-	beats     : MappedBeat[];
-	separator : number;
-};
-
-export function mappedMeasureInitializer () : MappedMeasure {
-	return {
-		...staveExtentionInitializer,
-		measure   : measureInitializer(),
-		beats     : [],
-		separator : 0
-	};
-};
-
-export interface MappedBar extends StaveExtention {
-	measures  : MappedMeasure[];
-	separator : number;
-};
-
-export function mappedBarInitializer (separator : number = 0) : MappedBar {
-	return {
-		...staveExtentionInitializer,
-		measures  : [],
-		separator : separator
-	};
-};
-
-export interface MappedBarAdjustment extends StaveExtention {
-	tracks : number[];
-};
-
 export interface MappedClef extends StaveExtention {
 	clef : Clef;
 };
@@ -107,27 +51,86 @@ export function mappedTimeSignatureInitializer () : MappedTimeSignature {
 };
 
 export interface MappedStaveSignature extends StaveExtention {
-	clef       : MappedClef;
-	clefOffset : number;
-	time       : MappedTimeSignature;
-	timeOffset : number;
-	key        : MappedKeySignature;
-	keyOffset  : number;
+	time      : MappedTimeSignature;
+	key       : MappedKeySignature;
+	separator : number;
+	showTime  : boolean;
+	showKey   : boolean;
 };
 
 export function mappedStaveSignatureInitializer () : MappedStaveSignature {
 	return {
 		...staveExtentionInitializer,
-	clef       : mappedClefInitializer(),
-	clefOffset : 0,
-	time       : mappedTimeSignatureInitializer(),
-	timeOffset : 0,
-	key        : mappedKeySignatureInitializer(),
-	keyOffset  : 0
+		time      : mappedTimeSignatureInitializer(),
+		key       : mappedKeySignatureInitializer(),
+		separator : 0,
+		showTime  : false,
+		showKey   : false
 	};
 };
 
+export interface MappedNote extends StaveExtention {
+	note : Note;
+};
+
+export function mappedNoteInitializer () : MappedNote {
+	return {
+		...staveExtentionInitializer,
+		note : noteInitializer()
+	};
+};
+
+export interface MappedBeat extends StaveExtention {
+	notes     : MappedNote[],
+	separator : number
+};
+
+export function mappedBeatInitializer () : MappedBeat {
+	return {
+		...staveExtentionInitializer,
+		notes     : [],
+		separator : 0
+	};
+};
+
+export interface MappedMeasure extends StaveExtention {
+	measure   : Measure;
+	beats     : MappedBeat[];
+	count     : number;
+	separator : number;
+	signature : MappedStaveSignature;
+};
+
+export function mappedMeasureInitializer () : MappedMeasure {
+	return {
+		...staveExtentionInitializer,
+		measure   : measureInitializer(),
+		beats     : [],
+		count     : 0,
+		separator : 0,
+		signature : mappedStaveSignatureInitializer()
+	};
+};
+
+export interface MappedBar extends StaveExtention {
+	measures  : MappedMeasure[];
+	separator : number;
+};
+
+export function mappedBarInitializer (separator : number = 0) : MappedBar {
+	return {
+		...staveExtentionInitializer,
+		measures  : [],
+		separator : separator
+	};
+};
+
+export interface MappedBarAdjustment extends StaveExtention {
+	tracks : number[];
+};
+
 export interface MappedStave extends StaveExtention {
+	clefs      : MappedClef           [];
 	bars       : MappedBar            [];
 	tracks     : number               [];
 	signatures : MappedStaveSignature [];
@@ -137,10 +140,11 @@ export interface MappedStave extends StaveExtention {
 export function mappedStaveInitializer () : MappedStave {
 	return {
 		...staveExtentionInitializer,
+		clefs      : [],
 		bars       : [],
 		tracks     : [],
 		signatures : [],
-		offset     : 0
+		offset     : 0,
 	};
 };
 

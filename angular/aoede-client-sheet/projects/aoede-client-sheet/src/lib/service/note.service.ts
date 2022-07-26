@@ -22,7 +22,7 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 					...staveExtentionInitializer,
 					header : staveConfig.noteSpacing,// + (note.pitch - clef.note) * staveConfig.stavesHalfHeight,
 					footer : staveConfig.noteSpacing,// + (note.pitch - clef.note) * staveConfig.stavesHalfHeight,
-					width  : staveConfig.noteSpacing * 2,
+					width  : staveConfig.noteSpacing * 16,
 					note   : note
 				};
 			}
