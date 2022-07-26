@@ -27,9 +27,9 @@ public class TimeSignatureRepository extends MapRepository <Fraction, TimeSignat
 		save(new TimeSignature (3, 4, List.of(0, 1, 2)));
 		save(new TimeSignature (3, 2, List.of(0, 1, 2)));
 
-		save(new TimeSignature (4, 8, List.of(0, 2)));
-		save(new TimeSignature (4, 4, List.of(0, 2)));
-		save(new TimeSignature (4, 2, List.of(0, 2)));
+		save(new TimeSignature (4, 8, List.of(0, 1, 2, 3)));
+		save(new TimeSignature (4, 4, List.of(0, 1, 2, 3)));
+		save(new TimeSignature (4, 2, List.of(0, 1, 2, 3)));
 
 		save(new TimeSignature (6, 8, List.of(0, 3)));
 		save(new TimeSignature (6, 4, List.of(0, 3)));

@@ -11,9 +11,11 @@ And prepare json array "beats012"
 	| integer | 0 |
 	| integer | 1 |
 	| integer | 2 |
-And prepare json array "beats02"
+And prepare json array "beats0123"
 	| integer | 0 |
+	| integer | 1 |
 	| integer | 2 |
+	| integer | 3 |
 And prepare json array "beats03"
 	| integer | 0 |
 	| integer | 3 |
@@ -47,9 +49,9 @@ And the response array contains "timeSignatureObject" objects
 	|     3     |      8      | beats012  |
 	|     3     |      4      | beats012  |
 	|     3     |      2      | beats012  |
-	|     4     |      8      | beats02   |
-	|     4     |      4      | beats02   |
-	|     4     |      2      | beats02   |
+	|     4     |      8      | beats0123 |
+	|     4     |      4      | beats0123 |
+	|     4     |      2      | beats0123 |
 	|     6     |      8      | beats03   |
 	|     6     |      4      | beats03   |
 	|     9     |      8      | beats036  |
@@ -92,9 +94,9 @@ Examples:
 	|     3     |      8      | beats012  |
 	|     3     |      4      | beats012  |
 	|     3     |      2      | beats012  |
-	|     4     |      8      | beats02   |
-	|     4     |      4      | beats02   |
-	|     4     |      2      | beats02   |
+	|     4     |      8      | beats0123 |
+	|     4     |      4      | beats0123 |
+	|     4     |      2      | beats0123 |
 	|     6     |      8      | beats03   |
 	|     6     |      4      | beats03   |
 	|     9     |      8      | beats036  |
@@ -121,9 +123,9 @@ Scenario: create a new Time signature
 ### create a new time signature is not allowed
 
 Given a "timeSignature" with
-	| numerator   | integer | 5       |
-	| denominator | integer | 4       |
-	| beats       | json    | beats02 |
+	| numerator   | integer | 5         |
+	| denominator | integer | 4         |
+	| beats       | json    | beats0123 |
 And the request was not successful
 And the response has a status code of 400
 And the response matches
@@ -148,9 +150,9 @@ When request a "timeSignature" with id "4-4"
 Then the request was successful
 And the response has a status code of 200
 And the response matches
-	| numerator   | integer |    4    |
-	| denominator | integer |    4    |
-	| beats       | json    | beats02 |
+	| numerator   | integer |    4      |
+	| denominator | integer |    4      |
+	| beats       | json    | beats0123 |
 
 @TC014007
 @Negative @Delete

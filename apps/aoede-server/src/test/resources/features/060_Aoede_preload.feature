@@ -122,9 +122,11 @@ And prepare json array "beats012"
 	| integer | 0 |
 	| integer | 1 |
 	| integer | 2 |
-And prepare json array "beats02"
+And prepare json array "beats0123"
 	| integer | 0 |
+	| integer | 1 |
 	| integer | 2 |
+	| integer | 3 |
 And prepare json array "beats03"
 	| integer | 0 |
 	| integer | 3 |
@@ -144,9 +146,9 @@ And prepare json array "timeSignatures" of "timeSignatureObject"
 	|     3     |      8      | beats012  |
 	|     3     |      4      | beats012  |
 	|     3     |      2      | beats012  |
-	|     4     |      8      | beats02   |
-	|     4     |      4      | beats02   |
-	|     4     |      2      | beats02   |
+	|     4     |      8      | beats0123 |
+	|     4     |      4      | beats0123 |
+	|     4     |      2      | beats0123 |
 	|     6     |      8      | beats03   |
 	|     6     |      4      | beats03   |
 	|     9     |      8      | beats036  |
