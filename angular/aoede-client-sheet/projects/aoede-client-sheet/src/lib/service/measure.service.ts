@@ -39,7 +39,6 @@ export class MeasureService implements SingleCanvasService<Measure, MappedMeasur
 		}
 
 		// append beats
-
 		mappedMeasure.separator = staveConfig.stavesSpacing;
 		mappedMeasure.beats     = this.beatService.map (source, staveConfig, sheetConfig, staveState.beats);
 		mappedMeasure.beats.forEach (beat => {
@@ -80,7 +79,6 @@ export class MeasureService implements SingleCanvasService<Measure, MappedMeasur
 	}
 
 	public draw (target : MappedMeasure, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
-		console.log("draw measure : " + JSON.stringify(target));
 		if (target.signature.width > 0) {
 			x += staveConfig.stavesSpacing;
 			this.staveSignatureService.draw(target.signature, staveConfig, context, x, y);

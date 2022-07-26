@@ -40,10 +40,10 @@ export class StaveSignatureService implements SingleCanvasService<StaveSignature
 	public map (source : StaveSignature, staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, staveState : StaveMapState = staveMapStateInitializer()) : MappedStaveSignature {
 		let stave = mappedStaveSignatureInitializer();
 
-		let showKey  = source.keySignature  !== undefined && (staveState.keySignature  === undefined || staveState.keySignature === source.keySignature);
+		let showKey  = source.keySignature  !== undefined && (staveState.keySignature  === undefined || staveState.keySignature !== source.keySignature);
 		let showTime = source.timeSignature !== undefined && (staveState.timeSignature === undefined || (
-			staveState.timeSignature.numerator   === source.timeSignature.numerator &&
-			staveState.timeSignature.denominator === source.timeSignature.denominator
+			staveState.timeSignature.numerator   !== source.timeSignature.numerator ||
+			staveState.timeSignature.denominator !== source.timeSignature.denominator
 		));
 
 		this.updateState(source, staveConfig, sheetConfig, staveState);
