@@ -34,6 +34,8 @@ export class BeatService implements MultiCanvasService<Measure, MappedBeat> {
 	}
 
 	public draw (target : MappedBeat, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
+		context.fillRect(x, y - target.header - staveConfig.stavesHalfHeight, target.width, staveConfig.stavesLineHeight);
+
 		target.notes.forEach(note => {
 			this.noteService.draw(note, staveConfig, context, x, y);
 			x += (note.width + target.separator);
@@ -42,6 +44,7 @@ export class BeatService implements MultiCanvasService<Measure, MappedBeat> {
 
 	public normalize (target : MappedBeat, excess : number) : void {
 		target.separator += Math.floor((excess + target.notes.length - 2) / (target.notes.length - 1));
+		target.width += excess;
 	}
 
 }
