@@ -26,10 +26,17 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 					note   : note
 				};
 			}
-		);
+		).sort((a, b) => a.note.order - b.note.order);
 	}
 
-	public draw (stave : MappedNote, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
-		context.fillRect(x, y - stave.header, stave.width, stave.header + stave.footer);
+	public draw (note : MappedNote, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
+		context.fillRect(x, y - note.header, note.width, note.header + note.footer);
+		context.save();
+		context.font         = "bold " + ((note.header + note.footer) * 1.2) + "px ''";
+		context.textAlign    = "center";
+		context.textBaseline = "alphabetic";
+		context.fillStyle    = "white";
+		context.fillText(note.note.pitch + " - " + note.note.order + " - " + note.note.value.numerator + " / " + note.note.value.denominator, x + (note.width / 2), y + note.footer);
+		context.restore();
 	}
 }
