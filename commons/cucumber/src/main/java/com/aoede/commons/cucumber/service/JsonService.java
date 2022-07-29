@@ -43,6 +43,8 @@ public interface JsonService extends TestStorageService<JsonElement> {
 	public boolean jsonArrayContainsObject(JsonArray array, DataTable  data);
 	public boolean jsonArrayContainsObject(JsonArray array, JsonObject data);
 
+	public boolean jsonArrayContainsArray(JsonArray object, JsonArray data);
+
 	public boolean jsonArrayContainsObjectWithElement(JsonArray array, String key, JsonElement element);
 
 	// url

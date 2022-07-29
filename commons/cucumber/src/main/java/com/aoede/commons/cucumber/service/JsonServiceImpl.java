@@ -266,11 +266,36 @@ public class JsonServiceImpl extends TestStorageServiceImpl<JsonElement> impleme
 				continue;
 			}
 
+			if (element.isJsonArray()) {
+				// array must contain the array
+				if (!jsonArrayContainsArray (array, element.getAsJsonArray())) {
+					logger.info("array does not contain " + element.toString());
+					return false;
+				}
+
+				// no need to check the rest of the cases
+				continue;
+			}
+
 			// no further types are implemented stop with an error if that ever happens
 			assertNotNull ("array element could not be handled (unimplemented type)", null);
 		}
 
 		return true;
+	}
+
+	@Override
+	public boolean jsonArrayContainsArray(JsonArray array, JsonArray data) {
+		// iterate the data array and match each object
+		for (int i = 0; i < array.size(); i += 1) {
+			JsonElement element = array.get(i);
+
+			if (element.isJsonArray() && jsonArrayMatches(element.getAsJsonArray(), data)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	@Override

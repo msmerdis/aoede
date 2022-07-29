@@ -90,6 +90,50 @@ public class TestJsonServiceImplJsonArrayMatches extends JsonServiceImplTestCase
 	}
 
 	@Test
+	public void verifyJsonArrayMatchOArray () throws Exception {
+		JsonArray expected = new JsonArray ();
+
+		expected.add(buildArray(3));
+
+		JsonArray actual = new JsonArray ();
+
+		actual.add(buildArray(1));
+		actual.add(buildArray(5));
+
+		assertTrue ("json is not matched correctly", uut().jsonArrayMatches(actual, expected));
+		assertFalse ("json is not matched correctly", uut().jsonArrayMatches(expected, actual));
+	}
+
+	@Test
+	public void verifyJsonArrayMatchEmptyArray () throws Exception {
+		JsonArray expected = new JsonArray ();
+
+		expected.add(buildArray(0));
+
+		JsonArray actual = new JsonArray ();
+
+		actual.add(buildArray(1));
+		actual.add(buildArray(2));
+
+		assertTrue  ("json is not matched correctly", uut().jsonArrayMatches(actual, expected));
+		assertFalse ("json is not matched correctly", uut().jsonArrayMatches(expected, actual));
+	}
+
+	@Test
+	public void verifyJsonArrayDontMatchArray () throws Exception {
+		JsonArray expected = new JsonArray ();
+
+		expected.add(buildArray(1, 3));
+
+		JsonArray actual = new JsonArray ();
+
+		actual.add(buildArray(2, 4));
+
+		assertFalse ("json is not matched correctly", uut().jsonArrayMatches(actual, expected));
+		assertFalse ("json is not matched correctly", uut().jsonArrayMatches(expected, actual));
+	}
+
+	@Test
 	public void verifyJsonArrayMatchObjectMixedTypes () throws Exception {
 		JsonArray expected = new JsonArray ();
 
@@ -112,6 +156,19 @@ public class TestJsonServiceImplJsonArrayMatches extends JsonServiceImplTestCase
 		object.add("id", new JsonPrimitive(value));
 
 		return object;
+	}
+
+	private JsonArray buildArray (int value) {
+		return buildArray(0, value);
+	}
+
+	private JsonArray buildArray (int start, int value) {
+		JsonArray array = new JsonArray ();
+
+		for (int i = start; i < value; i += 1)
+			array.add(new JsonPrimitive(i));
+
+		return array;
 	}
 
 }
