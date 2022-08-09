@@ -113,6 +113,15 @@ public class DataAssertionStepDefinitions extends BaseStepDefinition {
 		jsonMatchesJson(element1, element2);
 	}
 
+	@When("{string} json matches")
+	public void jsonMatches(String json, DataTable data) {
+		JsonElement element = jsonService.get(json);
+
+		assertNotNull(json + " was not found", element);
+
+		jsonMatchesJson(element, jsonService.generateJsonObject(data));
+	}
+
 	private void jsonMatchesJson(JsonElement element1, JsonElement element2) {
 		if (
 			element1.isJsonNull() &&

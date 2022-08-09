@@ -50,6 +50,11 @@ public interface JsonService extends TestStorageService<JsonElement> {
 	// url
 
 	public String generateUrl(DataTable data);
+
+	// generators
+
+	public JsonElementGenerator getGenerator(String name);
+	public JsonElementGenerator putGenerator(String name, JsonElementGenerator generator);
 }
 
 

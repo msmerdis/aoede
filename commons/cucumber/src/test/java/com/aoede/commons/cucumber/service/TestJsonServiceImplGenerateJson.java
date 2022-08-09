@@ -146,8 +146,6 @@ public class TestJsonServiceImplGenerateJson extends JsonServiceImplTestCaseSetu
 
 	@Test
 	public void verifyGenerateRandomJson () throws Exception {
-		random.setSeed(0);
-
 		DataTable table = buildDataTable (List.of(
 			List.of("data", "random string", "data_{string:12}")
 		));
@@ -159,8 +157,6 @@ public class TestJsonServiceImplGenerateJson extends JsonServiceImplTestCaseSetu
 
 	@Test
 	public void verifyGenerateJsonColumnNumber1 () throws Exception {
-		random.setSeed(0);
-
 		DataTable table = buildDataTable (List.of(
 			List.of("data")
 		));
@@ -172,8 +168,6 @@ public class TestJsonServiceImplGenerateJson extends JsonServiceImplTestCaseSetu
 
 	@Test
 	public void verifyGenerateJsonColumnNumber2 () throws Exception {
-		random.setSeed(0);
-
 		DataTable table = buildDataTable (List.of(
 			List.of("data", "null")
 		));
@@ -185,8 +179,6 @@ public class TestJsonServiceImplGenerateJson extends JsonServiceImplTestCaseSetu
 
 	@Test
 	public void verifyGenerateJsonColumnNumber4 () throws Exception {
-		random.setSeed(0);
-
 		DataTable table = buildDataTable (List.of(
 			List.of("data", "null", "", "")
 		));
@@ -198,8 +190,6 @@ public class TestJsonServiceImplGenerateJson extends JsonServiceImplTestCaseSetu
 
 	@Test
 	public void verifyGenerateJsonInvalidType () throws Exception {
-		random.setSeed(0);
-
 		DataTable table = buildDataTable (List.of(
 			List.of("data", "invalid", "")
 		));

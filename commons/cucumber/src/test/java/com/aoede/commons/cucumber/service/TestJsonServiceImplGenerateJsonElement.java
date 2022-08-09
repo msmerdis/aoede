@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import org.junit.Test;
 
 import com.aoede.JsonServiceImplTestCaseSetup;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -92,7 +93,7 @@ public class TestJsonServiceImplGenerateJsonElement extends JsonServiceImplTestC
 	}
 
 	@Test
-	public void generateKey () throws Exception {
+	public void generateStringKey () throws Exception {
 		// mock internal calls
 		setupKeyForService ("sevice name", new JsonPrimitive ("latest service key"));
 		JsonElement element = uut().generateJsonElement("key", "sevice name");
@@ -102,10 +103,74 @@ public class TestJsonServiceImplGenerateJsonElement extends JsonServiceImplTestC
 	}
 
 	@Test
+	public void generateIntegerKey () throws Exception {
+		// mock internal calls
+		setupKeyForService ("sevice name", new JsonPrimitive (5));
+		JsonElement element = uut().generateJsonElement("key", "sevice name");
+
+		assertTrue ("element must me primitive", element.isJsonPrimitive());
+		assertEquals ("element value is incorrect", "5", element.toString());
+	}
+
+	@Test
 	public void generateKeyMissingKey () throws Exception {
 		assertThrows("invocation must fail due to an assertion", AssertionError.class, () -> {
 			uut().generateJsonElement("key", "sevice name");
 		});
+	}
+
+	@Test
+	public void generateEmptyObject () throws Exception {
+		JsonObject object = new JsonObject ();
+
+		// mock internal calls
+		setupObjForService ("sevice name", object);
+		JsonElement element = uut().generateJsonElement("object", "sevice name");
+
+		assertTrue ("element must be object", element.isJsonObject());
+		assertEquals ("element value is incorrect", "{}", element.toString());
+	}
+
+	@Test
+	public void generateObject () throws Exception {
+		JsonObject object = new JsonObject ();
+
+		object.add("service", new JsonPrimitive("latest"));
+
+		// mock internal calls
+		setupObjForService ("sevice name", object);
+		JsonElement element = uut().generateJsonElement("object", "sevice name");
+
+		assertTrue ("element must be object", element.isJsonObject());
+		assertEquals ("element value is incorrect", "{\"service\":\"latest\"}", element.toString());
+	}
+
+	@Test
+	public void generateEmptyArray () throws Exception {
+		JsonArray object = new JsonArray ();
+
+		// mock internal calls
+		setupArrForService ("sevice name", object);
+		JsonElement element = uut().generateJsonElement("array", "sevice name");
+
+		assertTrue ("element must be array", element.isJsonArray());
+		assertEquals ("element value is incorrect", "[]", element.toString());
+	}
+
+
+	@Test
+	public void generateArray () throws Exception {
+		JsonArray object = new JsonArray ();
+
+		object.add(new JsonPrimitive("latest"));
+		object.add(new JsonPrimitive("service"));
+
+		// mock internal calls
+		setupArrForService ("sevice name", object);
+		JsonElement element = uut().generateJsonElement("array", "sevice name");
+
+		assertTrue ("element must be array", element.isJsonArray());
+		assertEquals ("element value is incorrect", "[\"latest\",\"service\"]", element.toString());
 	}
 
 	@Test
@@ -174,6 +239,62 @@ public class TestJsonServiceImplGenerateJsonElement extends JsonServiceImplTestC
 				@Override
 				public JsonElement getLatestKey() {
 					return key;
+				}
+
+			}
+		);
+	}
+
+	private void setupObjForService (String service, JsonObject obj) throws Exception {
+		when (abstractTestServiceDiscoveryService.getService(eq(service))).thenReturn(
+			new AbstractTestServiceImpl () {
+
+				@Override
+				public String getName() {
+					return null;
+				}
+
+				@Override
+				public String getPath() {
+					return null;
+				}
+
+				@Override
+				public String getKeyName() {
+					return null;
+				}
+
+				@Override
+				public JsonObject getLatestObj() {
+					return obj;
+				}
+
+			}
+		);
+	}
+
+	private void setupArrForService (String service, JsonArray arr) throws Exception {
+		when (abstractTestServiceDiscoveryService.getService(eq(service))).thenReturn(
+			new AbstractTestServiceImpl () {
+
+				@Override
+				public String getName() {
+					return null;
+				}
+
+				@Override
+				public String getPath() {
+					return null;
+				}
+
+				@Override
+				public String getKeyName() {
+					return null;
+				}
+
+				@Override
+				public JsonArray getLatestArr() {
+					return arr;
 				}
 
 			}

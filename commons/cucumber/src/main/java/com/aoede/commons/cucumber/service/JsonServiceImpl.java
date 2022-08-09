@@ -5,16 +5,26 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
-import java.util.regex.Pattern;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Service;
 
+import com.aoede.commons.cucumber.service.generators.BigIntegerGenerator;
+import com.aoede.commons.cucumber.service.generators.BooleanGenerator;
+import com.aoede.commons.cucumber.service.generators.CompositeIdGenerator;
+import com.aoede.commons.cucumber.service.generators.FractionGenerator;
+import com.aoede.commons.cucumber.service.generators.IntegerGenerator;
+import com.aoede.commons.cucumber.service.generators.JsonGenerator;
+import com.aoede.commons.cucumber.service.generators.LongGenerator;
+import com.aoede.commons.cucumber.service.generators.NullGenerator;
+import com.aoede.commons.cucumber.service.generators.RandomStringGenerator;
+import com.aoede.commons.cucumber.service.generators.ServiceElementGenerator;
+import com.aoede.commons.cucumber.service.generators.StringGenerator;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -22,19 +32,35 @@ import io.cucumber.datatable.DataTable;
 
 @Service
 public class JsonServiceImpl extends TestStorageServiceImpl<JsonElement> implements JsonService {
-	private final static String STRING_REGEX = "\\{[^{}]*\\}";
 
-	private Random random = new Random (System.currentTimeMillis());
-	private Pattern stringPattern;
-
-	private AbstractTestServiceDiscoveryService abstractTestServiceDiscoveryService;
+	private Map<String, JsonElementGenerator> generators = new HashMap<String, JsonElementGenerator>();
 
 	public JsonServiceImpl (
 		AbstractTestServiceDiscoveryService abstractTestServiceDiscoveryService
 	) {
-		this.abstractTestServiceDiscoveryService = abstractTestServiceDiscoveryService;
+		this.generators.put("integer",  new IntegerGenerator());
+		this.generators.put("long",     new LongGenerator());
+		this.generators.put("number",   new BigIntegerGenerator());
+		this.generators.put("string",   new StringGenerator());
+		this.generators.put("boolean",  new BooleanGenerator());
+		this.generators.put("fraction", new FractionGenerator());
 
-		stringPattern = Pattern.compile(STRING_REGEX, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+		this.generators.put("compositeId", new CompositeIdGenerator(this));
+
+		this.generators.put("key",    new ServiceElementGenerator(abstractTestServiceDiscoveryService, "key"));
+		this.generators.put("object", new ServiceElementGenerator(abstractTestServiceDiscoveryService, "object"));
+		this.generators.put("array",  new ServiceElementGenerator(abstractTestServiceDiscoveryService, "array"));
+
+		this.generators.put("random string", new RandomStringGenerator(new Random (System.currentTimeMillis())));
+
+		this.generators.put("json", new JsonGenerator(this));
+		this.generators.put("null", new NullGenerator());
+
+		// register aliases
+		this.generators.put("int",  this.generators.get("integer"));
+		this.generators.put("bool", this.generators.get("boolean"));
+		this.generators.put("obj",  this.generators.get("object"));
+		this.generators.put("arr",  this.generators.get("array"));
 	}
 
 	@Override
@@ -108,6 +134,11 @@ public class JsonServiceImpl extends TestStorageServiceImpl<JsonElement> impleme
 		assertTrue ("json " + name + " is not an aray", element.isJsonArray());
 
 		return element.getAsJsonArray();
+	}
+
+	private JsonElement getElement (String name) {
+		assertTrue ("json " + name + " does not exist", containsKey(name));
+		return get(name);
 	}
 
 	// generate a json object base on data table
@@ -342,100 +373,12 @@ public class JsonServiceImpl extends TestStorageServiceImpl<JsonElement> impleme
 			value = "";
 		}
 
-		switch (type) {
-		case "int":
-		case "integer":
-			return new JsonPrimitive(Integer.parseInt(value));
-		case "long":
-			return new JsonPrimitive(Long.parseLong(value));
-		case "number":
-			return new JsonPrimitive(new BigInteger(value));
-		case "string":
-			return new JsonPrimitive(value);
-		case "bool":
-		case "boolean":
-			return new JsonPrimitive(Boolean.parseBoolean(value));
-		case "fraction":
-			return buildFraction(value);
-		case "compositeId":
-			assertTrue("json value " + value + " is not a valid composite id", isCompositeKey(value));
-			return get(value);
-		case "key":
-			AbstractTestService service = abstractTestServiceDiscoveryService.getService(value);
-			assertNotNull("service for " + value + " was not found", service);
-
-			JsonElement element = service.getLatestKey();
-			assertNotNull("key for " + value + " was not found", element);
-
-			return element;
-		case "random string":
-			return new JsonPrimitive(randomString(value));
-		case "json":
-			assertTrue (
-				"json " + value + " was not found",
-				containsKey(value)
-			);
-			return get(value);
-		case "null":
-			return JsonNull.INSTANCE;
-		default:
-			assertFalse ("Type " + type + " could not be converted to json value", true);
-			return null;
+		if (generators.containsKey(type)) {
+			return generators.get(type).generate(value);
 		}
 
-	}
-
-	/**
-	 * Help functions to generate json
-	 */
-
-	private String randomString (int length) {
-		return random.ints(48, 123)
-			.filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-			.limit(length)
-			.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-			.toString();
-	}
-
-	private String randomString (String template) {
-		var matcher = stringPattern.matcher(template);
-
-		// find and process all matches
-		while (matcher.find()) {
-			String block = matcher.group();
-			String[] parts = block.substring(1, block.length()-1).split(":");
-
-			switch (parts[0]) {
-				case "string":
-					assertEquals("string template block must have two parts", 2, parts.length);
-					int length = Integer.parseInt(parts[1]);
-					assertTrue("string template block must define a positive number as the second part", length > 0);
-					template = template.replace(block, randomString(length));
-					break;
-				default:
-					assertNotNull("unknown template block for random string: " + parts[0], null);
-			}
-		}
-
-		logger.info("generated random string : " + template);
-		return template;
-	}
-
-	private JsonObject buildFraction (BigInteger num, BigInteger den) {
-		JsonObject fraction = new JsonObject ();
-
-		fraction.add( "numerator" , new JsonPrimitive(num));
-		fraction.add("denominator", new JsonPrimitive(den));
-
-		return fraction;
-	}
-
-	private JsonObject buildFraction (String fraction) {
-		String[] parts = fraction.split("/");
-
-		assertEquals("fraction must have two parts", 2, parts.length);
-
-		return buildFraction (new BigInteger(parts[0].trim()), new BigInteger(parts[1].trim()));
+		assertFalse ("Type " + type + " could not be converted to json value", true);
+		return null;
 	}
 
 	@Override
@@ -453,9 +396,16 @@ public class JsonServiceImpl extends TestStorageServiceImpl<JsonElement> impleme
 		return url;
 	}
 
-	private JsonElement getElement (String name) {
-		assertTrue ("json " + name + " does not exist", containsKey(name));
-		return get(name);
+	@Override
+	public JsonElementGenerator getGenerator(String name) {
+		return generators.get(name);
+	}
+
+	@Override
+	public JsonElementGenerator putGenerator(String name, JsonElementGenerator generator) {
+		if (generator == null)
+			return generators.remove(name);
+		return generators.put(name, generator);
 	}
 
 }
