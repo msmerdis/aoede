@@ -102,6 +102,15 @@ public class DataAssertionStepDefinitions extends BaseStepDefinition {
 		);
 	}
 
+	@Then("{string} json array {int} element matches {string} as {string}")
+	public void jsonArrayElementMatches (String json, int element, String value, String type) {
+		JsonArray arr = jsonService.getArray(json);
+
+		assertTrue("object does not have such element", arr.size() > element);
+
+		assertEquals("element does not match", arr.get(element), jsonService.generateJsonElement(type, value));
+	}
+
 	@When("{string} json matches {string} json")
 	public void jsonMatchesJson(String json1, String json2) {
 		JsonElement element1 = jsonService.get(json1);

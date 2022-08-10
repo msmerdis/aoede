@@ -7,9 +7,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.aoede.commons.base.converter.CompositeKeyDecoderFactory;
+import com.aoede.commons.cucumber.service.JsonService;
+import com.aoede.modules.music.service.generators.NoteOffsetArrayGenerator;
+import com.aoede.modules.music.service.generators.NoteOffsetGenerator;
 
 @Configuration
 public class TestConfig implements WebMvcConfigurer {
+
+	public TestConfig (JsonService service) {
+		registerGenerators (service);
+	}
 
 	@Override
 	public void addFormatters(FormatterRegistry registry) {
@@ -19,6 +26,13 @@ public class TestConfig implements WebMvcConfigurer {
 	@Bean
 	public BCryptPasswordEncoder musicPasswordEncoder () {
 		return new BCryptPasswordEncoder(12);
+	}
+
+	private void registerGenerators (JsonService service) {
+		NoteOffsetGenerator generator = new NoteOffsetGenerator();
+
+		service.putGenerator("note offset", generator);
+		service.putGenerator("note offset array", new NoteOffsetArrayGenerator(generator));
 	}
 
 }

@@ -235,3 +235,47 @@ And the response has a status code of 404
 And the response matches
 	| code | integer | 404       |
 	| text | string  | NOT_FOUND |
+
+@TC011012
+@Positive @NoteOffset
+Scenario Outline: validate Key signatures note offset
+### Retrieve a key signature and validate its note offsets
+
+When request a "keySignature" with id "<id>"
+And the request was successful
+Then prepare json "key" with "keySignature" as "object"
+And json object "key" contains "notes"
+And "key" json matches
+	| notes | note offset array | <C> <C+> <D> <D+> <E> <F> <F+> <G> <G+> <A> <A+> <B> |
+And store "notes" element from "key" object as "notes"
+And json array "notes" contains 12 items
+And "notes" json array 0 element matches "<C>" as "note offset"
+And "notes" json array 1 element matches "<C+>" as "note offset"
+And "notes" json array 2 element matches "<D>" as "note offset"
+And "notes" json array 3 element matches "<D+>" as "note offset"
+And "notes" json array 4 element matches "<E>" as "note offset"
+And "notes" json array 5 element matches "<F>" as "note offset"
+And "notes" json array 6 element matches "<F+>" as "note offset"
+And "notes" json array 7 element matches "<G>" as "note offset"
+And "notes" json array 8 element matches "<G+>" as "note offset"
+And "notes" json array 9 element matches "<A>" as "note offset"
+And "notes" json array 10 element matches "<A+>" as "note offset"
+And "notes" json array 11 element matches "<B>" as "note offset"
+
+Examples:
+	| id |  C  |  C+ |  D  |  D+ |  E  |  F  |  F+ |  G  |  G+ |  A  |  A+ |  B  |
+	| -7 |  1- |  1  |  2- |  2  |  3  |  4- |  4  |  5- |  5  |  6- |  6  |  7  |
+	| -6 |  1- |  1  |  2- |  2  |  3- |  3  |  4  |  5- |  5  |  6- |  6  |  7  |
+	| -5 |  0  |  1  |  2- |  2  |  3- |  3  |  4  |  5- |  5  |  6- |  6  |  7- |
+	| -4 |  0  |  1  |  2- |  2  |  3- |  3  |  4- |  4  |  5  |  6- |  6  |  7- |
+	| -3 |  0  |  1- |  1  |  2  |  3- |  3  |  4- |  4  |  5  |  6- |  6  |  7- |
+	| -2 |  0  |  1- |  1  |  2  |  3- |  3  |  4- |  4  |  5- |  5  |  6  |  7- |
+	| -1 |  0  |  1- |  1  |  2- |  2  |  3  |  4- |  4  |  5- |  5  |  6  |  7- |
+	|  0 |  0  |  0+ |  1  |  1+ |  2  |  3  |  3+ |  4  |  4+ |  5  |  5+ |  6  |
+	|  1 |  0  |  0+ |  1  |  1+ |  2  |  2+ |  3  |  4  |  4+ |  5  |  5+ |  6  |
+	|  2 | -1+ |  0  |  1  |  1+ |  2  |  2+ |  3  |  4  |  4+ |  5  |  5+ |  6  |
+	|  3 | -1+ |  0  |  1  |  1+ |  2  |  2+ |  3  |  3+ |  4  |  5  |  5+ |  6  |
+	|  4 | -1+ |  0  |  0+ |  1  |  2  |  2+ |  3  |  3+ |  4  |  5  |  5+ |  6  |
+	|  5 | -1+ |  0  |  0+ |  1  |  2  |  2+ |  3  |  3+ |  4  |  4+ |  5  |  6  |
+	|  6 | -1+ |  0  |  0+ |  1  |  1+ |  2  |  3  |  3+ |  4  |  4+ |  5  |  6  |
+	|  7 | -1  |  0  |  0+ |  1  |  1+ |  2  |  3  |  3+ |  4  |  4+ |  5  |  5+ |
