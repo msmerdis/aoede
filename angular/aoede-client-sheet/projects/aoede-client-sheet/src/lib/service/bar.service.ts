@@ -114,26 +114,23 @@ export class BarService implements SingleCanvasService<Track[], MappedBar[]> {
 		});
 	}
 
-	public draw (target : MappedBar[], staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
+	public draw (target : MappedBar[], staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number, tracks : number[] = []) : void {
 		target.forEach ((bar : MappedBar) => {
-			this.drawBar (bar, staveConfig, context, x, y);
+			this.drawBar (bar, staveConfig, context, x, y, tracks);
 			x += bar.width;
 		});
 	}
 
-	public drawBar (target : MappedBar, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
-		let end    = target.measures.length - 1;
-		let header = target.measures[ 0 ].header - staveConfig.stavesHalfHeight;
-		let footer = target.measures[end].footer - staveConfig.stavesHalfHeight;
-		let offset = y;
+	public drawBar (target : MappedBar, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number, tracks : number[]) : void {
+		let end    = tracks.length - 1;
+		let header = tracks[ 0 ] - staveConfig.stavesHalfHeight;
+		let footer = tracks[end] + staveConfig.stavesHalfHeight;
 
-		target.measures.forEach ((measure : MappedMeasure) => {
-			offset += measure.header;
-			this.measureService.draw(measure, staveConfig, context, x, offset);
-			offset += measure.footer;
+		target.measures.forEach ((measure : MappedMeasure, i : number) => {
+			this.measureService.draw(measure, staveConfig, context, x, y + tracks[i]);
 		});
 
-		context.fillRect(x + target.width - target.separator, y + header, target.separator, target.footer - header - footer);
+		context.fillRect(x + target.width - target.separator, y + header, target.separator, footer - header);
 	}
 
 }

@@ -91,7 +91,7 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 			}
 		});
 
-		this.barService.draw (stave.bars, staveConfig, context, x + stave.offset, y);
+		this.barService.draw (stave.bars, staveConfig, context, x + stave.offset, y, stave.tracks);
 	}
 
 	private setupStave (staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {

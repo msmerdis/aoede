@@ -6,7 +6,7 @@ import { SheetConfiguration } from '../model/sheet-configuration.model';
 import { StaveConfiguration } from '../model/stave-configuration.model';
 
 import { Measure } from '../model/measure.model';
-import { Clef, clefInitializer } from '../model/clef.model';
+import { StaveMapState, staveMapStateInitializer } from '../model/stave-map-state.model';
 import { MappedBeat, mappedBeatInitializer } from '../model/stave.model';
 
 @Injectable({
@@ -18,9 +18,9 @@ export class BeatService implements MultiCanvasService<Measure, MappedBeat> {
 		private noteService : NoteService
 	) { }
 
-	public map  (source : Measure, staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, beats : number[] = [0], clef : Clef = clefInitializer()): MappedBeat[] {
+	public map  (source : Measure, staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, staveState : StaveMapState = staveMapStateInitializer()): MappedBeat[] {
 		let mappedBeat = mappedBeatInitializer();
-		let notes = this.noteService.map(source.notes, staveConfig, sheetConfig, clef);
+		let notes = this.noteService.map(source.notes, staveConfig, sheetConfig, staveState);
 
 		mappedBeat.separator = staveConfig.noteSpacing;
 		mappedBeat.notes     = notes;
@@ -34,8 +34,6 @@ export class BeatService implements MultiCanvasService<Measure, MappedBeat> {
 	}
 
 	public draw (target : MappedBeat, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
-		context.fillRect(x, y - target.header - staveConfig.stavesHalfHeight, target.width, staveConfig.stavesLineHeight);
-
 		target.notes.forEach(note => {
 			this.noteService.draw(note, staveConfig, context, x, y);
 			x += (note.width + target.separator);

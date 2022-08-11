@@ -5,28 +5,69 @@ import { SheetConfiguration } from '../model/sheet-configuration.model';
 import { StaveConfiguration } from '../model/stave-configuration.model';
 
 import { Note } from '../model/note.model';
-import { Clef, clefInitializer } from '../model/clef.model';
-import { MappedNote, staveExtentionInitializer } from '../model/stave.model';
+import { Clef } from '../model/clef.model';
+import { NoteOffset } from '../model/key-signature.model';
+import { StaveMapState, staveMapStateInitializer } from '../model/stave-map-state.model';
+import {
+	MappedClef,
+	MappedNote,
+	staveExtentionInitializer
+} from '../model/stave.model';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class NoteService implements ArrayCanvasService<Note, MappedNote> {
+	private notes : string[] = ["C", "D", "E", "F", "G", "A", "B"];
 
 	constructor() { }
 
-	public map  (source : Note[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, clef : Clef = clefInitializer()): MappedNote[] {
+	public map  (source : Note[], staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, staveState : StaveMapState = staveMapStateInitializer()): MappedNote[] {
+		let clef  = staveState.mappedClef;
+		let notes = staveState.mappedKey.keySignature.notes || [];
+
 		return source.map(
-			(note) => {
-				return {
-					...staveExtentionInitializer,
-					header : staveConfig.noteSpacing,// + (note.pitch - clef.note) * staveConfig.stavesHalfHeight,
-					footer : staveConfig.noteSpacing,// + (note.pitch - clef.note) * staveConfig.stavesHalfHeight,
-					width  : staveConfig.noteSpacing * 16,
-					note   : note
-				};
-			}
-		).sort((a, b) => a.note.order - b.note.order);
+			(note) => this.mapNote(note, staveConfig, sheetConfig, clef, notes)
+		);
+	}
+
+	private mapNote (note : Note, staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, clef : MappedClef, notes : NoteOffset[]): MappedNote {
+		let offset     = -staveConfig.lineHeight/2;
+		let accidental = 0;
+
+		if (note.pitch >= 0) {
+			let [adjustment, accidental] = this.calculateNoteOffset(note, clef, notes);
+
+			offset += adjustment * staveConfig.stavesLineHeight / 2;
+		}
+
+		return {
+			...staveExtentionInitializer,
+			header : staveConfig.stavesLineHeight / 2 + offset,
+			footer : staveConfig.stavesLineHeight / 2 - offset,
+			width  : staveConfig.noteSpacing * 16,
+			note   : note,
+			accidental : accidental
+		};
+	}
+
+	private calculateNoteOffset (note : Note, clef : MappedClef, notes : NoteOffset[]): [number, number] {
+		let [octave, offset] = this.explodePitch(note.pitch);
+
+		return [
+			(octave - clef.octave) * 7
+			+ notes[offset].offset
+			- this.notes.indexOf(clef.clef.type)
+			+ clef.clef.spos,
+			notes[offset].accidental
+		];
+	}
+
+	public explodePitch (pitch : number) : [number, number] {
+		let div = Math.floor(pitch / 12);
+		let rem = pitch - (12 * div);
+
+		return [div, rem];
 	}
 
 	public draw (note : MappedNote, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
@@ -36,7 +77,7 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 		context.textAlign    = "center";
 		context.textBaseline = "alphabetic";
 		context.fillStyle    = "white";
-		context.fillText(note.note.pitch + " - " + note.note.order + " - " + note.note.value.numerator + " / " + note.note.value.denominator, x + (note.width / 2), y + note.footer);
+		context.fillText(note.note.pitch + " - " + (note.accidental) + " - " + note.note.value.numerator + "/" + note.note.value.denominator, x + (note.width / 2), y + note.footer);
 		context.restore();
 	}
 }

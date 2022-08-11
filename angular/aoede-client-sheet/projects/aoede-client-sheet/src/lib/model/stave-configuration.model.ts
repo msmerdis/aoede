@@ -10,16 +10,19 @@ export interface StaveConfiguration {
 	noteSpacing      : number;
 };
 
-export function staveConfigurationInitializer (scale : number = 1) : StaveConfiguration {
+export function staveConfigurationInitializer (scale : number = 1, line : number = 1, space : number = 5) : StaveConfiguration {
+	space *= scale;
+	line  *= scale;
+
 	return {
 		scale            : scale,
-		stavesMargin     :  11 * 5 * scale,
-		stavesWidth      : 188 * 5 * scale,
-		stavesSpacing    :   2 * 5 * scale,
-		stavesLineHeight :   2 * 5 * scale + 1 * scale,
-		stavesHalfHeight :   4 * 5 * scale + 2 * scale,
-		stavesFullHeight :   8 * 5 * scale + 5 * scale,
-		lineHeight       :       1 * scale,
-		noteSpacing      :       5 * scale
+		stavesMargin     :  11 * space,
+		stavesWidth      : 188 * space,
+		stavesSpacing    :   2 * space,
+		stavesLineHeight :   2 * space + 1 * line,
+		stavesHalfHeight :   4 * space + 2 * line,
+		stavesFullHeight :   8 * space + 5 * line,
+		lineHeight       :        line,
+		noteSpacing      :       space
 	};
 };

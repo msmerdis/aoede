@@ -28,6 +28,11 @@ export class KeySignatureService implements SingleCanvasService<KeySignature, Ma
 		context.save();
 		context.fillRect(x, y - key.header, key.width, key.header);
 		context.fillRect(x, y             , key.width, key.footer);
+		context.font         = "bold " + ((key.header + key.footer) * 1.2) + "px ''";
+		context.textAlign    = "center";
+		context.textBaseline = "alphabetic";
+		context.fillStyle    = "white";
+		context.fillText(""+key.keySignature.id, x + (key.width / 2), y + key.footer);
 		context.restore();
 	}
 

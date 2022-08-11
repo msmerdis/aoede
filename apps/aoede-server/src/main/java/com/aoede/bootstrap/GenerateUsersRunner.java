@@ -116,7 +116,7 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 
 		track.getMeasures().add(makeMeasure((short)1, startingNote +  0, startingNote + 2, startingNote +  4, startingNote +  5));
 		track.getMeasures().add(makeMeasure((short)2, startingNote +  7, startingNote + 9, startingNote + 11, startingNote + 12));
-		track.getMeasures().add(makeMeasure((short)3, startingNote + 11, startingNote + 9, startingNote +  7, startingNote +  4));
+		track.getMeasures().add(makeMeasure((short)3, startingNote + 11, startingNote + 9, startingNote +  7, startingNote +  5));
 		track.getMeasures().add(makeMeasure((short)4, startingNote +  4, startingNote + 2, startingNote +  0, -1));
 
 		return track;

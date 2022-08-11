@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { NoteService } from './note.service';
 import { SingleCanvasService } from './canvas.service';
 import { SheetConfiguration, sheetConfigurationInitializer } from '../model/sheet-configuration.model';
 import { StaveConfiguration, staveConfigurationInitializer } from '../model/stave-configuration.model';
@@ -12,10 +13,13 @@ import { MappedClef, staveExtentionInitializer } from '../model/stave.model';
 })
 export class ClefService implements SingleCanvasService<Clef, MappedClef> {
 
-	constructor() { }
+	constructor(
+		private noteService : NoteService
+	) { }
 
 	public map (source : Clef, staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration): MappedClef {
 		let offset = staveConfig.stavesLineHeight * Math.floor(source.spos/2);
+		let [octave, note] = this.noteService.explodePitch(source.note);
 
 		switch (source.type) {
 			case "G":
@@ -24,7 +28,9 @@ export class ClefService implements SingleCanvasService<Clef, MappedClef> {
 					clef   : source,
 					width  : staveConfig.stavesLineHeight * 3,
 					header : staveConfig.stavesLineHeight * 5 + offset,
-					footer : staveConfig.stavesLineHeight * 3 - offset
+					footer : staveConfig.stavesLineHeight * 3 - offset,
+					octave : octave,
+					note   : note
 				};
 			case "C":
 				return {
@@ -32,7 +38,9 @@ export class ClefService implements SingleCanvasService<Clef, MappedClef> {
 					clef   : source,
 					width  : staveConfig.stavesLineHeight * 3,
 					header : staveConfig.stavesLineHeight * 2 + offset,
-					footer : staveConfig.stavesLineHeight * 2 - offset
+					footer : staveConfig.stavesLineHeight * 2 - offset,
+					octave : octave,
+					note   : note
 				};
 			case "F":
 				return {
@@ -40,7 +48,9 @@ export class ClefService implements SingleCanvasService<Clef, MappedClef> {
 					clef   : source,
 					width  : staveConfig.stavesLineHeight * 3,
 					header : staveConfig.stavesLineHeight * 1 + offset,
-					footer : staveConfig.stavesLineHeight * 3 - offset - staveConfig.noteSpacing
+					footer : staveConfig.stavesLineHeight * 3 - offset - staveConfig.noteSpacing,
+					octave : octave,
+					note   : note
 				};
 			default :
 				return {
@@ -48,7 +58,9 @@ export class ClefService implements SingleCanvasService<Clef, MappedClef> {
 					clef   : source,
 					width  : staveConfig.stavesLineHeight * 3,
 					header : staveConfig.stavesLineHeight * 2 + offset,
-					footer : staveConfig.stavesLineHeight * 2 - offset
+					footer : staveConfig.stavesLineHeight * 2 - offset,
+					octave : octave,
+					note   : note
 				};
 		}
 	}

@@ -1,7 +1,13 @@
+export interface NoteOffset {
+	offset     : number;
+	accidental : number;
+};
+
 export interface KeySignature {
-	id    : number;
-	major : string;
-	minor : string;
+	id     : number;
+	major  : string;
+	minor  : string;
+	notes? : NoteOffset[];
 };
 
 export function keySignatureInitializer () : KeySignature {

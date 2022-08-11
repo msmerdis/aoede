@@ -40,7 +40,7 @@ export class MeasureService implements SingleCanvasService<Measure, MappedMeasur
 
 		// append beats
 		mappedMeasure.separator = staveConfig.stavesSpacing;
-		mappedMeasure.beats     = this.beatService.map (source, staveConfig, sheetConfig, staveState.beats);
+		mappedMeasure.beats     = this.beatService.map (source, staveConfig, sheetConfig, staveState);
 		mappedMeasure.beats.forEach (beat => {
 			mappedMeasure.width += beat.width + mappedMeasure.separator;
 			mappedMeasure.count += 1;

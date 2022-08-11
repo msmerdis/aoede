@@ -18,13 +18,17 @@ export const staveExtentionInitializer : StaveExtention = {
 };
 
 export interface MappedClef extends StaveExtention {
-	clef : Clef;
+	clef   : Clef;
+	note   : number;
+	octave : number;
 };
 
 export function mappedClefInitializer () : MappedClef {
 	return {
 		...staveExtentionInitializer,
-		clef : clefInitializer()
+		clef   : clefInitializer(),
+		note   : 0,
+		octave : 0
 	};
 };
 
@@ -70,13 +74,15 @@ export function mappedStaveSignatureInitializer () : MappedStaveSignature {
 };
 
 export interface MappedNote extends StaveExtention {
-	note : Note;
+	note       : Note;
+	accidental : number;
 };
 
 export function mappedNoteInitializer () : MappedNote {
 	return {
 		...staveExtentionInitializer,
-		note : noteInitializer()
+		note       : noteInitializer(),
+		accidental : 0
 	};
 };
 
