@@ -10,21 +10,25 @@ public class NoteOffsetGenerator implements JsonElementGenerator {
 	public JsonElement generate(String value) {
 		JsonObject object = new JsonObject();
 
+		int accidental = 0;
+		int offset     = 0;
+
 		if (value.endsWith("+")) {
-			object.add("accidental", new JsonPrimitive(1));
+			accidental = 1;
 		}
 
 		if (value.endsWith("-")) {
-			object.add("accidental", new JsonPrimitive(-1));
+			accidental = -1;
 		}
 
-		if (object.has("accidental") == false) {
-			object.add("accidental", new JsonPrimitive(0));
+		if (accidental == 0) {
+			offset = Integer.parseInt(value);
 		} else {
-			value = value.substring(0, value.length() - 1);
+			offset = Integer.parseInt(value.substring(0, value.length() - 1));
 		}
 
-		object.add("offset", new JsonPrimitive(Integer.parseInt(value)));
+		object.add("offset",     new JsonPrimitive(offset));
+		object.add("accidental", new JsonPrimitive(accidental));
 
 		return object;
 	}

@@ -32,25 +32,25 @@ Then "preload" json object's "clefList" element matches "clefs" as "json"
 Scenario: verify keys in preload info
 
 When prepare data table "keySignatureObject"
-	| id      | major  | minor  | notes                               |
-	| integer | string | string | note offset array                   |
+	| id      | major  | minor  | notes                                |
+	| integer | string | string | note offset array                    |
 And prepare json array "keys" of "keySignatureObject"
-	| id      | major  | minor  | notes                               |
-	| -7      |   C-   |   a-   | 1- 1  2- 2  3  4- 4  5- 5  6- 6  7  |
-	| -6      |   G-   |   e-   | 1- 1  2- 2  3- 3  4  5- 5  6- 6  7  |
-	| -5      |   D-   |   b-   | 0  1  2- 2  3- 3  4  5- 5  6- 6  7- |
-	| -4      |   A-   |   f    | 0  1  2- 2  3- 3  4- 4  5  6- 6  7- |
-	| -3      |   E-   |   c    | 0  1- 1  2  3- 3  4- 4  5  6- 6  7- |
-	| -2      |   B-   |   g    | 0  1- 1  2  3- 3  4- 4  5- 5  6  7- |
-	| -1      |   F    |   d    | 0  1- 1  2- 2  3  4- 4  5- 5  6  7- |
-	|  0      |   C    |   a    | 0  0+ 1  1+ 2  3  3+ 4  4+ 5  5+ 6  |
-	|  1      |   G    |   e    | 0  0+ 1  1+ 2  2+ 3  4  4+ 5  5+ 6  |
-	|  2      |   D    |   b    | 1+ 0  1  1+ 2  2+ 3  4  4+ 5  5+ 6  |
-	|  3      |   A    |   f+   | 1+ 0  1  1+ 2  2+ 3  3+ 4  5  5+ 6  |
-	|  4      |   E    |   c+   | 1+ 0  0+ 1  2  2+ 3  3+ 4  5  5+ 6  |
-	|  5      |   B    |   g+   | 1+ 0  0+ 1  2  2+ 3  3+ 4  4+ 5  6  |
-	|  6      |   F+   |   d+   | 1+ 0  0+ 1  1+ 2  3  3+ 4  4+ 5  6  |
-	|  7      |   C+   |   a+   | 1  0  0+ 1  1+ 2  3  3+ 4  4+ 5  5+ |
+	| id      | major  | minor  | notes                                |
+	| -7      |   C-   |   a-   |  1- 1  2- 2  3  4- 4  5- 5  6- 6  7  |
+	| -6      |   G-   |   e-   |  1- 1  2- 2  3- 3  4  5- 5  6- 6  7  |
+	| -5      |   D-   |   b-   |  0  1  2- 2  3- 3  4  5- 5  6- 6  7- |
+	| -4      |   A-   |   f    |  0  1  2- 2  3- 3  4- 4  5  6- 6  7- |
+	| -3      |   E-   |   c    |  0  1- 1  2  3- 3  4- 4  5  6- 6  7- |
+	| -2      |   B-   |   g    |  0  1- 1  2  3- 3  4- 4  5- 5  6  7- |
+	| -1      |   F    |   d    |  0  1- 1  2- 2  3  4- 4  5- 5  6  7- |
+	|  0      |   C    |   a    |  0  0+ 1  1+ 2  3  3+ 4  4+ 5  5+ 6  |
+	|  1      |   G    |   e    |  0  0+ 1  1+ 2  2+ 3  4  4+ 5  5+ 6  |
+	|  2      |   D    |   b    | -1+ 0  1  1+ 2  2+ 3  4  4+ 5  5+ 6  |
+	|  3      |   A    |   f+   | -1+ 0  1  1+ 2  2+ 3  3+ 4  5  5+ 6  |
+	|  4      |   E    |   c+   | -1+ 0  0+ 1  2  2+ 3  3+ 4  5  5+ 6  |
+	|  5      |   B    |   g+   | -1+ 0  0+ 1  2  2+ 3  3+ 4  4+ 5  6  |
+	|  6      |   F+   |   d+   | -1+ 0  0+ 1  1+ 2  3  3+ 4  4+ 5  6  |
+	|  7      |   C+   |   a+   | -1  0  0+ 1  1+ 2  3  3+ 4  4+ 5  5+ |
 Then "preload" json object's "keysList" element matches "keys" as "json"
 
 @TC060003

@@ -137,6 +137,13 @@
 						</goals>
 						<configuration>
 							<skipIfEmpty>true</skipIfEmpty>
+							<includes>
+								<include>**/com/aoede/**</include>
+							</includes>
+							<excludes>
+								<exclude>**/com/aoede/*</exclude>
+								<exclude>**/Test*</exclude>
+							</excludes>
 						</configuration>
 					</execution>
 				</executions>
