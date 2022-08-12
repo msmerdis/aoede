@@ -93,7 +93,7 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 		userService.create(makeUser("null", "test"));
 	}
 
-	private Sheet makeSheet (int startingNote, short key, String name) throws GenericException {
+	private Sheet makeScaleSheet (int startingNote, short key, String name) throws GenericException {
 		Sheet sheet = new Sheet();
 
 		sheet.setName(name);
@@ -101,16 +101,33 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 
 		for (Clef clef : clefService.findAll()) {
 			if (clef.getType() == 'F') {
-				sheet.getTracks().add(makeTrack(48 + startingNote, key, clef.getId()));
+				sheet.getTracks().add(makeScaleTrack(48 + startingNote, key, clef.getId()));
 			} else {
-				sheet.getTracks().add(makeTrack(60 + startingNote, key, clef.getId()));
+				sheet.getTracks().add(makeScaleTrack(60 + startingNote, key, clef.getId()));
 			}
 		}
 
 		return sheet;
 	}
 
-	private Track makeTrack (int startingNote, short key, String clef) {
+	private Sheet makeCromaticSheet (short key, String name) throws GenericException {
+		Sheet sheet = new Sheet();
+
+		sheet.setName(name);
+		sheet.setTracks(new LinkedList<Track>());
+
+		for (Clef clef : clefService.findAll()) {
+			if (clef.getType() == 'F') {
+				sheet.getTracks().add(makeCromaticTrack(48, key, clef.getId()));
+			} else {
+				sheet.getTracks().add(makeCromaticTrack(60, key, clef.getId()));
+			}
+		}
+
+		return sheet;
+	}
+
+	private Track makeScaleTrack (int startingNote, short key, String clef) {
 		Track track = new Track();
 
 		track.setClef(clef);
@@ -124,6 +141,26 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 		track.getMeasures().add(makeMeasure((short)2, startingNote +  7, startingNote + 9, startingNote + 11, startingNote + 12));
 		track.getMeasures().add(makeMeasure((short)3, startingNote + 11, startingNote + 9, startingNote +  7, startingNote +  5));
 		track.getMeasures().add(makeMeasure((short)4, startingNote +  4, startingNote + 2, startingNote +  0, -1));
+
+		return track;
+	}
+
+	private Track makeCromaticTrack (int startingNote, short key, String clef) {
+		Track track = new Track();
+
+		track.setClef(clef);
+		track.setName(clef);
+		track.setKeySignature(key);
+		track.setTempo((short)120);
+		track.setTimeSignature(new TimeSignature(4, 4));
+		track.setMeasures(new LinkedList<Measure>());
+
+		track.getMeasures().add(makeMeasure((short)1, startingNote +  0, startingNote +  1, startingNote +  2, startingNote +  3));
+		track.getMeasures().add(makeMeasure((short)2, startingNote +  4, startingNote +  5, startingNote +  6, startingNote +  7));
+		track.getMeasures().add(makeMeasure((short)3, startingNote +  8, startingNote +  9, startingNote + 10, startingNote + 11));
+		track.getMeasures().add(makeMeasure((short)4, startingNote + 11, startingNote + 10, startingNote +  9, startingNote +  8));
+		track.getMeasures().add(makeMeasure((short)5, startingNote +  7, startingNote +  6, startingNote +  5, startingNote +  4));
+		track.getMeasures().add(makeMeasure((short)6, startingNote +  3, startingNote +  2, startingNote +  1, startingNote +  0));
 
 		return track;
 	}
@@ -158,18 +195,28 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 		);
 
 		for (int i = 0; i < count; i += 1, this.startingNote = (this.startingNote + 1) % 12) {
-			generateSheet(userId, this.startingNote);
+			generateScaleSheet(userId, this.startingNote);
+		}
+		for (int j = 0; j < 12; j += 1) {
+			generateCromaticSheet (userId, j);
 		}
 
 		// clear authentication
 		SecurityContextHolder.clearContext();
 	}
 
-	private void generateSheet (long userId, int root) throws GenericException, Exception {
+	private void generateScaleSheet (long userId, int root) throws GenericException, Exception {
 		String note = this.notes[root % 12];
 		short key = this.keys[root % 12];
 
-		this.sheetService.create(makeSheet(root, key, note + " scale"));
+		this.sheetService.create(makeScaleSheet(root, key, note + " scale"));
+	}
+
+	private void generateCromaticSheet (long userId, int root) throws GenericException, Exception {
+		String note = this.notes[root % 12];
+		short key = this.keys[root % 12];
+
+		this.sheetService.create(makeCromaticSheet(key, note + " chromatic scale"));
 	}
 
 }
