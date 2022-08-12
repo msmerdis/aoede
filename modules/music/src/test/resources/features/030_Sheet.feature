@@ -354,5 +354,5 @@ And the response matches
 
 Examples:
 	| name         | clef   | tempo | key | time | pitch |
-	| TC020001 one | Treble |  120  |  0  |  3/4 |   64  |
+	| TC020001 one | Treble |  120  |  0  |  3/4 |   66  |
 	| TC020001 two | Bass   |  160  |  1  |  4/4 |   53  |

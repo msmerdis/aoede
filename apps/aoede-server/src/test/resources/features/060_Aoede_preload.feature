@@ -16,8 +16,8 @@ When prepare data table "clefObject"
 	| string        | string | integer | integer |
 And prepare json array "clefs" of "clefObject"
 	| id            | type   | note    | spos    |
-	| French Violin |  G     |  64     |  -4     |
-	| Treble        |  G     |  64     |  -2     |
+	| French Violin |  G     |  66     |  -4     |
+	| Treble        |  G     |  66     |  -2     |
 	| Soprano       |  C     |  60     |  -4     |
 	| Mezzo-soprano |  C     |  60     |  -2     |
 	| Alto          |  C     |  60     |   0     |

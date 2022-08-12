@@ -18,7 +18,6 @@ import {
 	providedIn: 'root'
 })
 export class NoteService implements ArrayCanvasService<Note, MappedNote> {
-	private notes : string[] = ["C", "D", "E", "F", "G", "A", "B"];
 
 	constructor() { }
 
@@ -36,7 +35,9 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 		let accidental = 0;
 
 		if (note.pitch >= 0) {
-			let [adjustment, accidental] = this.calculateNoteOffset(note, clef, notes);
+			let adjustment;
+
+			[adjustment, accidental] = this.calculateNoteOffset(note, clef, notes);
 
 			offset += adjustment * staveConfig.stavesLineHeight / 2;
 		}
@@ -57,7 +58,7 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 		return [
 			(octave - clef.octave) * 7
 			+ notes[offset].offset
-			- this.notes.indexOf(clef.clef.type)
+			- notes[clef.note].offset
 			+ clef.clef.spos,
 			notes[offset].accidental
 		];
