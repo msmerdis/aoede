@@ -17,8 +17,8 @@ And prepare data table "clefObject"
 	| string        | string | integer | integer |
 And the response array contains "clefObject" objects
 	| id            | type | note | spos |
-	| French Violin |  G   |  66  |  -4  |
-	| Treble        |  G   |  66  |  -2  |
+	| French Violin |  G   |  67  |  -4  |
+	| Treble        |  G   |  67  |  -2  |
 	| Soprano       |  C   |  60  |  -4  |
 	| Mezzo-soprano |  C   |  60  |  -2  |
 	| Alto          |  C   |  60  |   0  |
@@ -60,8 +60,8 @@ And the response matches
 
 Examples:
 	| name          | type | note | spos |
-	| French Violin |  G   |  66  |  -4  |
-	| Treble        |  G   |  66  |  -2  |
+	| French Violin |  G   |  67  |  -4  |
+	| Treble        |  G   |  67  |  -2  |
 	| Soprano       |  C   |  60  |  -4  |
 	| Mezzo-soprano |  C   |  60  |  -2  |
 	| Alto          |  C   |  60  |   0  |

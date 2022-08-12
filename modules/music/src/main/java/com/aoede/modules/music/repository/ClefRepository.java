@@ -18,8 +18,8 @@ public class ClefRepository extends MapRepository <String, Clef> {
 
 	@PostConstruct
 	public void init () {
-		save(new Clef ("French Violin", 'G', 66, -4));
-		save(new Clef ("Treble",        'G', 66, -2));
+		save(new Clef ("French Violin", 'G', 67, -4));
+		save(new Clef ("Treble",        'G', 67, -2));
 		save(new Clef ("Soprano",       'C', 60, -4));
 		save(new Clef ("Mezzo-soprano", 'C', 60, -2));
 		save(new Clef ("Alto",          'C', 60,  0));

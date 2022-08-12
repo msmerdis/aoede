@@ -24,13 +24,13 @@ import io.cucumber.java.en.When;
 
 public class MusicStepDefinitions extends BaseStepDefinition {
 	private Map<String, Integer> scales = Map.of(
-		"C", 57,
-		"D", 59,
-		"E", 61,
-		"F", 62,
-		"G", 64,
-		"A", 66,
-		"B", 68
+		"C", 60,
+		"D", 62,
+		"E", 64,
+		"F", 65,
+		"G", 67,
+		"A", 69,
+		"B", 71
 	);
 
 	public MusicStepDefinitions (

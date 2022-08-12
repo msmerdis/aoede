@@ -33,8 +33,9 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 	private ClefService clefService;
 	private SheetService sheetService;
 
-	private int startingNote = 60;
-	private String[] notes   = {"F", "G", "A", "B", "C", "D", "E"};
+	private int startingNote = 0;
+	private String [] notes  = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+	private short  [] keys   = { 0 ,  7  ,  2 ,  -3 ,  4 ,  -1,  6 ,   1 ,  -4 ,  3 ,  -2 ,  5 };
 
 	public GenerateUsersRunner (
 		RoleService roleService,
@@ -54,8 +55,8 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 		generateUsers();
 
 		try {
-			generateSheets(userService.login("pleb", "test").getId(), 1);
-			generateSheets(userService.login("boss", "test").getId(), 2);
+			generateSheets(userService.login("boss", "test").getId(), 12);
+			generateSheets(userService.login("pleb", "test").getId(), 4);
 		} catch (GenericExceptionContainer e) {
 			logger.error(e.toString());
 			throw e;
@@ -98,13 +99,18 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 		sheet.setName(name);
 		sheet.setTracks(new LinkedList<Track>());
 
-		for (Clef clef : clefService.findAll())
-			sheet.getTracks().add(makeTrack(startingNote, (short)1, key, clef.getId()));
+		for (Clef clef : clefService.findAll()) {
+			if (clef.getType() == 'F') {
+				sheet.getTracks().add(makeTrack(48 + startingNote, key, clef.getId()));
+			} else {
+				sheet.getTracks().add(makeTrack(60 + startingNote, key, clef.getId()));
+			}
+		}
 
 		return sheet;
 	}
 
-	private Track makeTrack (int startingNote, short order, short key, String clef) {
+	private Track makeTrack (int startingNote, short key, String clef) {
 		Track track = new Track();
 
 		track.setClef(clef);
@@ -151,18 +157,18 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 			new UsernamePasswordAuthenticationToken(userId, null, List.of())
 		);
 
-		for (int i = 0; i < count; i += 1, this.startingNote += 1) {
-			generateSheet(userId, (short)-1, this.startingNote);
-			generateSheet(userId, (short) 0, this.startingNote);
-			generateSheet(userId, (short) 1, this.startingNote);
+		for (int i = 0; i < count; i += 1, this.startingNote = (this.startingNote + 1) % 12) {
+			generateSheet(userId, this.startingNote);
 		}
 
 		// clear authentication
 		SecurityContextHolder.clearContext();
 	}
 
-	private void generateSheet (long userId, short key, int root) throws GenericException, Exception {
-		String note = this.notes[root % 7];
+	private void generateSheet (long userId, int root) throws GenericException, Exception {
+		String note = this.notes[root % 12];
+		short key = this.keys[root % 12];
+
 		this.sheetService.create(makeSheet(root, key, note + " scale"));
 	}
 
