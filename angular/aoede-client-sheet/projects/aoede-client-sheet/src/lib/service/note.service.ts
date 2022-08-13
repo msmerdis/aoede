@@ -102,7 +102,7 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 
 		context.beginPath();
 		context.strokeStyle = "5px";
-		context.ellipse(x + staveConfig.stavesLineHeight, y - note.header + staveConfig.stavesLineHeight/2, staveConfig.noteSpacing, staveConfig.noteSpacing + staveConfig.lineHeight, Math.PI * .25, 0, Math.PI * 2);
+		context.ellipse(x + staveConfig.stavesLineHeight, y - note.header + staveConfig.stavesLineHeight/2, staveConfig.noteSpacing, staveConfig.noteSpacing + staveConfig.lineHeight, Math.PI * .4, 0, Math.PI * 2);
 		context.stroke();
 	}
 }

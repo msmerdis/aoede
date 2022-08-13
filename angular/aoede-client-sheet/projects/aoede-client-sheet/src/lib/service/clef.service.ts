@@ -81,7 +81,7 @@ export class ClefService implements SingleCanvasService<Clef, MappedClef> {
 		context.font="15px ''";
 		context.font="   15px ''";
 		context.translate(x, y);
-		context.scale(0.9877518767285658 * staveConfig.scale * 2.2, 0.9877518767285658 * staveConfig.scale * 2.2);
+		context.scale(0.9877518767285658 * staveConfig.stavesFullHeight / 20, 0.9877518767285658 * staveConfig.stavesFullHeight / 20);
 		context.save();
 		context.font="   15px ''";
 		context.beginPath();
@@ -148,7 +148,7 @@ export class ClefService implements SingleCanvasService<Clef, MappedClef> {
 		context.font="15px ''";
 		context.font="   15px ''";
 		context.translate(x, y);
-		context.scale(staveConfig.scale * 1.8, staveConfig.scale * 1.8);
+		context.scale(staveConfig.stavesFullHeight / 25, staveConfig.stavesFullHeight / 25);
 		context.save();
 		context.font="   15px ''";
 		context.save();
@@ -228,7 +228,7 @@ export class ClefService implements SingleCanvasService<Clef, MappedClef> {
 		context.save();
 		context.font="   15px ''";
 		context.translate(x, y);
-		context.scale(staveConfig.scale * 1.9, staveConfig.scale * 1.9);
+		context.scale(staveConfig.stavesFullHeight / 24, staveConfig.stavesFullHeight / 24);
 		context.save();
 		context.fillStyle="rgba(0, 0, 0, 1)";
 		context.font="   15px ''";

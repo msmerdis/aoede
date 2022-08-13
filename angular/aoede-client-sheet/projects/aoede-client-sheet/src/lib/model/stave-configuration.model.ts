@@ -10,7 +10,7 @@ export interface StaveConfiguration {
 	noteSpacing      : number;
 };
 
-export function staveConfigurationInitializer (scale : number = 1, line : number = 1, space : number = 5) : StaveConfiguration {
+export function staveConfigurationInitializer (scale : number = 5, line : number = 2, space : number = 5) : StaveConfiguration {
 	space *= scale;
 	line  *= scale;
 
