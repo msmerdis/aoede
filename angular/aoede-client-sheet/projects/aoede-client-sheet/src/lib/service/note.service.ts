@@ -31,12 +31,11 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 	}
 
 	private mapNote (note : Note, staveConfig : StaveConfiguration, sheetConfig : SheetConfiguration, clef : MappedClef, notes : NoteOffset[]): MappedNote {
-		let offset     = -staveConfig.lineHeight/2;
+		let offset     = staveConfig.noteSpacing;
 		let accidental = 0;
+		let adjustment = 0;
 
 		if (note.pitch >= 0) {
-			let adjustment;
-
 			[adjustment, accidental] = this.calculateNoteOffset(note, clef, notes);
 
 			offset += adjustment * staveConfig.stavesLineHeight / 2;
@@ -44,10 +43,11 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 
 		return {
 			...staveExtentionInitializer,
-			header : staveConfig.stavesLineHeight / 2 + offset,
-			footer : staveConfig.stavesLineHeight / 2 - offset,
-			width  : staveConfig.noteSpacing * 16,
+			header : offset,
+			footer : staveConfig.stavesLineHeight - offset,
+			width  : staveConfig.stavesLineHeight * 2,
 			note   : note,
+			adjustment : adjustment,
 			accidental : accidental
 		};
 	}
@@ -72,13 +72,37 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 	}
 
 	public draw (note : MappedNote, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
-		context.fillRect(x, y - note.header, note.width, note.header + note.footer);
+/*
 		context.save();
-		context.font         = "bold " + ((note.header + note.footer) * 1.2) + "px ''";
-		context.textAlign    = "center";
-		context.textBaseline = "alphabetic";
 		context.fillStyle    = "white";
-		context.fillText(note.note.pitch + " - " + (note.accidental) + " - " + note.note.value.numerator + "/" + note.note.value.denominator, x + (note.width / 2), y + note.footer);
+		context.fillRect(x, y - note.header, note.width, note.header + note.footer);
 		context.restore();
+*/
+		for (let i = 3; i <= note.adjustment/2; i += 1) {
+			console.log("draw line " + i);
+			let yline = staveConfig.stavesLineHeight * -i + y;
+			context.fillRect(
+				x,
+				yline,
+				note.width,
+				staveConfig.lineHeight
+			);
+		}
+
+		for (let i = -3; i >= note.adjustment/2; i -= 1) {
+			console.log("draw line " + i);
+			let yline = staveConfig.stavesLineHeight * -i + y;
+			context.fillRect(
+				x,
+				yline,
+				note.width,
+				staveConfig.lineHeight
+			);
+		}
+
+		context.beginPath();
+		context.strokeStyle = "5px";
+		context.ellipse(x + staveConfig.stavesLineHeight, y - note.header + staveConfig.stavesLineHeight/2, staveConfig.noteSpacing, staveConfig.noteSpacing + staveConfig.lineHeight, Math.PI * .25, 0, Math.PI * 2);
+		context.stroke();
 	}
 }

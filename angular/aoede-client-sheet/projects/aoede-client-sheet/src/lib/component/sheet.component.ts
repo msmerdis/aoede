@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, Input, Output, EventEmitter, OnInit, OnDestroy, OnChanges } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, ElementRef, Input, Output, EventEmitter, OnInit, OnDestroy, OnChanges } from '@angular/core';
 import { Subscription, Observable, of, combineLatest, throwError } from 'rxjs';
 import { tap, map, take, filter, switchMap } from 'rxjs/operators';
 
@@ -32,7 +32,8 @@ export class SheetComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 	constructor(
-		private sheetService : SheetService
+		private sheetService      : SheetService,
+		private changeDetectorRef : ChangeDetectorRef
 	) {}
 
 	ngOnInit () : void {
@@ -43,6 +44,7 @@ export class SheetComponent implements OnInit, OnChanges, OnDestroy {
 
 	ngOnChanges (): void {
 		this.mappedSheet = this.sheetService.map(this.sheet, this.staveConfig, this.sheetConfig);
+		this.changeDetectorRef.detectChanges();
 		this.drawCanvas();
 	}
 

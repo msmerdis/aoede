@@ -38,6 +38,7 @@ export class SheetService implements SingleCanvasService<Sheet, MappedSheet> {
 			let offset = sheet.header;
 			let previousStype = context.fillStyle;
 			context.fillStyle = 'black';
+			context.lineWidth = staveConfig.lineHeight;
 
 			sheet.staves.forEach (stave => {
 				this.staveService.draw(stave, staveConfig, context, x, y + offset);
