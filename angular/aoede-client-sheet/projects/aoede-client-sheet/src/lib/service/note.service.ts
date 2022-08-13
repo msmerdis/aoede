@@ -43,6 +43,9 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 
 		let [accidentalWidth, accidentalHeader, accidentalFooter] = this.mapAccidental(accidental, staveConfig);
 
+		if (accidentalWidth > 0)
+			accidentalWidth += staveConfig.lineHeight * 2;
+
 		return {
 			...staveExtentionInitializer,
 			header : offset, //Math.max(accidentalHeader, offset),
@@ -82,8 +85,12 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 			return [staveConfig.noteSpacing + staveConfig.lineHeight*4, header, footer];
 		}
 
-		if (accidental < 0)
-			return [staveConfig.stavesLineHeight * 2, 0, staveConfig.stavesLineHeight];
+		if (accidental < 0) {
+			let header = staveConfig.noteSpacing;
+			let footer = staveConfig.stavesLineHeight;
+
+			return [staveConfig.noteSpacing + staveConfig.lineHeight*4, header, footer];
+		}
 
 		return [0, 0, 0];
 	}
@@ -129,19 +136,38 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 /*
 		context.save();
 		context.fillStyle    = "yellow";
-		context.fillRect(x + staveConfig.noteSpacing, y - accidentalHeader, accidentalWidth, accidentalHeader + accidentalFooter);
+		context.fillRect(x, y - accidentalHeader, accidentalWidth, accidentalHeader + accidentalFooter);
 		context.restore();
 */
-		if (accidentalWidth > 0) {
+		if (accidental > 0) {
+			context.save();
+			context.lineWidth = staveConfig.lineHeight * 2;
 			context.fillRect(x + staveConfig.lineHeight * 2, y - accidentalHeader, staveConfig.lineHeight, accidentalHeader + accidentalFooter);
 			context.fillRect(x - staveConfig.lineHeight * 3 + accidentalWidth, y - accidentalHeader, staveConfig.lineHeight, accidentalHeader + accidentalFooter);
 
+			context.lineWidth = staveConfig.lineHeight * 3;
 			[0, staveConfig.stavesLineHeight].forEach(offset => {
+				context.beginPath();
 				context.moveTo(x,                   y + offset + staveConfig.lineHeight);
 				context.lineTo(x + accidentalWidth, y + offset - staveConfig.lineHeight);
 				context.stroke();
 			});
+			context.restore();
+		}
 
+		if (accidental < 0) {
+			context.save();
+			context.beginPath();
+			context.moveTo(x, y + accidentalFooter);
+			context.lineTo(x + accidentalWidth/2, y - accidentalHeader);
+			context.lineTo(x + staveConfig.lineHeight + accidentalWidth /2, y - accidentalHeader);
+			context.lineTo(x + staveConfig.lineHeight, y + accidentalFooter);
+			context.fill();
+			context.beginPath();
+			context.moveTo(x, y + accidentalFooter);
+			context.quadraticCurveTo(x + accidentalWidth, y + accidentalFooter/2, x + accidentalWidth/4, y - accidentalHeader/2 + accidentalFooter/2);
+			context.stroke();
+			context.restore();
 		}
 	}
 }
