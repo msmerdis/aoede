@@ -36,24 +36,27 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 		let adjustment = 0;
 
 		if (note.pitch >= 0) {
-			[adjustment, accidental] = this.calculateNoteOffset(note, clef, notes);
+			[adjustment, accidental] = this.calculateNoteOffset(note.pitch, clef, notes);
 
 			offset += adjustment * staveConfig.stavesLineHeight / 2;
 		}
 
+		let [accidentalWidth, accidentalHeader, accidentalFooter] = this.mapAccidental(accidental, staveConfig);
+
 		return {
 			...staveExtentionInitializer,
-			header : offset,
-			footer : staveConfig.stavesLineHeight - offset,
-			width  : staveConfig.stavesLineHeight * 2,
+			header : offset, //Math.max(accidentalHeader, offset),
+			footer : staveConfig.stavesLineHeight - offset, //Math.max(accidentalFooter, staveConfig.stavesLineHeight - offset),
+			width  : staveConfig.stavesLineHeight * 2 + accidentalWidth,
 			note   : note,
+			offset : accidentalWidth,
 			adjustment : adjustment,
 			accidental : accidental
 		};
 	}
 
-	private calculateNoteOffset (note : Note, clef : MappedClef, notes : NoteOffset[]): [number, number] {
-		let [octave, offset] = this.explodePitch(note.pitch);
+	public calculateNoteOffset (pitch : number, clef : MappedClef, notes : NoteOffset[]): [number, number] {
+		let [octave, offset] = this.explodePitch(pitch);
 
 		return [
 			(octave - clef.octave) * 7
@@ -71,6 +74,20 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 		return [div, rem];
 	}
 
+	public mapAccidental (accidental : number, staveConfig : StaveConfiguration) : [number, number, number] {
+		if (accidental > 0) {
+			let header = staveConfig.lineHeight * 4;
+			let footer = staveConfig.stavesLineHeight + header;
+
+			return [staveConfig.noteSpacing + staveConfig.lineHeight*4, header, footer];
+		}
+
+		if (accidental < 0)
+			return [staveConfig.stavesLineHeight * 2, 0, staveConfig.stavesLineHeight];
+
+		return [0, 0, 0];
+	}
+
 	public draw (note : MappedNote, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
 /*
 		context.save();
@@ -78,8 +95,8 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 		context.fillRect(x, y - note.header, note.width, note.header + note.footer);
 		context.restore();
 */
+
 		for (let i = 3; i <= note.adjustment/2; i += 1) {
-			console.log("draw line " + i);
 			let yline = staveConfig.stavesLineHeight * -i + y;
 			context.fillRect(
 				x,
@@ -90,7 +107,6 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 		}
 
 		for (let i = -3; i >= note.adjustment/2; i -= 1) {
-			console.log("draw line " + i);
 			let yline = staveConfig.stavesLineHeight * -i + y;
 			context.fillRect(
 				x,
@@ -100,9 +116,32 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 			);
 		}
 
+		this.drawAccidental(note.accidental, staveConfig, context, x + staveConfig.noteSpacing, y - note.header);
+		x += note.offset;
+
 		context.beginPath();
-		context.strokeStyle = "5px";
 		context.ellipse(x + staveConfig.stavesLineHeight, y - note.header + staveConfig.stavesLineHeight/2, staveConfig.noteSpacing, staveConfig.noteSpacing + staveConfig.lineHeight, Math.PI * .4, 0, Math.PI * 2);
 		context.stroke();
+	}
+
+	public drawAccidental (accidental : number, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
+		let [accidentalWidth, accidentalHeader, accidentalFooter] = this.mapAccidental(accidental, staveConfig);
+/*
+		context.save();
+		context.fillStyle    = "yellow";
+		context.fillRect(x + staveConfig.noteSpacing, y - accidentalHeader, accidentalWidth, accidentalHeader + accidentalFooter);
+		context.restore();
+*/
+		if (accidentalWidth > 0) {
+			context.fillRect(x + staveConfig.lineHeight * 2, y - accidentalHeader, staveConfig.lineHeight, accidentalHeader + accidentalFooter);
+			context.fillRect(x - staveConfig.lineHeight * 3 + accidentalWidth, y - accidentalHeader, staveConfig.lineHeight, accidentalHeader + accidentalFooter);
+
+			[0, staveConfig.stavesLineHeight].forEach(offset => {
+				context.moveTo(x,                   y + offset + staveConfig.lineHeight);
+				context.lineTo(x + accidentalWidth, y + offset - staveConfig.lineHeight);
+				context.stroke();
+			});
+
+		}
 	}
 }

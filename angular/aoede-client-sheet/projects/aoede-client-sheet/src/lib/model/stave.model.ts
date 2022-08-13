@@ -75,6 +75,7 @@ export function mappedStaveSignatureInitializer () : MappedStaveSignature {
 
 export interface MappedNote extends StaveExtention {
 	note       : Note;
+	offset     : number;
 	accidental : number;
 	adjustment : number;
 };
@@ -83,6 +84,7 @@ export function mappedNoteInitializer () : MappedNote {
 	return {
 		...staveExtentionInitializer,
 		note       : noteInitializer(),
+		offset     : 0,
 		accidental : 0,
 		adjustment : 0
 	};

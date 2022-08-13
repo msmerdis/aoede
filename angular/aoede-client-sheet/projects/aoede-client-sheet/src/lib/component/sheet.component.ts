@@ -27,7 +27,7 @@ export class SheetComponent implements OnInit, OnChanges, OnDestroy {
 	@ViewChild('sCanvas') set content (content: ElementRef) {
 		if (content != null) {
 			this.context = content.nativeElement.getContext('2d');
-			this.drawCanvas();
+			//this.drawCanvas();
 		}
 	}
 
