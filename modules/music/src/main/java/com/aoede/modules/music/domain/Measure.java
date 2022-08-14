@@ -1,5 +1,6 @@
 package com.aoede.modules.music.domain;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -22,6 +23,12 @@ import lombok.ToString;
 @EqualsAndHashCode
 @JsonInclude(Include.NON_NULL)
 public class Measure {
+	@JsonInclude(Include.NON_EMPTY)
+	private List<String> tags;
+
+	@JsonInclude(Include.NON_EMPTY)
+	private HashMap<String,String> flags;
+
 	@Min(value =  32, message = "minimum allowed tempo is 32")
 	@Max(value = 512, message = "maximum allowed tempo is 512")
 	private Short tempo = null;

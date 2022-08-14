@@ -53,6 +53,25 @@ public class MusicStepDefinitions extends BaseStepDefinition {
 
 	@Given("prepare {string} scale as {string}")
 	public void prepareScale(String scale, String name) {
+		prepareScale(scale, name, false, false);
+	}
+
+	@Given("prepare {string} scale as {string} with tags")
+	public void prepareScaleTags(String scale, String name) {
+		prepareScale(scale, name, true, false);
+	}
+
+	@Given("prepare {string} scale as {string} with flags")
+	public void prepareScaleFlags(String scale, String name) {
+		prepareScale(scale, name, false, true);
+	}
+
+	@Given("prepare {string} scale as {string} with tags and flags")
+	public void prepareScaleAll(String scale, String name) {
+		prepareScale(scale, name, true, true);
+	}
+
+	private void prepareScale(String scale, String name, boolean tags, boolean flags) {
 		logger.info("generate a music sheet for " + scale + " scale");
 		JsonObject sheet = new JsonObject();
 		JsonArray tracks = new JsonArray();
@@ -62,12 +81,12 @@ public class MusicStepDefinitions extends BaseStepDefinition {
 		sheet.add("name", new JsonPrimitive(name));
 		sheet.add("tracks", tracks);
 
-		tracks.add(prepareScaleTrack(scales.get(scale)));
+		tracks.add(prepareScaleTrack(scales.get(scale), tags, flags));
 
 		jsonService.put(name, sheet);
 	}
 
-	private JsonObject prepareScaleTrack (int pitch) {
+	private JsonObject prepareScaleTrack (int pitch, boolean tags, boolean flags) {
 		JsonObject track = new JsonObject();
 		JsonArray measures = new JsonArray();
 
@@ -77,34 +96,40 @@ public class MusicStepDefinitions extends BaseStepDefinition {
 		track.add("timeSignature", prepareFraction(4,4));
 		track.add("measures", measures);
 
-		measures.add(prepareScaleMeasure(1, pitch +  0, pitch + 2, pitch +  4, pitch +  5));
-		measures.add(prepareScaleMeasure(2, pitch +  7, pitch + 9, pitch + 11, pitch + 12));
-		measures.add(prepareScaleMeasure(3, pitch + 11, pitch + 9, pitch +  7, pitch +  4));
-		measures.add(prepareScaleMeasure(4, pitch +  4, pitch + 2, pitch +  0, -1));
+		attachTagsAndFlags(track, tags, flags, "track");
+
+		measures.add(prepareScaleMeasure(1, pitch +  0, pitch + 2, pitch +  4, pitch +  5, tags, flags));
+		measures.add(prepareScaleMeasure(2, pitch +  7, pitch + 9, pitch + 11, pitch + 12, tags, flags));
+		measures.add(prepareScaleMeasure(3, pitch + 11, pitch + 9, pitch +  7, pitch +  4, tags, flags));
+		measures.add(prepareScaleMeasure(4, pitch +  4, pitch + 2, pitch +  0,         -1, tags, flags));
 
 		return track;
 	}
 
-	private JsonObject prepareScaleMeasure (int order, int n1, int n2, int n3, int n4) {
+	private JsonObject prepareScaleMeasure (int order, int n1, int n2, int n3, int n4, boolean tags, boolean flags) {
 		JsonObject measure = new JsonObject();
 		JsonArray notes = new JsonArray();
 
 		measure.add("notes", notes);
 
-		notes.add(prepareScaleNote(1, n1));
-		notes.add(prepareScaleNote(2, n2));
-		notes.add(prepareScaleNote(3, n3));
-		notes.add(prepareScaleNote(4, n4));
+		attachTagsAndFlags(measure, tags, flags, "measure");
+
+		notes.add(prepareScaleNote(1, n1, tags, flags));
+		notes.add(prepareScaleNote(2, n2, tags, flags));
+		notes.add(prepareScaleNote(3, n3, tags, flags));
+		notes.add(prepareScaleNote(4, n4, tags, flags));
 
 		return measure;
 	}
 
-	private JsonObject prepareScaleNote (int order, int pitch) {
+	private JsonObject prepareScaleNote (int order, int pitch, boolean tags, boolean flags) {
 		JsonObject note = new JsonObject();
 
 		note.add("order", new JsonPrimitive(order));
 		note.add("pitch", new JsonPrimitive(pitch));
 		note.add("value", prepareFraction(1,4));
+
+		attachTagsAndFlags(note, tags, flags, "note");
 
 		return note;
 	}
@@ -116,6 +141,21 @@ public class MusicStepDefinitions extends BaseStepDefinition {
 		fraction.add("denominator", new JsonPrimitive(den));
 
 		return fraction;
+	}
+
+	private void attachTagsAndFlags (JsonObject object, boolean tags, boolean flags, String type) {
+		if (tags) {
+			JsonArray arr = new JsonArray();
+			object.add("tags", arr);
+			arr.add("tag");
+		}
+
+		if (flags) {
+			JsonObject obj = new JsonObject();
+			object.add("flags", obj);
+			obj.add("flag", new JsonPrimitive("1"));
+			obj.add("type", new JsonPrimitive(type));
+		}
 	}
 
 	@When("request a key signature with major {string}")

@@ -356,3 +356,96 @@ Examples:
 	| name         | clef   | tempo | key | time | pitch |
 	| TC020001 one | Treble |  120  |  0  |  3/4 |   67  |
 	| TC020001 two | Bass   |  160  |  1  |  4/4 |   53  |
+
+@TC030014
+@Positive @Create @Tags
+Scenario: create a new Sheet with tags
+### create a new sheet and verify the sheet is created with the same data as provided
+### retrieve the sheet and verify the same data are returned
+
+Given prepare "C" scale as "C scale" with tags
+And a "sheet" with "C scale" json element
+And the request was successful
+And the response has a status code of 201
+And the response matches
+	|  id  | key    | sheet   |
+	| name | string | C scale |
+When request previously created "sheet"
+And the request was successful
+And the response has a status code of 200
+And the response matches "C scale" json
+And the response matches
+	|  id  | key    | sheet   |
+	| name | string | C scale |
+Then request all available "sheet"
+And the request was successful
+And the response has a status code of 200
+And prepare data table "sheetObject"
+	| id  | name   |
+	| key | string |
+And the response array contains "sheetObject" objects
+	| id    | name    |
+	| sheet | C scale |
+And the response array contains latest "sheet"
+
+@TC030015
+@Positive @Create @Flags
+Scenario: create a new Sheet with flags
+### create a new sheet and verify the sheet is created with the same data as provided
+### retrieve the sheet and verify the same data are returned
+
+Given prepare "C" scale as "C scale" with flags
+And a "sheet" with "C scale" json element
+And the request was successful
+And the response has a status code of 201
+And the response matches
+	|  id  | key    | sheet   |
+	| name | string | C scale |
+When request previously created "sheet"
+And the request was successful
+And the response has a status code of 200
+And the response matches "C scale" json
+And the response matches
+	|  id  | key    | sheet   |
+	| name | string | C scale |
+Then request all available "sheet"
+And the request was successful
+And the response has a status code of 200
+And prepare data table "sheetObject"
+	| id  | name   |
+	| key | string |
+And the response array contains "sheetObject" objects
+	| id    | name    |
+	| sheet | C scale |
+And the response array contains latest "sheet"
+
+@TC030016
+@Positive @Create @Tags @Flags
+Scenario: create a new Sheet with tags and flags
+### create a new sheet and verify the sheet is created with the same data as provided
+### retrieve the sheet and verify the same data are returned
+
+Given prepare "C" scale as "C scale" with tags and flags
+And a "sheet" with "C scale" json element
+And the request was successful
+And the response has a status code of 201
+And the response matches
+	|  id  | key    | sheet   |
+	| name | string | C scale |
+When request previously created "sheet"
+And the request was successful
+And the response has a status code of 200
+And the response matches "C scale" json
+And the response matches
+	|  id  | key    | sheet   |
+	| name | string | C scale |
+Then request all available "sheet"
+And the request was successful
+And the response has a status code of 200
+And prepare data table "sheetObject"
+	| id  | name   |
+	| key | string |
+And the response array contains "sheetObject" objects
+	| id    | name    |
+	| sheet | C scale |
+And the response array contains latest "sheet"

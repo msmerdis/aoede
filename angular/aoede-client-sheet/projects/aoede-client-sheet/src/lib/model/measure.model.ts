@@ -2,7 +2,9 @@ import { StaveSignature, staveSignatureInitializer } from './stave-signature.mod
 import { Note } from './note.model';
 
 export interface Measure extends StaveSignature {
-	notes : Note[];
+	notes  : Note[];
+	tags?  : string[];
+	flags? : Record<string, string>;
 };
 
 export function measureInitializer () : Measure {
