@@ -18,6 +18,7 @@ import {
 	providedIn: 'root'
 })
 export class NoteService implements ArrayCanvasService<Note, MappedNote> {
+	private notes : string[] = ["C", "D", "E", "F", "G", "A", "B"];
 
 	constructor() { }
 
@@ -64,7 +65,7 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 		return [
 			(octave - clef.octave) * 7
 			+ notes[offset].offset
-			- notes[clef.note].offset
+			- this.notes.indexOf(clef.clef.type)
 			+ clef.clef.spos,
 			notes[offset].accidental
 		];
