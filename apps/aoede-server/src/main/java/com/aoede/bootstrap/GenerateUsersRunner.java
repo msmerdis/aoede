@@ -12,7 +12,6 @@ import com.aoede.commons.base.component.BaseComponent;
 import com.aoede.commons.base.exceptions.GenericException;
 import com.aoede.commons.base.exceptions.GenericExceptionContainer;
 import com.aoede.modules.music.domain.Clef;
-import com.aoede.modules.music.domain.Fraction;
 import com.aoede.modules.music.domain.Measure;
 import com.aoede.modules.music.domain.Note;
 import com.aoede.modules.music.domain.Sheet;
@@ -181,9 +180,8 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 	private Note makeNote (short order, int pitch) {
 		Note note = new Note();
 
-		note.setOrder(order);
 		note.setPitch(pitch);
-		note.setValue(new Fraction(1, 4));
+		note.setValue(4);
 
 		return note;
 	}

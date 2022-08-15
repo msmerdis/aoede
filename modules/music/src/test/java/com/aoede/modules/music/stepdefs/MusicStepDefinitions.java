@@ -125,9 +125,8 @@ public class MusicStepDefinitions extends BaseStepDefinition {
 	private JsonObject prepareScaleNote (int order, int pitch, boolean tags, boolean flags) {
 		JsonObject note = new JsonObject();
 
-		note.add("order", new JsonPrimitive(order));
 		note.add("pitch", new JsonPrimitive(pitch));
-		note.add("value", prepareFraction(1,4));
+		note.add("value", new JsonPrimitive(4));
 
 		attachTagsAndFlags(note, tags, flags, "note");
 

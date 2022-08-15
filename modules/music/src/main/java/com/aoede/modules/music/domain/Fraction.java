@@ -21,6 +21,16 @@ public class Fraction {
 
 	@Positive(message = "denominator must be a positive value")
 	private int denominator;
+
+	public void simplify () {
+		for (int i = 2; i <= this.numerator && i <= this.denominator; i += 1) {
+			while (this.numerator % i == 0 && this.denominator % i == 0) {
+				this.numerator   /= i;
+				this.denominator /= i;
+			}
+		}
+	}
+
 }
 
 

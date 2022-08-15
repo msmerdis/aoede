@@ -1,7 +1,7 @@
 package com.aoede.modules.music.domain;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -21,11 +21,10 @@ public class Note {
 	private List<String> tags;
 
 	@JsonInclude(Include.NON_EMPTY)
-	private HashMap<String,String> flags;
+	private Map<String,String> flags;
 
-	private Short order;
 	private int pitch;
-	private Fraction value;
+	private int value;
 }
 
 

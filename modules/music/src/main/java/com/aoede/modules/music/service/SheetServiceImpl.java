@@ -1,6 +1,8 @@
 package com.aoede.modules.music.service;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManagerFactory;
@@ -152,15 +154,64 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Lo
 
 	@Override
 	public Sheet generate(GenerateSheet data) throws GenericException {
-		Sheet sheet = new Sheet();
-		Track track = new Track();
+		// Generate note
+		List<Note> notes = new LinkedList<Note>();
+		Note note = new Note();
+		notes.add(note);
 
+		int pitch = clefService.find(data.getClef()).getNote();
+
+		note.setPitch(pitch);
+
+		Fraction fraction = new Fraction (
+			data.getTimeSignature().getNumerator(),
+			data.getTimeSignature().getDenominator()
+		);
+		fraction.simplify();
+
+		if (fraction.getNumerator()   % 31 == 0 &&
+			fraction.getDenominator() % 16 == 0) {
+			fraction.setNumerator  (fraction.getNumerator()   / 31);
+			fraction.setDenominator(fraction.getDenominator() / 16);
+			note.setFlags(Map.of("DOTTED", Integer.toString(4)));
+		}
+
+		if (fraction.getNumerator()   % 15 == 0 &&
+			fraction.getDenominator() %  8 == 0) {
+			fraction.setNumerator  (fraction.getNumerator()   / 15);
+			fraction.setDenominator(fraction.getDenominator() /  8);
+			note.setFlags(Map.of("DOTTED", Integer.toString(3)));
+		}
+
+		if (fraction.getNumerator()   % 7 == 0 &&
+			fraction.getDenominator() % 4 == 0) {
+			fraction.setNumerator  (fraction.getNumerator()   / 7);
+			fraction.setDenominator(fraction.getDenominator() / 4);
+			note.setFlags(Map.of("DOTTED", Integer.toString(2)));
+		}
+
+		if (fraction.getNumerator()   % 3 == 0 &&
+			fraction.getDenominator() % 2 == 0) {
+			fraction.setNumerator  (fraction.getNumerator()   / 3);
+			fraction.setDenominator(fraction.getDenominator() / 2);
+			note.setFlags(Map.of("DOTTED", Integer.toString(1)));
+		}
+
+		note.setValue(fraction.getDenominator());
+
+		for (int i = 1; i < fraction.getNumerator(); i += 1) {
+			notes.add(note = new Note());
+			note.setPitch(pitch);
+			note.setValue(fraction.getDenominator());
+		}
+
+		// generate measure
 		Measure measure = new Measure();
 
-		Note note = new Note();
+		measure.setNotes(notes);
 
-		sheet.setName(data.getName());
-		sheet.setTracks(List.of(track));
+		// generate track
+		Track track = new Track();
 
 		track.setClef(data.getClef());
 		track.setKeySignature(data.getKeySignature());
@@ -168,14 +219,11 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Lo
 		track.setTempo(data.getTempo());
 		track.setMeasures(List.of(measure));
 
-		measure.setNotes(List.of(note));
+		// generate sheet
+		Sheet sheet = new Sheet();
 
-		note.setOrder((short)1);
-		note.setPitch(clefService.find(data.getClef()).getNote());
-		note.setValue(new Fraction(
-			data.getTimeSignature().getNumerator(),
-			data.getTimeSignature().getDenominator()
-		));
+		sheet.setName(data.getName());
+		sheet.setTracks(List.of(track));
 
 		return sheet;
 	}

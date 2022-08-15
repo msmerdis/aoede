@@ -321,11 +321,11 @@ And a "sheet" with
 	| timeSignature | fraction | <time>  |
 And the request was successful
 And prepare data table "noteObject"
-	| order   | pitch   | value    |
-	| integer | integer | fraction |
+	|   pitch  |  value  |
+	|  integer | integer |
 And prepare json array "notes" of "noteObject"
-	| order   |  pitch  | value    |
-	| 1       | <pitch> | <time>   |
+	|   pitch  |  value  |
+	|  <pitch> | <value> |
 And prepare data table "measureObject"
 	| notes |
 	| json  |
@@ -353,11 +353,68 @@ And the response matches
 	| tracks | json   | tracks |
 
 Examples:
-	| name         | clef   | tempo | key | time | pitch |
-	| TC020001 one | Treble |  120  |  0  |  3/4 |   67  |
-	| TC020001 two | Bass   |  160  |  1  |  4/4 |   53  |
+	| name         | clef   | tempo | key | time | value | pitch |
+	| TC030013 one | Treble |  120  |  0  |  3/4 |   2   |   67  |
+	| TC030013 two | Bass   |  160  |  1  |  4/4 |   1   |   53  |
+	| TC030013 fri | Alto   |  112  |  2  |  2/4 |   2   |   60  |
 
 @TC030014
+@Positive @Generate
+Scenario Outline: generate dotted note sheet
+### Generate a new sheet
+### Verify that the sheet was created successfully
+
+Given a logged in user "generateModuleMusicTest"
+And prepare url "/api/sheet/generate"
+And a "sheet" with
+	| name          | string   | <name>  |
+	| clef          | string   | <clef>  |
+	| tempo         | integer  | <tempo> |
+	| keySignature  | integer  | <key>   |
+	| timeSignature | fraction | <time>  |
+And the request was successful
+And prepare json "flags"
+	| DOTTED | string | <dot> |
+And prepare data table "noteObject"
+	|   pitch  |  value  | flags |
+	|  integer | integer | json  |
+And prepare json array "notes" of "noteObject"
+	|   pitch  |  value  | flags |
+	|  <pitch> | <value> | flags |
+And prepare data table "measureObject"
+	| notes |
+	| json  |
+And prepare json array "measures" of "measureObject"
+	| notes |
+	| notes |
+And prepare data table "trackObject"
+	| name  | clef   | tempo   | keySignature | timeSignature | measures |
+	| null  | string | integer | integer      | fraction      | json     |
+And prepare json array "tracks" of "trackObject"
+	| name  |  clef  |  tempo  | keySignature | timeSignature | measures |
+	|       | <clef> | <tempo> | <key>        | <time>        | measures |
+And the response matches
+	|  id    | key    | sheet  |
+	| name   | string | <name> |
+	| tracks | json   | tracks |
+When request all available "sheet"
+And the request was successful
+And the response array contains latest "sheet"
+Then request previously created "sheet"
+And the request was successful
+And the response matches
+	|  id    | key    | sheet  |
+	| name   | string | <name> |
+	| tracks | json   | tracks |
+
+Examples:
+	| name         | clef   | tempo | key | time  | value | pitch | dot |
+	| TC030014 one | Treble |  120  |  0  |  3/4  |   2   |   67  |  1  |
+	| TC030014 one | Treble |  120  |  0  |  7/8  |   2   |   67  |  2  |
+	| TC030014 one | Treble |  120  |  0  | 15/16 |   2   |   67  |  3  |
+	| TC030014 one | Treble |  120  |  0  | 31/32 |   2   |   67  |  4  |
+
+@TC030015
 @Positive @Create @Tags
 Scenario: create a new Sheet with tags
 ### create a new sheet and verify the sheet is created with the same data as provided
@@ -388,7 +445,7 @@ And the response array contains "sheetObject" objects
 	| sheet | C scale |
 And the response array contains latest "sheet"
 
-@TC030015
+@TC030016
 @Positive @Create @Flags
 Scenario: create a new Sheet with flags
 ### create a new sheet and verify the sheet is created with the same data as provided
@@ -419,7 +476,7 @@ And the response array contains "sheetObject" objects
 	| sheet | C scale |
 And the response array contains latest "sheet"
 
-@TC030016
+@TC030017
 @Positive @Create @Tags @Flags
 Scenario: create a new Sheet with tags and flags
 ### create a new sheet and verify the sheet is created with the same data as provided

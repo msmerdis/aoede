@@ -47,11 +47,13 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 		if (accidentalWidth > 0)
 			accidentalWidth += staveConfig.lineHeight * 2;
 
+		let dotCount = this.dots(note);
+
 		return {
 			...staveExtentionInitializer,
-			header : offset, //Math.max(accidentalHeader, offset),
-			footer : staveConfig.stavesLineHeight - offset, //Math.max(accidentalFooter, staveConfig.stavesLineHeight - offset),
-			width  : staveConfig.stavesLineHeight * 2 + accidentalWidth,
+			header : offset,
+			footer : staveConfig.stavesLineHeight - offset,
+			width  : staveConfig.stavesLineHeight * 2 + accidentalWidth + dotCount * staveConfig.noteSpacing,
 			note   : note,
 			offset : accidentalWidth,
 			adjustment : adjustment,
@@ -96,6 +98,13 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 		return [0, 0, 0];
 	}
 
+	public dots (note : Note) : number {
+		if (note.flags) {
+			return +note.flags['DOTTED'];
+		}
+		return 0;
+	}
+
 	public draw (note : MappedNote, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
 /*
 		context.save();
@@ -129,7 +138,22 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 
 		context.beginPath();
 		context.ellipse(x + staveConfig.stavesLineHeight, y - note.header + staveConfig.stavesLineHeight/2, staveConfig.noteSpacing, staveConfig.noteSpacing + staveConfig.lineHeight, Math.PI * .4, 0, Math.PI * 2);
-		context.stroke();
+		if (note.note.value > 2)
+			context.fill();
+		else
+			context.stroke();
+
+		let dots = this.dots(note.note);
+		x += staveConfig.stavesLineHeight * 2;
+
+		while (dots > 0) {
+			context.beginPath();
+			context.arc(x, y - note.header + staveConfig.stavesLineHeight/2, staveConfig.lineHeight * 2, 0, Math.PI * 2);
+			context.fill()
+			x += staveConfig.noteSpacing;
+			dots -= 1;
+		}
+
 	}
 
 	public drawAccidental (accidental : number, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
