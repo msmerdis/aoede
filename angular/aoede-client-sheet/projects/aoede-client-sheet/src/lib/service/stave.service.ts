@@ -30,28 +30,33 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 		let states : StaveMapState[] = source.map(track =>
 			this.staveSignatureService.initialize(track, staveConfig, sheetConfig)
 		);
-		let staves = this.barService
-			.map (source, staveConfig, sheetConfig, states)
-			.reduce ((staves : MappedStave[], bar : MappedBar) : MappedStave[] => {
-				let bottom = staves[staves.length - 1];
+		let maxBarWidth = 0;
+		let bars = this.barService.map (source, staveConfig, sheetConfig, states);
 
-				if (bottom.width + bar.width >= staveConfig.stavesWidth) {
-					bottom = this.emptyStave(states, staveConfig, sheetConfig);
-					staves.push(bottom);
-				}
+		bars.forEach((b) => maxBarWidth = Math.max(maxBarWidth, b.width));
 
-				if (bottom.bars.length == 0) {
-					this.barService.updateSignatures(bar, staveConfig, staves.length == 1);
-				}
+		let staves = bars.reduce ((staves : MappedStave[], bar : MappedBar) : MappedStave[] => {
+			let bottom = staves[staves.length - 1];
 
-				bottom.bars.push (bar);
-				bottom.width += bar.width;
+			if (bottom.width + bar.width >= Math.max(staveConfig.stavesWidth, maxBarWidth + bottom.offset)) {
+				bottom = this.emptyStave(states, staveConfig, sheetConfig);
+				staves.push(bottom);
+			}
 
-				return staves;
-			}, [this.emptyStave(states, staveConfig, sheetConfig)] as MappedStave[]);
+			if (bottom.bars.length == 0) {
+				this.barService.updateSignatures(bar, staveConfig, staves.length == 1);
+				maxBarWidth = Math.max(maxBarWidth, bar.width);
+			}
+
+			bottom.bars.push (bar);
+			bottom.width += bar.width;
+
+			return staves;
+		}, [this.emptyStave(states, staveConfig, sheetConfig)] as MappedStave[]);
 
 		staves.forEach ((stave) => {
-			let excess   = sheetConfig.normalize ? (staveConfig.stavesWidth - stave.width) : 0;
+			let maximum  = Math.max(staveConfig.stavesWidth, maxBarWidth + stave.offset);
+			let excess   = sheetConfig.normalize ? (maximum - stave.width) : 0;
 			let adjusted = this.barService.normalize(stave.bars, excess);
 			stave.width  = adjusted.width + stave.offset;
 			stave.header = adjusted.header;
@@ -80,11 +85,11 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 		};
 	}
 
-	public draw (stave : MappedStave, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
+	public draw (stave : MappedStave, staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number, scale : number = 1) : void {
 		x += staveConfig.stavesMargin;
 
 		stave.tracks.forEach((track, i) => {
-			this.setupStave(staveConfig, context, x, y + track);
+			this.setupStave(staveConfig, context, x, y + track, scale);
 
 			if (stave.offset > 0) {
 				this.clefService.draw(stave.clefs[i], staveConfig, context, x + staveConfig.stavesSpacing, y + track);
@@ -94,13 +99,13 @@ export class StaveService implements ArrayCanvasService<Track, MappedStave> {
 		this.barService.draw (stave.bars, staveConfig, context, x + stave.offset, y, stave.tracks);
 	}
 
-	private setupStave (staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number) : void {
+	private setupStave (staveConfig : StaveConfiguration, context : CanvasRenderingContext2D, x : number, y : number, scale : number) : void {
 		[-2, -1, 0, 1, 2].forEach(i => {
 			let yline = staveConfig.stavesLineHeight * i + y;
 			context.fillRect(
 				x,
 				yline,
-				staveConfig.stavesWidth,
+				staveConfig.stavesWidth / scale,
 				staveConfig.lineHeight
 			);
 		});

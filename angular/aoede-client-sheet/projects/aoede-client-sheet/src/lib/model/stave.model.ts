@@ -163,7 +163,8 @@ export function mappedStaveInitializer () : MappedStave {
 export interface MappedSheet extends StaveExtention {
 	sheet  : Sheet;
 	staves : MappedStave[];
-	mapped : boolean
+	mapped : boolean;
+	inner  : number;
 };
 
 export function mappedSheetInitializer () : MappedSheet {
@@ -171,6 +172,7 @@ export function mappedSheetInitializer () : MappedSheet {
 		...staveExtentionInitializer,
 		sheet  : sheetInitializer(),
 		staves : [],
-		mapped : false
+		mapped : false,
+		inner  : 0
 	};
 };

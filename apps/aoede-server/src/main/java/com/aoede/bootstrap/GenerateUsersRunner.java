@@ -192,6 +192,8 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 			new UsernamePasswordAuthenticationToken(userId, null, List.of())
 		);
 
+		generateValueSheet();
+
 		for (int i = 0; i < count; i += 1, this.startingNote = (this.startingNote + 1) % 12) {
 			generateScaleSheet(userId, this.startingNote);
 		}
@@ -201,6 +203,40 @@ public class GenerateUsersRunner extends BaseComponent implements CommandLineRun
 
 		// clear authentication
 		SecurityContextHolder.clearContext();
+	}
+
+	private void generateValueSheet () throws GenericException, Exception {
+		Track track = new Track();
+
+		track.setClef("Treble");
+		track.setKeySignature((short)0);
+		track.setTempo((short)120);
+		track.setTimeSignature(new TimeSignature(4, 4));
+		track.setMeasures(new LinkedList<Measure>());
+
+		for (int i = 1; i < 100; i *= 2) {
+			Measure measure = new Measure();
+
+			measure.setNotes(new LinkedList<Note>());
+
+			for (int j = 0; j < i; j += 1) {
+				Note note = new Note ();
+
+				note.setPitch(67);
+				note.setValue(i);
+
+				measure.getNotes().add(note);
+			}
+
+			track.getMeasures().add(measure);
+		}
+
+		Sheet sheet = new Sheet();
+
+		sheet.setName("All values track");
+		sheet.setTracks(List.of(track));
+
+		this.sheetService.create(sheet);
 	}
 
 	private void generateScaleSheet (long userId, int root) throws GenericException, Exception {

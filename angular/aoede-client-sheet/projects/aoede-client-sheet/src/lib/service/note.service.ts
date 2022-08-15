@@ -151,9 +151,10 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 			context.stroke();
 
 		if (note.note.value > 1) {
+			let stemX = x + staveConfig.stavesLineHeight + staveConfig.noteSpacing + staveConfig.lineHeight;
 			context.beginPath();
-			context.moveTo(x + staveConfig.stavesLineHeight + staveConfig.noteSpacing, y - note.header);
-			context.lineTo(x + staveConfig.stavesLineHeight + staveConfig.noteSpacing, y - note.center);
+			context.moveTo(stemX, y - note.header);
+			context.lineTo(stemX, y - note.center);
 			context.stroke();
 		}
 
