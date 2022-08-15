@@ -49,12 +49,19 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 
 		let dotCount = this.dots(note);
 
+		let stemHeight = 0;
+
+		if (note.value > 1) {
+			stemHeight = staveConfig.stavesLineHeight * 3;
+		}
+
 		return {
 			...staveExtentionInitializer,
-			header : offset,
+			header : offset + stemHeight,
 			footer : staveConfig.stavesLineHeight - offset,
 			width  : staveConfig.stavesLineHeight * 2 + accidentalWidth + dotCount * staveConfig.noteSpacing,
 			note   : note,
+			center : offset - staveConfig.stavesLineHeight / 2,
 			offset : accidentalWidth,
 			adjustment : adjustment,
 			accidental : accidental
@@ -82,15 +89,15 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 
 	public mapAccidental (accidental : number, staveConfig : StaveConfiguration) : [number, number, number] {
 		if (accidental > 0) {
-			let header = staveConfig.lineHeight * 4;
-			let footer = staveConfig.stavesLineHeight + header;
+			let header = staveConfig.stavesLineHeight / 2 + staveConfig.lineHeight * 4;
+			let footer = header;
 
 			return [staveConfig.noteSpacing + staveConfig.lineHeight*4, header, footer];
 		}
 
 		if (accidental < 0) {
-			let header = staveConfig.noteSpacing;
-			let footer = staveConfig.stavesLineHeight;
+			let footer = staveConfig.stavesLineHeight/2;
+			let header = staveConfig.noteSpacing + footer;
 
 			return [staveConfig.noteSpacing + staveConfig.lineHeight*4, header, footer];
 		}
@@ -133,22 +140,29 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 			);
 		}
 
-		this.drawAccidental(note.accidental, staveConfig, context, x + staveConfig.noteSpacing, y - note.header);
+		this.drawAccidental(note.accidental, staveConfig, context, x + staveConfig.noteSpacing, y - note.center);
 		x += note.offset;
 
 		context.beginPath();
-		context.ellipse(x + staveConfig.stavesLineHeight, y - note.header + staveConfig.stavesLineHeight/2, staveConfig.noteSpacing, staveConfig.noteSpacing + staveConfig.lineHeight, Math.PI * .4, 0, Math.PI * 2);
+		context.ellipse(x + staveConfig.stavesLineHeight, y - note.center, staveConfig.noteSpacing, staveConfig.noteSpacing + staveConfig.lineHeight, Math.PI * .4, 0, Math.PI * 2);
 		if (note.note.value > 2)
 			context.fill();
 		else
 			context.stroke();
+
+		if (note.note.value > 1) {
+			context.beginPath();
+			context.moveTo(x + staveConfig.stavesLineHeight + staveConfig.noteSpacing, y - note.header);
+			context.lineTo(x + staveConfig.stavesLineHeight + staveConfig.noteSpacing, y - note.center);
+			context.stroke();
+		}
 
 		let dots = this.dots(note.note);
 		x += staveConfig.stavesLineHeight * 2;
 
 		while (dots > 0) {
 			context.beginPath();
-			context.arc(x, y - note.header + staveConfig.stavesLineHeight/2, staveConfig.lineHeight * 2, 0, Math.PI * 2);
+			context.arc(x, y - note.center, staveConfig.lineHeight * 2, 0, Math.PI * 2);
 			context.fill()
 			x += staveConfig.noteSpacing;
 			dots -= 1;
@@ -171,7 +185,7 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 			context.fillRect(x - staveConfig.lineHeight * 3 + accidentalWidth, y - accidentalHeader, staveConfig.lineHeight, accidentalHeader + accidentalFooter);
 
 			context.lineWidth = staveConfig.lineHeight * 3;
-			[0, staveConfig.stavesLineHeight].forEach(offset => {
+			[-staveConfig.stavesLineHeight/2, staveConfig.stavesLineHeight/2].forEach(offset => {
 				context.beginPath();
 				context.moveTo(x,                   y + offset + staveConfig.lineHeight);
 				context.lineTo(x + accidentalWidth, y + offset - staveConfig.lineHeight);
@@ -190,7 +204,7 @@ export class NoteService implements ArrayCanvasService<Note, MappedNote> {
 			context.fill();
 			context.beginPath();
 			context.moveTo(x, y + accidentalFooter);
-			context.quadraticCurveTo(x + accidentalWidth, y + accidentalFooter/2, x + accidentalWidth/4, y - accidentalHeader/2 + accidentalFooter/2);
+			context.quadraticCurveTo(x + accidentalWidth, y - accidentalHeader/2 + accidentalFooter/2, x + accidentalWidth/4, y - accidentalHeader/2 + accidentalFooter/2);
 			context.stroke();
 			context.restore();
 		}
