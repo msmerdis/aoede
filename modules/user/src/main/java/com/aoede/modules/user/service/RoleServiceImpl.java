@@ -1,7 +1,5 @@
 package com.aoede.modules.user.service;
 
-import javax.persistence.EntityManagerFactory;
-
 import org.springframework.stereotype.Service;
 
 import com.aoede.commons.base.exceptions.GenericException;
@@ -13,8 +11,8 @@ import com.aoede.modules.user.repository.RoleRepository;
 @Service
 public class RoleServiceImpl extends AbstractServiceDomainImpl <Integer, Role, Integer, RoleEntity, RoleRepository> implements RoleService {
 
-	public RoleServiceImpl(RoleRepository repository, EntityManagerFactory entityManagerFactory) {
-		super(repository, entityManagerFactory);
+	public RoleServiceImpl(RoleRepository repository) {
+		super(repository);
 	}
 
 	@Override

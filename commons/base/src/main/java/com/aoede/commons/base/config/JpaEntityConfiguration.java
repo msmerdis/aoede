@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.aoede.commons.base.component.BaseComponent;
 
+// TODO: move to applications
 @Configuration
 @EnableTransactionManagement
 @EnableJpaAuditing

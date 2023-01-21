@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManagerFactory;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -36,10 +34,9 @@ public class SheetServiceImpl extends AbstractServiceDomainImpl <Long, Sheet, Lo
 	public SheetServiceImpl(
 		ClefService clefService,
 		UserService userService,
-		SheetRepository repository,
-		EntityManagerFactory entityManagerFactory
+		SheetRepository repository
 	) {
-		super(repository, entityManagerFactory);
+		super(repository);
 
 		this.clefService = clefService;
 		this.userService = userService;

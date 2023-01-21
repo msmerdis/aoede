@@ -25,6 +25,10 @@
 	<modules>
 		<module>cucumber</module>
 		<module>base</module>
+		<module>repository</module>
+		<module>service</module>
+		<module>controller</module>
+		<module>all</module>
 	</modules>
 
 </project>

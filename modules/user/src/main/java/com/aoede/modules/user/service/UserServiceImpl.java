@@ -3,8 +3,6 @@ package com.aoede.modules.user.service;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManagerFactory;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,8 +27,8 @@ public class UserServiceImpl extends AbstractServiceDomainImpl <Long, User, Long
 
 	private PasswordEncoder passwordEncoder;
 
-	public UserServiceImpl(UserRepository repository, EntityManagerFactory entityManagerFactory, PasswordEncoder passwordEncoder) {
-		super(repository, entityManagerFactory);
+	public UserServiceImpl(UserRepository repository, PasswordEncoder passwordEncoder) {
+		super(repository);
 
 		this.passwordEncoder = passwordEncoder;
 	}

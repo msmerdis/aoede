@@ -1,7 +1,5 @@
 package com.aoede.modules.music.service;
 
-import javax.persistence.EntityManagerFactory;
-
 import org.springframework.stereotype.Service;
 
 import com.aoede.commons.base.exceptions.GenericException;
@@ -13,8 +11,8 @@ import com.aoede.modules.music.repository.KeySignatureRepository;
 @Service
 public class KeySignatureServiceImpl extends AbstractServiceEntityImpl <Short, KeySignature, KeySignatureRepository> implements KeySignatureService {
 
-	public KeySignatureServiceImpl(KeySignatureRepository repository, EntityManagerFactory entityManagerFactory) {
-		super(repository, entityManagerFactory);
+	public KeySignatureServiceImpl(KeySignatureRepository repository) {
+		super(repository);
 	}
 
 	@Override
